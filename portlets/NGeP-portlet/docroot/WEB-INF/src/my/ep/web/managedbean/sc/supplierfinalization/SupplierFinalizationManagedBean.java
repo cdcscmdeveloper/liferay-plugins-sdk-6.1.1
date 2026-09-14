@@ -270,6 +270,12 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 
 	// 26247 - end
 
+	private boolean isReviseBriefMsg = Boolean.FALSE; // #39077
+
+	// #35320 - Start
+	private String selectedSupplierOfferedPrice;
+	// #35320 - End
+
 	/**
 	 * @return the activeIndex
 	 */
@@ -2323,4 +2329,31 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.disabledSupplierIds = disabledSupplierIds;
 	}
 	// 26247 - end
+
+	// 39077 -start-
+	/**
+	 * @return the isReviseBriefMsg
+	 */
+	public boolean isReviseBriefMsg() {
+		return isReviseBriefMsg;
+	}
+
+	/**
+	 * @param isReviseBriefMsg
+	 *            the isReviseBriefMsg to set
+	 */
+	public void setReviseBriefMsg(boolean isReviseBriefMsg) {
+		this.isReviseBriefMsg = isReviseBriefMsg;
+	}
+	// 39077 -end-
+
+	// #35320 - Start
+	public String getSelectedSupplierOfferedPrice() {
+		return selectedSupplierOfferedPrice;
+	}
+
+	public void setSelectedSupplierOfferedPrice(String selectedSupplierOfferedPrice) {
+		this.selectedSupplierOfferedPrice = selectedSupplierOfferedPrice;
+	}
+	// #35320 - End
 }
