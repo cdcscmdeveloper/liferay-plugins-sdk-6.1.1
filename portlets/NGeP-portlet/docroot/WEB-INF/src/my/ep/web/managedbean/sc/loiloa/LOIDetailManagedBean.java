@@ -20,6 +20,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.helper.Paginator;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
@@ -34,7 +35,10 @@ import my.ep.persistence.entity.sc.loaloi.ScLoiRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoiReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoiSupportingDoc;
 import my.ep.persistence.entity.sc.loaloi.ScLoiTerm;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMemberHistory;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
@@ -42,6 +46,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
+import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
@@ -56,7 +61,9 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.quatationtender.LoiLoaBean;
+import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.bean.sc.quatationtender.WeightageScoreBean; //#38151
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -451,9 +458,37 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private Long overallFinancialRecommendationPercent;//#38151
 	private List<ScQtScoreSetting> scoreSettings;//#38151
 	private boolean WeightageReq; //#38151
-	private boolean weightage35384WIP; //#38151
+	private boolean weightage35384WIP; //#38151 & #38679
 	
 	
+	// 34491 - start
+	private int meetingPreparationActiveIndex;
+	private ScQtCommittee finalizationQtCommittee;
+	private boolean selectAll;
+	private boolean selectAllMeetings;
+	private boolean selectAllMeetingAttendees;
+	private boolean selectAllMembers;
+	private String finalizationCommitteeDesc;
+	private boolean hasPreviousMeeting;
+	private boolean allowGlobalEndorseSignoff;
+	private Paginator historyPaginator;
+	private Paginator memberHistoryPaginator;
+	private ScCommitteeMemberHistory selectedCommitteeHistory;
+	private List<ScCommitteeMember> previousMembers;
+	private ScQtApproval committeeApproval;
+	private List<SelectItem> selections;
+	private UserCommitteeSearchBean userSearchBean;
+	private IPagingDataModel<PmUser> userSearchDataModel;
+	private String tabTitle;
+	private boolean nameRequired;
+	private List<PmUser> selectedPmUsers;
+	private List<ScQtCommitteeActivity> deletedCommitteeActivities;
+	private List<ScCommitteeMember> deletedCommitteeMembers;
+	private List<ScQtMeeting> deletedQtMeetings;
+	private List<ScQtMeetingAttendance> deletedQtMeetingAttendances;
+
+	// 34491 - end
+
     /**
      * Gets the spki backing bean.
      *
@@ -2556,7 +2591,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 	//#21692 - End
 	
-	//#38151 - Start
+	//#38151 & #38679 - Start
 	public List<WeightageScoreBean> getWeightageScoreBeans() {
 		return weightageScoreBeans;
 	}
@@ -2604,6 +2639,199 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	public void setWeightage35384WIP(boolean weightage35384WIP) {
 		this.weightage35384WIP = weightage35384WIP;
 	}
-	//#38151 - End
+	//#38151 & #38679 - End
 
+	// 34491 - start
+	public int getMeetingPreparationActiveIndex() {
+		return meetingPreparationActiveIndex;
+	}
+
+	public void setMeetingPreparationActiveIndex(int meetingPreparationActiveIndex) {
+		this.meetingPreparationActiveIndex = meetingPreparationActiveIndex;
+	}
+
+	public ScQtCommittee getFinalizationQtCommittee() {
+		return finalizationQtCommittee;
+	}
+
+	public void setFinalizationQtCommittee(ScQtCommittee finalizationQtCommittee) {
+		this.finalizationQtCommittee = finalizationQtCommittee;
+	}
+
+	public boolean isSelectAll() {
+		return selectAll;
+	}
+
+	public void setSelectAll(boolean selectAll) {
+		this.selectAll = selectAll;
+	}
+
+	public boolean isSelectAllMeetings() {
+		return selectAllMeetings;
+	}
+
+	public void setSelectAllMeetings(boolean selectAllMeetings) {
+		this.selectAllMeetings = selectAllMeetings;
+	}
+
+	public boolean isSelectAllMeetingAttendees() {
+		return selectAllMeetingAttendees;
+	}
+
+	public void setSelectAllMeetingAttendees(boolean selectAllMeetingAttendees) {
+		this.selectAllMeetingAttendees = selectAllMeetingAttendees;
+	}
+
+	public String getFinalizationCommitteeDesc() {
+		return finalizationCommitteeDesc;
+	}
+
+	public void setFinalizationCommitteeDesc(String finalizationCommitteeDesc) {
+		this.finalizationCommitteeDesc = finalizationCommitteeDesc;
+	}
+
+	public boolean isHasPreviousMeeting() {
+		return hasPreviousMeeting;
+	}
+
+	public void setHasPreviousMeeting(boolean hasPreviousMeeting) {
+		this.hasPreviousMeeting = hasPreviousMeeting;
+	}
+
+	public boolean isAllowGlobalEndorseSignoff() {
+		return allowGlobalEndorseSignoff;
+	}
+
+	public void setAllowGlobalEndorseSignoff(boolean allowGlobalEndorseSignoff) {
+		this.allowGlobalEndorseSignoff = allowGlobalEndorseSignoff;
+	}
+
+	public Paginator getHistoryPaginator() {
+		return historyPaginator;
+	}
+
+	public void setHistoryPaginator(Paginator historyPaginator) {
+		this.historyPaginator = historyPaginator;
+	}
+
+	public Paginator getMemberHistoryPaginator() {
+		return memberHistoryPaginator;
+	}
+
+	public void setMemberHistoryPaginator(Paginator memberHistoryPaginator) {
+		this.memberHistoryPaginator = memberHistoryPaginator;
+	}
+
+	public ScCommitteeMemberHistory getSelectedCommitteeHistory() {
+		return selectedCommitteeHistory;
+	}
+
+	public void setSelectedCommitteeHistory(ScCommitteeMemberHistory selectedCommitteeHistory) {
+		this.selectedCommitteeHistory = selectedCommitteeHistory;
+	}
+
+	public boolean isSelectAllMembers() {
+		return selectAllMembers;
+	}
+
+	public void setSelectAllMembers(boolean selectAllMembers) {
+		this.selectAllMembers = selectAllMembers;
+	}
+
+	public ScQtApproval getCommitteeApproval() {
+		return committeeApproval;
+	}
+
+	public void setCommitteeApproval(ScQtApproval committeeApproval) {
+		this.committeeApproval = committeeApproval;
+	}
+
+	public List<ScCommitteeMember> getPreviousMembers() {
+		return previousMembers;
+	}
+
+	public void setPreviousMembers(List<ScCommitteeMember> previousMembers) {
+		this.previousMembers = previousMembers;
+	}
+
+	public List<SelectItem> getSelections() {
+		return selections;
+	}
+
+	public void setSelections(List<SelectItem> selections) {
+		this.selections = selections;
+	}
+
+	public UserCommitteeSearchBean getUserSearchBean() {
+		return userSearchBean;
+	}
+
+	public void setUserSearchBean(UserCommitteeSearchBean userSearchBean) {
+		this.userSearchBean = userSearchBean;
+	}
+
+	public IPagingDataModel<PmUser> getUserSearchDataModel() {
+		return userSearchDataModel;
+	}
+
+	public void setUserSearchDataModel(IPagingDataModel<PmUser> userSearchDataModel) {
+		this.userSearchDataModel = userSearchDataModel;
+	}
+
+	public String getTabTitle() {
+		return tabTitle;
+	}
+
+	public void setTabTitle(String tabTitle) {
+		this.tabTitle = tabTitle;
+	}
+
+	public boolean isNameRequired() {
+		return nameRequired;
+	}
+
+	public void setNameRequired(boolean nameRequired) {
+		this.nameRequired = nameRequired;
+	}
+
+	public List<PmUser> getSelectedPmUsers() {
+		return selectedPmUsers;
+	}
+
+	public void setSelectedPmUsers(List<PmUser> selectedPmUsers) {
+		this.selectedPmUsers = selectedPmUsers;
+	}
+
+	public List<ScQtCommitteeActivity> getDeletedCommitteeActivities() {
+		return deletedCommitteeActivities;
+	}
+
+	public void setDeletedCommitteeActivities(List<ScQtCommitteeActivity> deletedCommitteeActivities) {
+		this.deletedCommitteeActivities = deletedCommitteeActivities;
+	}
+
+	public List<ScCommitteeMember> getDeletedCommitteeMembers() {
+		return deletedCommitteeMembers;
+	}
+
+	public void setDeletedCommitteeMembers(List<ScCommitteeMember> deletedCommitteeMembers) {
+		this.deletedCommitteeMembers = deletedCommitteeMembers;
+	}
+
+	public List<ScQtMeeting> getDeletedQtMeetings() {
+		return deletedQtMeetings;
+	}
+
+	public void setDeletedQtMeetings(List<ScQtMeeting> deletedQtMeetings) {
+		this.deletedQtMeetings = deletedQtMeetings;
+	}
+
+	public List<ScQtMeetingAttendance> getDeletedQtMeetingAttendances() {
+		return deletedQtMeetingAttendances;
+	}
+
+	public void setDeletedQtMeetingAttendances(List<ScQtMeetingAttendance> deletedQtMeetingAttendances) {
+		this.deletedQtMeetingAttendances = deletedQtMeetingAttendances;
+	}
+	// 34491 - end
 }

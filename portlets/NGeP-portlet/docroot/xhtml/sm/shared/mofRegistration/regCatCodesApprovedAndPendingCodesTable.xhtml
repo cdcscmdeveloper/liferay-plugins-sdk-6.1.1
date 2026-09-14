@@ -136,8 +136,7 @@
 					oncomplete="blockWidget.hide()"
 					update=":form" process="@this"
 					action="#{backingBean.otherDescriptionEdit(catBean)}"
-					rendered="#{(catBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
-					catBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING) and (backingBean.managedBean.poUser or backingBean.managedBean.approverUser)}">
+					rendered="#{backingBean.rulesEditOtherDescription(catBean, SupplierManagementConst.SECTION_MAIN)}">
 					<p:graphicImage
 						value="/css/images/design/edit.png"
 						title="#{lbl['lbl.sm.edit']}"
@@ -508,8 +507,7 @@
 					oncomplete="blockWidget.hide()"
 					update=":form" process="@this"
 					action="#{backingBean.otherDescriptionEdit(aprvdCatNBean)}"
-					rendered="#{(aprvdCatNBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
-					aprvdCatNBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING) and (backingBean.managedBean.poUser or backingBean.managedBean.approverUser)}">
+					rendered="#{backingBean.rulesEditOtherDescription(aprvdCatNBean, SupplierManagementConst.SECTION_MAIN)}">
 					<p:graphicImage
 						value="/css/images/design/edit.png"
 						title="#{lbl['lbl.sm.edit']}"
@@ -547,12 +545,6 @@
 		update="@form"/>
 		
 	<!-- 36504 - START -->
-	<ac:otherDescriptionHistory
-		categoryCodeList="#{backingBean.managedBean.activeCategoryList}"
-		applNo="#{backingBean.managedBean.smAppl.applNo}"
-		otherDescChangePO="#{backingBean.managedBean.otherDescChangePO}"
-		otherDescChangeApprover="#{backingBean.managedBean.otherDescChangeApprover}"
-		otherDescChangeSupplier="#{backingBean.managedBean.otherDescChangeSupplier}"  />
 	<ac:otherDescriptionEdit />
     <!-- 36504 - END -->
 </ui:composition>

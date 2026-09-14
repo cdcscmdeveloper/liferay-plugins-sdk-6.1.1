@@ -17,6 +17,44 @@
 	<p:remoteCommand name="resetAllData" update="searchPanel lovTitle resultPanel" partialSubmit="true" action="#{lovBackingBean.resetAll}" process="@this" />
 	<p:remoteCommand name="lovPopsetAutoUpdateValue" partialSubmit="true" process="@this" update="@this" action="#{lovBackingBean.setAutoUpdateValue()}" />
 	
+		<!-- #40001 - START -->
+		<ui:remove>
+		<p:blockUI block="lovPopup" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		</ui:remove>
+		
+		<style>
+			.custom-overlay {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background: rgba(240, 240, 220, 0.5);
+				display: none; /* Hidden by default */
+				z-index: 9999;
+				text-align: center;
+			}
+
+			.spinner-content {
+				position: sticky;
+				top: 50%;
+				transform: translateY(-50%);
+				
+				/* The "Card" Styling */
+				display: inline-block;
+				background: white;
+				padding: 20px;
+				border-radius: 8px; /* Rounded corners */
+				box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Soft shadow */
+				min-width: 100px;
+			}
+			
+		</style>	
+		
+		<!-- #40001 - END -->
+		
 	<p:dialog id="lovPopup" widgetVar="lovPopup" modal="true" width="700" position="top" 
 		onShow="lovPopsetAutoUpdateValue([{name:'enableAutoUpdate', value:false}]);"
 		onHide="lovPopsetAutoUpdateValue([{name:'enableAutoUpdate', value:true}]); resetAllData();" 
@@ -28,6 +66,14 @@
 		
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false"/>
 		
+		<!-- #40001 - START use manual since blockwidget has gap-->
+		<div id="manualBlocker" class="custom-overlay">
+	        <div class="spinner-content">
+	            <p:graphicImage value="/css/images/ajax-loader.gif" />
+	        </div>
+    	</div>
+		<!-- #40001 - END -->
+		
 		<p:panel header="#{lbl['lbl.cm.search']}" toggleable="true">
 		
 		<h:panelGroup id="searchPanel" style="width:100%;">
@@ -35,14 +81,18 @@
 		<ui:include src="lovSearchPanel.xhtml" />
 
 		<table style="width:100%;"><tr><TD style="text-align:right;">
+			<!-- #40001 - START - add blockWidget-->
 			<p:commandButton id="lovSearchBtn"
 				value="#{lbl['lbl.btn.search']}"
 				action="#{lovBackingBean.searchAction}"
 				partialSubmit="true"
+				onstart="document.getElementById('manualBlocker').style.display = 'block';"
+				oncomplete="document.getElementById('manualBlocker').style.display = 'none';"
 				process="searchPanel"
 				update="resultPanel"
 				widgetVar="lovSearch">
-			</p:commandButton>		
+			</p:commandButton>
+			<!-- #40001 - END -->
 			<p:commandButton
 				value="#{lbl['lbl.btn.reset']}"
 				action="#{lovBackingBean.resetAction}"

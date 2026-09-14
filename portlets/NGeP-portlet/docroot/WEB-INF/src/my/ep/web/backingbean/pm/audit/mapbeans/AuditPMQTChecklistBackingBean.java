@@ -3,8 +3,10 @@ package my.ep.web.backingbean.pm.audit.mapbeans;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import my.ep.constant.pm.AuditConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
 import my.ep.persistence.constant.DbValueConst;
@@ -13,6 +15,7 @@ import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
 import my.ep.web.backingbean.pm.audit.role.AuditPMRoleBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.pm.common.supportdoc.SupportDocumentManagedBean;
+import my.ep.web.util.pm.helper.ParameterHelper;
 
 /**
  * AuditPMQTChecklistBackingBean
@@ -64,19 +67,23 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 			this.docGroupId = BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId());
 			this.docId = BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId());
 			this.lvlCode3 = managedBeans.getSelectedDocument().getDocCategoryCode().getParameterCode();
+			
+			Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);			
 
 			detailObj(AuditConst.PM_AUD_QTCHECKLIST_DISPLAY_PRIORITY_FIELDLABELID, null, managedBeans.getResDTO().getDocument()
 					.getDisplaySeq(), AuditConst.PM_AUD_ACTION_TYPE_INS);
 
 			detailObj(AuditConst.PM_AUD_QTCHECKLIST_DOCUMENT_NAME_FIELDLABELID, null, managedBeans.getResDTO().getDocument()
 					.getDocName(), AuditConst.PM_AUD_ACTION_TYPE_INS);
-
-			detailObj(AuditConst.PM_AUD_QTCHECKLIST_DOCUMENT_DEFINITION_FIELDLABELID, null, managedBeans.getSelectedDocument()
-					.getDocDefinitionTypeCode().getPmParameterDescsSpecCallOnly().get(1).getCodeName(),
+			
+			detailObj(AuditConst.PM_AUD_QTCHECKLIST_DOCUMENT_DEFINITION_FIELDLABELID, null, ParameterHelper.getInstance().getParameterDesc(managedBeans.getSelectedDocument()
+					.getDocDefinitionTypeCode().getParameterType(), managedBeans.getSelectedDocument()
+					.getDocDefinitionTypeCode().getParameterCode(), locale),
 					AuditConst.PM_AUD_ACTION_TYPE_INS);
-
-			detailObj(AuditConst.PM_AUD_QTCHECKLIST_SUPPLIER_ACTION_FIELDLABELID, null, managedBeans.getSelectedDocument()
-					.getChecklistActionCode().getPmParameterDescsSpecCallOnly().get(1).getCodeDesc(),
+			
+			detailObj(AuditConst.PM_AUD_QTCHECKLIST_SUPPLIER_ACTION_FIELDLABELID, null, ParameterHelper.getInstance().getParameterDesc(managedBeans.getSelectedDocument()
+					.getChecklistActionCode().getParameterType(), managedBeans.getSelectedDocument()
+					.getChecklistActionCode().getParameterCode(), locale),
 					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
 			detailObj(AuditConst.PM_AUD_QTCHECKLIST_SCORING_REQUIRED_FIELDLABELID, null, managedBeans.getResDTO().getDocument()
@@ -195,10 +202,11 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 					this.docId = BigInteger.valueOf(res.getDocumentRestrId());
 					this.lvlCode3 = managedBeans.getSelectedDocument().getDocCategoryCode().getParameterCode();
 					
-					String oldProcCategory = oldValue.getProcurementCatCode()
-							.getPmParameterDescsSpecCallOnly().get(1).getCodeDesc();
-					String newProcCategory = res.getProcurementCatCode()
-							.getPmParameterDescsSpecCallOnly().get(1).getCodeDesc();
+					Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
+					
+					String oldProcCategory = ParameterHelper.getInstance().getParameterDesc(oldValue.getProcurementCatCode().getParameterType(), oldValue.getProcurementCatCode().getParameterCode(), locale);
+					
+					String newProcCategory = ParameterHelper.getInstance().getParameterDesc(res.getProcurementCatCode().getParameterType(), res.getProcurementCatCode().getParameterCode(), locale);
 
 					detailObj(AuditConst.PM_AUD_QTCHECKLIST_MANDATORY_FIELDLABELID,
 							oldValue.isMandatory() ? oldProcCategory.concat(dashes).concat(AuditConst.PM_AUD_YES) : 
@@ -216,8 +224,8 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 		for (PmDocumentRestr pmDocumentRestr : managedBeans.getUpdatedPmDocumentRestrList()) {
 			this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
 			
-			String procCategory = pmDocumentRestr.getProcurementCatCode()
-					.getPmParameterDescsSpecCallOnly().get(1).getCodeDesc();
+			Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
+			String procCategory = ParameterHelper.getInstance().getParameterDesc(pmDocumentRestr.getProcurementCatCode().getParameterType(), pmDocumentRestr.getProcurementCatCode().getParameterCode(), locale);
 			
 			if (pmDocumentRestr.getProcurementCatCode().getParameterId() != null) {
 				detailObj(AuditConst.PM_AUD_QTCHECKLIST_PROCUREMENT_CATEGORY_FIELDLABELID, null, procCategory, isUpdated(managedBeans
@@ -233,9 +241,9 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 	}
 
 	private void deletedProcurementCatCodeList(SupportDocumentManagedBean managedBeans) {
-		for (PmDocumentRestr deletepmDocumentRestr : managedBeans.getResDTO().getDeletedProcurementCatCodeList()) {
-			String procCategory = deletepmDocumentRestr.getProcurementCatCode()
-					.getPmParameterDescsSpecCallOnly().get(1).getCodeDesc();
+		for (PmDocumentRestr deletepmDocumentRestr : managedBeans.getResDTO().getDeletedProcurementCatCodeList()) {			
+			Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
+			String procCategory = ParameterHelper.getInstance().getParameterDesc(deletepmDocumentRestr.getProcurementCatCode().getParameterType(), deletepmDocumentRestr.getProcurementCatCode().getParameterCode(), locale);
 			
 			if (deletepmDocumentRestr.getProcurementCatCode().getParameterId() != null) {
 				this.docGroupId = BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId());

@@ -4,6 +4,9 @@
 	<category name="NGeP">
 		<category name="category.ep.au">
 			<portlet id="auSearch" />
+ 			<!-- 35740 - shaqimi start -->
+			<portlet id="auPatchSearch" />
+			<!-- 35740 - shaqimi end -->
 		</category>
 		
 		<category name="category.ep.ct">

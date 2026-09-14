@@ -17,7 +17,9 @@
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.spec.financial.check.list.instruction']}"
 			escape="false" />
-		<ui:include src="/xhtml/tpl/spec/specGuideLineInstructions.xhtml"></ui:include>
+			<ui:remove>#30432 - Start</ui:remove>
+			<ui:include src="/xhtml/tpl/spec/specGuideLineInstructions.xhtml" />
+			<ui:remove>#30432 - End</ui:remove>		
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.spec.financial.check.list.instruction1']}"
 			escape="false" />
@@ -348,8 +350,8 @@
 				value="#{lbl['lbl.sc.spec.btn.checklist.preview']}"
 				action="#{specificationBackingBean.financialCheckListPreview}"
 				onstart="blockWidget.show()"
-				oncomplete="financialChecklistPreview.show();"
-				process="@this" update="@([id$=financialChecklistTitleListId])"/>
+				oncomplete="blockWidget.hide(); financialChecklistPreview.show();"
+				process="@this" update="@([id$=financialChecklistTitleListId], [id$=finSelectedDownloadButton])"/>
 			<ui:remove>#10141 End Vinod </ui:remove>
 			<p:commandButton styleClass="BtnSpacing"
 				value="#{lbl['lbl.sc.spec.btn.standard.check.list']}"

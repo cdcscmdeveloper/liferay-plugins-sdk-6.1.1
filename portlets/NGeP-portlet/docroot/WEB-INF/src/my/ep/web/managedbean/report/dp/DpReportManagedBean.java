@@ -11,6 +11,9 @@
 package my.ep.web.managedbean.report.dp;
 
 import java.util.Date;
+import java.util.HashMap;//#29558
+import java.util.List;//#29558
+import java.util.Map;//#29558
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.web.managedbean.report.ReportBaseManagedBean;
@@ -40,6 +43,10 @@ public abstract class DpReportManagedBean extends ReportBaseManagedBean {
 	
 	private String scRequisitioner;
 	private String scPtj;
+	
+	private List<String> scStatusManyMenu;//#29558
+	private List<String> scStatusManyMenuTemp;//#29558
+	private Map<String, String> hash_scStatusManyMenuId = new HashMap<String, String>();//#29558
 	
 	/**
 	 * @return the dateFrom
@@ -194,5 +201,50 @@ public abstract class DpReportManagedBean extends ReportBaseManagedBean {
 	public void setScPtj(String scPtj) {
 		this.scPtj = scPtj;
 	}
+	
+	// 29558 - Start
+	/**
+	 * @return the scStatusManyMenu
+	 */
+	public List<String> getScStatusManyMenu() {
+		return scStatusManyMenu;
+	}
+
+	/**
+	 * @param scStatusManyMenu the scStatusManyMenu to set
+	 */
+	public void setScStatusManyMenu(List<String> scStatusManyMenu) {
+		this.scStatusManyMenu = scStatusManyMenu;
+	}
+
+	/**
+	 * @return the scStatusManyMenuTemp
+	 */
+	public List<String> getScStatusManyMenuTemp() {
+		return scStatusManyMenuTemp;
+	}
+
+	/**
+	 * @param scStatusManyMenuTemp the scStatusManyMenuTemp to set
+	 */
+	public void setScStatusManyMenuTemp(List<String> scStatusManyMenuTemp) {
+		this.scStatusManyMenuTemp = scStatusManyMenuTemp;
+	}
+
+	/**
+	 * @return the hash_scStatusManyMenuId
+	 */
+	public Map<String, String> getHash_scStatusManyMenuId() {
+		return hash_scStatusManyMenuId;
+	}
+
+	/**
+	 * @param hash_scStatusManyMenuId the hash_scStatusManyMenuId to set
+	 */
+	public void setHash_scStatusManyMenuId(Map<String, String> hash_scStatusManyMenuId) {
+		this.hash_scStatusManyMenuId = hash_scStatusManyMenuId;
+	}
+	
+	// 29558 - End 
 
 }

@@ -48,6 +48,7 @@
 		/* Button text alignment */
 		.ui-button.ai-assistant-btn .ui-button-text {
 			display: inline-flex !important;
+			white-space: nowrap !important;
 			align-items: center !important;
 			vertical-align: middle !important;
 			gap: 3px !important;
@@ -197,13 +198,27 @@
 								value="#{backingBean.managedBean.basicCompanyFacility.ownerName}"
 								size="35" required="true"
 								disabled="#{backingBean.managedBean.upsCannotEdit}"> 
-								<p:ajax partialSubmit="true" process="@this" />
+								<!-- #40112 - start -->
+								<p:ajax event="change" partialSubmit="true" process="@this"
+									listener="#{backingBean.managedBean.basicCompanyFacility.clearOwnerNameAI()}" update="ownerNameAiIcon" />
 							</p:inputText>
+							<!-- #40112 -->
+							<p:outputPanel id="ownerNameAiIcon" layout="inline">
+								<p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" 
+								rendered="#{backingBean.managedBean.basicCompanyFacility.ownerNameFromAI and backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}" />
+							</p:outputPanel>
 								
-								<!-- #38890 -->
-								<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'
-									and backingBean.managedBean.basicCompanyFacility.facilityType eq 'B'}">
-									<p:commandButton value="#{lbl['lbl.sm.ai.btn']}" style="width: 150px;" styleClass="ai-assistant-btn" onclick="tenancyAI.show()" immediate="true">
+								<ac:smFieldChangeAlert
+									isShow="#{backingBean.managedBean.showFieldChanges}"
+									oriValue="#{backingBean.managedBean.latestAppl.hqFacility.ownerName}"
+									currValue="#{backingBean.managedBean.basicCompanyFacility.ownerName}"
+									alertValue="#{backingBean.managedBean.latestAppl.hqFacility.ownerName}"/>
+
+								<!-- #40112 -->
+								<p:outputPanel layout="inline"
+									rendered="#{backingBean.showTenancyAiBtn}">
+									<p:commandButton value="#{lbl['lbl.sm.ai.btn']}" 
+										styleClass="ai-assistant-btn" style="min-width: 150px;" onclick="tenancyAI.show()" immediate="true">
 										<p:ajax partialSubmit="true" process="@this" />
 									</p:commandButton>
 									<p:graphicImage id="tttenancyAI" value="/css/images/design/tooltips.png" style="margin-left: 5px; vertical-align: middle;" />
@@ -211,13 +226,7 @@
 										<p:outputLabel value="#{lbl['lbl.sm.ai.tnc.tips']}" />
 									</p:tooltip>&#160;
 								</p:outputPanel>
-								<!-- #38890 - end -->
-								
-								<ac:smFieldChangeAlert 
-									isShow="#{backingBean.managedBean.showFieldChanges}"
-									oriValue="#{backingBean.managedBean.latestAppl.hqFacility.ownerName}" 
-									currValue="#{backingBean.managedBean.basicCompanyFacility.ownerName}" 
-									alertValue="#{backingBean.managedBean.latestAppl.hqFacility.ownerName}"/>
+								<!-- #40112 - end -->
 									
 								<p:message id="fcltyOwnerNameMsg"
 								for="fcltyOwnerName" showSummary="true" showDetail="false"
@@ -262,10 +271,16 @@
 										maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 									<f:convertNumber
 										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-									<p:ajax process="@this" partialSubmit="true"
-										update="@this,rentalMsg" />
-								</p:inputText> 
-								
+									<!-- #40112 - start -->
+									<p:ajax event="change" process="@this" partialSubmit="true"
+										listener="#{backingBean.managedBean.basicCompanyFacility.clearRentalRateAI()}"
+										update="@this,rentalMsg,rentalAiIcon" />
+								</p:inputText>
+								<p:outputPanel id="rentalAiIcon" layout="inline">
+									<p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" 
+									rendered="#{backingBean.managedBean.basicCompanyFacility.rentalRateFromAI}" />
+								</p:outputPanel> 
+								<!-- #40112 - end -->
 								<ac:smFieldChangeAlert 
 									isShow="#{backingBean.managedBean.showFieldChanges}"
 									oriValue="#{backingBean.managedBean.latestAppl.hqFacility.rentalRate}" 
@@ -323,8 +338,15 @@
 								required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.companyaddress']}"
 								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address1}" 
 								disabled="#{backingBean.managedBean.upsCannotEdit}" >
-								<p:ajax partialSubmit="true" process="@this" />
+								<!-- #40112 - start -->
+								<p:ajax event="change" partialSubmit="true" process="@this"
+									listener="#{backingBean.managedBean.basicCompanyFacility.smAddress.clearAddress1AI()}" update="address1AiIcon" />
 							</p:inputText>
+							<p:outputPanel id="address1AiIcon" layout="inline">
+								<p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" 
+									rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.address1FromAI}" />
+							</p:outputPanel>
+							<!-- #40112  - end -->
 							<!-- #39097 & #36718 - End  -->
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -349,9 +371,14 @@
 								<!-- #39097 & #36718 - add more id id ajax process -->
 									<p:ajax event="change" process="@this @([id$=compFacilityAddrPanel])"
 										listener="#{backingBean.onChangeCountry(backingBean.managedBean.basicCompanyFacility.smAddress, SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
-										update="basicOffFacState,divisionOfficeLabelPanelId,divisionOfficeDropdownPanelId,basicOffFacDist,basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId" />
+										update="basicOffFacState,divisionOfficeLabelPanelId,divisionOfficeDropdownPanelId,basicOffFacDist,basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId,companyCntryAiIcon,basicOffFacStateAiIcon,basicOffFacDistAiIcon,basicOffFacCityAiIcon" />
 								<!-- #39097 & #36718 - End  -->
 								</p:selectOneMenu> 
+							<!-- #40112 -->
+							<p:outputPanel id="companyCntryAiIcon" layout="inline">
+								<p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" 
+								rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.countryFromAI}" />
+							</p:outputPanel>
 							<!-- #39097 & #34159 - End  -->
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -367,9 +394,15 @@
 						<td><p:inputText id="companyAdd2" size="35" maxlength="100"
 								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address2}"
 								disabled="#{backingBean.managedBean.upsCannotEdit}" >
-								<p:ajax partialSubmit="true" process="@this" />
+								<!-- #40112 - start -->
+								<p:ajax event="change" partialSubmit="true" process="@this"
+									listener="#{backingBean.managedBean.basicCompanyFacility.smAddress.clearAddress2AI()}" update="address2AiIcon" />
 							</p:inputText>
-							
+							<p:outputPanel id="address2AiIcon" layout="inline">
+								<p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" 
+								rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.address2FromAI}" />
+							</p:outputPanel>
+							<!-- #40112 - end -->
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
 								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.address2}" 
@@ -392,9 +425,14 @@
 								<!-- #39097 & #36718 - add more id id ajax process -->
 									<p:ajax event="change" process="@this @([id$=compFacilityAddrPanel])"
 										listener="#{backingBean.onChangeState(backingBean.managedBean.basicCompanyFacility.smAddress, SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
-										update="ofp,basicOffFacDist,divisionOfficeLabelPanelId,divisionOfficeDropdownPanelId,basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId" />
+										update="ofp,basicOffFacDist,divisionOfficeLabelPanelId,divisionOfficeDropdownPanelId,basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId,basicOffFacStateAiIcon,basicOffFacDistAiIcon,basicOffFacCityAiIcon,companyPostMyCodeAiIcon" />
 								<!-- #39097 & #36718 - End  -->
 							</p:selectOneMenu>
+							<!-- #40112 -->
+							<p:outputPanel id="basicOffFacStateAiIcon" layout="inline">
+								<p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" 
+								rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.stateFromAI}" />
+							</p:outputPanel>
 							<!-- #39097 & #34159 - End -->
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -432,7 +470,7 @@
 										<!-- #39097 & #36718 - add more id id ajax process -->
 										<p:ajax event="change" process="@this @([id$=compFacilityAddrPanel])"
 											listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.basicCompanyFacility.smAddress, SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
-											update="basicOffFacDist,basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId" />
+											update="basicOffFacDist,basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId,basicOffFacDistAiIcon,basicOffFacCityAiIcon,companyPostMyCodeAiIcon" /><!-- #40112 -->
 										<!-- #39097 & #36718 - End  -->
 									</p:selectOneMenu>
 									<!-- #39097 & #34159 - End  -->
@@ -454,8 +492,16 @@
 						<td></td>
 						<td><p:inputText id="companyAdd3" size="35" maxlength="100"
 								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address3}"
-								disabled="#{backingBean.managedBean.upsCannotEdit}"/>
-							
+								disabled="#{backingBean.managedBean.upsCannotEdit}">
+								<!-- #40112 - start -->
+								<p:ajax event="change" partialSubmit="true" process="@this" update="address3AiIcon"
+									listener="#{backingBean.managedBean.basicCompanyFacility.smAddress.clearAddress3AI()}"/>
+							</p:inputText>
+							<p:outputPanel id="address3AiIcon" layout="inline">
+								<p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" 
+								rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.address3FromAI}" />
+							</p:outputPanel>
+							<!-- #40112 - end -->
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
 								oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.address3}" 
@@ -479,9 +525,14 @@
 								<p:ajax event="change" process="@this @([id$=compFacilityAddrPanel])"
 									listener="#{backingBean.onChangeDistrict(backingBean.managedBean.basicCompanyFacility.smAddress, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
-									update="basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId" />
+									update="basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId,basicOffFacStateAiIcon,basicOffFacDistAiIcon,basicOffFacCityAiIcon,companyPostMyCodeAiIcon" />
 								<!-- #39097 & #36718 - End  -->
-							</p:selectOneMenu> 
+							</p:selectOneMenu>
+							<!-- #40112 -->
+							<p:outputPanel id="basicOffFacDistAiIcon" layout="inline">
+								<p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" 
+								rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.districtFromAI}" />
+							</p:outputPanel> 
 							<!-- #39097 & #34159 - End -->
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -511,9 +562,14 @@
 								<p:ajax event="change" process="@this @([id$=compFacilityAddrPanel])"
 									listener="#{backingBean.onChangeCity(backingBean.managedBean.basicCompanyFacility.smAddress, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
-									update="basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId" />
+									update="basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId,basicOffFacStateAiIcon,basicOffFacDistAiIcon,basicOffFacCityAiIcon,companyPostMyCodeAiIcon" />
 								<!-- #39097 & #36718 -->
-							</p:selectOneMenu> 
+							</p:selectOneMenu>
+							<!-- #40112 -->
+							<p:outputPanel id="basicOffFacCityAiIcon" layout="inline">
+								<p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" 
+								rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.cityFromAI}" />
+							</p:outputPanel> 
 							<!-- #39097 & #34159 - End -->
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -539,8 +595,16 @@
 										size="35"
 										disabled="#{backingBean.managedBean.upsCannotEdit}">
 										<f:validator validatorId="postcodeValidator" />
-										<p:ajax partialSubmit="true" process="@this" />
-									</p:inputText>
+										<!-- #40112 - start -->
+										<p:ajax event="change" partialSubmit="true" process="@this"
+											listener="#{backingBean.managedBean.basicCompanyFacility.smAddress.clearPostcodeAI()}" 
+											update="companyPostMyCodeAiIcon" />
+								</p:inputText>
+								<p:outputPanel id="companyPostMyCodeAiIcon" layout="inline">
+									<p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" 
+									rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcodeFromAI}" />
+								</p:outputPanel>
+								<!-- #40112 -end -->
 									<!-- #39097 & #36718 - End  -->
 									
 									<ac:smFieldChangeAlert 
@@ -688,7 +752,9 @@
 		</p:confirmDialog>
 		<!-- 29480 - Update: remove code for Re-endorsed CR -->
 	</p:panel>
-	<!-- #38890 -->
-	<ac:smAIAssistant aiDlg="tenancyAI" docType="tenancy" updateId="offInfPan"
-		smAppl="#{backingBean.managedBean.smAppl}"/>
+	<!-- #40112 -->
+	<p:outputPanel rendered="#{backingBean.aiAvailable}">
+		<ac:smAIAssistant aiDlg="tenancyAI" docType="tenancy" updateId="offInfPan"
+			smAppl="#{backingBean.managedBean.smAppl}"/>
+	</p:outputPanel>
 </ui:composition>

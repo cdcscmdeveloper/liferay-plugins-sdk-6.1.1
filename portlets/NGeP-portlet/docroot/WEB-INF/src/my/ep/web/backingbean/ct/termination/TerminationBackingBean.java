@@ -115,6 +115,8 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	private CtAgency selectedRecommendedAgency;
 	private IPagingDataModel<CtAgency> agencyDataModel = new AgencyPagingDataModel();	
 	SimpleDateFormat dateformat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+	
+	private String confirmationContentMsg;//34442 
 	/**
 	 * This constructor method used to initialize the variable on start up
 	 * Setting button if user not call from BPM
@@ -1315,7 +1317,21 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 			getManagedBean().setTextBeforeSign(sb.toString());	
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
-			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			
+			//#34442 - start
+			if(BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
+				setConfirmationContentMsg(
+					    getConfirmationContent(
+					        String.valueOf(ctBB.getManagedBean().getContractVer().getStatus().getStatusId())
+					    )
+					);
+				RequestContext.getCurrentInstance().update("approvalConfirmDlgId");
+				RequestContext.getCurrentInstance().execute("approvalConfirmDlg.show()");
+			} else {
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			}
+			//#34442 - end
+			
 			return null;
 		} else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
 			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
@@ -1494,4 +1510,14 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		}
 	}
 	//Enhancement 15851, 34142 - shaqimi end 02/12/2022	
+	
+	//34442 - start
+	public String getConfirmationContentMsg() {
+	    return confirmationContentMsg;
+	}
+
+	public void setConfirmationContentMsg(String confirmationContentMsg) {
+	    this.confirmationContentMsg = confirmationContentMsg;
+	}
+	//34442 - end
 }

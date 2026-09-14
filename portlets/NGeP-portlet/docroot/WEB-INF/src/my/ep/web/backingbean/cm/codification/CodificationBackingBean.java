@@ -303,9 +303,12 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	 * 
 	 */
 	public void extensionCodeSearchForAssign() {
-
-		this.getManagedBean().setRenderButtonAssignCode(true); // #31503
-
+		
+		// #31503 - Start
+		this.getManagedBean().setRenderButtonAssignCode(true);
+		this.getManagedBean().setObjSelected(null);
+		// #31503 - End
+		
 		extensionSearchItemDataModel.reloadData();
 
 	}
@@ -3774,7 +3777,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 		this.getManagedBean().setItemCodeDesc(codeDesc);
 		this.getManagedBean().setSelectedUNSPSCObj(unspscObj);
-		RequestContext.getCurrentInstance().execute("asignCodeDialogConfirm.show()");
+		RequestContext.getCurrentInstance().execute("assignCodeDialogConfirm.show()");
 	}
 	// #31503 -end-
 
@@ -3846,7 +3849,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				
 				this.getManagedBean().setItemCodeDesc(codeDesc);
 
-				RequestContext.getCurrentInstance().execute("asignCodeDialConfirm.show()");
+				RequestContext.getCurrentInstance().execute("assignCodeDialConfirm.show()");
 
 			} catch (Exception e) {
 				SLAUtils.getInstance().logSLAError("QT", "selectedItemCode", "selectedItemCode", null,
@@ -3911,16 +3914,15 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			newItem.setCmBrand(brandObj);
 			newItem.setCmMeasurement(meaObj);
 			newItem.setCmColor(colorObj);
-			newItem.setItemName(common.removeItemNameNA(typeObj.getTypeName()) + " "
-					+ common.removeItemNameNA(brandObj.getBrandName()) + " "
-					+ common.removeItemNameNA(meaObj.getMeasurementName()) + " "
-					+ common.removeItemNameNA(colorObj.getColorName()));
+			// #26059 -start- to prevent unwanted spacing
+			newItem.setItemName(common.removeItemNameNA(typeObj.getTypeName() + " " + brandObj.getBrandName() + " "
+					+ meaObj.getMeasurementName() + " " + colorObj.getColorName()));
 
-			String completeItemName = codeResDTO.getCommodityObj().getUnspscTitle() + " "
-					+ common.removeItemNameNA(typeObj.getTypeName()) + " "
-					+ common.removeItemNameNA(brandObj.getBrandName()) + " "
-					+ common.removeItemNameNA(meaObj.getMeasurementName()) + " "
-					+ common.removeItemNameNA(colorObj.getColorName());
+			String completeItemName = codeResDTO.getCommodityObj().getUnspscTitle()
+					+ " "
+					+ common.removeItemNameNA(typeObj.getTypeName() + " " + brandObj.getBrandName() + " "
+							+ meaObj.getMeasurementName() + " " + colorObj.getColorName());
+			// #26059 -end-
 
 			newItem.setExtensionCode(typeObj.getTypeCode() + brandObj.getBrandCode() + meaObj.getMeasurementCode()
 					+ colorObj.getColorCode());
@@ -4124,24 +4126,20 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	 *             {@code saveScAssignItemDetail} fails during persistence.
 	 */
 	private void insertIntoAssignCodeDetail(ScRequestItem scRequestItem) {
-		
-		if(scRequestItem !=null){
-			
-			List<ScAssignItemDtl> listAssignItemDtls = scRequestItem.getScAssignItemDtlList();
+	    
+	    if (scRequestItem != null) {
 	        
-	        if (listAssignItemDtls == null) {
-	            listAssignItemDtls = new ArrayList<ScAssignItemDtl>();
-	        }
-			
-			ScAssignItemDtl assignItemDtl = new ScAssignItemDtl();
-		    assignItemDtl.setScRequestItem(scRequestItem);
-		    assignItemDtl.setItemName(scRequestItem.getItemName());
-		    assignItemDtl.setItemDescription(scRequestItem.getItemDesc());
-		    
-		    listAssignItemDtls.add(assignItemDtl);
-		    
-		    scRequestItem.setScAssignItemDtlList(listAssignItemDtls);
-		} 
+	        List<ScAssignItemDtl> listAssignItemDtls = new ArrayList<ScAssignItemDtl>();
+	        
+	        ScAssignItemDtl assignItemDtl = new ScAssignItemDtl();
+	        assignItemDtl.setScRequestItem(scRequestItem); // Link Parent
+	        assignItemDtl.setItemName(scRequestItem.getItemName());
+	        assignItemDtl.setItemDescription(scRequestItem.getItemDesc());
+	        
+	        listAssignItemDtls.add(assignItemDtl);
+	        
+	        scRequestItem.setScAssignItemDtlList(listAssignItemDtls);
+	    } 
 	}
 	// #26059 - End
 

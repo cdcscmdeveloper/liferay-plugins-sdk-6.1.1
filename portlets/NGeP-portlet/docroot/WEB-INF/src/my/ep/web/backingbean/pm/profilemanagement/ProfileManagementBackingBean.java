@@ -1078,7 +1078,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 	}
     
-	//#36489 - Start
+	//#36489,#40780 - Start
 	/**
 	 * check if user still have:
 	 * 1) pending task (BPM)
@@ -1088,37 +1088,45 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 */
 	public void orgUnitStatusChange() {
 		logger.info("orgUnitStatusChange");
-		if (validateUserOrg()) {
-			int status = this.getManagedBean().getSelectedUserOrg().getRecordStatusFlg();
-			if (status == DbValueConst.RECORD_STATUS_SUSPENDED) {
-				EpException ex;
-				if (isAnyPendingTaskForUser(this.getManagedBean().getSelectedUser().getLoginId())) {
-					// revert it to active
-					this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-					// hit error and exit
-					throw new EpException(MessageConst.ERROR_770167);
-				} else if ((ex = isAnyPendingDocForUserRole(validateUserOrgandRole(), this.getManagedBean()
-						.getSelectedUser().getUserId())) != null) {
-					// revert it to active
-					this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-					// hit error and exit
-					throw ex;
-				} else if (isActiveUserGroupUser() != null) {
-					this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-					throw new EpException(MessageConst.ERROR_770202, isActiveUserGroupUser());
-				} else if (validateUserOrgProfileAndStatus()) {
-					checkIsActiveGovtSellerUser();
-				} else {
-					// if inactive set expire Date to SyetemDate
-					inactiveUserOrgRoleAndReceivingAddress(status);
-				}
-			}
-			//#35489 - Start
-			this.getManagedBean().setOrgUnitStatusChange(true);
-			//#35489 - End
+		if (!validateUserOrg()) {
+			return;
 		}
+
+		int status = this.getManagedBean().getSelectedUserOrg().getRecordStatusFlg();
+		String loginId = this.getManagedBean().getSelectedUser().getLoginId();
+		Long userId = this.getManagedBean().getSelectedUser().getUserId();
+		EpException pendingDocumentException;
+
+		if (status == DbValueConst.RECORD_STATUS_SUSPENDED) {
+			// revert it to active
+			if (isAnyPendingTaskForUser(loginId)) {
+				this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+				// hit error and exit
+				throw new EpException(MessageConst.ERROR_770167);
+			} else if ((pendingDocumentException = isAnyPendingDocForUserRole(validateUserOrgandRole(), userId)) != null) {
+				this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+				// hit error and exit
+				throw pendingDocumentException;
+			} else {
+				String[] activeUserGroup = isActiveUserGroupUser();
+				if (activeUserGroup != null) {
+					this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+					throw new EpException(MessageConst.ERROR_770202, activeUserGroup);
+				}
+				boolean validGovtSeller = validateUserOrgProfileAndStatus();
+				if (validGovtSeller) {
+					checkIsActiveGovtSellerUser();
+				}
+				// if inactive set expire Date to SyetemDate
+				inactiveUserOrgRoleAndReceivingAddress(status);
+			}
+		}
+		//#35489 - Start
+		this.getManagedBean().setOrgUnitStatusChange(true);
+		//#35489 - End
+		logger.info("orgUnitStatusChange - End");
 	}
-	//#36489 - End
+	//#36489,#40780 - End
 
 	public void userStatusChange() {
 		logger.info("userStatusChange");
@@ -1585,7 +1593,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					}
 				}
 				
-				if (getManagedBean().getSelectedReceivingAddrTypes() != null
+				if (RoleCode.RECEIVING_OFFICER.value().equals(pmUserRole.getPmRole().getRoleCode()) //#34445, Fix as-is bug: #39638
+						&& getManagedBean().getSelectedReceivingAddrTypes() != null
 						&& !getManagedBean().getSelectedReceivingAddrTypes().isEmpty()) {
 					//Bug #32656 - start
 					List<PmAddressType> removeNewAddressTypes = new ArrayList<PmAddressType>();
@@ -2885,7 +2894,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		user.setMobileNo(userOrg.getMobileNo());
 		user.setMobileArea(userOrg.getMobileArea());
 		user.setMobileCountry(userOrg.getMobileCountry());
-		user.setMobileTelcoId(userOrg.getMobileTelcoId());
+		//user.setMobileTelcoId(userOrg.getMobileTelcoId()); //#40246
 	}
 
 	private void checkChangesAndFillTrackingDiary(PmUser user, PmUserOrg userOrg, UserReqDTO reqDTO) {
@@ -3110,16 +3119,18 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			validateRoles(userOrg);
 						
 			/** AUDIT 28895_35509 START **/
+			//#40423 - Start
 			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IAuditPMSO.class);
 			AuditPMBackingBeanTemplate auTemplate = new AuditPMConfigUserBackingBean();
-			
-			PmUserOrg oldPmUserOrg = !this.getManagedBean().getSelectedUser().isBrandNew() ? 
+			// #40810 Start
+			PmUserOrg oldPmUserOrg = !userOrg.isBrandNew() ? 
 					PmCommonUtil.retrieveUserOrgByUserIdAndOrgId(this.getManagedBean().getSelectedUser().getUserId(),
 							 this.getManagedBean().getSelectedUserOrg().getUserOrgId()) : null;
 			PmUser oldPmUser = oldPmUserOrg != null ? oldPmUserOrg.getPmUser() : null;
 			List<PmUserRole> oldPmUserRoles = oldPmUserOrg != null ? oldPmUserOrg.getPmUserRoles() : null;
 			List<PmAddressType> oldPmAddressTypes = oldPmUserOrg != null ? oldPmUserOrg.getPmUser().getPmAddressTypes() : null;
+			//#40423 - End
 			/** AUDIT 28895_35509 START END **/
 
 			reqDTO = new UserReqDTO();
@@ -3262,11 +3273,12 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				}
 				
 				if(getManagedBean().getSelectedUserOrg().isBrandNew()){
+					this.getManagedBean().setUserGrpBrandNew(true); // 40810
 					this.getManagedBean().setBrandNewUserOrgId(resDTO.getPmUser().getActiveUserOrgs().get(0).getUserOrgId());
 					userOrg.setUserOrgId(resDTO.getPmUser().getActiveUserOrgs().get(0).getUserOrgId());
 					getManagedBean().setPmUserOrgOriginal(resDTO.getPmUser().getPmUserOrgs().get(0));
 				}
-				
+				//#40423 - Start // #40810 Remove commented code
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_USER)) {
 					getManagedBean().setNewAuditPmUser(user);
 					getManagedBean().setNewAuditPmUserOrg(userOrg);
@@ -3276,7 +3288,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					getManagedBean().setOldAuditPmUserOrg(oldPmUserOrg);
 					getManagedBean().setOldAuditPmUserRoles(oldPmUserRoles);
 					getManagedBean().setOldAuditPmAddressTypes(oldPmAddressTypes);
-				}
+				} 
+				//#40423 - End // #40810
 				/************ END AUDIT #28895_35509 shaqimi 24072025 *************/
 				
 				uploadAttachments();
@@ -3336,11 +3349,11 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 						addressType.setAddressTypeId(currentAddressType.getAddressTypeId());
 					}
 				}
-				
+				//#40423 - Start  // 40810 - remove commented code
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_USER)) {
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_OUSR);
 				}
-				
+				//#40423 - End
 				getManagedBean().setNewAuditPmUserRoles(new ArrayList<PmUserRole>());
 				getManagedBean().setNewAuditPmAddressTypes(new ArrayList<PmAddressType>());
 				/************ END AUDIT #28895_35509 END *************/
@@ -4036,11 +4049,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			getManagedBean().getSelectedUser().setNotifyBySms(false);
 			throw new EpException(MessageConst.ERROR_770090);
 		}
-		if (getManagedBean().getSelectedUser().isNotifyBySms()
+		//#40246 Start
+		/*if (getManagedBean().getSelectedUser().isNotifyBySms()
 				&& getManagedBean().getSelectedUserOrg().getMobileTelcoId() == null) {
 			getManagedBean().getSelectedUser().setNotifyBySms(false);
 			throw new EpException(MessageConst.ERROR_770250);
-		}
+		}*/
+		//#40246 End
 		this.getManagedBean().getSelectedUser().setModified(true);
 	}
 
@@ -4506,16 +4521,16 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		if (StringUtils.isBlank(pmUserOrg.getEmail())) {
 			throw new EpException(MessageConst.ERROR_770036);
 		}
-
-		if (user.isNotifyBySms()) {
-			if (StringUtils.isBlank(pmUserOrg.getMobileNo())) {
-				throw new EpException(MessageConst.ERROR_770090);
-			}
-			if (pmUserOrg.getMobileTelcoId() == null) {
-				throw new EpException(MessageConst.ERROR_770250);
-			}
+		//#40623 Start
+		if (user.isNotifyBySms() && StringUtils.isBlank(pmUserOrg.getMobileNo())) {
+			throw new EpException(MessageConst.ERROR_770090);
 		}
-	}
+			//#40246 Start
+			/*if (pmUserOrg.getMobileTelcoId() == null) {
+				throw new EpException(MessageConst.ERROR_770250);
+			}*/
+			//#40246 End
+	}	//#40623 End
 
 	private void validateOrgProfile(PmUserOrg pmUserOrg) {
 		if (pmUserOrg.getPmOrgProfile() == null || pmUserOrg.getPmOrgProfile().getOrgProfileId() == null) {

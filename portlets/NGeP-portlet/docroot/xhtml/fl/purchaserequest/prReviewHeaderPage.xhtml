@@ -25,9 +25,11 @@
 				<td>
 					<p:outputLabel value="#{lbl['lbl.fl.ptj.name']} " />
 				</td>
+				<!-- 35571 start -->
 				<td class="header-info-text">
-					#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}
+					#{purchaseRequestBackingBean.retrievePtjNameByUserLogin(purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName)}
 				</td>
+				<!-- 35571 end -->
 				<!-- 29555 start -->
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.by']} " /></td>
 				<td class="header-info-text">

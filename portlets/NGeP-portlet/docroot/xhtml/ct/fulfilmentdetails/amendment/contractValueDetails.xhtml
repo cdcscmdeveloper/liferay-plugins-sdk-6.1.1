@@ -7,17 +7,17 @@
 	<p:panel id="contractValuePanel" rendered="#{amendmentBackingBean.getAmendValue(1) || ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}" 
 		header="#{lbl['lbl.ct.menu.contract.value']}" toggleable="true" toggleSpeed="500">
 	
-		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth320">
+		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidthChangeContractValue">
 			
-			<p:outputLabel value="#{lbl['lbl.ct.overall.contract.amount']}" />
+			<p:outputLabel value="#{lbl['lbl.ct.contract.amount']}" />
 			<h:panelGrid columns="4">
 				<p:inputText id="overallAmount" styleClass="ppRightBtn change-contract-value-inputtext"
-					value="#{amendmentBackingBean.getApplicableOverallContractAmount()}" disabled="true">
+					value="#{amendmentBackingBean.getApplicableOriginalContractAmount()}" disabled="true">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
 				<p:spacer width="1" />
-				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.overall.amt']}" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.original.contract.amount']}" />
 				<p:message for="overallAmount" display="icon" />
 			</h:panelGrid>
 
@@ -99,7 +99,7 @@
 				<p:inputText id="reductionAmt" styleClass="ppRightBtn change-contract-value-inputtext"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.reductionAmt}"
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL or ctBackingBean.managedBean.disableReductionContractAmount}"
-					onblur="this.value = this.value.replace(/-/g, '');">
+					onblur="this.value = this.value.replace(/[^\d.,]/g, '');"> <!-- #24336 accept only digits and a single decimal point -->
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					<p:ajax event="blur" update="reductionAmt, addValue, overallAmt, newAmtEffDate" process="@this"
@@ -117,7 +117,7 @@
 				<p:inputText id="addValueTxt" styleClass="ppRightBtn change-contract-value-inputtext"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.additionalAmount}"
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL or ctBackingBean.managedBean.disableAdditionContractAmount}" 
-					onblur="this.value = this.value.replace(/-/g, '');">
+					onblur="this.value = this.value.replace(/[^\d.,]/g, '');"> <!-- #24336 accept only digits and a single decimal point -->
 					<!-- Enhancement 15851 - shaqimi -->
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -150,7 +150,7 @@
 		</h:panelGrid>
 
 		<!-- Change of contract value caused by GST/SST -->
-		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth320" 
+		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidthChangeContractValue" 
 			rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}">
 		
 			<p:outputLabel value="#{lbl['lbl.ct.gst.sst']}" style="font-weight: bold; text-decoration:underline;" />
@@ -159,10 +159,12 @@
 			<p:outputLabel value="#{lbl['lbl.ct.new.gst.amt']}" />
 			<h:panelGrid columns="5">
 
+				<!-- #24336 remove rendered gstCheckingGUI-->
 				<p:inputText id="newGstAmtTxt" styleClass="ppRightBtn change-contract-value-inputtext" maxlength="18"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.newGstAmount}" 
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL
-					or ctBackingBean.managedBean.disableGstAmount}" rendered="#{ctBackingBean.managedBean.gstCheckingGUI}">
+					or ctBackingBean.managedBean.disableGstAmount}"
+					onblur="this.value = this.value.replace(/[^\d.,]/g, '');"> <!-- #24336 accept only digits and a single decimal point -->
 					<!-- Enhancement 15851 - shaqimi -->
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -170,9 +172,7 @@
 						oncomplete="blockWidget.hide();" listener="#{amendmentBackingBean.changeGstValue}" />
 				</p:inputText>
 				<p:message for="newGstAmtTxt" display="icon" />
-				<p:inputText styleClass="ppRightBtn change-contract-value-inputtext" disabled="true"
-					rendered="#{!ctBackingBean.managedBean.gstCheckingGUI}" value="#{lbl['lbl.txt.na']}">
-				</p:inputText>
+				<!-- #24336 remove inputText N/A-->
 				<p:spacer width="1" />
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.additional.new.gst.amt']}" />
 			</h:panelGrid>
@@ -180,10 +180,12 @@
 			<p:outputLabel value="#{lbl['lbl.ct.new.stax.amt']}" />
 			<h:panelGrid columns="5">
 
+				<!-- #24336 remove rendered staxCheckingGUI-->
 				<p:inputText id="newStaxAmtTxt" styleClass="ppRightBtn change-contract-value-inputtext" maxlength="18"
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL
-					or ctBackingBean.managedBean.disableStaxAmount}" rendered="#{ctBackingBean.managedBean.staxCheckingGUI}"
-					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.newStaxAmount}">
+					or ctBackingBean.managedBean.disableStaxAmount}"
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.newStaxAmount}"
+					onblur="this.value = this.value.replace(/[^\d.,]/g, '');"> <!-- #24336 accept only digits and a single decimal point -->
 					<!-- Enhancement 15851 - shaqimi -->
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -200,7 +202,7 @@
 
 		</h:panelGrid>
 
-		<h:panelGrid columns="2" style="width:100%;" columnClasses="columnWidth320">
+		<h:panelGrid columns="2" style="width:100%;" columnClasses="columnWidthChangeContractValue">
 
 			<p:outputLabel value="#{lbl['lbl.ct.current.contract.amt']}" style="font-weight: bold; text-decoration:underline;" />
 			<p:spacer width="1" />
@@ -230,7 +232,7 @@
 			<p:outputLabel value="#{lbl['lbl.ct.new.contract.amt.eff.date']}" />
 			<h:panelGrid columns="4" styleClass="top-aligned-columns">
 				<p:calendar id="newAmtEffDate" showOn="button" readonlyInput="true"
-					styleClass="calanderWidth86"
+					styleClass="calanderWidth110"
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL 
 								or ctBackingBean.managedBean.disableNewCtAmountEffDate}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 

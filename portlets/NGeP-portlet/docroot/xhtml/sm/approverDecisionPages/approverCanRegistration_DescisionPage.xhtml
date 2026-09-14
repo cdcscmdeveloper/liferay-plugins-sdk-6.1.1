@@ -89,14 +89,14 @@
 			hasParam="true"
 			content="#{lbl['lbl.sm.confirm.approve']}" 
 			update="@([id$=Msg])"
-			loadingWidget="blockWidget" />
+			loadingWidget="approvedCancelMofBlockWidget" /> <!-- #40367 -->
 			
 		<ac:confirmationPopupSM id="confirmRejectDlg" widget="confirmRejectDlg"
 			okParam="#{backingBean.submitPOorApproverReviewToBPM('REJECT')}"
 			hasParam="true"
 			content="#{lbl['lbl.sm.confirm.reject']}" 
 			update="@([id$=Msg])"
-			loadingWidget="blockWidget" />
+			loadingWidget="rejectCancelMofBlockWidget" /> <!-- #40367 -->
 		<!-- #34400 - end -->
 	</ui:define>
 </ui:composition>

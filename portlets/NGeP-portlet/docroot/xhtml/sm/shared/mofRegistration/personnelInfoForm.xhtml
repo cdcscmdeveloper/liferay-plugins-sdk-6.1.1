@@ -48,6 +48,7 @@
 		/* Button text alignment */
 		.ui-button.ai-assistant-btn .ui-button-text {
 			display: inline-flex !important;
+			white-space: nowrap !important;
 			align-items: center !important;
 			vertical-align: middle !important;
 			gap: 3px !important;
@@ -579,16 +580,18 @@
 		</p:panel>
 		<p:panel header="#{lbl['lbl.sm.person.composition.listDtHdr']}"
 			toggleable="true" id="smPersonnelParentPan">
-			<!-- #38890 - start -->
-			<p:commandButton value="#{lbl['lbl.sm.ai.btn']}" styleClass="ai-assistant-btn" style="width: 150px;" onclick="epfAI.show()" immediate="true">
-				<p:ajax partialSubmit="true" process="@this" />
-			</p:commandButton>
-			<p:graphicImage id="ttepfAI" value="/css/images/design/tooltips.png" />
-			<p:tooltip id="tt2epfAI" for="ttepfAI">
-				<p:outputLabel value="#{lbl['lbl.sm.ai.epf.tips']}" />
-			</p:tooltip>&#160;
+			<!-- #40112 - start -->
+			<p:outputPanel rendered="#{backingBean.showEpfAiBtn}">
+				<p:commandButton value="#{lbl['lbl.sm.ai.btn']}" styleClass="ai-assistant-btn" style="min-width: 150px;" onclick="epfAI.show()" immediate="true">
+					<p:ajax partialSubmit="true" process="@this" />
+				</p:commandButton>
+				<p:graphicImage id="ttepfAI" value="/css/images/design/tooltips.png" />
+				<p:tooltip id="tt2epfAI" for="ttepfAI">
+					<p:outputLabel value="#{lbl['lbl.sm.ai.epf.tips']}" />
+				</p:tooltip>&#160;
+			</p:outputPanel>
 			<br/>
-			<!-- #38890 - end -->
+			<!-- #40112 - end -->
 			
 			<ui:param name="lblShareholderInstruction" value="lbl.sm.shareholder.composistion.#{backingBean.managedBean.smSupplier.businessType}" />
 			<ui:param name="lblPersonnelInstruction" value="lbl.sm.personnel.composistion.#{backingBean.managedBean.smAppl.supplierType}#{backingBean.managedBean.smSupplier.businessType}" />
@@ -736,7 +739,9 @@
 		</p:dataTable>
 		
 	</p:dialog>
-	<!-- #38890 -->
-	<ac:smAIAssistant aiDlg="epfAI" docType="epf" updateId="persInfoDtPanel" 
-		smAppl="#{backingBean.managedBean.smAppl}" />
+	<!-- #40112 -->
+	<p:outputPanel rendered="#{backingBean.aiAvailable}">
+		<ac:smAIAssistant aiDlg="epfAI" docType="epf" updateId="persInfoDtPanel"
+			smAppl="#{backingBean.managedBean.smAppl}" />
+	</p:outputPanel>
 </ui:composition>

@@ -548,7 +548,7 @@ public class CommitteBackingBean extends
 				toCreatedDate = toDate.getTime();
 				
 				SearchFilterBean bean = new SearchFilterBean();
-				bean.setSearchField(QTConstants.CREATED_DATE);
+				bean.setSearchField("scQt.createdDate"); //#35320
 				/*bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 				bean.setSearchValue(fromCreatedDate);*/
 				bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
@@ -2708,7 +2708,7 @@ public class CommitteBackingBean extends
 				}
 			}
 
-			reqDto.setTplCommitteeId(null != displayCommittee ? displayCommittee.getTplCommitteeId() : null);
+			reqDto.setTplCommitteeId(null != displayCommittee ? displayCommittee.getCommitteeId() : null);
 			reqDto.setOmitCurrent(false);
 			reqDto.setUserId(loggedInUserId);
 
@@ -3065,10 +3065,10 @@ public class CommitteBackingBean extends
 			CustomUtils.sortQtCommitteeMemberRole(list);
 			list = sortMemberByAlphabetOrder(list);
 			this.getManagedBean().setMemberHistoryPaginator(new Paginator(list));
-			reqDTO.setTplCommitteeId(history.getTplCommittee().getTplCommitteeId());
+			reqDTO.setTplCommitteeId(history.getTplCommittee().getCommitteeId());
 		} else {
 			if (null != this.getManagedBean().getTplCommittee()) {
-				reqDTO.setTplCommitteeId(this.getManagedBean().getTplCommittee().getTplCommitteeId());
+				reqDTO.setTplCommitteeId(this.getManagedBean().getTplCommittee().getCommitteeId());
 			}
 		}
 
@@ -3223,9 +3223,12 @@ public class CommitteBackingBean extends
 				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 				OrgProfileReqDTO mofReqDTO = new OrgProfileReqDTO();
-
-				mofReqDTO.setOrgName(ParameterConst.KEMENTERIAN_KEWANGAN_MALAYSIA);
-				OrgProfileResDTO mofResDTO = orgProfileSO.retrieveOrgProfileByName(mofReqDTO);
+				
+				//#35320 - Start
+				mofReqDTO.setOrgCode(ParameterConst.MOF_ORG_CODE);
+				OrgProfileResDTO mofResDTO = orgProfileSO.retrieveOrgProfileByCode(mofReqDTO);
+				//#35320 - End
+				
 				reqDTO.setPmOrgProfile(mofResDTO.getPmOrgProfile());
 			} else {
 				PmOrgProfile pmOrgProfile = getManagedBean().getMinstryList().get(0);
@@ -3327,7 +3330,7 @@ public class CommitteBackingBean extends
 
 		TplCommittee tplCommittee = getManagedBean().getTplCommittee();
 		committeReqDTO.setTplCommittee(tplCommittee);
-		committeReqDTO.setTplCommitteeId(tplCommittee.getTplCommitteeId());
+		committeReqDTO.setTplCommitteeId(tplCommittee.getCommitteeId());
 		committeReqDTO.setOutcome(outCome);
 		committeReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 		committeReqDTO.setRoleCode(getTplCommitteeRoleCode());
@@ -3433,7 +3436,7 @@ public class CommitteBackingBean extends
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						ICommitteSO.class);
 		CommitteReqDTO committeeReqDTO = new CommitteReqDTO();
-		committeeReqDTO.setTplCommitteeId(this.getManagedBean().getTplCommittee().getTplCommitteeId());
+		committeeReqDTO.setTplCommitteeId(this.getManagedBean().getTplCommittee().getCommitteeId());
 		committeeReqDTO.setPmUser(curLogedInUser);
 		committeeReqDTO.setCommitteeType(committeeType);
 		return committeSO.retrieveTplCommitteMemberByUserId(committeeReqDTO);
@@ -3457,7 +3460,7 @@ public class CommitteBackingBean extends
 		this.getManagedBean().setMemberHistoryPaginator(new Paginator(list));
 		
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
-		reqDTO.setTplCommitteeId(history.getTplCommittee().getTplCommitteeId());
+		reqDTO.setTplCommitteeId(history.getTplCommittee().getCommitteeId());
 		CommitteResDTO resDTO = this.getCommitteeSO().retrieveCommitteDtlByCommitteeId(reqDTO);
 		history.setTplCommittee(resDTO.getTplCommittee());
 	}

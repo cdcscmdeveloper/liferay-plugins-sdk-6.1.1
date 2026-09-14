@@ -84,23 +84,23 @@
 			<td>
 				<p:outputLabel value="#{lbl['lbl.rpt.group']}" />
 			</td>
-			<td>
-				<p:selectOneMenu value="#{itemThRptBB.managedBean.group}">
+			<ui:remove>#41069 start</ui:remove>
+			<td><p:selectOneMenu value="#{itemThRptBB.managedBean.group}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
-						itemValue="#{null}" />
+						itemValue="#{FlReportConst.getFlRptGroupNone()}" />
 					<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.doc.status']}"
-						itemValue="#{lbl['lbl.fl.doc.maintain.doc.status']}" />
+						itemValue="#{FlReportConst.getFlRptGroupDocStatus()}" />
 					<f:selectItem itemLabel="#{lbl['lbl.fl.fulfilment.type']}"
 						itemValue="#{lbl['lbl.fl.fulfilment.type']}" />
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
-				</p:selectOneMenu>
-			</td>
+				</p:selectOneMenu></td>
+			<ui:remove>#41069 end</ui:remove>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.fl.procurement.type']}" />
 			</td>
 			<td>
 				<p:selectOneMenu
-					value="#{itemThRptBB.managedBean.procurementTypeCode}"
+					value="#{itemThRptBB.managedBean.procurementTypeId}"
 					style="width: 100px;">
 					<f:selectItems
 						value="#{itemThRptBB.getDropdownValuesProcurementType()}" />
@@ -133,7 +133,7 @@
 					<p:selectOneMenu style="margin-bottom: 5px; width: 225px;"
 						panelStyle="overflow-y: scroll; width:400px; height:100px;"
 						rendered="#{itemThRptBB.managedBean.reasonFlag}"
-						value="#{itemThRptBB.managedBean.reasonCode}">
+						value="#{itemThRptBB.managedBean.reasonId}">
 						<f:selectItems value="#{itemThRptBB.managedBean.reasonDropdown}" />
 					</p:selectOneMenu>
 				</h:panelGroup>

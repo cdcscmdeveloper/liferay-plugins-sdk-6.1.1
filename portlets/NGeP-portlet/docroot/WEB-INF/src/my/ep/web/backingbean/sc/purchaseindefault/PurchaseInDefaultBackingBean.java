@@ -39,6 +39,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.pm.ProfileManagementConst; //27868
 import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -90,6 +91,7 @@ import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.report.ReportConst;
@@ -211,6 +213,15 @@ public class PurchaseInDefaultBackingBean extends
 							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 									message));
 				}
+				
+				//#26059 - Start
+				if (contractItem.getScRequestItem() != null && contractItem.getScRequestItem().getCmItem() != null) {
+					CommonUtils commonUtils = new CommonUtils();
+					String cleanedName = commonUtils.removeItemNameNA(contractItem.getScRequestItem().getCmItem().getItemName());
+					contractItem.getScRequestItem().getCmItem().setItemName(cleanedName);
+				}
+				//#26059 - End
+				
 				scPurchaseInDefault.setContractedItem(contractItem);
 				retriveContractSupplierGstInfomation(scPurchaseInDefault
 						.getContractedItem());
@@ -263,8 +274,11 @@ public class PurchaseInDefaultBackingBean extends
 				}
 				
 				//#26059 - Start
-				CommonUtils commonUtils = new CommonUtils();
-				ctPanelItem.setItemName(commonUtils.removeItemNameNA(ctPanelItem.getItemName()));
+				if (ctPanelItem.getScRequestItem() != null && ctPanelItem.getScRequestItem().getCmItem() != null) {
+					CommonUtils commonUtils = new CommonUtils();
+					String cleanedName = commonUtils.removeItemNameNA(ctPanelItem.getScRequestItem().getCmItem().getItemName());
+					ctPanelItem.getScRequestItem().getCmItem().setItemName(cleanedName);
+				}
 				//#26059 - End
 
 				getManagedBean().setCheckContractItem(Boolean.FALSE);
@@ -398,16 +412,21 @@ public class PurchaseInDefaultBackingBean extends
 	/**
 	 * Checking for dialog message shown 
 	 */
-	public void dialogMsgCheck(){
-		if(getManagedBean().getPmReason() != null){
-			if (getManagedBean().getPmReason().getReasonId().intValue() == reasonAllowSupplierResponse().getReasonId().intValue())
-				RequestContext.getCurrentInstance().execute("submitSuppDlg.show()");
-			else
-				submitPurchaseInDefault(null); //#9133
+	public void dialogMsgCheck() {
+		// 34449 - start
+			if (getManagedBean().getPmReason() != null) {
+				if (getManagedBean().getPmReason().getReasonId().intValue() == reasonAllowSupplierResponse().getReasonId()
+						.intValue()) {
+					RequestContext.getCurrentInstance().execute("submitSuppDlg.show()");
+				} else {
+					RequestContext.getCurrentInstance().execute("submitConformDlg.show()");
+					// submitPurchaseInDefault(null); //#9133
+				}
+			} else {
+			RequestContext.getCurrentInstance().execute("submitConformDlg.show()");
+			// submitPurchaseInDefault(null); //#9133
 		}
-		else{
-			submitPurchaseInDefault(null); //#9133
-		}
+		// 34449 - end
 	}
 	//end #28865
 
@@ -1125,8 +1144,11 @@ public class PurchaseInDefaultBackingBean extends
 		if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 				getManagedBean().setAutoUpdate(true);//#9133
 				RequestContext.getCurrentInstance().execute("rejectPID.show()");
-		} else {
-			approverAction(outcome);
+		} 
+		//34449 - start
+		else {
+			constructConfirmationPopup(outcome,"pidConformDlg.show()");
+			//34449 - end
 		}
 	}
 	// 20190417@asyrafhaziq_12095 - End 	
@@ -1579,6 +1601,8 @@ public class PurchaseInDefaultBackingBean extends
 		// approved by
 		getManagedBean().setApprovedBy(purchaseInDefaultResDTO.getApprovedBy());
 		
+		CommonUtils commonUtils = new CommonUtils(); //#26059 - Start													   
+
 		// contract item
 		if (purchaseInDefault.getContractedItem() != null) {
 			/*
@@ -1604,6 +1628,21 @@ public class PurchaseInDefaultBackingBean extends
 				 getManagedBean().setContractTypeAsMinistry(Boolean.TRUE);
 			}
 			//#9133 - end
+			
+			//#26059 - Start
+			if (purchaseInDefault.getContractedItem().getScRequestItem() != null
+					&& purchaseInDefault.getContractedItem().getScRequestItem()
+							.getCmItem() != null) {
+				purchaseInDefault
+						.getContractedItem()
+						.getScRequestItem()
+						.getCmItem()
+						.setItemName(
+								commonUtils.removeItemNameNA(purchaseInDefault
+										.getContractedItem().getScRequestItem()
+										.getCmItem().getItemName()));
+			}
+			//#26059 - End
 		}
 		
 		if(purchaseInDefault.getCircularItem() != null) {
@@ -1612,6 +1651,19 @@ public class PurchaseInDefaultBackingBean extends
 		// panel item
 		if (purchaseInDefault.getPanelItem() != null) {
 			getManagedBean().setCheckContractItem(Boolean.FALSE);
+			
+			// #26059 - Start
+			if (purchaseInDefault.getPanelItem().getScRequestItem() != null
+					&& purchaseInDefault.getPanelItem().getScRequestItem().getCmItem() != null) {
+				purchaseInDefault
+						.getPanelItem()
+						.getScRequestItem()
+						.getCmItem()
+						.setItemName(
+								commonUtils.removeItemNameNA(purchaseInDefault.getPanelItem().getScRequestItem()
+										.getCmItem().getItemName()));
+			}
+			// #26059 - End
 		}
 
 		getManagedBean().setPurchaseInDefault(purchaseInDefault);
@@ -1637,12 +1689,6 @@ public class PurchaseInDefaultBackingBean extends
 			//#31603 - end
 		}	
 		//#9133 - end
-		
-		//#26059 - Start
-		CommonUtils commonUtils = new CommonUtils();
-		purchaseInDefault.getPanelItem().setItemName(
-				commonUtils.removeItemNameNA(purchaseInDefault.getPanelItem().getItemName()));
-		//#26059 - End
 		
 		finaliseEditableRemark(purchaseInDefault);//#31603
 
@@ -1805,6 +1851,8 @@ public class PurchaseInDefaultBackingBean extends
 		
 		getManagedBean().setContractId(Long.valueOf(directPurchaseDataType.getContractId()));
 		
+		CommonUtils commonUtils = new CommonUtils(); //#26059 - Start
+		
 		// approved by
 		getManagedBean().setApprovedBy(purchaseInDefaultResDTO.getApprovedBy());
 
@@ -1838,6 +1886,22 @@ public class PurchaseInDefaultBackingBean extends
 			 * contractItem = ConIresDTO.getCtContractItem();
 			 * purchaseInDefault.setContractedItem(contractItem);
 			 */
+			
+			// #26059 - Start
+			if (purchaseInDefault.getContractedItem().getScRequestItem() != null
+					&& purchaseInDefault.getContractedItem().getScRequestItem()
+							.getCmItem() != null) {
+				purchaseInDefault
+						.getContractedItem()
+						.getScRequestItem()
+						.getCmItem()
+						.setItemName(
+								commonUtils.removeItemNameNA(purchaseInDefault
+										.getContractedItem().getScRequestItem()
+										.getCmItem().getItemName()));
+			}
+			// #26059 - End
+			
 			retriveContractSupplierGstInfomation(purchaseInDefault.getContractedItem());
 			getManagedBean().setCheckContractItem(Boolean.TRUE);
 		}
@@ -1848,6 +1912,19 @@ public class PurchaseInDefaultBackingBean extends
 		// panel item
 		if (purchaseInDefault.getPanelItem() != null) {
 			getManagedBean().setCheckContractItem(Boolean.FALSE);
+			
+			// #26059 - Start
+			if (purchaseInDefault.getPanelItem().getScRequestItem() != null
+					&& purchaseInDefault.getPanelItem().getScRequestItem().getCmItem() != null) {
+				purchaseInDefault
+						.getPanelItem()
+						.getScRequestItem()
+						.getCmItem()
+						.setItemName(
+								commonUtils.removeItemNameNA(purchaseInDefault.getPanelItem().getScRequestItem()
+										.getCmItem().getItemName()));
+			}
+			// #26059 - End
 		}
 		getManagedBean().setPurchaseInDefault(purchaseInDefault);
 
@@ -2293,7 +2370,7 @@ public class PurchaseInDefaultBackingBean extends
 						
 						if (!DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(getManagedBean()
 								.getPidStatus().getStatusId()))// #31603
-							shouldBreak = true;
+							break; //#34449 - changes from sonarqube fixing that cause logic issue during execute. Revert to existing code
 					}
 
 					ScPIDRemark fetchRemark = purchaseInDefaultSO
@@ -2305,7 +2382,7 @@ public class PurchaseInDefaultBackingBean extends
 					
 					if (!DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(getManagedBean()
 							.getPidStatus().getStatusId()))// #31603
-						shouldBreak = true;
+						break; //#34449 - changes from sonarqube fixing that cause logic issue during execute. Revert to existing code
 				}
 				// start - #9133 (reopen comment 146)
 				else{
@@ -2314,9 +2391,6 @@ public class PurchaseInDefaultBackingBean extends
 					}
 				}
 				// end - #9133
-				if (shouldBreak) {
-			        break;
-			    }
 			}
 			//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 			// start - #9133 (reopen comment 146)
@@ -2329,7 +2403,7 @@ public class PurchaseInDefaultBackingBean extends
 			log.info(e.getStackTrace());
 		}
 	}
-	
+	//#34449 - start
 	/**
 	 * Checking for reject dialog popup shown
 	 * 
@@ -2341,13 +2415,12 @@ public class PurchaseInDefaultBackingBean extends
 		debugLogger("supplierAction");
 		this.getManagedBean().setAction(outcome);
 		if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
-			//getManagedBean().setAutoUpdate(Boolean.FALSE);
-			updateBPMTask(outcome, null);
+			RequestContext.getCurrentInstance().execute("acceptSuppDlg.show()");
 		} else if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
-			//getManagedBean().setAutoUpdate(Boolean.TRUE);
 			RequestContext.getCurrentInstance().execute("rejectDlg.show()");
 		}
 	}
+	//#34449 - end
 	
 	/**
 	 * Checking for cancel dialog popup shown
@@ -2360,10 +2433,8 @@ public class PurchaseInDefaultBackingBean extends
 		debugLogger("requisitionerAction");
 		this.getManagedBean().setAction(outcome);
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
-			//getManagedBean().setAutoUpdate(Boolean.FALSE);
-			updateBPMTask(outcome, null);
+			RequestContext.getCurrentInstance().execute("reqSubmitDlg.show()"); //34449
 		} else if (BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)) {
-			//getManagedBean().setAutoUpdate(Boolean.TRUE);
 			RequestContext.getCurrentInstance().execute("cancelDlg.show()");
 		}
 	}
@@ -2437,8 +2508,10 @@ public class PurchaseInDefaultBackingBean extends
 		
 		PmReason pmReason = new PmReason();
 		for (PmReason reason : reasonResDTO.getPmReasonList()) {
-			pmReason = reason;
-			break;
+			if (reason.getReasonCode().equalsIgnoreCase(ProfileManagementConst.PID_REASONTYPE_LESS_QUANITY)) { // start #27868
+				pmReason = reason;
+				break;
+			}// end #27868
 		}
 		
 		return pmReason;
@@ -3260,5 +3333,51 @@ public class PurchaseInDefaultBackingBean extends
 		FacesScopes facesScopes = new FacesScopes();
 		return username != null && username.equals(facesScopes.getUserScreenName());
 	}
+	
 	//#31603 - end
+	// 34449 - start
+	/**
+	 * Construct confirmation message pop up based on bpm outcome
+	 * Bpm Outcome Verify, Cancel.
+	 * 
+	 * @param outcome
+	 * @param lovId
+	 */
+	public void constructConfirmationPopup(String outcome, String lovId) {
+		if (outcome == null || outcome.isEmpty()){
+			
+			return;
+		}
+
+		String outcomeLowerCase = outcome.toLowerCase();
+		String confirmationMessageContent = ResourceBundleUtils.getMessage("lbl.sc.confirmation.message." + outcomeLowerCase,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale());
+
+		String confirmationMessageTitle = ResourceBundleUtils.getMessage("lbl.sc.header.message." + outcomeLowerCase,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale());
+		
+		this.getManagedBean().setConfirmationMessageContent(confirmationMessageContent);
+		this.getManagedBean().setConfirmationMessageTitle(confirmationMessageTitle);
+		this.getManagedBean().setSelectedAction(outcome);
+		RequestContext.getCurrentInstance().execute(lovId);
+	}
+	
+	/**
+	 * 
+	 * 
+	 * This method is a wrapper that delegates to the main BPM task update logic
+	 * without digi sign information.
+	 * 
+	 * 
+	 * @param outcome
+	 *            the selected BPM outcome
+	 * @return the update result
+	 * 
+	 * @param outcome
+	 * @return
+	 */
+	public PurchaseInDefaultResDTO wrappedUpdateBPMTask (String outcome){
+		return updateBPMTask(outcome, null);
+	}
+	// 34449 - end
 }

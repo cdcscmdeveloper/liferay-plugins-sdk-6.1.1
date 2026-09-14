@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.ct.agreement;
 
@@ -66,6 +66,7 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper; //#37620,#34367
 import my.ep.jaxb.ct.agreement.CTAgreementDataType;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtRemark;
@@ -146,6 +147,8 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	private String gstAmtChange = null;
 	private String sTaxAmtChange = null;	
 	//26686 end
+
+	private String confirmationContentMsg;//34442 
 
 	/**
 	 * The constructor used for initializing the variable.
@@ -578,6 +581,13 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			}
 		}
 		// #24333 - End
+		
+		// #37620,#34367 - Start
+		// Retrieve LOA and update contract panel state (flag, circular data, and attachment)
+		// based on validation logic in retrieveItemPanelDetails.
+		ScLoa loa = (ScLoa) EntityHelper.getNestedProperty(getManagedBean(), "ctContract.loa");
+		ctBB.retrieveItemPanelDetails(loa);
+		// #37620,#34367 - End
 
 		// Check for migrated contract
 		if (getManagedBean().getCtAgreement().getCtAmendment() == null
@@ -1045,7 +1055,12 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			if(signDate != null && expDate != null && signDate.after(expDate)){	
 				RequestContext.getCurrentInstance().execute("dateValidationExpGpki.show()");				
 			}else{
-				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+				// 34442 - start
+				setConfirmationContentMsg(getConfirmationContent(String.valueOf(getManagedBean().getCtAgreement()
+						.getStatus().getStatusId()), getManagedBean().getCtContract().getContractNo()));
+				RequestContext.getCurrentInstance().update("submitConfirmDlgId");
+				RequestContext.getCurrentInstance().execute("submitConfirmDlg.show()");
+				// 34442 - end
 			}
 			//#29417 end
 			return null;
@@ -2974,4 +2989,14 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		return false;
 	}
 	//#24333 - End
+
+	//34442 - start
+	public String getConfirmationContentMsg() {
+	    return confirmationContentMsg;
+	}
+
+	public void setConfirmationContentMsg(String confirmationContentMsg) {
+	    this.confirmationContentMsg = confirmationContentMsg;
+	}
+	//34442 - end
 }

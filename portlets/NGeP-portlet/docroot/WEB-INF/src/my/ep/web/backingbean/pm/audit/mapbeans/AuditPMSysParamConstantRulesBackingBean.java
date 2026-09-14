@@ -8,11 +8,13 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
 import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.RuleTypeConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -21,6 +23,7 @@ import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRule;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleDesc;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.web.managedbean.pm.settings.RuleCatalogueManageBean;
+import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 
@@ -268,7 +271,7 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 			if (!repByRange.containsKey(key))
 				repByRange.put(key, v);
 
-			final List<PmParameterDesc> descs = v.getSupplAcctTypeId().getPmParameterDescsSpecCallOnly();
+			final List<PmParameterDesc> descs = v.getSupplAcctTypeId().getPmParameterDescs();
 			final PmParameterDesc d = descs.get(1);
 			if (v.isSameSupplAcctType()) {
 				getParameterDesc(descs, codeNamesByRange, key, d);
@@ -422,8 +425,11 @@ public class AuditPMSysParamConstantRulesBackingBean extends AuditPMSysParamBack
 				ruleValue = formatter.format(amount);
 			} else if(newCreatedItem.getRuleType().getParameterType() != null) {
 				PmParameter pmParameter = getParameterByTypeAndCode(newCreatedItem.getRuleType().getParameterType(),
-						newCreatedItem.getRuleValue().toUpperCase());
-				ruleValue = pmParameter.getPmParameterDescsSpecCallOnly().get(1).getCodeName();
+						newCreatedItem.getRuleValue().toUpperCase());				
+				Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY,
+						CommonConstants.DEFAULT_COUNTRY_CODE);
+				ruleValue = ParameterHelper.getInstance().getParameterDesc(pmParameter.getParameterType(),
+						pmParameter.getParameterCode(), locale);
 			}else if(newCreatedItem.getRuleType().getRuleDataTypeId().getParameterType().equalsIgnoreCase("DAT") && newCreatedItem.getRuleType().getRuleDataTypeId().getParameterCode().equalsIgnoreCase("PC")){
 				ruleValue = rawRuleValue;
 			} else {

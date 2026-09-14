@@ -1,35 +1,26 @@
 package my.ep.web.backingbean.report.fl.pa;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
-import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.report.fl.FlReportBackingBean;
 import my.ep.web.backingbean.report.fl.po.ItemThresholdRptBackingBean;
 import my.ep.web.constant.report.FlReportConst;
 import my.ep.web.managedbean.report.fl.pa.ItemPanelThresholdRptManagedBean;
-import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.ParameterHelper;
-import my.ep.web.util.pm.helper.StatusHelper;
 
 /**
  * Backing Bean for Item Panel Threshold - 31344
@@ -68,22 +59,17 @@ public class ItemPanelThresholdRptBackingBean extends FlReportBackingBean<ItemPa
 					parameterType, null);
 
 			List<SelectItem> itemList = new ArrayList<>();
-
-			if (parameterDescs != null) {
-				for (PmParameterDesc parameterDesc : parameterDescs) {
-					if (ParameterConst.PROC_TYPE_NORMAL.equalsIgnoreCase(parameterDesc.getPmParameter()
-							.getParameterCode())) {
-
-						itemList.add(new SelectItem(parameterDesc.getPmParameter().getParameterCode(), parameterDesc
-								.getCodeName()));
-					}
+			
+			for (PmParameterDesc parameterDesc : parameterDescs) {
+				if (ParameterConst.PROC_TYPE_NORMAL.equalsIgnoreCase(parameterDesc.getPmParameter().getParameterCode())) {
+					itemList.add(new SelectItem(parameterDesc.getPmParameter().getParameterId(), parameterDesc
+							.getCodeName()));
 				}
 			}
 			items = itemList.toArray(new SelectItem[itemList.size()]);
 		} catch (Exception e) {
-			log.error(e.getMessage());
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			SLAUtils.getInstance().logSLAError("FL", "procurementTypeDropdown", "procurementTypeDropdown", null,
+					getUserIdSessionFromLoginId(), e);
 		}
 
 		return items;
@@ -105,7 +91,7 @@ public class ItemPanelThresholdRptBackingBean extends FlReportBackingBean<ItemPa
 			getManagedBean().setPtj(null);
 		}
 		getManagedBean().setFinancialYear(null);
-		getManagedBean().setProcurementTypeCode(null);
+		getManagedBean().setProcurementTypeId(null);
 		resetSearchCriteriaValues();
 	}
 
@@ -113,9 +99,10 @@ public class ItemPanelThresholdRptBackingBean extends FlReportBackingBean<ItemPa
 	 * Generate report
 	 */
 	public void generateReport() {
-		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
+		LinkedHashMap<String, String> params = new LinkedHashMap<>();
 		log.info("********Report Code*************" + getManagedBean().getReportCode());
 		retrieveReportValueFromDb();
+		
 		if (getManagedBean().getMinistry() != null) {
 			params.put(FlReportConst.FL_RPT_MINISTRY, getManagedBean().getMinistry().getOrgProfileId().toString());
 		}
@@ -140,14 +127,14 @@ public class ItemPanelThresholdRptBackingBean extends FlReportBackingBean<ItemPa
 		if (getManagedBean().getStatusDescId() != null) {
 			params.put(FlReportConst.FL_RPT_STATUS, getManagedBean().getStatusDescId().toString());
 		}
-		if (getManagedBean().getProcurementTypeCode() != null) {
-			params.put(FlReportConst.FL_RPT_PROCUREMENT_TYPE, getManagedBean().getProcurementTypeCode().toString());
+		if (getManagedBean().getProcurementTypeId() != null) {
+			params.put(FlReportConst.FL_RPT_PROCUREMENT_TYPE, getManagedBean().getProcurementTypeId().toString());
 		}
 		if (StringUtils.isNotBlank(getManagedBean().getGroup())) {
 			params.put(FlReportConst.FL_RPT_GROUP_BY, getManagedBean().getGroup());
 		}
-
+		
 		generateFlReport(params);
-
+		
 	}
 }

@@ -76,9 +76,10 @@
 		<h:outputText styleClass="instruction"
 			style="float:left;margin-left:20px;"
 			value="#{lbl['lbl.instruction.mandatory']}" />
-
+         <!--#29580 - Issue 1 note #87 - Start-->
 		<ui:param name="qtNumEnabelDisable"
-			value="#{qtReportMainBB.managedBean.reportCode ne QtReportConst.SC_LETTER_OF_ACCPT_OR_RPT_VAL and qtReportMainBB.managedBean.reportCode ne QtReportConst.SC_QUOT_TENDER_OR_RPT_VAL}"></ui:param>
+			value="#{qtReportMainBB.managedBean.reportCode ne QtReportConst.SC_QUOT_TENDER_OR_RPT_VAL}"></ui:param>
+		 <!--#29580 - Issue 1 note #87 - End-->
 		<ui:param name="statusEnabelDisable"
 			value="#{qtReportMainBB.managedBean.reportCode ne QtReportConst.SC_PRAPOSAL_SUB_LST_OR_RPT_VAL and qtReportMainBB.managedBean.reportCode ne QtReportConst.SC_SUMMRY_SRC_OR_RPT_VAL}"></ui:param>
 		<ui:remove>#29580 add SC_PRICE_SCHEDULE_OR_RPT_VAL -start</ui:remove>
