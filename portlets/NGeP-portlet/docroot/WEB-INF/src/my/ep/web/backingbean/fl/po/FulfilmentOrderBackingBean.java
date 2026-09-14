@@ -2890,7 +2890,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	/**
 	 * Validate User for YEP
 	 */
-	public void validateUserYep(){
+	private void validateUserYep(){
 		IFulfilmentOrderSO fulfilmentRequestSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -3016,7 +3016,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	 * @param userSO
 	 * @param userId
 	 */
-	public void validateGovSeller(IUserSO userSO, Long userId) {
+	private void validateGovSeller(IUserSO userSO, Long userId) {
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setUserId(userId);
 		userReqDTO.setOrgProfileId(getManagedBean().getFlRequest().getSmSupplier().getSupplierId());

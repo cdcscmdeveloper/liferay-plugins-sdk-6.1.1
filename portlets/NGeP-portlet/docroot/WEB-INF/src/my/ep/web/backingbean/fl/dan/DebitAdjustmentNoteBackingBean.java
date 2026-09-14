@@ -690,7 +690,7 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			if(userResDTO.getUserList() == null || userResDTO.getUserList().isEmpty()){
 				// 31788 - Update alert message and send notification
 				userSO.sendNotifyToPtjAdminInactive(flRequest.getPreparedOrgProfile().getOrgProfileId(),
-						RoleCode.PAY_OFFICER.toString(), ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE, getManagedBean()
+						RoleCode.PAY_OFFICER.value(), ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE, getManagedBean()
 								.getAdjustment().getDocNo());
 				throw new EpException(MessageConst.ERROR_700128, new String[] { getEpRoleDescByRoleCode(RoleCode.PAY_OFFICER.value()),
 						flRequest.getPreparedOrgProfile().getOrgValidity().getOrgName() });
