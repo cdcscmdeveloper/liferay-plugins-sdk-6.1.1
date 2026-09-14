@@ -77,7 +77,7 @@ public final class AiDocSupport {
 	public static final class AiUserEdit {
 
 		public static final String KEY_TENANCY = "hq";
-		// #40112 - never an NRIC: marks the applicant's EPF tick/untick decision as recorded
+		// never an NRIC: marks the applicant's EPF tick/untick decision as recorded
 		public static final String KEY_EPF_DECIDED = "_decided";
 		public static final String F_DECIDED = "decided";
 		public static final String F_EPF_NO = "epf_no";
@@ -656,7 +656,7 @@ public final class AiDocSupport {
 			if (serviceTypes.isEmpty()) {
 				addBankServiceTypes(serviceTypes, null);
 			}
-			// #40112 - keyed by canonical name, not id: PM_FINANCIAL_ORG holds the same bank under several ids,
+			// keyed by canonical name, not id: PM_FINANCIAL_ORG holds the same bank under several ids,
 			// and identical names would otherwise cancel each other out on the runner-up margin below
 			Map<String, PmFinancialOrg> candidates = new HashMap<>();
 			for (String serviceType : serviceTypes) {
