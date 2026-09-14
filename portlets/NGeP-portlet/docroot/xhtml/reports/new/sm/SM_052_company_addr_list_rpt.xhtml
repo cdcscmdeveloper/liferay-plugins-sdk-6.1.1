@@ -36,10 +36,12 @@
 					required="true">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 						itemValue=""></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.approve']}"
+					<!-- 14980 - START -->	
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.approvedLabel']}"
 						itemValue="Approved"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.reject']}"
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.rejectedLabel']}"
 						itemValue="Rejected"></f:selectItem>
+					<!-- 14980 - END -->
 					<p:ajax event="change" partialSubmit="true"
 						update="@([id$=Msg])" />
 				</p:selectOneMenu>
