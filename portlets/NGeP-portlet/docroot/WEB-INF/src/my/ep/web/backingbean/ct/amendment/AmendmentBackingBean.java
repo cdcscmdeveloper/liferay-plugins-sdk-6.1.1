@@ -182,7 +182,6 @@ import my.ep.web.util.pm.helper.RoleHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.vo.DisciplinaryActionVO;
-import org.apache.commons.collections.CollectionUtils;
 
 import org.apache.commons.collections.CollectionUtils; //#13847
 import org.apache.commons.lang.SerializationUtils;
