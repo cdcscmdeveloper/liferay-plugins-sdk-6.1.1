@@ -134,6 +134,7 @@ import my.ep.persistence.entity.pm.common.PmReason;//#27868
 import my.ep.persistence.entity.pm.common.PmReasonDesc;//#27868
 import my.ep.persistence.entity.pm.common.PmReasonRestr; //#27868
 import my.ep.persistence.entity.pm.common.PmUom;
+import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;//#27868
 import my.ep.persistence.entity.pm.map.PmPK7Mapping;//#27868
 import my.ep.persistence.entity.sc.common.ScActor;
@@ -8252,7 +8253,21 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 //			sb.append(overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt())); 
 			sb.append("^4");
 		}
-		
+			//@asyrafhaziq #27502 - New DO MOF Role and Process - Start
+			if (scLoa.getContractType().getParameterType().equals(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+				
+				sb.append("|pmUserOrgs.pmOrgProfile.bpk^");
+				sb.append(true);
+				sb.append("^1");	
+				
+				PmZone zone = SmCommonUtil.getInstance().getUserZone();		
+				if (zone != null) {
+
+					sb.append("|pmUserOrgs.pmOrgProfile.pmZone.zoneId^");
+					sb.append(zone.getZoneId()); 
+				}
+			 }
+			//@asyrafhaziq #27502 - New DO MOF Role and Process - End
 		return sb.toString();
 	}
 
