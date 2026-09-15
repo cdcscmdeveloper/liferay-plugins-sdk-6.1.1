@@ -3964,10 +3964,9 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 					// #30447 - Start
 					String newName = personnel.getName();
 					String salutation = supplierSalutation(personnel.getIdentificationNo());
-					String upperCaseRegex = "[\\p{Lu} -]+";
 					
 					if (StringUtils.isNotBlank(salutation)) {
-					    String formattedSalutation = newName.matches(upperCaseRegex) 
+					    String formattedSalutation = newName.equals(newName.toUpperCase()) 
 					        ? StringUtils.upperCase(salutation) 
 					        : salutation;
 					        
@@ -4959,10 +4958,9 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 
 		if (pmUser != null) {
 			// #30447 - start
-			String upperCaseRegex = "[\\p{Lu} -]+";
 
 			if (pmUser.getSalutationCode() != null) {
-				    String formattedSalutation = pmUser.getUserName().matches(upperCaseRegex) 
+				    String formattedSalutation = pmUser.getUserName().equals(pmUser.getUserName().toUpperCase()) 
 				        ? StringUtils.upperCase(pmUser.getSalutationCode().getSalutationName()) 
 				        : pmUser.getSalutationCode().getSalutationName();
 				        

@@ -1032,17 +1032,15 @@ public class BSVAttendanceBackingBean extends
 	// #30447 - Start
 	/**
 	 * To set salutation name for supplier.
-	 * UpperCase salutation check.
 	 * 
 	 * @param identificationNo
 	 * @return salutationName
 	 */
 	public String setSalutationSupplierName(String identificationNo, String name) {	
 		String salutation = supplierSalutation(identificationNo);
-		String upperCaseRegex = "[\\p{Lu} -]+";
 
 		if (StringUtils.isNotBlank(salutation)) {
-			if ( StringUtils.isNotBlank(name) && name.matches(upperCaseRegex)) {
+			if ( StringUtils.isNotBlank(name) && name.equals(name.toUpperCase())) {
 				return StringUtils.upperCase(salutation);
 			}
 
@@ -1115,7 +1113,6 @@ public class BSVAttendanceBackingBean extends
 		
 		// #30447 - Start
 		for (ScQtBsvAttendance attaned : attanedList) {
-		// #30447 - upperCase salutation check	
 			attaned.setSalutation(setSalutationSupplierName(attaned.getIcPassPort(), attaned.getName()));
 		}
 		// #30447 - End

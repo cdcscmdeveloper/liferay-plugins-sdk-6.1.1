@@ -791,7 +791,6 @@ public class LOIDetailBackingBean extends
 	// # 30447 - start
 	public String getFormattedNameWithSalutation(String name,String salutation) {
 		name = StringUtils.trimToEmpty(name);
-		String upperCaseRegex = "[\\p{Lu} -]+";
 
 		salutation = StringUtils.trimToEmpty(salutation);
 		
@@ -801,7 +800,7 @@ public class LOIDetailBackingBean extends
         if (StringUtils.startsWithIgnoreCase(name, salutation)) {
             return name;
         }
-        if (name.matches(upperCaseRegex)) {
+        if (name.equals(name.toUpperCase())) {
             salutation = salutation.toUpperCase();
         }
         return salutation + " " + name;
@@ -4297,6 +4296,9 @@ public class LOIDetailBackingBean extends
 					getManagedBean().getContractSignerUser().getSalutationCode() : null;
 			if (getManagedBean().getContractSignerUser() != null && salutationCode != null) {
 				salutation = getManagedBean().getContractSignerUser().getSalutationCode().getSalutationName();
+				if (!loiSigner.isEmpty() && loiSigner.equals(loiSigner.toUpperCase())) {
+				    salutation = salutation.toUpperCase();
+				}
 			}
 			context.put("salutation", salutation);
 			// #30447 end

@@ -1871,12 +1871,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	/**
 	 * To retrieve salutation + name with salutation duplication checking
 	 * 
-	 * @param 
-	 * @return String roleCode
+	 * @param salutation, name
+	 * @return String salutation+name | name
 	 */
-	public String getFormattedChequeSignatoryName(String salutation, String name ) {
+	public String getFormattedSalutationName(String salutation, String name ) {
 		name = StringUtils.trimToEmpty(name);
-		String upperCaseRegex = "[\\p{Lu} -]+";
 
 		salutation = StringUtils.trimToEmpty(salutation);
 		
@@ -1886,7 +1885,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
         if (StringUtils.startsWithIgnoreCase(name, salutation)) {
             return name;
         }
-        if (name.matches(upperCaseRegex)) {
+        if (name.equals(name.toUpperCase())) {
             salutation = salutation.toUpperCase();
         }
         return salutation + " " + name;
