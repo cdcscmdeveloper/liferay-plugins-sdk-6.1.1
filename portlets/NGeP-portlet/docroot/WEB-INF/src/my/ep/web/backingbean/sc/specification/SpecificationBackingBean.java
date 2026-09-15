@@ -2519,6 +2519,8 @@ public class SpecificationBackingBean extends
 
 				this.getManagedBean().setScQtCheckSt2financeProposalList(
 						resDTO1.getFinancialCheckLists());
+				removeMarkedDeletedChecklists(this.getManagedBean().getScQtCheckSt2financeProposalList(),
+						this.getManagedBean().getMarkDeletedFinChecklist());	//#41026/#10141
 			}
 			//#25138 - add if() condition - end		
 			List<Integer> settinglist = new ArrayList<Integer>();
@@ -22912,6 +22914,32 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 	}
 
+	//#41026/#10141 - Start
+	/**
+	 * Drops checklists already marked for deletion from a reloaded checklist
+	 * list, so unsaved removals are not undone.
+	 *
+	 * @param checklists
+	 * @param markDeletedChecklists
+	 */
+	private void removeMarkedDeletedChecklists(List<ScQtCheckList> checklists,
+			List<ScQtCheckList> markDeletedChecklists) {
+		if (CollectionUtils.isEmpty(checklists) || CollectionUtils.isEmpty(markDeletedChecklists)) {
+			return;
+		}
+		Iterator<ScQtCheckList> iterator = checklists.iterator();
+		while (iterator.hasNext()) {
+			Long qtChecklistId = iterator.next().getQtChecklistId();
+			for (ScQtCheckList deleted : markDeletedChecklists) {
+				if (null != qtChecklistId && qtChecklistId.equals(deleted.getQtChecklistId())) {
+					iterator.remove();
+					break;
+				}
+			}
+		}
+	}
+	//#41026/#10141 - End
+
 	// #10141 End Vinod
 
 	// #10141 Start Vinod
@@ -23375,6 +23403,11 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		int specZoneTabIndex = this.getManagedBean().getSpecZoneTabIndex();
 		this.getManagedBean().setSaveForScorePrintBtn(true); //#10141 - #41172 added.
 		validatePrepareQtChecklist();
+		 // #10141 - #41066 - Start
+		if (this.getManagedBean().isMaintanceFlow()) {
+			checkSpecMaintenanceChecklist();
+		}
+		 // #10141 - #41066 - End
 		
 		this.getManagedBean().setSpecZoneTabIndex(specZoneTabIndex);
 
