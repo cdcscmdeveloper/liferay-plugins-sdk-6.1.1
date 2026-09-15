@@ -24,7 +24,7 @@
 			challengeQues1="#{amendmentBackingBean.managedBean.spkiBackingBean.challengeQues1}"
 			postSignAction="#{amendmentBackingBean.preSubmitContractAmendment(spkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{amendmentBackingBean.enableAutoUpdate()}" />
-
+		
 	<!--#26186 start-->
 	<ui:fragment
 		rendered="#{not empty amendmentBackingBean.managedBean.disciplinaryActionMsg or not empty amendmentBackingBean.managedBean.supplierMsg}">

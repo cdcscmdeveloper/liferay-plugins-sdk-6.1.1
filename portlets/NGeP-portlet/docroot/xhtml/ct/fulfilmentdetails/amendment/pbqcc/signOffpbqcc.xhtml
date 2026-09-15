@@ -219,9 +219,8 @@
 		rendered="#{ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faPendingMofMeetingDecision
 			or (amendmentBackingBean.managedBean.decisionPbQcLOA and ctBackingBean.managedBean.contractVer.ctAmendment.mofAuthorityReq)}">
 		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth150">
-		
 			<!-- #26186 start-->
-		<h:panelGrid columns="2" style="float:right;">
+			<h:panelGrid columns="2" style="float:right;">
 				<h:outputText value="* " styleClass="mandatory" />
 				<p:outputLabel value="#{lbl['lbl.ct.mof.decision.date']}" />
 			</h:panelGrid>

@@ -51,7 +51,7 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.vo.DisciplinaryActionVO;
+import my.ep.web.vo.DisciplinaryActionVO; //#26186
 
 /**
  * ManagedBean For Contract Amendment
@@ -1397,7 +1397,6 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	}
 	//#20997 - End
 	
-	
 	//Enhancement #26186/#34097 start
 	@Override
 	public boolean isDisciplinaryAction() {
@@ -1529,7 +1528,7 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.contractAdminlist = contractAdminlist;
 	}
 	//#25956 End
-	
+
 	//26753 - start
 	/**
 	 * @return the updateCommittee
@@ -1587,7 +1586,7 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.hasChanges = hasChanges;
 	}	
 	//26753 - end
-
+	
 	// Start Fix - #33256
 	public Map<Long, CtItemMaxQty> getSelectedChangeItemQuantity() {
 		if (selectedChangeItemQuantity == null){
