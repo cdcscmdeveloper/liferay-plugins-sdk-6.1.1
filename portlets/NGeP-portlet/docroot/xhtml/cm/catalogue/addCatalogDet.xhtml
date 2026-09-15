@@ -38,7 +38,7 @@
 					action="#{reviewCatBackingBean.approveCatalogueItem}"></p:commandButton>
 				<!-- 34447 Start -->
 				<p:commandButton value="#{lbl['lbl.btn.reject']}"
-					action="#{reviewCatBackingBean.validateRejectBeforePopup}" update="@form" />
+					actionListener="#{reviewCatBackingBean.validateRejectBeforePopup}" update="@form" />
 				<!-- 34447 End -->
 			</h:panelGroup>
 
@@ -51,7 +51,6 @@
 				id="rejectCatConfirmPopup" widget="rejectCatConfirmPopup"
 				loadingWidget="pageBlockWidget"
 				okParam="#{reviewCatBackingBean.rejectCatalogueItem()}" hasParam="true"
-				title="#{lbl['lbl.cm.dialog.cofirm.header']}"
 				content="#{lbl['lbl.cm.dialog.message.reject.catalogue']}"
 				update="@form">
 			</ac:confirmationPopupCM>
