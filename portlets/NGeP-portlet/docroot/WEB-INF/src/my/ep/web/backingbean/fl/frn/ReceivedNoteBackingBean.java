@@ -512,8 +512,10 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			/*#14650 - Logan - Beginning*/
 			IFulfilmentRequestSO fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
 			
-			if(getManagedBean().getFulfilmentRequest().getCtContract() !=null 
-					&& getManagedBean().getFulfilmentRequest().getCtContract().getContractId() !=null){
+			if (getManagedBean().getFulfilmentRequest().getCtContract() != null
+					&& getManagedBean().getFulfilmentRequest().getCtContract().getContractId() != null
+					&& getManagedBean().getFulfilmentRequest().getCtContract().getContractType().getParameterCode()
+							.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {//24956 -Disable blocking rules for CC
 				reqDTO.setContractId(getManagedBean().getFulfilmentRequest().getCtContract().getContractId());
 							
 				BigDecimal sumReceivedAmt = BigDecimal.ZERO;
