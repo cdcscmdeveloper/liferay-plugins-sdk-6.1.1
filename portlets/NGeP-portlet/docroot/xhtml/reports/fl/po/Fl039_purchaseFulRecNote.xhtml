@@ -139,7 +139,7 @@
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.rpt.group']}" /></td>
 			<td><p:selectOneMenu value="#{reportBackingBean.flGroupOne}">
-					<ui:remove>#41069 start</ui:remove>
+					<!-- #41069 start -->
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
 						itemValue="#{FlReportConst.getFlRptGroupNone()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
@@ -154,7 +154,7 @@
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.treasurycrclr']}"
 						itemValue="#{FlReportConst.getFlRptGroupTreasuryCircular()}"></f:selectItem>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
-					<ui:remove>#41069 end</ui:remove>
+					<!-- #41069 end-->
 				</p:selectOneMenu></td>
 		</tr>
 		<tr>

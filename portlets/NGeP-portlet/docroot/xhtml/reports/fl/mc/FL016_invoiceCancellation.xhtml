@@ -194,7 +194,7 @@
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.rpt.group']}" /></td>
 			<!-- 29550 - start(to cater option displayed by factoring user)-->
-			<ui:remove>#41069 start</ui:remove>
+			<!-- #41069 start -->
 			<td><p:selectOneMenu
 					value="#{mcInvCancelRptBB.managedBean.group}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
@@ -228,7 +228,7 @@
 
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
-			<ui:remove>#41069 start</ui:remove>
+			<!-- #41069 start -->
 			<!-- 29550 - end -->
 			<td colspan="2">
 			</td>
