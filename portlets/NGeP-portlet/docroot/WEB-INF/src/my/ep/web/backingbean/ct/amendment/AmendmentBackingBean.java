@@ -58,7 +58,7 @@ import my.ep.biz.service.pm.general.settings.bpm.ICompositeValiditySO; //#26186
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;//#15851
 import my.ep.biz.service.sc.quationtender.IQTDetailSO; //26186
-import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
+import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO; //#26186
 import my.ep.comparator.ct.CtContractZoneComparator;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
@@ -91,10 +91,10 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.general.settings.bpm.CompositeValidityReqDTO; //26186
 import my.ep.dto.sc.committe.CommitteReqDTO;
-import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
-import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;//#15851
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;//#15851
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO; //#26186
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO; //#26186
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper; //Fix - #36708
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
@@ -135,9 +135,9 @@ import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
-import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction; //#26186
 import my.ep.persistence.entity.sm.SmPersonnel;
-import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplier; //#26186
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierCategory; //#26186
 import my.ep.type.aut.SearchOperator;
@@ -179,9 +179,9 @@ import my.ep.web.util.NumberWordUtilEn; //#24333
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.RoleHelper;
-import my.ep.web.util.sm.helper.SmApplicationUtil;
+import my.ep.web.util.sm.helper.SmApplicationUtil; //#26186
 import my.ep.web.util.template.DocumentGenerator;
-import my.ep.web.vo.DisciplinaryActionVO;
+import my.ep.web.vo.DisciplinaryActionVO; //#26186
 
 import org.apache.commons.collections.CollectionUtils; //#13847
 import org.apache.commons.lang.SerializationUtils;
@@ -231,7 +231,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	private AmendmentManagedBean lastManagedBean;
 	private FacesScopes lastFacesScopes;
 	//#35238 end
-
+	
 	/**
 	 * The constructor used for initializing the variable.
 	 * This method will initialize the button and approver list.
@@ -765,19 +765,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
 				getManagedBean().setPbConfirmMeeting(true);
 				if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
-					//Enhancement #26186 - start
-					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate() == null) {
-						//24333 - Start
-						getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.DECISION_MENU_LABEL, 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
-						
-						throw new EpException(MessageConst.ERROR_100022, 
-								new String[]{ResourceBundleUtils.getMessage(ContractConst.PBM_DECISION_DATE_MENU_LABEL, 
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-						//24333 - End
-					}
-					//Enhancement #26186 - end
-			
 					getManagedBean().setSignUpdateDecision(true);
 					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbQcApprovedFlag() == null) {
 						getManagedBean().setPbQcApproved("");
@@ -789,19 +776,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 			} 
 			else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_MOF_RESULT_HT_NAME)) {
-				//Enhancement #26186 - start
-				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate() == null) {
-					//24333 - Start
-					getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.DECISION_MENU_LABEL, 
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
-					
-					throw new EpException(MessageConst.ERROR_100022, 
-							new String[]{ResourceBundleUtils.getMessage(ContractConst.MOF_DECISION_DATE_MENU_LABEL, 
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-					//24333 - End
-				}
-				//Enhancement #26186 - end
-			
 				getManagedBean().setSignUpdateDecision(true);  
 				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofApprovedFlag() == null) {
 					getManagedBean().setMofApproved("");
@@ -3101,6 +3075,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}
 				}
 				if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
+					//Enhancement #26186 - start
+					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate() == null) {
+						//24333 - Start
+						getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.DECISION_MENU_LABEL, 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+						
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage(ContractConst.PBM_DECISION_DATE_MENU_LABEL, 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						//24333 - End
+					}
+					//Enhancement #26186 - end
+					
 					if (getManagedBean().getPbQcApproved() == null || getManagedBean().getPbQcApproved().equalsIgnoreCase("")) {
 						//24333 - Start
 						getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.DECISION_MENU_LABEL, 
@@ -3137,6 +3124,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			if (getManagedBean().getTaskName() != null
 					&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_MOF_RESULT_HT_NAME)) {
+				//Enhancement #26186 - start
+				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate() == null) {
+					//24333 - Start
+					getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.DECISION_MENU_LABEL, 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+					
+					throw new EpException(MessageConst.ERROR_100022, 
+							new String[]{ResourceBundleUtils.getMessage(ContractConst.MOF_DECISION_DATE_MENU_LABEL, 
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					//24333 - End
+				}
+				//Enhancement #26186 - end
+				
 				if (getManagedBean().getMofApproved() == null || getManagedBean().getMofApproved().equalsIgnoreCase("")) {
 					//24333 - Start
 					getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage(ContractConst.DECISION_MENU_LABEL, 
@@ -7932,44 +7932,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	//29403 end
-	
-	//#29403 start
-	/**
-	 * The method used to get the parameter description by parameter.
-	 * with additional setting for secretary role.
-	 * Attendance is compulsory for secretary.
-	 * 
-	 * @param   index      the current record index (only used for secretary role)
-	 * @param   curCommitteeMember  the current committee member
-	 * @return  parameter description
-	 */
-	public String getParameterDescCommitteeByMember(CtCommitteeMember curCommitteeMember, int index) {
-		String strDescription = null;
-		PmParameter curParameter = null;
-
-		if (curCommitteeMember.getMemberRoleId() != null) {
-			curParameter = ParameterHelper.getInstance().getPmParameterById(curCommitteeMember.getMemberRoleId());
-		} else {
-			curParameter = ParameterHelper.getInstance().getPmParameterById(curCommitteeMember.getMemberRole().getParameterId());
-		}
-
-		if (curParameter != null && curParameter.getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
-			curCommitteeMember.setAttended(true);
-			if (ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())
-					|| ContractStatusConst.FA_PENDING_MEETING_DECISION_REVISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) { // #26688
-				getManagedBean().getUpdatedCommitteeMembers().remove(index);
-				getManagedBean().getUpdatedCommitteeMembers().add(index, curCommitteeMember);
-			} else {
-				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().remove(index);
-				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().add(index, curCommitteeMember);
-			}
-			strDescription = ResourceBundleUtils.getMessage("lbl.ct.secretary", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-		} else {
-			strDescription = getParameterDesc(curParameter);
-		}
-		return strDescription;
-	}
-	//#29403 end
 	
 	/**
 	 * The method used to delete the selected meeting committee(s).
