@@ -214,7 +214,7 @@
 		<!-- #40112 - start -->
 		<p:dialog id="#{cc.attrs.uploadDialogId}AI" widgetVar="#{cc.attrs.uploadDialogId}AI" modal="true"
 			rendered="#{cc.attrs.hasAI}"
-			dynamic="true" resizable="false" width="700px" height="300"
+			dynamic="true" resizable="true" width="700px" height="300"
 			styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}"
 			onShow="singleUploadListener(uploadWV_AI);"
 			onHide="uploadWV_AI.buttonBar.find('input[type=file]').get(0).disabled=false;">
