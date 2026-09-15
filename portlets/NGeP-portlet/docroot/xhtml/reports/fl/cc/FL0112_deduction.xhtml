@@ -121,7 +121,7 @@
 			<td>
 				<p:outputLabel value="#{lbl['lbl.rpt.group']}" />
 			</td>
-			<ui:remove>#41069 start</ui:remove>
+			<!-- #41069 start -->
 			<td>
 				<p:selectOneMenu value="#{ccDdRptBB.managedBean.group}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
@@ -142,7 +142,7 @@
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu>
 			</td>
-			<ui:remove>#41069 end</ui:remove>
+			<!-- #41069 end -->
 			<td>
 				<p:outputLabel
 					value="#{lbl['lbl.fl.doc.maintain.doc.status']}" />
