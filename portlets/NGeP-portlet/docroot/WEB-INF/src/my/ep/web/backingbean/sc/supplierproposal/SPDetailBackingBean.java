@@ -7020,4 +7020,11 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 	}
 	//Bug #39517@Syazani 07/01/2026 -- End
 
+	// #41190 - Start
+	public boolean isSupplierInfoReminderStage() {
+		ScQt scQt = this.getManagedBean().getQt();
+		PmStatus qtStatus = scQt != null ? scQt.getQtStatus() : null;
+		return qtStatus != null && QTStatusConst.QT_PROPOSAL_PREPARATION.equals(qtStatus.getStatusId());
+	}
+	// #41190 - End
 }
