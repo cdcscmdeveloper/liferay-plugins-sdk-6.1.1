@@ -24136,11 +24136,11 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		int specZoneTabIndex = this.getManagedBean().getSpecZoneTabIndex();
 		this.getManagedBean().setSaveForScorePrintBtn(true); //#10141 - #41172 added.
 		validatePrepareQtChecklist();
-		 // #41066 - Start
+		 // #10141 - #41066 - Start
 		if (this.getManagedBean().isMaintanceFlow()) {
 			checkSpecMaintenanceChecklist();
 		}
-		 // #41066 - End
+		 // #10141 - #41066 - End
 		
 		this.getManagedBean().setSpecZoneTabIndex(specZoneTabIndex);
 
