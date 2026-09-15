@@ -158,7 +158,7 @@
 			<td>
 				<p:outputLabel value="#{lbl['lbl.rpt.group']}" />
 			</td>
-			<ui:remove>#41069 start</ui:remove>
+			<!-- #41069 start -->
 			<td><p:selectOneMenu value="#{mcDoRptBB.managedBean.group}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
 						itemValue="#{FlReportConst.getFlRptGroupNone()}"></f:selectItem>
@@ -177,7 +177,7 @@
 						itemValue="#{FlReportConst.getFlRptGroupTreasuryCircular()}"></f:selectItem>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
-			<ui:remove>#41069 start</ui:remove>
+			<!-- #41069 start -->
 			<td>
 				<p:outputLabel
 					value="#{lbl['lbl.fl.doc.maintain.doc.status']}" />

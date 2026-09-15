@@ -131,7 +131,7 @@
 			<td>
 				<p:outputLabel value="#{lbl['lbl.rpt.group']}" />
 			</td>
-			<ui:remove>#41069 start</ui:remove>
+			<!-- #41069 start -->
 			<td><p:selectOneMenu value="#{mcSmRptBB.managedBean.group}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
 						itemValue="#{FlReportConst.getFlRptGroupNone()}"></f:selectItem>
@@ -150,7 +150,7 @@
 						itemValue="#{lbl['lbl.rpt.dcmntType']}"></f:selectItem>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
-			<ui:remove>#41069 end</ui:remove>
+			<!-- #41069 end-->
 		</tr>
 		<tr>
 			<td>
