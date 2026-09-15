@@ -6321,6 +6321,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					
 					IRuleSO ruleSO = (IRuleSO) EpEjbBusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+					//#27502 - New DO MOF Role and Process
 					List<Object[]> bpkList = ruleSO.getBpkByOrgProfileIdAndRuleType(scQt.getOrgProfileId(), RuleTypeConst.PTJCO);
 					
 					if(bpkList != null){

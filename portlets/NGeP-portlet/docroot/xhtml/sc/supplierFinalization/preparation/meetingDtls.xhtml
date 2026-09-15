@@ -19,6 +19,17 @@
 				      value="#{!isSecretaryUser or 
 										meetingDtl.recordStatusFlg ne DbValueConst.recordStatusActive
 										or suppFinalizationBackingBean.managedBean.readOnly}" />
+			
+			<ui:remove>
+				20230727@asyrafhaziq #27502 - New DO MOF Role and Process - Start
+			</ui:remove>							
+			<ui:param name="isBPKCentralContract"
+				      value="#{suppFinalizationBackingBean.managedBean.bpkCentralContract}" />
+			<ui:param name="disableMeetingStatus"
+				      value="#{disableMeeting or isBPKCentralContract}" />
+			<ui:remove>
+				20230727@asyrafhaziq #27502 - New DO MOF Role and Process - End
+			</ui:remove>							
 			<p:column styleClass="td-check-box-spacing">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllChk"
@@ -88,7 +99,13 @@
 			
 			</p:column>
 
-			<p:column style="width:20%">
+            <ui:remove>
+				20230727@asyrafhaziq #27502 - New DO MOF Role and Process - Start
+			</ui:remove>
+			<p:column style="width:20%" rendered="#{!isBPKCentralContract}">
+			<ui:remove>
+				20230727@asyrafhaziq #27502 - New DO MOF Role and Process - End
+			</ui:remove>
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.txt.mandatory']}"
 						styleClass="mandatory" />
@@ -114,7 +131,13 @@
 					<h:outputText value="#{lbl['lbl.sc.status']}" />
 				</f:facet>
 				<p:selectOneMenu label="#{lbl['lbl.sc.status']}" required="false"
-					value="#{meetingDtl.meetingStatusStr}" disabled="#{disableMeeting}">
+				<ui:remove>
+				20230727@asyrafhaziq #27502 - New DO MOF Role and Process - Start
+				</ui:remove>
+					value="#{meetingDtl.meetingStatusStr}" disabled="#{disableMeetingStatus}">
+				<ui:remove>
+				20230727@asyrafhaziq #27502 - New DO MOF Role and Process - End
+				</ui:remove>
 					<f:selectItems
 						value="#{suppFinalizationBackingBean.getMeetingStatusDropDown()}" />
 						<!-- ***28834 start -->

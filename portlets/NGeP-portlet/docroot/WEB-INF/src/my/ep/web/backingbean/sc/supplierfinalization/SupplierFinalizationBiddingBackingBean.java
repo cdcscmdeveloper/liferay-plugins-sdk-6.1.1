@@ -379,8 +379,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 							scQtFinalization.getOnlineBiddingEndorse())) {
 				retrieveOnlineEndorsement();
 			} else {
-				if (QTStatusConst.SF_PENDING_BIDDING_ESCALATION
-						.equals(getManagedBean().getCurrentStatusId())) {
+				if (QTStatusConst.SF_PENDING_BIDDING_ESCALATION.equals(getManagedBean().getCurrentStatusId())
+						|| QTStatusConst.SF_MOF_COMMITTEE_BIDDING.equals(getManagedBean().getCurrentStatusId())) {//#27502 - New DO MOF Role and Process
 					getManagedBean().setBpkUser(true);
 				}
 				retrieveOfflineEndorsement();
@@ -3222,6 +3222,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 			tenderReqDTO.setDocId(this.getManagedBean().getScQt().getQtId());	
 			List<Long> statusIds = new ArrayList<Long>();
 			statusIds.add(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION);
+			statusIds.add(QTStatusConst.SF_MOF_COMMITTEE);//#27502 - New DO MOF Role and Process
 //			statusIds.add(QTStatusConst.QT_RE_FINALIZATION);
 //			statusIds.add(QTStatusConst.QT_RE_EVALUATION);
 			tenderReqDTO.setStatusIds(statusIds);
