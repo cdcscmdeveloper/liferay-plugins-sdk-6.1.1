@@ -1866,6 +1866,31 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				ParameterTypeConst.COMMITTEE_ROLE, searchBean);
 
 	}
+	
+	// #30447 - start
+	/**
+	 * To retrieve salutation + name with salutation duplication checking
+	 * 
+	 * @param salutation, name
+	 * @return String salutation+name | name
+	 */
+	public String getFormattedSalutationName(String salutation, String name ) {
+		name = StringUtils.trimToEmpty(name);
+
+		salutation = StringUtils.trimToEmpty(salutation);
+		
+        if (name.isEmpty() || salutation.isEmpty()) {
+            return name;
+        }
+        if (StringUtils.startsWithIgnoreCase(name, salutation)) {
+            return name;
+        }
+        if (name.equals(name.toUpperCase())) {
+            salutation = salutation.toUpperCase();
+        }
+        return salutation + " " + name;
+	}
+	// #30447 - end
 
 	/**
 	 * Retrive mof account by supplier.

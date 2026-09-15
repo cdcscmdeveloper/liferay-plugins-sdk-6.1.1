@@ -48,7 +48,6 @@
 					id="revExtCode_rejectConfirmPopup" widget="revExtCode_rejectConfirmPopup"
 					loadingWidget="pageBlockWidget"
 					okParam="#{unspscCodeBackingBean.bpmTesting('REJECT')}" hasParam="true"
-					title="#{lbl['lbl.cm.dialog.cofirm.header']}"
 					content="#{lbl['lbl.cd.dialog.message.reject.request']}"
 					update="@form">
 				</ac:confirmationPopupCM>
@@ -57,7 +56,6 @@
 					id="revExtCode_submitToSupplierPopup" widget="revExtCode_submitToSupplierPopup"
 					loadingWidget="pageBlockWidget"
 					okParam="#{unspscCodeBackingBean.submitToReviewExt('SUBMIT')}" hasParam="true"
-					title="#{lbl['lbl.cm.dialog.cofirm.header']}"
 					content="#{lbl['lbl.cd.dialog.message.recommend']}"
 					selectedExtItem="#{unspscCodeBackingBean.managedBean.reviewExtCodeList[0]}"
 					update="@form">
@@ -67,7 +65,6 @@
 					id="revExtCode_recommendSupplierPopup" widget="revExtCode_recommendSupplierPopup"
 					loadingWidget="pageBlockWidget"
 					okParam="#{unspscCodeBackingBean.bpmTesting('RECOMMEND_TO_SUPPLIER')}" hasParam="true"
-					title="#{lbl['lbl.cm.dialog.cofirm.header']}"
 					content="#{lbl['lbl.cd.dialog.message.recommend']}"
 					update="@form"
 					itemList="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes}">
