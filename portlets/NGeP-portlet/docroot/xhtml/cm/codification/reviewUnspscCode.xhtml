@@ -51,7 +51,6 @@
 					id="rejectConfirmPopup" widget="rejectConfirmPopup"
 					loadingWidget="pageBlockWidget"
 					okParam="#{unspscCodeBackingBean.bpmTesting('REJECT')}" hasParam="true"
-					title="#{lbl['lbl.cm.dialog.cofirm.header']}"
 					content="#{lbl['lbl.cd.dialog.message.reject.request']}"
 					update="@form">
 				</ac:confirmationPopupCM>
@@ -60,7 +59,6 @@
 					id="recommendConfirmPopup" widget="recommendConfirmPopup"
 					loadingWidget="pageBlockWidget"
 					okParam="#{unspscCodeBackingBean.bpmTesting('RECOMMEND_TO_SUPPLIER')}" hasParam="true"
-					title="#{lbl['lbl.cm.dialog.cofirm.header']}"
 					content="#{lbl['lbl.cd.dialog.message.recommend']}"
 					update="@form"
 					itemList="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes}">
