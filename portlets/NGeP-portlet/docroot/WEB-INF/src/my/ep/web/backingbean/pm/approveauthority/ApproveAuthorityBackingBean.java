@@ -22,9 +22,11 @@ import my.ep.dto.pm.common.approveauthority.AuthorityCommitteeReqDTO;
 import my.ep.dto.pm.common.approveauthority.AuthorityCommitteeResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAuthority;
 import my.ep.persistence.entity.pm.common.PmAuthorityCommittee;
 import my.ep.persistence.entity.pm.common.PmRemarkAuthority;
+import my.ep.persistence.logging.LogKey;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
@@ -58,6 +60,12 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 	public static final int TAB_PENGURUSAN_TERTINGGI = 1;
 
 	public ApproveAuthorityBackingBean() {
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		if (pmUser != null && pmUser.getUserId() != null) {
+			new LogKey(pmUser.getUserId());
+		} else {
+			new LogKey(1L);
+		}
 	}
 
 	/**
