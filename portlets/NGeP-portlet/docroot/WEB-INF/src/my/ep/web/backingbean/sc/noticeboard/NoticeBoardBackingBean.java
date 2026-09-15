@@ -3657,6 +3657,7 @@ public class NoticeBoardBackingBean extends
 	 */
 	public String setSalutationSupplierName(String identificationNo, String name) {
 		String salutation = supplierSalutation(identificationNo);
+		
 		if (StringUtils.isNotBlank(salutation)) {
 			if( StringUtils.isNotBlank(name) && name.equals(name.toUpperCase())){
 				return StringUtils.upperCase(salutation);
