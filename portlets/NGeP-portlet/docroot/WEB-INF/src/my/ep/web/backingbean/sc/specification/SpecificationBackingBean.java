@@ -371,6 +371,28 @@ public class SpecificationBackingBean extends
 	// #40846,#10141 - Start
 	private static final String TAB_CHANGE = "tabChange";
 
+	private static final List<String> TECHNICAL_CHECKLIST_SELECT_LIST = Collections
+			.unmodifiableList(Arrays.asList(
+					QTConstants.TECH_CHECKLIST_DOC_DEFINATION_KEY_TG,
+					QTConstants.TECH_CHECKLIST_DOC_DEFINATION_KEY_TN,
+					QTConstants.TECH_CHECKLIST_DOC_DEFINATION_KEY_NE));
+
+	private static final List<String> FINANCIAL_CHECKLIST_SELECT_LIST = Collections
+			.unmodifiableList(Arrays.asList(
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_BS,
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_FG,
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_FGE,
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_FN,
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_FNE));
+
+	private static final List<String> FINANCIAL_CHECKLIST_SELECT_LIST_SCORE_REQ = Collections
+			.unmodifiableList(Arrays.asList(
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_CF,
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_PC,
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_AL,
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_CH,
+					QTConstants.FIN_CHECKLIST_DOC_DEFINATION_KEY_SD));
+
 	// #40846,#10141 - End
 
 	/**
@@ -2501,8 +2523,8 @@ public class SpecificationBackingBean extends
 		reqDTO.setScQt(this.getManagedBean().getQt());
 		try {
 			// #40846,#10141 - Start
-			boolean isNeedRefresh = StringUtils.isNotEmpty(condition) && TAB_CHANGE.equalsIgnoreCase(condition) ? true
-					: false;
+			// #41039 sonarqube issue
+			boolean isNeedRefresh = StringUtils.isNotEmpty(condition) && TAB_CHANGE.equalsIgnoreCase(condition);
 			// #40846,#10141 - End
 
 			//#25138 - add if() condition - start
@@ -3096,7 +3118,8 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().setFinancialScoring(newFinancialScoring);
 				}// #33525 - End
 				// Bug #35688@Syazani 10/07/2024 -- Start
-				boolean isNotThrow = StringUtils.isNotEmpty(condition) && TAB_CHANGE.equalsIgnoreCase(condition) ? true : false;	// Bug #35688@Syazani 10/07/2024/ // #40846,#10141 
+				// #41040 sonarqube issue
+				boolean isNotThrow = StringUtils.isNotEmpty(condition) && TAB_CHANGE.equalsIgnoreCase(condition);	// Bug #35688@Syazani 10/07/2024/ // #40846,#10141 
 				finWeightageSum(isNotThrow);
 				// Bug #35688@Syazani 10/07/2024 -- End
 				localChecklist = null;
@@ -11983,6 +12006,14 @@ if (null != checklist && !checklist.isEmpty()) {
 						        ? itemScoreSetting.getOverallFin()
 						        : packageScoreSetting.getOverallFin()
 						);
+				
+				//#38151 Apply a flag to recognize in specification maintenance data wip before and after revise.
+				newItemScoreSetting.setOverallOtherFlag(
+				        this.getManagedBean().isWeightage35384WIP()
+				            ? null
+				            : Boolean.TRUE
+				    );
+
 				newItemScoreSetting.setOverallOtherFin(itemScoreSetting.getOverallOtherFin());
 				itemScoreSetting = newItemScoreSetting;
 			}//#28784 - end
@@ -15881,9 +15912,10 @@ if (null != checklist && !checklist.isEmpty()) {
 				if (finDocDefKeys.contains(list.getPmDocument().getDocDefinitionKey())
 						&& (null == list.getScQtCheckListValue() || null == list.getScQtCheckListValue().getYear())) {
 					statusId = QTStatusConst.TS_PENDING_SUBMISSION;
+				}else{
+					statusId = QTStatusConst.TS_COMPLETED;
 				}
 				//#40724 - End
-				statusId = QTStatusConst.TS_COMPLETED;
 			}
 			list.setPmStatus(getPmStatusByStatusId(statusId));
 		}
@@ -17029,6 +17061,7 @@ if (null != checklist && !checklist.isEmpty()) {
 				recommendationItem.setOverallFin(recommendationPackage.getOverallFin());
 				recommendationItem.setPassingScore(recommendationPackage.getPassingScore());
 				//#38151 && 40044 -start-
+				recommendationItem.setOverallOtherFlag(true);
 				recommendationItem.setOverallOtherTechnical(BigDecimal.ZERO);
 				recommendationItem.setOverallOtherFin(BigDecimal.ZERO);
 				//#38151 && 40044 -end-
@@ -23582,6 +23615,16 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				return true;
 			}
 		}
+		removeInactiveChecklists();
+
+		return false;
+	}
+
+	/**
+	 * Drops the inactive checklists already confirmed by the user from the
+	 * technical and financial proposal lists, and keeps them for deletion.
+	 */
+	private void removeInactiveChecklists() {
 		List<ScQtCheckList> inActiveChecklist = this.getManagedBean().getInActiveChecklist();
 		
 		if (CollectionUtils.isNotEmpty(inActiveChecklist)) {
@@ -23606,8 +23649,6 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				this.getManagedBean().getMarkDeletedFinChecklist().addAll(deletefinCheckList);
 			}
 		}
-		
-		return false;
 	}
 
 	// #10141 End Vinod
@@ -23990,7 +24031,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 					&& null != techChecklist.getPmDocument().getDocDefinitionKey() ? techChecklist.getPmDocument()
 					.getDocDefinitionKey() : "";
 			if (Arrays.asList(QTConstants.DEFINATION_TYPE_LIST).contains(defType)
-					|| (Arrays.asList(QTConstants.TECHNICAL_CHECKLIST_SELECT_LIST).contains(docDefKey) || (docDefKey
+					|| (TECHNICAL_CHECKLIST_SELECT_LIST.contains(docDefKey) || (docDefKey
 							.equalsIgnoreCase(QTConstants.TECH_CHECKLIST_DOC_DEFINATION_KEY_TL) && techChecklist
 							.isScoringReq()))) {
 				ScQtCheckList previewCheckList = new ScQtCheckList();
@@ -24033,9 +24074,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 					&& null != finChecklist.getPmDocument().getDocDefinitionKey() ? finChecklist.getPmDocument()
 					.getDocDefinitionKey() : "";
 			if (Arrays.asList(QTConstants.DEFINATION_TYPE_LIST).contains(defType)
-					|| (Arrays.asList(QTConstants.FINANCIAL_CHECKLIST_SELECT_LIST).contains(docDefKey) || (Arrays
-							.asList(QTConstants.FINANCIAL_CHECKLIST_SELECT_LIST_SCORE_REQ).contains(docDefKey) && finChecklist
-							.isScoringReq()))) {
+					|| (FINANCIAL_CHECKLIST_SELECT_LIST.contains(docDefKey) || (FINANCIAL_CHECKLIST_SELECT_LIST_SCORE_REQ
+							.contains(docDefKey) && finChecklist.isScoringReq()))) {
 				ScQtCheckList previewCheckList = new ScQtCheckList();
 				Long qtChecklistId = finChecklist.getQtChecklistId();
 				String title = finChecklist.getTitle();
@@ -25262,6 +25302,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			if (null == technical.getOverallFin()) {
 				technical.setOverallFin(new BigDecimal(0));
 			}
+			technical.setOverallOtherFlag(Boolean.TRUE);
 			BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_WEIGHTAGE);
 			if (null != passingScore
 					&& technical.getOverallTechnical().intValue() < passingScore
@@ -25289,6 +25330,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 					.intValue();
 			technical.setOverallFin(new BigDecimal(financialScore));
 			this.getManagedBean().setRecommendationPackageScore(technical);
+			this.getManagedBean().getRecommendationPackageScore().setOverallOtherFlag(true);
 			int local = technical.getOverallTechnical().intValue()
 					+ technical.getOverallFin().intValue();
 
@@ -25321,12 +25363,19 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	// #38151 end
 
 	// #38151 && 40044 Start
-	public void checkWeightage35384WIP() {
+	public void checkWeightage35384WIP() { 
 		
 		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTDetailSO.class);
+		
+		IQTSpecSO	specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTSpecSO.class);//34852_start
+		SpecificationReqDTO specReqDto=new SpecificationReqDTO();
+		specReqDto.setScQt(this.getManagedBean().getQt());
+		this.getManagedBean().setWipStatusMax(specSo.checkWipScoreSettingMax(specReqDto));//34852_End
+		
 		ScQt qt = this.getManagedBean().getQt();
-		Date publishDate = qt.getPublishDate();
+		boolean checkStatusWip = checkWipScoreSettingFlag(qt.getQtId());
 		Date createdDate = qt.getCreatedDate();
 
 		QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
@@ -25338,54 +25387,15 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		Date effDate = appVerDtls.getEffDate();
 		Timestamp effTimestamp = new Timestamp(effDate.getTime());
 
-		boolean reviseEndorse = specStatusEndorseRev(effTimestamp);
-		boolean reviseEndorsePenDoc = specStatusPendingDocRev(effTimestamp);
-		
-		if ((createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus() && (reviseEndorse || reviseEndorsePenDoc))) {
+		if ((createdDate.before(effTimestamp) && !checkStatusWip)) {
 			//null != publishDate && publishDate.before(effDate)
 			this.getManagedBean().setWeightage35384WIP(true);
-		} else if ((createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus()) 
-						|| (createdDate.before(effTimestamp) && null != publishDate && publishDate.before(effDate))) {
-			this.getManagedBean().setWeightage35384WIP(true);
-		}
+		} 
 	}
-	
-	private boolean specStatusEndorseRev(Date effTimestamp) {
-		
-		IScWorkFlowStatusSO workFlowStatusSO;
-		try {
-			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
-			ScWorkFlowStatus workFlowStat = workFlowStatusSO.checkSpecStatus(this.getManagedBean().getQt().getQtId());
-			if(null != workFlowStat && workFlowStat.getCreatedDate().before(effTimestamp)){
-				return Boolean.TRUE;
-			}else{
-				return Boolean.FALSE;
-			}
-			
-			 
-		} finally {
-			workFlowStatusSO = null;
-		}
-	}
-
-	private boolean specStatusPendingDocRev(Date effTimestamp) {
-		
-		IScWorkFlowStatusSO workFlowStatusSO;
-		try {
-			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
-			ScWorkFlowStatus workFlowStat = workFlowStatusSO.checkSpecStatusPenDoc(this.getManagedBean().getQt().getQtId());
-			if(null != workFlowStat && workFlowStat.getCreatedDate().before(effTimestamp)){
-				return Boolean.TRUE;
-			}else{
-				return Boolean.FALSE;
-			}
-			
-			 
-		} finally {
-			workFlowStatusSO = null;
-		}
+	private boolean checkWipScoreSettingFlag(Long qtId) {
+		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTSpecSO.class);
+		return specSo.checkWipScoreFlag(qtId);
 	}
 	// #38151 End
 	
