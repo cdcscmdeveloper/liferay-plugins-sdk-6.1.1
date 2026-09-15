@@ -12309,6 +12309,7 @@ public class SpecificationBackingBean extends
 					.isProcMethodDropdownPresent();
 			ScWorkFlowStatus scWorkFlowStatus = this.getManagedBean()
 					.getSpecMaintenanceWorkFlowStatus();
+			boolean weightage35384WIP = this.getManagedBean().isWeightage35384WIP();//#38151
 
 			SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 			List<ScQtDeliveryLoc> deliveryRemoveList = this.getManagedBean()
@@ -12725,6 +12726,8 @@ public class SpecificationBackingBean extends
 					specScreenMaintenance);
 			this.getManagedBean().setSpecMaintenance(specMaintenance);
 			this.getManagedBean().setUpdateSpec(updateSpec);
+			this.getManagedBean().setWeightage35384WIP(weightage35384WIP); //#38151
+
 			if (null != this.getManagedBean().getCtContract()) {
 				this.getManagedBean()
 						.getCtContract()
