@@ -294,8 +294,9 @@
 								    <!-- #10747, #35739 - End -->
 									
 									<!-- #10747 - Soo - Start -->
-									<h:commandLink title="#{lbl['lbl.cm.list.icon']}"
-									action="#{pCatalogueBackingBean.thumbnailView(false)}">
+									<p:commandLink title="#{lbl['lbl.cm.list.icon']}"
+									action="#{pCatalogueBackingBean.thumbnailView(false)}"
+									process="@this" update=":form" >
 									<h:panelGroup rendered="#{pCatalogueBackingBean.managedBean.visible}">
 									<p:graphicImage id="list" value="/css/images/design/list.png"
 									style="font-size: 20px; float:right; margin-left: 10px; opacity: 0.3"></p:graphicImage>
@@ -304,10 +305,11 @@
 									<p:graphicImage value="/css/images/design/list.png"
 									style="font-size: 20px; float: right; margin-left: 10px; opacity: 1.0"></p:graphicImage>
 									</h:panelGroup>
-									</h:commandLink>
+									</p:commandLink>
 									
-									<h:commandLink title="#{lbl['lbl.cm.thumbnail.icon']}"
-									action="#{pCatalogueBackingBean.thumbnailView(true)}">
+									<p:commandLink title="#{lbl['lbl.cm.thumbnail.icon']}"
+									action="#{pCatalogueBackingBean.thumbnailView(true)}"
+									process="@this" update=":form">
 									<h:panelGroup rendered="#{pCatalogueBackingBean.managedBean.visible}">
 									<p:graphicImage id="thumbnail" value="/css/images/design/thumbnail.png"
 									style="font-size: 20px; float: right; opacity: 1.0"></p:graphicImage>
@@ -316,7 +318,7 @@
 									<p:graphicImage value="/css/images/design/thumbnail.png"
 									style="font-size: 20px; float: right; opacity: 0.3"></p:graphicImage>
 									</h:panelGroup>
-									</h:commandLink>
+									</p:commandLink>
 									<p:outputLabel value="#{lbl['lbl.cm.pub.catalog.view']}" 
 									style="font-weight: bold; float: right; font-size: 15px; margin-left: 20px;"/>	
 									
