@@ -695,6 +695,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String removedRoleMsg;
 	private boolean latestApplHasPrevRole;
 	// #40031 - End
+	
+	// #36718 - Start
+	private boolean reassignAddress = true;
+	// #36718 - End
 
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
@@ -4932,4 +4936,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.latestApplHasPrevRole = latestApplHasPrevRole;
 	}
 	// #40031 - End
+	
+	// #36718 - Start
+	public boolean isReassignAddress() {
+		return reassignAddress;
+	}
+
+	public void setReassignAddress(boolean reassignAddress) {
+		this.reassignAddress = reassignAddress;
+	}
+	// #36718 - End
 }
