@@ -165,7 +165,7 @@
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText> <ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforcc']}" /></td>
 			<td><p:outputLabel value="#{lbl['lbl.rpt.group']}" /></td>
-			<ui:remove>#41069 start</ui:remove>
+			<!-- #41069 start -->
 			<td><p:selectOneMenu value="#{frnCancelRptBB.managedBean.group}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
 						itemValue="#{FlReportConst.getFlRptGroupNone()}"></f:selectItem>
@@ -191,7 +191,7 @@
 						itemValue="#{FlReportConst.getFlRptAcknowledgedOfficerName()}"></f:selectItem>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
-			<ui:remove>#41069 start</ui:remove>
+			<!-- #41069 start -->
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.fl.created.date.from']}" /></td>

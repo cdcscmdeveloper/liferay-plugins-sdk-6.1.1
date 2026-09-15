@@ -505,6 +505,7 @@ public class FlReportConst implements Serializable {
 		return FL_RPT_GROUP_ITEM_TYPE;
 	}
 
+	//#41069 start
 	/**
 	 * @return the flRptGroupNone
 	 */
@@ -588,5 +589,7 @@ public class FlReportConst implements Serializable {
 	public static String getFlRptCcCancelledBy() {
 		return FL_RPT_CC_CANCELLED_BY;
 	}
+	
+	//#41069 end
 	
  }
