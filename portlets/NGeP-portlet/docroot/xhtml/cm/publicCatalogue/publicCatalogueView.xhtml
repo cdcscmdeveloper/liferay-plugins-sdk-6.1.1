@@ -325,7 +325,7 @@
 									
 									<p:selectOneMenu
 										label="#{lbl['lbl.cm.item.per.page']}"
-										style="font-weight:bold; float:right; font-size:15px; min-width:50px;"
+    									style="font-weight:bold; float:right; font-size:15px; width:100%; max-width:50px; box-sizing:border-box;"
 										value="#{pCatalogueBackingBean.managedBean.itemPerPage}">
 										<f:selectItem itemLabel="15" itemValue="15"/>
 										<f:selectItem itemLabel="25" itemValue="25" />
@@ -339,7 +339,7 @@
 									
 									<p:selectOneMenu
 										label="#{lbl['lbl.cm.sort.by']}"
-										style="font-weight:bold; float:right; font-size:15px; min-width:180px;"
+										style="font-weight:bold; float:right; font-size:15px; width:100%; max-width:180px; box-sizing:border-box;"
 										value="#{pCatalogueBackingBean.managedBean.sortBy}">
 										<f:selectItem itemLabel="#{lbl['lbl.cm.best.match']}" itemValue="0"/>
 										<f:selectItem itemLabel="#{lbl['lbl.cm.price.low.high']}" itemValue="1" />
