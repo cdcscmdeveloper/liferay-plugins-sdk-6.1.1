@@ -60,14 +60,15 @@
 
         <!-- #10747 - Start -->
 		<script type="text/javascript">
-    		function scrollToError() {
-        		var error = $('.ui-messages-error');
+			function scrollToError() {
+	        var error = $('.ui-messages-error:visible');
 
-        		if (error.length > 0) {
-           			 $('html, body').animate({
-            	    scrollTop: error.first().offset().top - 20}, 500);
-       			 }
-   			 }
+	     	if (error.length > 0) {
+	       		$('html, body').animate({
+	     		scrollTop: error.first().offset().top
+	         		}, 500);
+	        	}
+	    	}
 		</script>
 		<!-- #10747 - End -->
 
