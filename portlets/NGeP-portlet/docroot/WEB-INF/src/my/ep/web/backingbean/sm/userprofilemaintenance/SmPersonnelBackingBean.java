@@ -485,14 +485,22 @@ public class SmPersonnelBackingBean extends
 		}
 		
 		// set prev epRole
+		int currentActiveUser = 0; //#40739
 		if (getManagedBean().getSmPersonnelList() != null
 				&& !getManagedBean().getSmPersonnelList().isEmpty()) {
 			for (SmPersonnel smPersonnel : getManagedBean()
 					.getSmPersonnelList()) {
 				setPrevEpRole(smPersonnel);
+				//#40739 START
+				if(smPersonnel.getRecordStatusFlg() == SupplierManagementConst.RECORD_STATUS_ACTIVE
+						&& smPersonnel.getEpRole() != null
+						&& !smPersonnel.getEpRole().isEmpty()){
+					currentActiveUser++;
+				}
+				//#40739 END
 			}
 			int balanceUser = getManagedBean().getMaxUserLimit()
-					- getManagedBean().getSmPersonnelList().size();
+					- currentActiveUser; //#40739
 			getManagedBean().setUserAddConfirmationMsg(
 					SmCommonUtil.getMessage(
 							"lbl.sm.userprofile.search.userscount",

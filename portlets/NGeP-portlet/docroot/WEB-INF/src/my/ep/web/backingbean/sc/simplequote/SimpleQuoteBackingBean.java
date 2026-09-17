@@ -10222,16 +10222,20 @@ public class SimpleQuoteBackingBean extends
 		}
 		List<ScQuoteSupplier> target = quote.getScQuoteSuppliers();
 		if (target == null) {
-			target = new ArrayList<ScQuoteSupplier>();
+			target = new ArrayList<>(); //#41211
 			quote.setScQuoteSuppliers(target);
 		}
 
 		// copy first: `desired` may BE the same List instance as `target`, in which
 		// case retainAll below would otherwise operate on itself
-		List<ScQuoteSupplier> keep = (desired == null)
-				? new ArrayList<ScQuoteSupplier>()
-				: new ArrayList<ScQuoteSupplier>(desired);
-
+		//#41212 & #41213 - start
+		List<ScQuoteSupplier> keep;
+		if (desired == null) {
+		    keep = new ArrayList<>();
+		} else {
+		    keep = new ArrayList<>(desired);
+		}
+		//#41212 & #41213 - end
 		// delete only the rows that really left; survivors are left untouched
 		target.retainAll(keep);
 

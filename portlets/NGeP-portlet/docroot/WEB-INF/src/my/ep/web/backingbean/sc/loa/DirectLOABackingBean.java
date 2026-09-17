@@ -2714,7 +2714,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		// #41077: when the supplier actually changes, the Procurement-Related category codes belong to the
 		// old supplier and are invalid for the new one. Reset the category lists so the Category Code side
 		// menu regenerates from the newly selected supplier's profile, and mark the old codes for deletion on save.
-		Object newSupplierId = (suSmSupplier != null) ? suSmSupplier.getSupplierId() : null;
+		// #41111 sonarqube issue
+		Object newSupplierId = suSmSupplier.getSupplierId();
 		if (previousSupplierId != null && newSupplierId != null && !previousSupplierId.equals(newSupplierId)) {
 			resetSupplierCategoryOnSupplierChange();
 		}

@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.faces.model.SelectItem;
@@ -206,16 +205,12 @@ public abstract class BaseManagedBean implements Serializable {
 	private boolean displayLabelRegistrationStatus;
 	private boolean displayDropdownRegStatus;
 //	37925 END
-
-	// #34444 START
-	private String btnAction;
-	
-	@javax.faces.bean.ManagedProperty("#{lbl}")
-	private ResourceBundle lbl;
-	// #34444 END
 	
 	// #25651 - Start
 	List<ScQtFinalizationReportDetail> scQtFinalizationReportDetail; 
+	private List<ScQtFinalizationReportDetail> removeFinalizationReportDetails;
+	private ScQtFinalizationReportDetail selectedBriefingReportDetail;
+	
 	private List<Map.Entry<String, String>> reportDetail = new ArrayList<>();
 	
 	public BaseManagedBean(){
@@ -229,14 +224,6 @@ public abstract class BaseManagedBean implements Serializable {
 				SourcingConstants.LAPORAN_KERTAS_TAKLIMAT_PERTIMBANGAN));
 		reportDetail.add(new AbstractMap.SimpleEntry<>(SourcingConstants.DOC_DEF_KEY_LAPORAN_KERTAS_TAKLIMAT_PAKEJ,
 				SourcingConstants.LAPORAN_KERTAS_TAKLIMAT_PERTIMBANGAN_ANALISIS));
-	}
-	
-	public List<ScQtFinalizationReportDetail> getScQtFinalizationReportDetail() {
-		return scQtFinalizationReportDetail;
-	}
-
-	public void setScQtFinalizationReportDetail(List<ScQtFinalizationReportDetail> scQtFinalizationReportDetail) {
-		this.scQtFinalizationReportDetail = scQtFinalizationReportDetail;
 	}
 	
 	public List<Map.Entry<String, String>> getReportDetail() {
@@ -1298,40 +1285,30 @@ public abstract class BaseManagedBean implements Serializable {
 		this.displayDropdownRegStatus = displayDropdownRegStatus;
 	}
 //	37925 END
-
-	// #34444 START
-	public String getBtnAction() {
-		return btnAction;
+	
+	// #25651 - Start
+	public List<ScQtFinalizationReportDetail> getScQtFinalizationReportDetail() {
+		return scQtFinalizationReportDetail;
 	}
 
-	public void setBtnAction(String btnAction) {
-		this.btnAction = btnAction;
+	public void setScQtFinalizationReportDetail(List<ScQtFinalizationReportDetail> scQtFinalizationReportDetail) {
+		this.scQtFinalizationReportDetail = scQtFinalizationReportDetail;
+	}
+	
+	public List<ScQtFinalizationReportDetail> getRemoveFinalizationReportDetails() {
+		return removeFinalizationReportDetails;
 	}
 
-	public ResourceBundle getLbl() {
-		return lbl;
+	public void setRemoveFinalizationReportDetails(List<ScQtFinalizationReportDetail> removeFinalizationReportDetails) {
+		this.removeFinalizationReportDetails = removeFinalizationReportDetails;
 	}
 
-	public void setLbl(ResourceBundle lbl) {
-		this.lbl = lbl;
+	public ScQtFinalizationReportDetail getSelectedBriefingReportDetail() {
+		return selectedBriefingReportDetail;
 	}
 
-	public String getConfirmTitle() {
-		if (lbl == null || btnAction == null) {
-			return "";
-		}
-		return my.ep.web.util.sc.ActionPopupMessageKeys.getTitleMessage(btnAction, lbl);
+	public void setSelectedBriefingReportDetail(ScQtFinalizationReportDetail selectedBriefingReportDetail) {
+		this.selectedBriefingReportDetail = selectedBriefingReportDetail;
 	}
-
-	public String getConfirmContent() {
-		if (lbl == null || btnAction == null) {
-			return "";
-		}
-		return my.ep.web.util.sc.ActionPopupMessageKeys.getContentMessage(btnAction, lbl);
-	}
-
-	public void prepareAction(String action) {
-		this.btnAction = action;
-	}
-	// #34444 END
+	// #25651 - End
 }
