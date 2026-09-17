@@ -192,6 +192,7 @@
 			<portlet id="maintenanceRequestRevision"/>
 			<!-- 25037 - end -->
 			<portlet id="demoInvitation"/><!-- #28784 -->
+			<portlet id="disciplinaryActionDp"/><!-- #26284 -->
 			<portlet id="finalizationCommitteeMaintenance"/><!-- #35320 -->	
 		</category>
 
@@ -324,8 +325,11 @@
 		<portlet id="disciplinaryAction"></portlet>
 		<portlet id="complaint"></portlet>
 		<portlet id="onlineRegistration"></portlet>
+		<portlet id="smCancelRegistration"></portlet>
 		<portlet id="onlineAccountMaintenance"></portlet>
-		<portlet id="smCancelRegistration"></portlet>	
+		<!-- 26238 disciplinary action -->
+		<portlet id="basicAccountMaintenance"></portlet>
+		<portlet id="profileDisciplinaryAction"></portlet>
 
 		<portlet id="sm" />
 		<portlet id="smAddtionalCatCodes"></portlet>

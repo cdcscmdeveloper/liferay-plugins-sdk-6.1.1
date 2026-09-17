@@ -45,6 +45,7 @@ import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
+import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
@@ -83,10 +84,12 @@ import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
@@ -143,6 +146,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
@@ -164,6 +168,7 @@ import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sc.helper.SourcingLocationHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
+import my.ep.web.vo.DisciplinaryActionVO;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -4889,6 +4894,7 @@ public class SimpleQuoteBackingBean extends
 		StringBuilder stateCriteria = new StringBuilder();
 		StringBuilder divCriteria = new StringBuilder();
 		StringBuilder distCriteria = new StringBuilder();
+		StringBuilder recordStatus = new StringBuilder();//#26284 - Start
 
 		// business nature criteria
 		if (getManagedBean().isByBusinessNature()) {
@@ -5024,7 +5030,16 @@ public class SimpleQuoteBackingBean extends
 		}
 		// #28536 - end
 		
-		criteria.append("recordStatus^1");
+		// #26284 - Start
+		recordStatus.append(DbValueConst.RECORD_STATUS_ACTIVE).append(",");
+		recordStatus.append(DbValueConst.RECORD_STATUS_CANCELLED).append(",");
+		recordStatus.append(DbValueConst.RECORD_STATUS_SUSPENDED).append(",");
+		recordStatus.append(DbValueConst.RECORD_STATUS_DELETED);
+
+		criteria.append("recordStatus").append("^")
+				.append(recordStatus.toString()).append("^")
+				.append(SearchOperator.OPERATOR_IN.value());
+		// #26284 - End
 		return criteria.toString();
 	}
 	
@@ -8214,4 +8229,85 @@ public class SimpleQuoteBackingBean extends
 			suppliers.removeAll(suppliersToRemove);
 		}
 		//40234 - end
+		
+	// 26284 - Start
+	/**
+	 * Retrieves and sets the disciplinary action details for the supplier
+	 * associated with the given quote supplier.
+	 * 
+	 * This method checks if the provided {@link ScQuoteSupplier} contains a
+	 * valid {@link SmSupplier}. If so, it retrieves the disciplinary action
+	 * details for the supplier using the
+	 * {@link #getDisciplinaryActionVO(SmSupplier)} method. If the disciplinary
+	 * action data exists, it sets the result into the managed bean. Otherwise,
+	 * it sets an empty list. It also triggers the display of the disciplinary
+	 * action history dialog.
+	 * 
+	 * @param scQuoteSupp
+	 *            the {@link ScQuoteSupplier} object that contains the supplier
+	 *            whose disciplinary actions need to be retrieved. If the
+	 *            supplier is null or there are no disciplinary actions, an
+	 *            empty list will be set in the managed bean.
+	 */
+	public void supplierDisciplinaryActionInfo(ScQuoteSupplier scQuoteSupp) {
+		try {
+			SmSupplier currSupp = scQuoteSupp.getSmSupplier();
+			if (currSupp != null) {
+				List<DisciplinaryActionVO> voList = onDisplayActiveDisciplinaryAction(currSupp);
+				if (!voList.isEmpty()) {
+					getManagedBean().setDisciplineVOs(voList);
+				} else {
+					getManagedBean().setDisciplineVOs(
+							new ArrayList<DisciplinaryActionVO>());
+				}
+			} else {
+				getManagedBean().setDisciplineVOs(
+						new ArrayList<DisciplinaryActionVO>());
+			}
+			RequestContext.getCurrentInstance().execute(
+					"disciplinaryActionHistoryDlg.show();");
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.DIRECT_PURCHASE,
+					"supplierDisciplinaryActionInfo", StringUtils.EMPTY,
+					"supplierDisciplinaryActionInfo",
+					getUserIdSessionFromLoginId(), e);
+		}
+	}
+
+	/**
+	 * Retrieves the active disciplinary action status for a given supplier.
+	 * 
+	 * This method checks if the supplier has any active disciplinary actions by
+	 * calling the service method to retrieve the disciplinary action details
+	 * and returns the active status.
+	 * 
+	 * @param supplier
+	 *            the {@link SmSupplier} object for which to check the active
+	 *            disciplinary action status.
+	 * @return {@code true} if the supplier has an active disciplinary action,
+	 *         {@code false} otherwise.
+	 */
+	public Boolean getDisciplinaryActionActive(SmSupplier supplier) {
+		try {
+			ISupplierDataMaintenanceSO supplierDataMaintenanceSO = BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_MANAGEMENT,
+							ISupplierDataMaintenanceSO.class);
+
+			SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+			reqDTO.setSupplier(supplier);
+			return supplierDataMaintenanceSO
+					.retrieveActiveDisciplinaryActionBySupplierDp(reqDTO)
+					.isDisciplinaryActionActiveDp();
+		} catch (Exception e) {
+			String exceptionSupplierId = supplier.getSupplierId() != null ? Long
+					.toString(supplier.getSupplierId()) : StringUtils.EMPTY;
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.DIRECT_PURCHASE,
+					"getDisciplinaryActionActive", exceptionSupplierId,
+					"getDisciplinaryActionActive",
+					getUserIdSessionFromLoginId(), e);
+		}
+		return false;
+	}
+	// 26284 - End
 }

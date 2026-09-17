@@ -67,6 +67,26 @@
 					</c:choose>
 				</p:column>
 
+				<ui:remove>#26284 - Start</ui:remove>
+				<p:column style="white-space:normal;text-align:center;">
+					<f:facet name="header" style="white-space:normal;">
+						<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
+						<ac:iconTooltip
+							value="#{lbl['lbl.sc.tooltip.disciplinary.action.taken']}" />
+					</f:facet>
+					<p:commandLink onstart="blockWidget.show()"
+						oncomplete="blockWidget.hide()"
+						rendered="#{scPurchaseRequest.requestNoteDtls[0].scRequestSupplierItem.smSupplier ne null and dpLOABackingBean.getDisciplinaryActionActive(scPurchaseRequest.requestNoteDtls[0].scRequestSupplierItem.smSupplier)}"
+						action="#{dpLOABackingBean.supplierDisciplinaryActionInfo(scPurchaseRequest.requestNoteDtls[0].scRequestSupplierItem.smSupplier)}"
+						process="@this" partialSubmit="true" update=":form">
+						<h:outputText value="#{lbl['lbl.sc.da.yes']}" style="color:red;" />
+					</p:commandLink>
+					<h:outputText
+						rendered="#{scPurchaseRequest.requestNoteDtls[0].scRequestSupplierItem.smSupplier ne null and !dpLOABackingBean.getDisciplinaryActionActive(scPurchaseRequest.requestNoteDtls[0].scRequestSupplierItem.smSupplier)}"
+						value="#{lbl['lbl.sc.da.no']}" />
+				</p:column>
+				<ui:remove>#26284 - End</ui:remove>
+
 				<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%">
 					<p:commandButton value="#{lbl['lbl.sc.loiloa.create.loa']}"
 						action="#{lOADetailBackingBean.editLOAAction(scPurchaseRequest.scLoa)}"

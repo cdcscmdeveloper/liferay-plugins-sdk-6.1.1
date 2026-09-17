@@ -380,7 +380,18 @@
 
 								<p:column headerText="#{lbl['lbl.cm.supplier.name']}"
 									style="white-space: normal">
-									<h:outputText value="#{supplierItem.companyName}"></h:outputText>
+									<h:outputText value="#{supplierItem.companyName}" />
+									<!-- [#26282] - start -->
+									<p:spacer width="5" />
+									<p:commandLink id="daSupplierAlertCL"
+										action="#{catalogueBackingBean.onViewDisciplinaryAction(supplierItem.supplierId, supplierItem.mofNo)}"
+										partialSubmit="true" process="@this" update="@([id$=disciplinaryActionHistoryDlgId])"
+										rendered="#{supplierItem.daWarning or supplierItem.daSuspendReg}"	
+										onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
+										<p:graphicImage id="daSupplierAlertGI" 
+											value="/css/images/design/exclamation.png" />
+									</p:commandLink>
+									<!-- [#26282] - end -->
 								</p:column>
 
 								<p:column width="5%" headerText="#{lbl['lbl.cm.uom']}"
@@ -449,7 +460,7 @@
 								<p:column headerText="#{lbl['lbl.cm.action']}"
 									rendered="#{unspscCodeBackingBean.requisitioner}">
 
-									<p:menuButton value="" disabled="#{!supplierItem.atcRequired or supplierItem.contractTerminated or supplierItem.itemSuspended}">  <!-- #27654 -->
+									<p:menuButton value="" disabled="#{supplierItem.daSuspendReg or !supplierItem.atcRequired or supplierItem.contractTerminated or supplierItem.itemSuspended}">	<!-- [#26282]/#27654 -->
 										<p:menuitem value="#{lbl['lbl.cm.add.to.cr']}"
 											actionListener="#{catalogueBackingBean.addToList(supplierItem,1)}"
 											update="@form" icon="ui-icon-plus"
@@ -484,7 +495,7 @@
 
 									<p:spacer width="5px" />
 
-									<h:panelGroup rendered="#{supplierItem.atcRequired}">
+									<h:panelGroup rendered="#{supplierItem.daSuspendReg ? 'false' : supplierItem.atcRequired}">	<!-- [#26282] -->
 										<p:commandLink disabled="#{!supplierItem.atcRequired}"
 											action="#{requestNoteBackingBean.addToCart(supplierItem.docId, false, null)}"
 											update="@form"
@@ -595,6 +606,14 @@
 			<ui:include src="viewWishListItem.xhtml"></ui:include>
 		</p:dialog> -->
 		
+		<!-- [#26282] - start -->
+		<ac:disciplinaryActionHistory 
+			voList="#{catalogueBackingBean.managedBean.disciplineVOs}" 
+			dialogMessage="#{catalogueBackingBean.managedBean.disciplinaryMsg}"
+			btnView="true"
+			dialogHeader="" /> <ui:remove>set null value for title at popup DA history</ui:remove>
+		<!-- [#26282] - end -->
+
 		<!-- #27654 start -->
 		<p:dialog id="dlItemSuspended" header="#{lbl['lbl.cm.alert.message']}" 
 			widgetVar="dlItemSuspendedWv" dynamic="true" width="500" height="100" closable="true">

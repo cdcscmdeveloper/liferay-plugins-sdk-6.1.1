@@ -4,7 +4,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 	
 	<style type="text/css">
 		.commandLink {
@@ -87,7 +88,7 @@
 						<ui:remove>#11134 -end-</ui:remove>
 					</p:row>
 		           	<p:row>
-						<ui:remove>#11134 -start-</ui:remove>
+						<ui:remove>#11134 -start-</ui:remove>						
 						<p:column colspan="1" headerText="#{lbl['lbl.sc.ranking']}"
 							style="width:5%; text-align:center;" />
 						<p:column colspan="1" headerText="#{lbl['lbl.sc.remarks']}"
@@ -151,30 +152,34 @@
 					</h:outputText>
 				</p:column>
 				
-				<p:column rendered="#{!empty qualifiedSupp.smMofAccount and qualifiedSupp.smMofAccount.recordStatusFlg
-								  	 								eq DbValueConst.recordStatusActive}">
-					<h:outputText value="#{lbl['lbl.pm.status.active']}"/>							  	 
+				<ui:remove>26247 - start</ui:remove>
+				<ui:param name="supplier"
+					value="#{qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
+				<ui:param name="mofExpired"
+					value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
+				<p:column styleClass="#{mofExpired ? 'red-background':''}">
+					<h:outputText
+						value="#{consolidationReportBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />						  	 
 				</p:column>
-				
-				<p:column style="background-color:red; color:white; font-weight:bold;" 
-						  rendered="#{empty qualifiedSupp.smMofAccount}">
-					<h:outputText value="#{lbl['lbl.sm.status.expired']}"/>
-				</p:column>
-						
 				<p:column>
-					<h:outputText value="" />
+					<ac:disciplinaryActionYesNo supplier="#{supplier}" index="#{index}" />
 				</p:column>
+				<ui:remove>26247 - end</ui:remove>
+
 				
 				<p:column rendered="#{false}" >
 					<h:outputText value="" />
 				</p:column>
 				
 				<p:column style="text-align:center;">
+					<ui:remove>26247 - start</ui:remove>
 					<p:inputText id="deskOfficerRankInput" value="#{qualifiedSupp.deskOfficerRank}" 
 								 size="5" maxlength="3" required="false" autocomplete="false" 
 								 label="#{lbl['lbl.sc.consolidation.report.do.ranking']}"
-								 disabled="#{qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}">
-								 <ui:remove>21692</ui:remove>
+								 disabled="#{consolidationReportBackingBean.disabledQTProcess(qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)
+								 	or qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}">
+									<ui:remove>21692</ui:remove>
+					<ui:remove>26247 - end</ui:remove>
 						<ac:validateNumber 
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 							maxIntegerDigits="4" integerOnly="true"  />

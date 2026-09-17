@@ -1173,8 +1173,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		boolean isWithFederal = currentPersonnel.getSmAppl().getSmCompanyBasic().isWithFederal();
 		log.info("isWithFederal --> " + isWithFederal );
 		log.info("softCertStatus --> " + softCertStatus );
-
-		if(!isWithFederal && !isG2G){ //assumption non-federal has no published catalog
+		//Start 26288 - DA - 29602
+		if(!isWithFederal && !isG2G && !SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL.equalsIgnoreCase(supplier.getBusinessType())){ //assumption non-federal has no published catalog
 			log.info("this is basic not g2g");
 			if(!isPublishedCatalogue(supplier.getSupplierId())){
 				if(getCmSupplierItems(supplier.getSupplierId()).size() > 0){
@@ -1183,13 +1183,20 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 					path = CATALOGUE_UPLOAD_PATH;
 				}
 				getManagedBean().setFlowStatus(1);
-			}
-			if(validSupplierTemp()){
+			}else if(validSupplierTemp()){
 				if(softCertStatus == SupplierManagementConst.SOFT_CERT_PENDING_REQ && !isWithFederal){
 					log.info(">>>CHange ROle for SUpplier Temp<<");
 					changeRoleForSupplierTemp(currentPersonnel.getPersonnelId(),supplier);
 				}				
 			}
+		//26238 - Basic account skip upload catalogue
+		}else if(!isG2G && (isWithFederal || SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL.equalsIgnoreCase(supplier.getBusinessType()))&& !isPublishedCatalogue(supplier.getSupplierId())){
+			if(getCmSupplierItems(supplier.getSupplierId()).size() > 0){
+				path = CATALOGUE_MAINT;
+			}else{
+				path = CATALOGUE_UPLOAD_PATH;
+			}
+			getManagedBean().setFlowStatus(1);
 		}else{
 			log.info("this is basic g2g");
 
