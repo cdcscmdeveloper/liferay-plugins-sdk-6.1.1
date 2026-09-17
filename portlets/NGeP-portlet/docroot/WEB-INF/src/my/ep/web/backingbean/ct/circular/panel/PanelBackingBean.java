@@ -59,7 +59,7 @@ import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
 import my.ep.dto.ct.circular.PanelGroupItemReqDTO;
 import my.ep.dto.ct.circular.PanelGroupItemResDTO;
-import my.ep.dto.pm.authorization.user.UserStatusCheckDTO; //#30737
+import my.ep.dto.pm.authorization.user.SelectedInactiveUserDTO; //#30737
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
@@ -843,7 +843,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 				reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
 			}
 			
-			reqDTO.setSelectedInactiveList(getManagedBean().getUserStatusCheckResult()); // 30737
+			reqDTO.setSelectedInactiveList(getManagedBean().getInactiveUserRevise()); // 30737
 			
 			CircularResDTO resDTO = circularSO.saveCircular(reqDTO); 
 			if(resDTO.isSuccessful()) {
@@ -1030,7 +1030,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setUserRole(getUserRole());
 			
-			reqDTO.setSelectedInactiveList(getManagedBean().getUserStatusCheckResult()); //30737
+			reqDTO.setSelectedInactiveList(getManagedBean().getInactiveUserRevise()); //30737
 
 			CircularResDTO resDTO = circularSO.saveCancelCircularRequest(reqDTO);
 			if(resDTO.isSuccessful()) {
@@ -4067,7 +4067,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 	//#40498,#30014 - End
 	
 	//#30737 - start
-	public List<UserStatusCheckDTO> validateInactiveUserForRevise(CtCircular circular, CtCircularVer ctCircularVer, String userRole) {
+	public List<SelectedInactiveUserDTO> validateInactiveUserForRevise(CtCircular circular, CtCircularVer ctCircularVer, String userRole) {
 		
 		ICircularSO circularSO = null;
 		
@@ -4089,10 +4089,10 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 		} finally {
 			circularSO = null;
 		}
-		return new ArrayList<UserStatusCheckDTO>();
+		return new ArrayList<SelectedInactiveUserDTO>();
 	}
 	
-	public List<UserStatusCheckDTO> validateInactiveUserForReviseFromCancelCircular(String docType, String cancelDocNo, String userRole) {
+	public List<SelectedInactiveUserDTO> validateInactiveUserForReviseFromCancelCircular(String docType, String cancelDocNo, String userRole) {
         
         ICircularSO circularSO = null;
         
@@ -4116,11 +4116,11 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
         } finally {
             circularSO = null;
         }
-        return new ArrayList<UserStatusCheckDTO>();
+        return new ArrayList<SelectedInactiveUserDTO>();
     }
 	
 	public void checkingInactiveUserViaProcess(String action) {
-		List<UserStatusCheckDTO> userListStatus = new ArrayList<UserStatusCheckDTO>();
+		List<SelectedInactiveUserDTO> userListStatus = new ArrayList<SelectedInactiveUserDTO>();
         
         if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
             log.info("saveCancelCircularReq inactive action : "+action);
@@ -4147,9 +4147,9 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
             if (!userListStatus.isEmpty()) {
                  Long userStatus = null;
                  
-                 for(UserStatusCheckDTO inactiveActor : userListStatus){
+                 for(SelectedInactiveUserDTO inactiveActor : userListStatus){
                      userStatus = inactiveActor.getStatus();
-                     this.getManagedBean().setUserStatusCheckResult(inactiveActor.getStatus());
+                     this.getManagedBean().setInactiveUserRevise(inactiveActor.getStatus());
                      break;
                     }
                  
@@ -4162,7 +4162,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 	}
 	
 	public void validateUserToCheckStatus(String outcome) {
-		List<UserStatusCheckDTO> userListStatus = new ArrayList<UserStatusCheckDTO>();
+		List<SelectedInactiveUserDTO> userListStatus = new ArrayList<SelectedInactiveUserDTO>();
 
 		CtCircularVer ctCircularVer = getManagedBean().getCircularVer();
 
@@ -4185,10 +4185,10 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			if (!userListStatus.isEmpty()) {
 				Long userStatus = null;
 
-				for (UserStatusCheckDTO userStatusResult : userListStatus) {
-					userStatus = userStatusResult.getStatus();
-					this.getManagedBean().setUserStatusCheckResult(
-							userStatusResult.getStatus());
+				for (SelectedInactiveUserDTO inactiveActor : userListStatus) {
+					userStatus = inactiveActor.getStatus();
+					this.getManagedBean().setInactiveUserRevise(
+							inactiveActor.getStatus());
 					break;
 				}
 

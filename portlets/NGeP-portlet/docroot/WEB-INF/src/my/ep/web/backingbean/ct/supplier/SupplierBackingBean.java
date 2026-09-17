@@ -42,9 +42,9 @@ import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.audit.AuditContractReqDTO; //35506
 import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
-import my.ep.dto.pm.authorization.user.UserStatusCheckReqDTO; //#30737
-import my.ep.dto.pm.authorization.user.UserStatusCheckResDTO; //#30737
-import my.ep.dto.pm.authorization.user.UserStatusCheckDTO; //#30737
+import my.ep.dto.pm.authorization.user.InactiveUserReqDTO;
+import my.ep.dto.pm.authorization.user.InactiveUserResDTO;
+import my.ep.dto.pm.authorization.user.SelectedInactiveUserDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
@@ -121,7 +121,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 
 	//#30737 - Start 
     @Override
-    protected List<PmUser> getSelectedApprovers() {
+    protected List<PmUser> getSelectedUsers() {
         return getManagedBean().getApproverModel().getTarget();
     }
     
@@ -625,20 +625,20 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 					? RoleCode.MIN_CONTRACT_ADMIN.value() 
 							: RoleCode.BPK_CCA.value();
 					
-			List<UserStatusCheckDTO> userStatusResults = 
+			List<SelectedInactiveUserDTO> selectedInactiveUsers = 
 					checkInactiveUsers(roleCode, getManagedBean().getContractAdminlist(), docType);
 					
-			if (!userStatusResults.isEmpty()) {
+			if (!selectedInactiveUsers.isEmpty()) {
 				Long userStatus = null;
 				 
-				for(UserStatusCheckDTO ctActor : userStatusResults){
+				for(SelectedInactiveUserDTO ctActor : selectedInactiveUsers){
 					 userStatus = ctActor.getStatus(); // expected only 1 actor
 					 break;
 					}
 				 
 				 if(InactiveUserConst.INACTIVE_USER_5.equals(userStatus)){
 		        	log.info(" BPM_SUBMIT + return 5");
-	                handleInactiveUserValidation(action, userStatusResults);
+	                handleInactiveUserValidation(action, selectedInactiveUsers);
 				 }
 	         }
 				
@@ -865,9 +865,9 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				
 				String approverType = (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 						ParameterConst.CONTRACT_TYPE_MINISTRY)) ? RoleCode.CT_APPROVER.value() : RoleCode.BPK_CC_APPROVER.value();
-				List<UserStatusCheckDTO> userStatusResults = 
-						checkInactiveUsers(approverType, getSelectedApprovers(), docType);
-		        handleInactiveUserValidation(action, userStatusResults);
+				List<SelectedInactiveUserDTO> selectedInactiveUsers = 
+						checkInactiveUsers(approverType, getSelectedUsers(), docType);
+		        handleInactiveUserValidation(action, selectedInactiveUsers);
 		        
 				log.info(" action : "+action);
 			}
@@ -881,20 +881,20 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 						? RoleCode.MIN_CONTRACT_ADMIN.value() 
 								: RoleCode.BPK_CCA.value();
 						
-				List<UserStatusCheckDTO> userStatusResults = 
+				List<SelectedInactiveUserDTO> selectedInactiveUsers = 
 						checkInactiveUsers(roleCode, getManagedBean().getContractAdminlist(), docType);
 						
-				if (!userStatusResults.isEmpty()) {
+				if (!selectedInactiveUsers.isEmpty()) {
 					Long userStatus = null;
 					 
-					for(UserStatusCheckDTO ctActor : userStatusResults){
+					for(SelectedInactiveUserDTO ctActor : selectedInactiveUsers){
 						 userStatus = ctActor.getStatus(); // expected only 1 actor
 						 break;
 						}
 					 
 					 if(InactiveUserConst.INACTIVE_USER_5.equals(userStatus)){
 			        	log.info(" BPM_SUBMIT + return 5");
-		                handleInactiveUserValidation(action, userStatusResults);
+		                handleInactiveUserValidation(action, selectedInactiveUsers);
 					 }
 		         }
 					
@@ -905,12 +905,12 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		}
 	}
 	// getInactiveUsers
-	private List<UserStatusCheckDTO> checkInactiveUsers(String roleCode, List<PmUser> users, String docType) {
+	private List<SelectedInactiveUserDTO> checkInactiveUsers(String roleCode, List<PmUser> users, String docType) {
   		
   	    IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 
-  	    UserStatusCheckReqDTO inactiveDto = new UserStatusCheckReqDTO();
-  	    inactiveDto.setUserIds(buildUserIdString(users));
+  	    InactiveUserReqDTO inactiveDto = new InactiveUserReqDTO();
+  	    inactiveDto.setUserIds(populateInactiveUserIdIntoString(users));
   	    inactiveDto.setUserRoleCode(roleCode);
   	    inactiveDto.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
   	    inactiveDto.setDocType(docType);
@@ -919,18 +919,18 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
   	    
   	    log.info("xoxoxoxoxo getInactiveUsers docType : "+docType);
   	    
-  	    UserStatusCheckResDTO resDto = userSO.checkInactiveUserBySP(inactiveDto);
+  	    InactiveUserResDTO resDto = userSO.checkInactiveUserBySP(inactiveDto);
   	    resDto.setRoleCode(roleCode);
   	    
   	    log.info("xoxoxo getStatus "+resDto.getStatus());
   	    log.info("xoxoxo getMessage "+resDto.getMessage());
   	    log.info("xoxoxo roleCode "+roleCode);
 
-  	    return buildUserStatusCheckResults(users, resDto);
+  	    return resolveInactiveUserStatus(users, resDto);
   	}
 	
 	// private to populate user id into string with comma delimiter 
-  	private String buildUserIdString(List<PmUser> pmUsers){
+  	private String populateInactiveUserIdIntoString(List<PmUser> pmUsers){
   		StringBuilder sb = new StringBuilder();
   		for(PmUser user : pmUsers){
   			if (sb.length() > 0) {
@@ -941,16 +941,16 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
   		return sb.toString();
   	}
   	
-  	private List<UserStatusCheckDTO> buildUserStatusCheckResults(List<PmUser> users, UserStatusCheckResDTO resDto) {
+  	private List<SelectedInactiveUserDTO> resolveInactiveUserStatus(List<PmUser> users, InactiveUserResDTO resDto) {
 
-  	    List<UserStatusCheckDTO> selectedUsers = new ArrayList<UserStatusCheckDTO>();
+  	    List<SelectedInactiveUserDTO> selectedUsers = new ArrayList<SelectedInactiveUserDTO>();
   	    if (!users.isEmpty()) {
   	    	String[] statuses = resDto.getStatus().split(",");
   	  	    for (int i = 0; i < statuses.length; i++) {
   	  	    	
   	  	    	String userRoleDesc = RoleHelper.getInstance().getRoleDescByCode(resDto.getRoleCode()).getRoleName();
   	  	    	
-  	  	        UserStatusCheckDTO selectedUser = new UserStatusCheckDTO();
+  	  	        SelectedInactiveUserDTO selectedUser = new SelectedInactiveUserDTO();
   	  	        selectedUser.setUserName(users.get(i).getUserName());
   	  	        selectedUser.setUserRoleDesc(userRoleDesc);
   	  	        selectedUser.setStatus(Long.parseLong(statuses[i].trim()));

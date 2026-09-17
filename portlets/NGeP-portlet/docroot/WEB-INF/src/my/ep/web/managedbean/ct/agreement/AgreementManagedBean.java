@@ -97,7 +97,7 @@ public class AgreementManagedBean extends BaseManagedBean {
 	//#24333 - End
 	
 	//30737 - start
-	private Long userStatusCheckResult;
+	private Long inactiveUserRevise;
 	//30737 - end
 		
 	/**
@@ -844,20 +844,14 @@ public class AgreementManagedBean extends BaseManagedBean {
 		this.isBondAttachmentCompleted = isBondAttachmentCompleted;
 	}
 	// 24333 - End
-
+	
 	//30737 - start
-	/**
-	 * @return the userStatusCheckResult
-	 */
-	public Long getUserStatusCheckResult() {
-		return userStatusCheckResult;
+	public Long getInactiveUserRevise() {
+		return inactiveUserRevise;
 	}
 
-	/**
-	 * @param userStatusCheckResult the userStatusCheckResult to set
-	 */
-	public void setUserStatusCheckResult(Long userStatusCheckResult) {
-		this.userStatusCheckResult = userStatusCheckResult;
+	public void setInactiveUserRevise(Long inactiveUserRevise) {
+		this.inactiveUserRevise = inactiveUserRevise;
 	}
 	//30737 - end
 }

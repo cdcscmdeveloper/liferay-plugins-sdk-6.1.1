@@ -30,12 +30,5 @@
 	<classpathentry kind="lib" path="C:/ePerolehanDemo/liferay-portal-6.1.1-ce-ga2/jboss-7.1.1/modules/javax/enterprise/api/main/cdi-api-1.0-SP4.jar"/>
 	<classpathentry kind="src" path="/NGeP-bizBase"/>
 	<classpathentry kind="lib" path="C:/ePerolehanDemo/liferay-portal-6.1.1-ce-ga2/jboss-7.1.1/modules/org/picketbox/main/picketbox-4.0.7.Final.jar"/>
-	<classpathentry kind="lib" path="/NGeP-ear/EarContent/lib/commons-beanutils-1.8.3.jar"/>
-	<classpathentry kind="lib" path="/NGeP-ear/EarContent/lib/commons-collections.jar"/>
-	<classpathentry kind="lib" path="/NGeP-ear/EarContent/lib/commons-discovery-0.2.jar"/>
-	<classpathentry kind="lib" path="/NGeP-ear/EarContent/lib/commons-id-0.1-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="/NGeP-ear/EarContent/lib/commons-io-1.3.2.jar"/>
-	<classpathentry kind="lib" path="/NGeP-ear/EarContent/lib/commons-lang.jar"/>
-	<classpathentry kind="lib" path="/NGeP-ear/EarContent/lib/commons-logging.jar"/>
 	<classpathentry kind="output" path="docroot/WEB-INF/classes"/>
 </classpath>
