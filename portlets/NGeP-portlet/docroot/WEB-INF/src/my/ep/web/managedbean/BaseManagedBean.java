@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.faces.model.SelectItem;
@@ -210,6 +211,13 @@ public abstract class BaseManagedBean implements Serializable {
 	List<ScQtFinalizationReportDetail> scQtFinalizationReportDetail; 
 	private List<ScQtFinalizationReportDetail> removeFinalizationReportDetails;
 	private ScQtFinalizationReportDetail selectedBriefingReportDetail;
+	
+	// #34444 START
+	private String btnAction;
+	
+	@javax.faces.bean.ManagedProperty("#{lbl}")
+	private ResourceBundle lbl;
+	// #34444 END
 	
 	private List<Map.Entry<String, String>> reportDetail = new ArrayList<>();
 	
@@ -1311,4 +1319,40 @@ public abstract class BaseManagedBean implements Serializable {
 		this.selectedBriefingReportDetail = selectedBriefingReportDetail;
 	}
 	// #25651 - End
+	
+	// #34444 START
+		public String getBtnAction() {
+			return btnAction;
+		}
+
+		public void setBtnAction(String btnAction) {
+			this.btnAction = btnAction;
+		}
+
+		public ResourceBundle getLbl() {
+			return lbl;
+		}
+
+		public void setLbl(ResourceBundle lbl) {
+			this.lbl = lbl;
+		}
+
+		public String getConfirmTitle() {
+			if (lbl == null || btnAction == null) {
+				return "";
+			}
+			return my.ep.web.util.sc.ActionPopupMessageKeys.getTitleMessage(btnAction, lbl);
+		}
+
+		public String getConfirmContent() {
+			if (lbl == null || btnAction == null) {
+				return "";
+			}
+			return my.ep.web.util.sc.ActionPopupMessageKeys.getContentMessage(btnAction, lbl);
+		}
+
+		public void prepareAction(String action) {
+			this.btnAction = action;
+		}
+		// #34444 END
 }
