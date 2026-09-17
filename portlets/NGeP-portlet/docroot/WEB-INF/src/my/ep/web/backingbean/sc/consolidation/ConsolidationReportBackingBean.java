@@ -534,6 +534,38 @@ public class ConsolidationReportBackingBean extends
 			uploadAttachment(event.getFile(), scAttachment);
 		}
 	}
+	
+	//#25651 - Start
+	/**
+     * To download a report detail under evaluation tab
+	 * 
+	 * @param scQtFinalizationReport
+	 *            selected report which would be downloaded
+	 * @throws Exception
+	 *             the exception that would be thrown in case of any error while
+	 *             downloading the report
+	 */
+	public void downloadReportDetail(ScQtFinalizationReportDetail scQtFinalizationReportDetail)
+			throws Exception {
+		debugLogger("downloadReport");
+
+		ScQtFinalizationReportDetailAttachment reportAttachment = scQtFinalizationReportDetail
+				.getScQtFinalizationReportDetailAttachment();
+		String definitionType = scQtFinalizationReportDetail.getDefinationType().getParameterCode();
+		String docDefinitionKey = null;
+		if (!SourcingConstants.DEMO_EVALUATION_REPORT.equalsIgnoreCase(scQtFinalizationReportDetail.getTitle())) {
+			docDefinitionKey = scQtFinalizationReportDetail.getPmDocument().getDocDefinitionKey();
+		}
+	
+		if (reportAttachment == null
+				|| (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equals(definitionType) && SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT
+						.equals(docDefinitionKey))) {
+			reportAttachment = generateDocumentAttachmentDetail(scQtFinalizationReportDetail);
+			
+		}
+		downloadFile(reportAttachment);
+	}
+	//#25651 - End
 
 	/**
 	 * To download a report under Briefing Paper/Kertas Taklimat tab
@@ -633,15 +665,10 @@ public class ConsolidationReportBackingBean extends
 	}
 	// #25651 - End
 	
-	// #18685 - Start
-	/**
-	 * @throws Exception
-	 */
-	// 38523 - start
-	public void downloadAllBriefingPaperReports(boolean skipDownload) throws Exception {
-		// #18685 - Start.
-		debugLogger("downloadAllReports");
-		List<ScAttachment> attachments = new ArrayList<>(); //#25651
+	// #25651 - Start
+	public void  downloadAllBriefingPaperReportDetails(boolean skipDownload) throws Exception {
+	
+		List<ScAttachment> attachments = new ArrayList<>(); 
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<>();
 		List<ScQtFinalizationReport> scQtFinalizationReports = briefingPaperDisplayFilter(getManagedBean()
 				.getScQtFinalization().getScQtFinalizationReports());
@@ -658,7 +685,6 @@ public class ConsolidationReportBackingBean extends
 		}
 
 		if (CollectionUtils.isNotEmpty(this.getManagedBean().getNewBriefingPaperReportList())) {
-			// 38523 - end
 			for (ScQtFinalizationReport uploadedSfReport : this.getManagedBean().getNewBriefingPaperReportList()) {
 				if (uploadedSfReport.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)
 						&& null != uploadedSfReport.getScQtFinalizationReportAttachment()) {
@@ -667,7 +693,6 @@ public class ConsolidationReportBackingBean extends
 			}
 		}
 		
-		//#25651 - Start
 		attachments.addAll(scAttachments);
 		List<Object[]> reportDetailList = reportDetailAttachmentType();
 		List<ScQtFinalizationReportDetail> scQtFinalizationReportDetail = this.getManagedBean().getScQtFinalizationReportDetail();
@@ -684,11 +709,50 @@ public class ConsolidationReportBackingBean extends
 				}
 			}
 		}
-		//#25651 - Start
 		
 		// Generate all the reports before submission
+		if (!skipDownload) {
+			downloadAllFiles(SourcingConstants.LAPORAN_KERTAS_TAKLIMAT, attachments); 
+		}
+	
+	}
+	// #25651 - End
+	
+	// #18685 - Start
+	/**
+	 * @throws Exception
+	 */
+	// 38523 - start
+	public void downloadAllBriefingPaperReports(boolean skipDownload) throws Exception {
+		// #18685 - Start.
+		debugLogger("downloadAllReports");
+		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<>();
+		List<ScQtFinalizationReport> scQtFinalizationReports = briefingPaperDisplayFilter(getManagedBean()
+				.getScQtFinalization().getScQtFinalizationReports());
+		for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReports) {
+			ScQtFinalizationReportAttachment attachment;
+			if (scQtFinalizationReport.getTitle().contains(QTConstants.QT_REPORT_BRIEFING_PAPER)) {
+				attachment = retrieveBriefingPaperAttachment(scQtFinalizationReport, skipDownload);
+			  } else {
+				attachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
+				  }
+			if (null != attachment) {
+				scAttachments.add(attachment);
+			}
+		}
+
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getNewBriefingPaperReportList())) {
+			// 38523 - end
+			for (ScQtFinalizationReport uploadedSfReport : this.getManagedBean().getNewBriefingPaperReportList()) {
+				if (uploadedSfReport.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)
+						&& null != uploadedSfReport.getScQtFinalizationReportAttachment()) {
+					scAttachments.add(uploadedSfReport.getScQtFinalizationReportAttachment());
+				}
+			}
+		}
+
 		if (!skipDownload) {// 38523
-			downloadAllFiles(SourcingConstants.LAPORAN_KERTAS_TAKLIMAT, attachments); //#25651
+			downloadAllFiles(SourcingConstants.WIP_LAPORAN_KERTAS_TAKLIMAT, scAttachments);	//#25651
 		}
 		// #18685 - End.
 	}
@@ -768,6 +832,61 @@ public class ConsolidationReportBackingBean extends
 		}
 	}
 	
+	//#25651 - Start
+	/**
+	 * To combine download evalution report ScQtFinalizationReport and ScQtFinalizationReportDetail
+	 */
+	public void downloadCombinedReport(Object report) throws Exception {
+
+		if (report instanceof ScQtFinalizationReport) {
+
+			downloadReport((ScQtFinalizationReport) report);
+
+		} else if (report instanceof ScQtFinalizationReportDetail) {
+
+			downloadReportDetail((ScQtFinalizationReportDetail) report);
+		}
+	}
+	//#25651 - End
+	
+	//#25651 - Start
+	/**
+	 * To get list evaluation report ScQtFinalizationReport and ScQtFinalizationReportDetail
+	 */
+	public List<Object> getCombinedEvaluationReportList() {
+
+		List<Object> combinedReportList = new ArrayList<Object>();
+		ScQt scQt = getManagedBean().getScQt();
+
+		List<ScQtFinalizationReport> reports = getManagedBean().getEvaluationReportList();
+		List<ScQtFinalizationReportDetail> details = getManagedBean().getEvaluationReportDetailList();
+
+		if (CollectionUtils.isNotEmpty(reports)) {
+			for (ScQtFinalizationReport report : reports) {
+				String key = report.getPmDocument().getDocDefinitionKey();
+
+				if (!isWipEvaluationReportExisting(key, scQt.getQtId())) {
+					combinedReportList.addAll(reports);
+					break;
+				}
+			}
+		}
+
+		if (CollectionUtils.isNotEmpty(details)) {
+			for (ScQtFinalizationReportDetail detail : details) {
+				String key = detail.getPmDocument().getDocDefinitionKey();
+
+				if (isWipEvaluationReportExisting(key, scQt.getQtId())) {
+					combinedReportList.addAll(details);
+					break;
+				}
+			}
+		}
+
+		return combinedReportList;
+	}
+	//#25651 - End
+	
 	/**
 	 * save consolidationReport Details.
 	 * 
@@ -810,7 +929,8 @@ public class ConsolidationReportBackingBean extends
 			// #18685 - End 
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 					.saveConsolidationReport(reqDTO);
-			//saveEvaluationReportsDetaills();
+			
+			saveFinalizationReportDetails(); //#25651
 			
             // #18685 - Start
             /*for (ScQtFinalizationRemarks updatedRemark : resDTO.getScQtFinalization().getScQtFinalizationRemarks()) {
@@ -1250,6 +1370,7 @@ public class ConsolidationReportBackingBean extends
 			reqDTO.setDocumentCategory(ParameterConst.DOCUMENT_CATEGORY_BRIEFING_PAPER);
 			reqDTO.setExcludedDocNames(ConsolidationReportManagedBean.getDirectdownloaddocdefkeys());
 			List<ScQtFinalizationReportDetail> finalizationReportsDetail = qtSuppFinalizationSO.retriveFinalizationReportDetail(reqDTO).getScQtFinalizationReportDetails();
+			populateEvaluationReportDetails(finalizationReportsDetail, this.getManagedBean().getScQt());
 			this.getManagedBean().setScQtFinalizationReportDetail(finalizationReportsDetail);
 			// #25651 - End
 			
@@ -1898,6 +2019,46 @@ public class ConsolidationReportBackingBean extends
 		finalizeUlasanremarks();
 		return reqDTO;
 	}
+	
+    //#25651 - Start
+	private ScQtFinalizationReportDetailAttachment generateDocumentAttachmentDetail(
+			ScQtFinalizationReportDetail scQtFinalizationReportDetail) throws Exception {
+		
+		ScQtFinalization scQtFinalization = getManagedBean()
+				.getScQtFinalization();
+
+		ScQtFinalizationReportDetailAttachment reportAttachment = null;
+
+		String docDefinitionKey = scQtFinalizationReportDetail.getPmDocument()
+				.getDocDefinitionKey();
+		ScQt scQt = getManagedBean().getScQt();
+		reportAttachment = new ScQtFinalizationReportDetailAttachment();
+		reportAttachment.setScQtFinalizationReportDetail(scQtFinalizationReportDetail);
+		reportAttachment.setDocNo(scQtFinalization.getScQt().getQtNo());
+		StringBuilder filename = new StringBuilder();
+		// replace white space due to firefox
+		filename.append(scQtFinalizationReportDetail
+				.getTitle()
+				.replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE,
+						SourcingConstants.UNDER_SCORE)
+				.replaceAll(SourcingConstants.REG_EXP_BACK_SLASH,
+						SourcingConstants.UNDER_SCORE));
+
+		if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT
+				.equals(docDefinitionKey)) {
+			filename.append(".rtf");
+			reportAttachment.setFileName(filename.toString());
+			generateKertasTaklimatPdf(scQt, reportAttachment);
+		} else {
+			debugLogger("No document type exists with the key "
+					+ docDefinitionKey);
+			reportAttachment = null;
+		}
+
+	
+		return reportAttachment;
+	}
+	//#25651 - End
 
 	private ScQtFinalizationReportAttachment generateDocumentAttachment(
 			ScQtFinalizationReport scQtFinalizationReport) throws Exception {
@@ -1942,7 +2103,7 @@ public class ConsolidationReportBackingBean extends
 	}
 
 	private void generateKertasTaklimatPdf(ScQt qt,
-			ScQtFinalizationReportAttachment attachment) throws Exception {
+			ScAttachment attachment) throws Exception { //#25651
 		debugLogger("generateKertasTaklimatPdf");
 		populateAttachmentDetails(attachment);
 

@@ -190,6 +190,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportDetail;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportDetailAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
@@ -1864,6 +1866,31 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				ParameterTypeConst.COMMITTEE_ROLE, searchBean);
 
 	}
+	
+	// #30447 - start
+	/**
+	 * To retrieve salutation + name with salutation duplication checking
+	 * 
+	 * @param salutation, name
+	 * @return String salutation+name | name
+	 */
+	public String getFormattedSalutationName(String salutation, String name ) {
+		name = StringUtils.trimToEmpty(name);
+
+		salutation = StringUtils.trimToEmpty(salutation);
+		
+        if (name.isEmpty() || salutation.isEmpty()) {
+            return name;
+        }
+        if (StringUtils.startsWithIgnoreCase(name, salutation)) {
+            return name;
+        }
+        if (name.equals(name.toUpperCase())) {
+            salutation = salutation.toUpperCase();
+        }
+        return salutation + " " + name;
+	}
+	// #30447 - end
 
 	/**
 	 * Retrive mof account by supplier.
@@ -5336,6 +5363,32 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	}
 	
+	//#25651 - Start
+	
+	/**
+	 * Delete reports upload file.Event handle to delete upload file in
+	 * reports tab.
+	 * @param delEntity
+	 *               (BaseEntity delEntity).
+	 */
+	public void deleteReportDetailsUploadFile(BaseEntity delEntity) {
+		log.debug("deleteUploadFile");
+		
+		try{
+		log.debug("deleteReportsUploadFile");
+		ScQtFinalizationReportDetail selectedEvaluationReport = getManagedBean()
+				.getSelectedBriefingReportDetail();
+		selectedEvaluationReport.setScQtFinalizationReportDetailAttachment(null);
+		 getManagedBean()
+			.setSelectedBriefingReportDetail(selectedEvaluationReport);
+		}finally{
+		
+		}
+
+	}
+	
+	//#25651 - End
+	
 	/**
 	 * @param finalizationReports
 	 * @param scQt 
@@ -5375,6 +5428,52 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								}
 							}
 						// 18685 - END.	
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	//#25651 - Start
+	/**
+	 * @param finalizationReportDetails
+	 * @param scQt 
+	 */
+	public void populateEvaluationReportDetails(List<ScQtFinalizationReportDetail> finalizationReportDetails, ScQt scQt) {
+		if (null != scQt) {
+			String evaluationType = scQt.getEvaluationType();
+			if (StringUtils.isNotEmpty(evaluationType)) {
+				Iterator<ScQtFinalizationReportDetail> iterator = finalizationReportDetails.iterator();
+				while (iterator.hasNext()) {
+					ScQtFinalizationReportDetail reportDetail = iterator.next();
+					if (null != reportDetail) {
+
+						if (getManagedBean().getEvaluationReportDetailList() == null) {
+							List<ScQtFinalizationReportDetail> erList = new ArrayList<>();
+							getManagedBean().setEvaluationReportDetailList(erList);
+						}
+						boolean isDemoRequired = reportDetail.getTitle().equalsIgnoreCase(
+								SourcingConstants.DEMO_EVALUATION_REPORT)
+								&& !checkDemoWIP(scQt);
+				                                   
+						if (null != reportDetail.getPmDocument() || isDemoRequired) {
+							if (SourcingConstants.EVALUATION_TYPE_TIER1.equals(evaluationType)) {
+								if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(reportDetail.getPmDocument().getDocDefinitionKey())) {
+									getManagedBean().getEvaluationReportDetailList().add(reportDetail);
+
+								}
+							} else if (SourcingConstants.EVALUATION_TYPE_TIER2.equals(evaluationType)) {
+								if (SourcingConstants.DEMO_EVALUATION_REPORT.equalsIgnoreCase(reportDetail.getTitle())
+										|| SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT.equals(reportDetail.getPmDocument().getDocDefinitionKey())
+										|| SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT.equals(reportDetail.getPmDocument().getDocDefinitionKey())
+										|| SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT.equals(reportDetail.getPmDocument().getDocDefinitionKey())
+										|| SourcingConstants.DEMO_EVALUATION_REPORT.equalsIgnoreCase(reportDetail.getTitle())) {
+									getManagedBean().getEvaluationReportDetailList().add(reportDetail);
+
+								}
+							}
+					
 						}
 					}
 				}
@@ -5593,6 +5692,62 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 	
+	//#25651 - Start
+	/**
+	 *reports file upload.to upload files for manual added reports.
+	 * 
+	 * @param event
+	 *            (Mandatory)
+	 * @throws FileNotFoundException
+	 *             the file not found exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public void reportDetailsUploadAttachment(FileUploadEvent event)
+			throws FileNotFoundException, IOException {
+		if (event.getFile() != null) {
+			ScAttachment scAttachment = null;
+			ScQtFinalizationReportDetail briefingReport = getManagedBean()
+					.getSelectedBriefingReportDetail();
+			ScQtFinalizationReportDetailAttachment reportAttachment = briefingReport
+					.getScQtFinalizationReportDetailAttachment();
+			if (null == reportAttachment) {
+				reportAttachment = new ScQtFinalizationReportDetailAttachment();
+				reportAttachment.setScQtFinalizationReportDetail(briefingReport);
+				briefingReport
+						.setScQtFinalizationReportDetailAttachment(reportAttachment);
+			} else {
+				reportAttachment.setScQtFinalizationReportDetail(briefingReport);
+				briefingReport
+						.setScQtFinalizationReportDetailAttachment(reportAttachment);
+			}
+			
+			int index = 0;
+			
+			if (CollectionUtils.isNotEmpty(getManagedBean().getScQtFinalizationReportDetail())
+			    && this.getManagedBean().getScQtFinalizationReportDetail().size() > 0) {
+			  for (ScQtFinalizationReportDetail finalizationReport : getManagedBean().getScQtFinalizationReportDetail()) {
+			    if (finalizationReport.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)) {
+			      index++;
+			    }
+			  }
+			}
+			reportAttachment.setDocNo(getManagedBean().getDocNo());
+			scAttachment = reportAttachment;
+			uploadAttachment(event.getFile(), scAttachment);
+			String fileName = scAttachment.getFileName();
+			
+			if (index >= 0 && fileName != null) {
+              reportAttachment.setFileName(index + UNDER_SCORE
+                      + fileName);
+			}
+			
+			briefingReport.setScQtFinalizationReportDetailAttachment(reportAttachment);
+		
+		}
+	}
+	//#25651 - End
+	
 	// 18685 - START.
 	/**
 	 * @param reportTitle
@@ -5661,6 +5816,29 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 
 	}
+	
+	//#25651 - Start
+	/**
+	 * delete existing report details records from database.
+	 *  
+	 */
+	public void deleteReportDetailsTabDtls() {
+		List<ScQtFinalizationReportDetail> removeFinalizationReports = getManagedBean()
+				.getRemoveFinalizationReportDetails();
+		if (null == removeFinalizationReports) {
+			removeFinalizationReports = new ArrayList<ScQtFinalizationReportDetail>();
+			getManagedBean()
+			.setRemoveFinalizationReportDetails(removeFinalizationReports);
+		}
+		markDeleteSelectedRowsAction(getManagedBean()
+				.getScQtFinalizationReportDetail(), removeFinalizationReports);
+		if(CollectionUtils.isNotEmpty(removeFinalizationReports)){
+			getManagedBean()
+			.setRemoveFinalizationReportDetails(removeFinalizationReports);
+		}
+
+	}
+	//#25651 - End
 	
 	// 18685 - START.
 	/**
@@ -8220,7 +8398,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			for (SmCompExpMasterDoc compExpDocs : supportingDocuments) {
 				ScLoaReportAttachment attachemnt = new ScLoaReportAttachment();
 				attachemnt.setFileName(compExpDocs.getFileName());
-				attachemnt.setFilePath(compExpDocs.getFilePath());
+				attachemnt.setFilePath(compExpDocs.getFilePath() + compExpDocs.getFileName()); //#41093
 				attachmentList.add(attachemnt);
 
 			}
@@ -8814,6 +8992,199 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	// #25651 - End
 	
+	// #25651 - Start
+	public void saveFinalizationReportDetails() {
+		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+
+		List<ScQtFinalizationReportDetail> finalizationReportList = this.getManagedBean()
+				.getScQtFinalizationReportDetail();
+
+		SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+		reqDTO.setFinalizationReportDetailList(finalizationReportList);
+		reqDTO.setReportType(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
+		if (CollectionUtils.isNotEmpty(getManagedBean().getRemoveFinalizationReportDetails())) {
+			List<ScQtFinalizationReportDetail> localReports = new ArrayList<>();
+			for (ScQtFinalizationReportDetail finalizationReport : getManagedBean().getRemoveFinalizationReportDetails()) {
+				if (null != finalizationReport.getQtReportId() && !finalizationReport.isBrandNew()) {
+					finalizationReport.setDeleted(true);
+					localReports.add(finalizationReport);
+				}
+
+			}
+			reqDTO.setToBeRemovedReportDetailList(localReports);
+		}
+		qtSuppFinalizationSO.saveReportDetails(reqDTO);
+	    getManagedBean().setRemoveFinalizationReportDetails(null);
+
+	}
+	// #25651 - End
+	
+	// #25651 - Start
+	public void addDocumentDetailList(ScQt scqt) {
+	
+		List<ScQtFinalizationReportDetail> newBPReportDetailList = this.getManagedBean()
+				.getScQtFinalizationReportDetail();
+		if (newBPReportDetailList == null) {
+			newBPReportDetailList = new ArrayList<>();
+		}
+		ScQtFinalizationReportDetail report = new ScQtFinalizationReportDetail();
+		report.setDocCategory(SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT);
+		ScQtFinalization scQtFinalization = scqt.getFinalization();
+		if (scQtFinalization == null) {
+			scQtFinalization = new ScQtFinalization();
+		}
+		report.setScQtFinalization(scQtFinalization);
+		IParameterSO parameterSO = null;
+		try {
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
+			reqDTO.setParameterCode(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
+			ParameterResDTO resDTO = parameterSO
+					.retrieveParameterByTypeAndCode(reqDTO);
+			report.setDefinationType(resDTO.getPmParameter());
+		} finally {
+			parameterSO = null;
+		}
+		newBPReportDetailList.add(report);
+	}
+	// #25651 - End
+	
+	//#25651 - Start
+	public String getReportTitle(Object report) {
+
+		if (report instanceof ScQtFinalizationReport) {
+			return ((ScQtFinalizationReport) report).getTitle();
+
+		} else if (report instanceof ScQtFinalizationReportDetail) {
+			return ((ScQtFinalizationReportDetail) report).getTitle();
+		}
+
+		return null;
+	}
+	//#25651 - End
+
+	//#25651 - Start
+	public PmParameter getReportDefinationType(Object report) {
+
+		if (report instanceof ScQtFinalizationReport) {
+			return ((ScQtFinalizationReport) report).getDefinationType();
+
+		} else if (report instanceof ScQtFinalizationReportDetail) {
+			return ((ScQtFinalizationReportDetail) report).getDefinationType();
+		}
+
+		return null;
+	}
+	//#25651 - End
+
+	//#25651 - Start
+	public PmDocument getReportPmDocument(Object report) {
+
+		if (report instanceof ScQtFinalizationReport) {
+			return ((ScQtFinalizationReport) report).getPmDocument();
+
+		} else if (report instanceof ScQtFinalizationReportDetail) {
+			return ((ScQtFinalizationReportDetail) report).getPmDocument();
+		}
+
+		return null;
+	}
+	//#25651 - ENd
+	
+	//#25651 - Start
+	public boolean isWipEvaluationReportExisting(String docDefinitionKey, Long qtId) {
+
+	    if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(docDefinitionKey)) {
+	        return checkWipExistingECReports(qtId);
+	    }
+
+	    if (SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT.equals(docDefinitionKey)) {
+	        return checkWipExistingOCReports(qtId);
+	    }
+
+	    if (SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT.equals(docDefinitionKey)) {
+	        return checkWipExistingTECReports(qtId);
+	    }
+
+	    if (SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT.equals(docDefinitionKey)) {
+	        return checkWipExistingFECReports(qtId);
+	    }
+
+	    return false;
+	}
+	//#25651 - End
+	
+	//#25651 - Start
+	/**
+	 * To check wip existing for evaluation report.
+	 * 
+	 * @param qtId
+	 * @return true or false
+	 */
+	public Boolean checkWipExistingECReports(Long qtId) {
+		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+		if (qtSuppFinalizationSO.checkWipExistingECReports(qtId)) {
+			return true;
+		}
+		return false;
+	}
+	//#25651 - End
+	
+	//#25651 - Start
+	/**
+	 * To check wip existing for opening report.
+	 * 
+	 * @param qtId
+	 * @return true or false
+	 */
+	public Boolean checkWipExistingOCReports(Long qtId) {
+		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+		if (qtSuppFinalizationSO.checkWipExistingOCReports(qtId)) {
+			return true;
+		}
+		return false;
+	}
+	//#25651 - End
+	
+	//#25651 - Start
+	/**
+	 * To check wip existing for techniqal report.
+	 * 
+	 * @param qtId
+	 * @return true or false
+	 */
+	public Boolean checkWipExistingTECReports(Long qtId) {
+		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+		if (qtSuppFinalizationSO.checkWipExistingTECReports(qtId)) {
+			return true;
+		}
+		return false;
+	}
+	//#25651 - End
+	
+	//#25651 - Start
+	/**
+	 * To check wip existing for financial report.
+	 * 
+	 * @param qtId
+	 * @return true or false
+	 */
+	public Boolean checkWipExistingFECReports(Long qtId) {
+		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+		if (qtSuppFinalizationSO.checkWipExistingFECReports(qtId)) {
+			return true;
+		}
+		return false;
+	}
+	//#25651 - End
+	
 	// #28188 - Start
 	/**
 	 * Group and sort briefingsitevist details.
@@ -8976,6 +9347,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			List<ScQtBsvDtl> rejectList = new ArrayList<>();
 			List<ScQtBsvDtl> pendingList = new ArrayList<>();
 			List<ScQtBsvDtl> completedList = new ArrayList<>();
+			List<ScQtBsvDtl> cancelledList = new ArrayList<>();
 			List<ScQtBsvDtl> pendingUpdateApprList = new ArrayList<>();
 			for (ScQtBsvDtl scQtBsvDtl : list) {
 				if (scQtBsvDtl.getBsvStatus() != null
@@ -8994,6 +9366,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						&& scQtBsvDtl.getBsvStatus().getStatusId()
 								.equals(QTStatusConst.BSV_COMPLETED)) {
 					completedList.add(scQtBsvDtl);
+				} else if (scQtBsvDtl.getBsvStatus() != null
+						&& scQtBsvDtl.getBsvStatus().getStatusId()
+								.equals(QTStatusConst.BSV_CANCELLED)) {
+					cancelledList.add(scQtBsvDtl);	
 				} else if (scQtBsvDtl.getBsvStatus() != null
 						&& scQtBsvDtl
 								.getBsvStatus()
@@ -9015,6 +9391,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 			if (CollectionUtils.isNotEmpty(completedList)) {
 				sortedList.addAll(completedList);
+			}
+			if (CollectionUtils.isNotEmpty(cancelledList)) {
+				sortedList.addAll(cancelledList);
 			}
 			if (CollectionUtils.isNotEmpty(pendingUpdateApprList)) {
 				sortedList.addAll(pendingUpdateApprList);

@@ -2709,11 +2709,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 		}
 		setDisciplinaryAction(scLoa);// 26247
-
+		getSmSupplierCategory(scLoa);// 29961
+		
 		// #41077: when the supplier actually changes, the Procurement-Related category codes belong to the
 		// old supplier and are invalid for the new one. Reset the category lists so the Category Code side
 		// menu regenerates from the newly selected supplier's profile, and mark the old codes for deletion on save.
-		Object newSupplierId = (suSmSupplier != null) ? suSmSupplier.getSupplierId() : null;
+		// #41111 sonarqube issue
+		Object newSupplierId = suSmSupplier.getSupplierId();
 		if (previousSupplierId != null && newSupplierId != null && !previousSupplierId.equals(newSupplierId)) {
 			resetSupplierCategoryOnSupplierChange();
 		}
@@ -2737,8 +2739,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		//#41077 end
 		getManagedBean().setDeletedCategoryList(deletedList);
 		getManagedBean().setProcurementRelatedCategoryList(null);
-		getManagedBean().setAddedCategoryList(null);
-		getManagedBean().setSupplierCategoryList(null);
+		getManagedBean().setAddedCategoryList(null);		
 	}
 
 	//#41077 start
@@ -5458,9 +5459,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				scLoa.getCurrentStatus(),
 				scLoa.getScLoaRemarks(), ScLoaRemark.class));
 		
-		// #11134 - start
-		scLoa.setScLoaRemarks(filterSupplierRemarks(scLoa.getScLoaRemarks(), false));
-		// #11134 - end
+		// #11134/#41092  - start
+		List<ScLoaRemark> supplierRemarks = filterSupplierRemarks(scLoa.getScLoaRemarks(), false);
+		getManagedBean().setSupplierRemarks(supplierRemarks);
+		// #11134/#41092  - end
 		
 		// bond calculation
 		//Enhancement #24259 #24269
@@ -5543,13 +5545,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		checkQTTypePk7WpItem();
 		// #29766 End Vinod
 		
-		// #29661 #40096 Start 
-		if (!scLoa.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_SUBMISSION)) {
+		//#29661 #40096 Start
+		Long statusId = scLoa.getPmStatus().getStatusId();
+		if (!QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)) {
 			getSmSupplierCategory(this.getManagedBean().getScLoa());
-		} else {
-			this.getManagedBean().setShowCategoryCode(true);
 		}
-		// #29661 #40096 End
+		//#29661 #40096 End
+
 		
 		return QTConstants.SC_DIRECT_LOA_MAIN_PAGE;
 	}
@@ -14772,5 +14774,32 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 	}
 	// #40974 - End
+	
+	
+	// 41092 - start
+	/**
+	 * Sorts SC LOA remarks in descending order by created date (latest first).
+	 * 
+	 * @return
+	 */
+	public List<ScLoaRemark> getSortedRemarksByDate() {
+		List<ScLoaRemark> remarks = getManagedBean().getScLoa().getScLoaRemarks();
+
+		if (remarks == null || remarks.isEmpty()) {
+			return remarks;
+		}
+
+		List<ScLoaRemark> sortedList = new ArrayList<>(remarks);
+
+		Collections.sort(sortedList, new Comparator<ScLoaRemark>() {
+			@Override
+			public int compare(ScLoaRemark r1, ScLoaRemark r2) {
+				return DateUtils.compareDatesForRemark(r1.getCreatedDate(), r2.getCreatedDate());
+			}
+		});
+
+		return sortedList;
+	}
+	// 41092 - end
 
 }

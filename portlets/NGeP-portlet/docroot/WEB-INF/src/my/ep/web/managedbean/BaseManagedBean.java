@@ -206,15 +206,18 @@ public abstract class BaseManagedBean implements Serializable {
 	private boolean displayLabelRegistrationStatus;
 	private boolean displayDropdownRegStatus;
 //	37925 END
+
+	// #25651 - Start
+	List<ScQtFinalizationReportDetail> scQtFinalizationReportDetail; 
+	private List<ScQtFinalizationReportDetail> removeFinalizationReportDetails;
+	private ScQtFinalizationReportDetail selectedBriefingReportDetail;
+	private List<ScQtFinalizationReportDetail> evaluationReportDetailList;
+	private List<Map.Entry<String, String>> reportDetail = new ArrayList<>();
 	
 	// 31788 - start
     private boolean assignNewUser = false;
     private PmUser newUser;
     // 31788 - end
-	
-	// #25651 - Start
-	List<ScQtFinalizationReportDetail> scQtFinalizationReportDetail; 
-	private List<Map.Entry<String, String>> reportDetail = new ArrayList<>();
 	
 	public BaseManagedBean(){
 		reportDetail.add(new AbstractMap.SimpleEntry<>(SourcingConstants.DOC_DEF_KEY_LAPORAN_KERTAS_TAKLIMAT_UMUM,
@@ -1297,6 +1300,32 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 //	37925 END
 
+	// #25651 - Start
+	public List<ScQtFinalizationReportDetail> getRemoveFinalizationReportDetails() {
+		return removeFinalizationReportDetails;
+	}
+
+	public void setRemoveFinalizationReportDetails(List<ScQtFinalizationReportDetail> removeFinalizationReportDetails) {
+		this.removeFinalizationReportDetails = removeFinalizationReportDetails;
+	}
+
+	public ScQtFinalizationReportDetail getSelectedBriefingReportDetail() {
+		return selectedBriefingReportDetail;
+	}
+
+	public void setSelectedBriefingReportDetail(ScQtFinalizationReportDetail selectedBriefingReportDetail) {
+		this.selectedBriefingReportDetail = selectedBriefingReportDetail;
+	}
+	
+	public List<ScQtFinalizationReportDetail> getEvaluationReportDetailList() {
+		return evaluationReportDetailList;
+	}
+
+	public void setEvaluationReportDetailList(List<ScQtFinalizationReportDetail> evaluationReportDetailList) {
+		this.evaluationReportDetailList = evaluationReportDetailList;
+	}
+	// #25651 - End
+	
 	//31788 - start
 	public boolean isAssignNewUser() {
 		return assignNewUser;
