@@ -321,7 +321,7 @@
 									</h:panelGroup>
 									</p:commandLink>
 									<p:outputLabel value="#{lbl['lbl.cm.pub.catalog.view']}" 
-									style="font-weight: bold; float: right; font-size: 15px; margin-left: 20px;"/>	
+									style="font-weight: bold; float: right; font-size: 15px; margin-left: 20px;  white-space:nowrap;"/>	
 									
 									<p:selectOneMenu
 										label="#{lbl['lbl.cm.item.per.page']}"
@@ -335,7 +335,7 @@
 										update=":form:catalogueTabId:catalogueGridViewID, :form:catalogueTabId:catalogueListingTable"/>		<!-- shift between catalogueListingTable and catalogueGridViewID -->					
 									</p:selectOneMenu>
 									<p:outputLabel value="#{lbl['lbl.cm.item.per.page']}"
-									style="font-weight: bold; float: right; font-size: 15px; margin-left: 20px; min-width:100px;"/>
+									style="font-weight: bold; float: right; font-size: 15px; margin-left: 20px;  white-space:nowrap;"/>
 									
 									<p:selectOneMenu
 										label="#{lbl['lbl.cm.sort.by']}"
@@ -349,7 +349,7 @@
 										update=":form:catalogueTabId:catalogueGridViewID, :form:catalogueTabId:catalogueListingTable"/>		<!-- shift between catalogueListingTable and catalogueGridViewID -->				
 									</p:selectOneMenu>
 									<p:outputLabel value="#{lbl['lbl.cm.sort.by']}"
-									style="font-weight: bold; float: right; font-size: 15px;"/>
+									style="font-weight: bold; float: right; font-size: 15px;  white-space:nowrap;"/>
 									<!-- #10747 - Soo - End -->
 
 									<br />
@@ -470,14 +470,14 @@
 													<!-- #10747 - Soo - End -->
 											</h:panelGroup>
 										</p:column>
-										<!-- Enhancement #31245 - start -->
+										<!-- Enhancement #31245, #10747 - start -->
 										<p:column style="width :30%;white-space:normal">
 											<p:commandLink value="#{supplierItem[8].replaceAll('N/A', '').replaceAll(' NA NA NA NA', '').replaceAll(' N A', '').replaceAll('(^|\\s|\\W)(NA)(\\s|\\W|$)', '')}"
 						    				styleClass="blue_font"
 						    				action="#{pCatalogueBackingBean.navigateToSupplierItemDet(supplierItem[12])}"
 											process="@this"/>
 										</p:column>
-										<!-- Enhancement #31245 - end -->
+										<!-- Enhancement #31245, #10747 - end -->
 										<p:column style="width :40%;white-space:normal">
 											<h:outputText value="#{supplierItem[3]}"/>
 										</p:column>
