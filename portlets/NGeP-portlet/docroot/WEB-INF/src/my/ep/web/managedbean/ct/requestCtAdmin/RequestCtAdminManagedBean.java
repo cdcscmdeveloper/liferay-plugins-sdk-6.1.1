@@ -59,7 +59,7 @@ public class RequestCtAdminManagedBean extends BaseManagedBean{
 	private CtContractVer contractVer;
 	
 	//30737 - start
-	private Long inactiveUserRevise;
+	private Long userStatusCheckResult;
 	//30737 - end
 	
 	/**
@@ -382,14 +382,14 @@ public class RequestCtAdminManagedBean extends BaseManagedBean{
 	public void setDocType(String docType) {
 		this.docType = docType;
 	}
-	
+
 	//#30737 - start
-	public Long getInactiveUserRevise() {
-		return inactiveUserRevise;
+	public Long getUserStatusCheckResult() {
+		return userStatusCheckResult;
 	}
 
-	public void setInactiveUserRevise(Long inactiveUserRevise) {
-		this.inactiveUserRevise = inactiveUserRevise;
+	public void setUserStatusCheckResult(Long userStatusCheckResult) {
+		this.userStatusCheckResult = userStatusCheckResult;
 	}
 	//#30737 - end
 

@@ -135,7 +135,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	// End - #30866
 	
 	//30737 - start
-	private Long inactiveUserRevise;
+	private Long userStatusCheckResult;
 	//30737 - end
 		
 	/**
@@ -1406,14 +1406,20 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 		this.dpContinuitySession = dpContinuitySession;
 	}
 	//end - #25790
-	
+
 	//30737 - start
-	public Long getInactiveUserRevise() {
-		return inactiveUserRevise;
+	/**
+	 * @return the userStatusCheckResult
+	 */
+	public Long getUserStatusCheckResult() {
+		return userStatusCheckResult;
 	}
 
-	public void setInactiveUserRevise(Long inactiveUserRevise) {
-		this.inactiveUserRevise = inactiveUserRevise;
+	/**
+	 * @param userStatusCheckResult the userStatusCheckResult to set
+	 */
+	public void setUserStatusCheckResult(Long userStatusCheckResult) {
+		this.userStatusCheckResult = userStatusCheckResult;
 	}
 	//30737 - end
 }

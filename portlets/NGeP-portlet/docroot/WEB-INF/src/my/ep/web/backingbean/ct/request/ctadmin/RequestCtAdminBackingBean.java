@@ -41,7 +41,7 @@ import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.audit.AuditContractReqDTO; //35506
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
-import my.ep.dto.pm.authorization.user.SelectedInactiveUserDTO; // 30737
+import my.ep.dto.pm.authorization.user.UserStatusCheckDTO; // 30737
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.requestctadmin.CTContractReqadminDataType;
 import my.ep.persistence.entity.ct.CtActor;
@@ -82,7 +82,7 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 
 	//#30737 - Start 
     @Override
-    protected List<PmUser> getSelectedUsers() {
+    protected List<PmUser> getSelectedApprovers() {
         return getManagedBean().getApproverModel().getTarget();
     }
     
@@ -716,9 +716,9 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 			log.info("xoxoxoxoxooxoxo action : "+outcome);
 			String approverType = determineRoleCode();
 			
-	        List<SelectedInactiveUserDTO> selectedInactiveUsers = 
-	        		checkUserStatus(approverType, getSelectedUsers(), ctBB.getManagedBean().getDocTypeFromAgreementTaskList(), null);
-	        handleInactiveUserValidation(outcome, selectedInactiveUsers);
+	        List<UserStatusCheckDTO> userStatusResults = 
+	        		checkUserStatus(approverType, getSelectedApprovers(), ctBB.getManagedBean().getDocTypeFromAgreementTaskList(), null);
+	        handleInactiveUserValidation(outcome, userStatusResults);
 		}
 		//#30737 - End
 		

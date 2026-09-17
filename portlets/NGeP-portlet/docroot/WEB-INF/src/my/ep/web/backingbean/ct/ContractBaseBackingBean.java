@@ -28,9 +28,9 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CTProcessNameConst; //#30737
 import my.ep.dto.ct.actor.CtActorReqDTO;
 import my.ep.dto.ct.actor.CtActorResDTO;
-import my.ep.dto.pm.authorization.user.InactiveUserReqDTO; // #30737
-import my.ep.dto.pm.authorization.user.InactiveUserResDTO; // #30737
-import my.ep.dto.pm.authorization.user.SelectedInactiveUserDTO; // #30737
+import my.ep.dto.pm.authorization.user.UserStatusCheckReqDTO; // #30737
+import my.ep.dto.pm.authorization.user.UserStatusCheckResDTO; // #30737
+import my.ep.dto.pm.authorization.user.UserStatusCheckDTO; // #30737
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
@@ -468,24 +468,20 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
      * parameters
     */
     protected EpException buildInactiveUserException(EpException ex) {
-    	log.info("xoxoxoxoxoxoxo catch buildInactiveUserException");
-        
         String errorCode = ex.getMessage();
-        log.info("xoxoxoxoxoxoxo errorCode : "+errorCode);
-        
-        String[] messageKeys =
-                getInactiveUserMessageKeys(
+        String[] messageKeys  =
+        		getInactiveUserMessageKeys(
                         errorCode,
                         getSelectedUserNames(),
                         ex.getParameters());
         
-        if (messageKeys != null && messageKeys.length > 0) {
+        if (messageKeys  != null && messageKeys .length > 0) {
 
-            String[] resolvedMessages = new String[messageKeys.length];
-            for (int i = 0; i < messageKeys.length; i++) {
+            String[] resolvedMessages = new String[messageKeys .length];
+            for (int i = 0; i < messageKeys .length; i++) {
                 resolvedMessages[i] =
                     ResourceBundleUtils.getMessage(
-                        messageKeys[i],
+                    		messageKeys[i],
                         ResourceBundleUtils.BUNDLE_COMMON_LABELS,
                         getFacesScopes().getUserLocale()
                     );
@@ -499,13 +495,13 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
      * Returns message parameters based on inactive user validation error code.
      *
      * @param errorCode -inactive user validation error code
-     * @param selectedUserName -selected user name used in message parameter generation
+     * @param selectedUserNames -selected user name used in message parameter generation
      * @return message parameters for inactive user validation message
      * 
      * NOTE:
      * Complexity is caused by explicit business error code mapping.
     */
-    private String[] getInactiveUserMessageKeys(String errorCode, String selectedUserName, String[] parameters) {
+    private String[] getInactiveUserMessageKeys(String errorCode, String selectedUserNames, String[] parameters) {
 
     	CtContract ctContract = getContractVer().getCtContract();
     	if (ctContract == null) {
@@ -518,7 +514,7 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
         	if(parameters != null){
         		return parameters;
         	}
-            return new String[]{selectedUserName};
+            return new String[]{selectedUserNames};
         }
 
         if (MessageConst.ERROR_100069.equals(errorCode)) {
@@ -528,7 +524,7 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
             	Collections.addAll(result, parameters);
             	return result.toArray(new String[result.size()]);
             }
-            return new String[] {contractNo, selectedUserName};
+            return new String[] {contractNo, selectedUserNames};
         }
 
         if (MessageConst.ERROR_100071.equals(errorCode)
@@ -543,49 +539,37 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
     
     private String getSelectedUserNames() {
         List<String> userNames = new ArrayList<String>();
-        for (PmUser user : getSelectedUsers()) {
+        for (PmUser user : getSelectedApprovers()) {
             userNames.add(user.getUserName());
         }
         return buildUserNames(userNames);
     }
     
-    public void checkInactiveUserOnAction(List<SelectedInactiveUserDTO> selectedInactiveUsers) {
+    public void validateUserStatusOnAction(List<UserStatusCheckDTO> userStatusResults) {
 
-    	log.info("xoxoxoxoxoxoxo checkInactiveUserOnAction....");
-    	log.info("xoxoxoxoxoxoxo selectedInactiveUsers size : "+selectedInactiveUsers.size());
-    	log.info("xoxoxoxoxoxoxo getTaskName : "+getTaskName());
-    	
-        List<SelectedInactiveUserDTO> invalidUsers = new ArrayList<SelectedInactiveUserDTO>();
+        List<UserStatusCheckDTO> inactiveUsers = new ArrayList<UserStatusCheckDTO>();
 
         CtContract ctContract = getContractVer().getCtContract();
         
-        int activeCount = 0;
-        for (SelectedInactiveUserDTO user : selectedInactiveUsers) {
+        int activeUserCount = 0;
+        for (UserStatusCheckDTO userStatus : userStatusResults) {
 
-            Long status = user.getStatus();
-            log.info("xoxoxoxo status : "+status);
-
+            Long status = userStatus.getStatus();
             if (Long.valueOf(1L).equals(status)) {
-                activeCount++;
+            	activeUserCount++;
             }
 
             if (Long.valueOf(2L).equals(status)
                     || Long.valueOf(3L).equals(status)
                     || Long.valueOf(4L).equals(status)) {
-
-                invalidUsers.add(user);
+            	inactiveUsers.add(userStatus);
             }
         }
         
-        log.info("xoxoxoxoxoxo activeCount : "+activeCount);
-        log.info("xoxoxoxoxoxo invalidUsers size : "+invalidUsers.size());
-        
-        String userNames = getSelectedInactiveUserNames(invalidUsers);
+        String userNames = getInactiveUserNames(inactiveUsers);
         
         // Single selected user and inactive
-        if (selectedInactiveUsers.size() == 1 && !invalidUsers.isEmpty()) {
-        	log.info("Single selected user and inactive");
-        	log.info("invalidUsers name : "+userNames);
+        if (userStatusResults.size() == 1 && !inactiveUsers.isEmpty()) {
         	String message = MessageConst.ERROR_100068;
         	String[] parameters = null;
             if (CTProcessNameConst.REVIEW_FA_HT_NAME.equalsIgnoreCase(getTaskName())){
@@ -600,59 +584,53 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
         }
 
         // Mixed active and inactive
-        if (activeCount > 0 && !invalidUsers.isEmpty()) {
-        	log.info("Mixed active and inactive");
+        if (activeUserCount > 0 && !inactiveUsers.isEmpty()) {
         	if (CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME.equalsIgnoreCase(getTaskName())){
-        		throw new EpException(MessageConst.ERROR_100071, new String[] { buildInactiveCommitteeUserParameters(invalidUsers) });
+        		throw new EpException(MessageConst.ERROR_100071, new String[] { buildInactiveCommitteeUserParameters(inactiveUsers) });
         	} else {
                 throw new EpException(MessageConst.ERROR_100068, new String[] { userNames });
         	}
         }
 
         // All inactive (2,3,4)
-        if (activeCount == 0 && !invalidUsers.isEmpty()) {
-        	log.info("All inactive (2,3,4)");
+        if (activeUserCount == 0 && !inactiveUsers.isEmpty()) {
         	if (CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME.equalsIgnoreCase(getTaskName())){
-        		throw new EpException(MessageConst.ERROR_100071, new String[] { buildInactiveCommitteeUserParameters(invalidUsers) });
+        		throw new EpException(MessageConst.ERROR_100071, new String[] { buildInactiveCommitteeUserParameters(inactiveUsers) });
         	} else {
                 throw new EpException(MessageConst.ERROR_100068, new String[] { userNames });
         	}
         }
 
         // All status = 5
-        if (Long.valueOf(5L).equals(selectedInactiveUsers.get(0).getStatus())) {
-        	log.info("All status = 5");
-        	String[] parameters = new String[] { selectedInactiveUsers.get(0).getUserRoleDesc() , ctContract.getOwnerOrgProfile().getOrgValidity().getOrgName()};
+        if (Long.valueOf(5L).equals(userStatusResults.get(0).getStatus())) {
+        	String[] parameters = new String[] { userStatusResults.get(0).getUserRoleDesc() , ctContract.getOwnerOrgProfile().getOrgValidity().getOrgName()};
             throw new EpException(MessageConst.ERROR_100073, parameters);
         }
 
-        // Single active or all active
-        log.info("PASSED!");
-//      throw new EpException(MessageConst.ERROR_100068); //TEMP
         return;
     }
     
-    private String buildInactiveCommitteeUserParameters(List<SelectedInactiveUserDTO> inactiveUsers) {
+    private String buildInactiveCommitteeUserParameters(List<UserStatusCheckDTO> inactiveUsers) {
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < inactiveUsers.size(); i++) {
-            SelectedInactiveUserDTO user = inactiveUsers.get(i);
+            UserStatusCheckDTO inactiveUser = inactiveUsers.get(i);
 
             if (i > 0) {
                 sb.append("<br />");
             }
 
-            sb.append(user.getMemberRole())
+            sb.append(inactiveUser.getMemberRole())
               .append(" ")
-              .append(user.getUserName());
+              .append(inactiveUser.getUserName());
         }
         return sb.toString();
     }
     
-    private String getSelectedInactiveUserNames(List<SelectedInactiveUserDTO> inactiveUsers) {
+    private String getInactiveUserNames(List<UserStatusCheckDTO> inactiveUsers) {
         List<String> userNames = new ArrayList<String>();
-        for (SelectedInactiveUserDTO user : inactiveUsers) {
-            userNames.add(user.getUserName());
+        for (UserStatusCheckDTO userStatus : inactiveUsers) {
+            userNames.add(userStatus.getUserName());
         }
         return buildUserNames(userNames);
     }
@@ -672,25 +650,16 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
         return sb.toString();
     }
     
-    protected abstract List<PmUser> getSelectedUsers();
+    protected abstract List<PmUser> getSelectedApprovers();
     protected abstract CtContractVer getContractVer();
     protected abstract String getTaskName();
     
-  	protected List<SelectedInactiveUserDTO> getInactiveUsersForRevise(Long docId, String parameterCode, String docType){
-  		
-  		log.info("xoxoxoxoxooxoxo docId : "+ docId);
-  		log.info("xoxoxoxoxooxoxo parameterCode : "+ parameterCode);
-  		log.info("xoxoxoxoxooxoxo docType : "+ docType);
+  	protected List<UserStatusCheckDTO> getContractAdminUserStatus(Long docId, String parameterCode, String docType){
           
   		String userRole = determineContractAdminRole();
 	      
-  		//log.info("xoxoxoxoxo org name : "+getContractVer().getCtContract().getOwnerOrgProfile().getOrgValidity().getOrgName());
-	      
   		CtActor ctActor = retrieveContractActor(docId, docType, userRole);
   		if (ctActor != null) {
-  			log.info("xoxoxoxoxooxoxo ctActor name : "+ctActor.getUserName());
-  			log.info("xoxoxoxoxooxoxo ctActor.getRoleCode() : "+ctActor.getRoleCode());
-          
 	        List<PmUser> users = new ArrayList<PmUser>();
 	        users.add(ctActor.getUser());
 	        return checkUserStatus(userRole, users, docType, null);
@@ -699,66 +668,55 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 	    return new ArrayList<>();
   	}
   	
-  	protected List<SelectedInactiveUserDTO> checkUserStatus(String roleCode, List<PmUser> users, String docType, String memberRoleCode) {
+  	protected List<UserStatusCheckDTO> checkUserStatus(String roleCode, List<PmUser> users, String docType, String memberRoleCode) {
   		
   	    IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 
-  	    InactiveUserReqDTO inactiveDto = new InactiveUserReqDTO();
-  	    inactiveDto.setUserIds(populateInactiveUserIdIntoString(users));
-  	    inactiveDto.setUserRoleCode(roleCode);
-  	    inactiveDto.setOrgProfileId(getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-  	    inactiveDto.setDocType(docType);
-  	    inactiveDto.setDocNo(getContractVer().getCtContract().getContractNo());
-  	    inactiveDto.setNotifyAdmin(RoleCode.PTJ_ADMIN.value());
+  	    UserStatusCheckReqDTO userStatusRequest = new UserStatusCheckReqDTO();
+  	    userStatusRequest.setUserIds(populateUserIdsIntoString(users));
+	  	userStatusRequest.setUserRoleCode(roleCode);
+	  	userStatusRequest.setOrgProfileId(getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+	  	userStatusRequest.setDocType(docType);
+	  	userStatusRequest.setDocNo(getContractVer().getCtContract().getContractNo());
+	  	userStatusRequest.setNotifyAdmin(RoleCode.PTJ_ADMIN.value());
   	    
-  	    log.info("xoxoxoxoxo getInactiveUsers docType : "+docType);
-  	    
-  	    InactiveUserResDTO resDto = userSO.checkInactiveUserBySP(inactiveDto);
+  	    UserStatusCheckResDTO resDto = userSO.checkInactiveUserBySP(userStatusRequest);
   	    resDto.setRoleCode(roleCode);
   	    resDto.setMemberRoleCode(memberRoleCode);
-  	    
-  	    log.info("xoxoxo getStatus "+resDto.getStatus());
-  	    log.info("xoxoxo getMessage "+resDto.getMessage());
-  	    log.info("xoxoxo roleCode "+roleCode);
-  	    log.info("xoxoxo memberRoleCode "+memberRoleCode);
 
-  	    return resolveInactiveUserStatus(users, resDto);
+  	    return buildUserStatusCheckResults(users, resDto);
   	}
   	
-  	private List<SelectedInactiveUserDTO> resolveInactiveUserStatus(List<PmUser> users, InactiveUserResDTO resDto) {
+  	private List<UserStatusCheckDTO> buildUserStatusCheckResults(List<PmUser> users, UserStatusCheckResDTO userStatusResponse) {
 
-  	    List<SelectedInactiveUserDTO> selectedUsers = new ArrayList<SelectedInactiveUserDTO>();
+  	    List<UserStatusCheckDTO> userStatusList = new ArrayList<UserStatusCheckDTO>();
   	    if (!users.isEmpty()) {
-  	    	String[] statuses = resDto.getStatus().split(",");
-  	  	    for (int i = 0; i < statuses.length; i++) {
+  	    	String[] userStatuses = userStatusResponse.getStatus().split(",");
+  	  	    for (int i = 0; i < userStatuses.length; i++) {
   	  	    	
-  	  	    	String userRoleDesc = RoleHelper.getInstance().getRoleDescByCode(resDto.getRoleCode()).getRoleName();
+  	  	    	String userRoleDesc = RoleHelper.getInstance().getRoleDescByCode(userStatusResponse.getRoleCode()).getRoleName();
   	  	    	
-  	  	        SelectedInactiveUserDTO selectedUser = new SelectedInactiveUserDTO();
-  	  	        selectedUser.setUserId(users.get(i).getUserId());
-  	  	        selectedUser.setUserName(users.get(i).getUserName());
-  	  	        selectedUser.setUserRoleDesc(userRoleDesc);
-  	  	        selectedUser.setStatus(Long.parseLong(statuses[i].trim()));
+  	  	        UserStatusCheckDTO userStatus = new UserStatusCheckDTO();
+  	  	        userStatus.setUserId(users.get(i).getUserId());
+  	  	        userStatus.setUserName(users.get(i).getUserName());
+  	  	        userStatus.setUserRoleDesc(userRoleDesc);
+  	  	        userStatus.setStatus(Long.parseLong(userStatuses[i].trim()));
   	  	        
-//  	  	        /**TEMP*/ selectedUser.setStatus(3L);
-  	  	        
-  	  	        if (ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equals(resDto.getMemberRoleCode())) {
-  	  	        	log.info("xoxoxoxoxoxo add as chairperson");
-  	  	        	selectedUser.setMemberRole(ResourceBundleUtils.getMessage("lbl.ct.chairperson", 
+  	  	        if (ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equals(userStatusResponse.getMemberRoleCode())) {
+  	  	        	userStatus.setMemberRole(ResourceBundleUtils.getMessage("lbl.ct.chairperson", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-  	  	        } else if (ParameterConst.COMMITTEE_ROLE_MEMBER.equals(resDto.getMemberRoleCode())) {
-  	  	        	log.info("xoxoxoxoxoxo add as member");
-  	  	        	selectedUser.setMemberRole(ResourceBundleUtils.getMessage("lbl.ct.member", 
+  	  	        } else if (ParameterConst.COMMITTEE_ROLE_MEMBER.equals(userStatusResponse.getMemberRoleCode())) {
+  	  	        	userStatus.setMemberRole(ResourceBundleUtils.getMessage("lbl.ct.member", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
   	  	        }
-  	  	        selectedUsers.add(selectedUser);
+  	  	        userStatusList.add(userStatus);
   	  	    }
   	    }
-  	    return selectedUsers;
+  	    return userStatusList;
   	}
   	
   	// private to populate user id into string with comma delimiter 
-  	private String populateInactiveUserIdIntoString(List<PmUser> pmUsers){
+  	private String populateUserIdsIntoString(List<PmUser> pmUsers){
   		StringBuilder sb = new StringBuilder();
   		for(PmUser user : pmUsers){
   			if (sb.length() > 0) {
@@ -773,18 +731,18 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
   	 * Handles inactive user validation during actions.
   	 *
   	 * @param outcome -action outcome such as SUBMIT or REVISE
-  	 * @param selectedInactiveUsers - list of result returned from inactive user checking process (SP)
+  	 * @param userStatusResults - list of result returned from user status checking process (SP)
   	 * @throws EpException if inactive user conditions are met during validation. 
   	 * Different error messages will be generated based on the returned error code.
   	 */
-  	protected void handleInactiveUserValidation(String outcome, List<SelectedInactiveUserDTO> selectedInactiveUsers) {
+  	protected void handleInactiveUserValidation(String outcome, List<UserStatusCheckDTO> userStatusResults) {
   		try {
   			
-  			if (selectedInactiveUsers.isEmpty()){
+  			if (userStatusResults.isEmpty()){
   				throw new EpException(MessageConst.ERROR_722505);
   			}
   			
-	      	checkInactiveUserOnAction(selectedInactiveUsers);
+  			validateUserStatusOnAction(userStatusResults);
 	      	
   		} catch (EpException ex) {
   			throw buildInactiveUserException(ex);

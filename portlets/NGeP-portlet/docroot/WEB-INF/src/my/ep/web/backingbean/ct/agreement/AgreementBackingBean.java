@@ -62,7 +62,7 @@ import my.ep.dto.ct.agreement.ContractAgreementReqDTO;
 import my.ep.dto.ct.agreement.ContractAgreementResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
-import my.ep.dto.pm.authorization.user.SelectedInactiveUserDTO; //#30737
+import my.ep.dto.pm.authorization.user.UserStatusCheckDTO; //#30737
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -154,7 +154,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	
 	//#30737 - Start 
     @Override
-    protected List<PmUser> getSelectedUsers() {
+    protected List<PmUser> getSelectedApprovers() {
         return getManagedBean().getApproverModel().getTarget();
     }
     
@@ -703,7 +703,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			}
 			
 			//#30737 - for revise purpose
-			reqDTO.setInactiveUserCheckResult(getManagedBean().getInactiveUserRevise());
+			reqDTO.setUserStatusCheckResult(getManagedBean().getUserStatusCheckResult());
 			
 			System.out.println("Bug #30924 6.0");
 			log.info("Bug #30924 6.0");
@@ -1007,39 +1007,30 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		
 		//#30737 - Start
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
-			log.info("xoxoxoxoxooxoxo action : SUBMIT");
-			
 			String approverType = determineRoleCode();
-			
-	        List<SelectedInactiveUserDTO> selectedInactiveUsers = 
-	        		checkUserStatus(approverType, getSelectedUsers(), ctBB.getManagedBean().getDocTypeFromAgreementTaskList(), null);
-	        handleInactiveUserValidation(outcome, selectedInactiveUsers);
+	        List<UserStatusCheckDTO> userStatusResults = 
+	        		checkUserStatus(approverType, getSelectedApprovers(), ctBB.getManagedBean().getDocTypeFromAgreementTaskList(), null);
+	        handleInactiveUserValidation(outcome, userStatusResults);
 		}
 		
 		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
-	        log.info("xoxoxoxoxooxoxo action : REVISE");
-	        
-	        List<SelectedInactiveUserDTO> inactiveUsersForRevise = new ArrayList<>();
-			
-			inactiveUsersForRevise = getInactiveUsersForRevise(
+	        List<UserStatusCheckDTO> userStatusResults = new ArrayList<>();
+	        userStatusResults = getContractAdminUserStatus(
 					ctBB.getManagedBean().getDocIdFromAgreementTaskList(),
 					getManagedBean().getCtAgreement().getCtContract().getContractType().getParameterCode(), 
 					ctBB.getManagedBean().getDocTypeFromAgreementTaskList());
 			
-			log.info("xoxoxoxoxo inactiveUsersForRevise : "+inactiveUsersForRevise);
-			
-			 if (!inactiveUsersForRevise.isEmpty()) {
+			 if (!userStatusResults.isEmpty()) {
 				 Long userStatus = null;
 				 
-				 for(SelectedInactiveUserDTO inactiveActor : inactiveUsersForRevise){
-					 userStatus = inactiveActor.getStatus();
-					 this.getManagedBean().setInactiveUserRevise(inactiveActor.getStatus());
+				 for(UserStatusCheckDTO userStatusCheck : userStatusResults){
+					 userStatus = userStatusCheck.getStatus();
+					 this.getManagedBean().setUserStatusCheckResult(userStatusCheck.getStatus());
 					 break;
 					}
 				 
 				 if(InactiveUserConst.INACTIVE_USER_5.equals(userStatus)){
-		        	log.info("xoxoxoxoxooxoxo REVISE + return 5");
-	                handleInactiveUserValidation(outcome, inactiveUsersForRevise);
+	                handleInactiveUserValidation(outcome, userStatusResults);
 				 }
             }
 	    }

@@ -190,7 +190,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private boolean committeeQCBSecretaryWIP; //#35238
 	
 	//30737 - start
-	private Long inactiveUserRevise;
+	private Long userStatusCheckResult;
 	//30737 - end
 	
 	public void reassignValue(boolean value) 
@@ -1710,12 +1710,17 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	//#35238 end
 	
 	//30737 - start
-	public Long getInactiveUserRevise() {
-		return inactiveUserRevise;
+	/**
+	 * @return the userStatusCheckResult
+	 */
+	public Long getUserStatusCheckResult() {
+		return userStatusCheckResult;
 	}
-
-	public void setInactiveUserRevise(Long inactiveUserRevise) {
-		this.inactiveUserRevise = inactiveUserRevise;
+	/**
+	 * @param userStatusCheckResult the userStatusCheckResult to set
+	 */
+	public void setUserStatusCheckResult(Long userStatusCheckResult) {
+		this.userStatusCheckResult = userStatusCheckResult;
 	}
 	//30737 - end
 }

@@ -55,9 +55,7 @@ import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
-import my.ep.dto.pm.authorization.user.InactiveUserReqDTO;
-import my.ep.dto.pm.authorization.user.InactiveUserResDTO;
-import my.ep.dto.pm.authorization.user.SelectedInactiveUserDTO;
+import my.ep.dto.pm.authorization.user.UserStatusCheckDTO; //#30737
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.termination.CTContractTerminationDataType;
 import my.ep.persistence.entity.ct.CtActor;
@@ -123,7 +121,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	
 	//#30737 - Start 
     @Override
-    protected List<PmUser> getSelectedUsers() {
+    protected List<PmUser> getSelectedApprovers() {
         return getManagedBean().getApproverModel().getTarget();
     }
     
@@ -452,7 +450,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 			
 			// 30737 - END
 			reqDTO.setScLoa(getContractVer().getCtContract().getLoa());
-			reqDTO.setInactiveUserCheckResult(getManagedBean().getInactiveActor());
+			reqDTO.setUserStatusCheckResult(getManagedBean().getInactiveActor());
 			// 30737 - END
 
 			resDTO = contractTerminationSO.saveContractTerminationDetails(reqDTO);
@@ -627,9 +625,9 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		//SUBMIT
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
 			String approverType = determineRoleCode();
-	        List<SelectedInactiveUserDTO> selectedUsers = // change name selectedInactiveUsers
-	        		checkUserStatus(approverType, getSelectedUsers(), docType, null);
-	        handleInactiveUserValidation(outcome, selectedUsers);
+	        List<UserStatusCheckDTO> userStatusResults =
+	        		checkUserStatus(approverType, getSelectedApprovers(), docType, null);
+	        handleInactiveUserValidation(outcome, userStatusResults);
 	        
 			log.info(" action : "+outcome);
 		}
@@ -637,16 +635,16 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)
 				|| BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 			CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
-			List<SelectedInactiveUserDTO> selectedActor = new ArrayList<>();
+			List<UserStatusCheckDTO> selectedActor = new ArrayList<>();
 			
-			selectedActor = getInactiveUsersForRevise(
+			selectedActor = getContractAdminUserStatus(
 					ctContractVer.getContractVerId(),
 					ctContractVer.getCtContract().getContractType().getParameterCode(), 
 					ctContractVer.getDocType());
 			
 			 if (!selectedActor.isEmpty()) {
 				 Long userStatus = null;
-				 for(SelectedInactiveUserDTO inActiveActor : selectedActor){
+				 for(UserStatusCheckDTO inActiveActor : selectedActor){
 					 userStatus = inActiveActor.getStatus();
 					 this.getManagedBean().setInactiveActor(inActiveActor.getStatus());
 					 break;
