@@ -83,7 +83,7 @@ import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
-import my.ep.dto.pm.authorization.user.SelectedInactiveUserDTO; //#30737
+import my.ep.dto.pm.authorization.user.UserStatusCheckDTO; //#30737
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
@@ -248,7 +248,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	//#30737 - Start 
     @Override
-    protected List<PmUser> getSelectedUsers() {
+    protected List<PmUser> getSelectedApprovers() {
         return getManagedBean().getApproverModel().getTarget();
     }
     
@@ -2022,25 +2022,22 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			// End Fix - #30022
 			
 			//#30737 - start - for revise, cancel and review fa approval without committee
-			log.info("xoxoxoxoxo getLoa : "+getContractVer().getCtContract().getLoa().getLoaId());
-			log.info("xoxoxoxoxo getInactiveUserReviseOrCancel : "+getManagedBean().getInactiveUserRevise());
-			Long inactiveUserResult = getManagedBean().getInactiveUserRevise();
+			Long userStatusCheckResult = getManagedBean().getUserStatusCheckResult();
 			reqDTO.setScLoa(getContractVer().getCtContract().getLoa());
-			reqDTO.setInactiveUserCheckResult(inactiveUserResult);
+			reqDTO.setUserStatusCheckResult(userStatusCheckResult);
 			
+			//Get new approver
 			Long docId = getContractVer().getContractVerId();
 			String docType = getContractVer().getDocType();
-			if (isInactiveUserChecking(inactiveUserResult)
+			if (hasInactiveUserStatus(userStatusCheckResult)
 					&& CTProcessNameConst.PREPARE_LOA_HT_NAME.equalsIgnoreCase(getTaskName())
 					&& ctAmendment.getAmendmentLoa().isApprovalReq()) {
-				log.info("xoxoxoxoxo start get new approver");
 				
 				PmUser currentApprover = getCurrentApprover();
-				
-				List<PmUser> contractApproverList 
+				List<PmUser> availableApprovers
 					= contractAmendmentSO.retrieveActiveContractApproverList(docId, docType, currentApprover.getUserId());
 				
-				reqDTO.setNewApprover(resolveReplacementApprover(contractApproverList, currentApprover.getUserId()));
+				reqDTO.setNewApprover(resolveReplacementApprover(availableApprovers, currentApprover.getUserId()));
 			}
 	        //#30737 - end 
 			
@@ -2162,8 +2159,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)) {
 							
 							//#30737 acknowledgement for inactive user - start
-							if (isInactiveUserChecking(getManagedBean().getInactiveUserRevise())) {
-								log.info("xoxoxoxoxo inactive user message info");
+							if (hasInactiveUserStatus(getManagedBean().getUserStatusCheckResult())) {
 								messageId = MessageConst.INFO_700128;
 								params = new String[] {
 										getParameterDesc(
@@ -3295,19 +3291,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		                        && BpmOutcomeConst.BPM_ACKNOWLEDGE.equalsIgnoreCase(action))
 		                || BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action))) {
 			
-			log.info("xoxoxoxoxo action : SUBMIT(exclude Confirm FA Meeting) / ACKNOWLEDGE(exclude sign off) / APPROVE");
-			
 			boolean isApprovalReq = false;
 			if (ctAmendment.getAmendmentLoa() != null) {
 				isApprovalReq = ctAmendment.getAmendmentLoa().isApprovalReq();
 			}
 	    	
-		    List<SelectedInactiveUserDTO> selectedInactiveUsers = new ArrayList<>();
+		    List<UserStatusCheckDTO> userStatusResults = new ArrayList<>();
 		    
 		    if (CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME.equalsIgnoreCase(taskName)) {
-		    	log.info("xoxoxoxo UPDATE_FA_RESULT_HT_NAME...");
-		    	selectedInactiveUsers = retrieveCommitteeInactiveUsers();
-		    	
+		    	userStatusResults = retrieveCommitteeInactiveUsers();
 		    } 
 		    
 //		    else if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) 
@@ -3331,47 +3323,39 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		    	
 		    	if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action) 
 		    			&& CTProcessNameConst.REVIEW_FA_HT_NAME.equalsIgnoreCase(taskName)) { 
-		    		log.info("xoxoxoxoxoxo isPbqcAuthorityReq? : "+ctAmendment.isPbqcAuthorityReq());
 
 		    		// if isPbqcAuthorityReq is true, will proceed to retrieveInactiveUsers
 		    		if (!ctAmendment.isPbqcAuthorityReq()) {
-		    			log.info("xoxoxoxoxoxo isPbqcAuthorityReq false CA -> MCA");
-		    			processInactiveUserForReviseCancel(action);
+		    			processContractAdminUserStatus(action);
 		    			return;
 		    		}
 		    		
 		    	} else if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equalsIgnoreCase(action)
 		    			&& (CTProcessNameConst.CHAIR_PERSON_SIGN_OFF_HT_NAME.equalsIgnoreCase(taskName)
 		    					|| CTProcessNameConst.ACK_FA_HT_NAME.equalsIgnoreCase(taskName))) {
-		    		
-			    		log.info("xoxoxoxoxoxo Chairperson SignOff / Ack FA");
-			    		processInactiveUserForReviseCancel(action);
+		    			processContractAdminUserStatus(action);
 			    		return;
 		    	}
 		    	
-		    	selectedInactiveUsers = retrieveInactiveUsers(action, taskName, isApprovalReq);
+		    	userStatusResults = retrieveUserStatusResults(action, taskName, isApprovalReq);
 		    }
 	    	
 		    //MCA to CA (prepare loa with approval)
 		    if (CTProcessNameConst.PREPARE_LOA_HT_NAME.equalsIgnoreCase(taskName)
-		            && !selectedInactiveUsers.isEmpty() 
+		            && !userStatusResults.isEmpty() 
 		            && isApprovalReq) {
-		    	
-	    		log.info("xoxoxoxoxoxo PREPARE_LOA_HT_NAME - isApprovalReq is true. (MCA to CA)");
 	    		
-	    		SelectedInactiveUserDTO inactiveUser = selectedInactiveUsers.get(0);
-		        Long userStatus = inactiveUser.getStatus();
+	    		UserStatusCheckDTO userStatusCheck = userStatusResults.get(0);
+		        Long userStatus = userStatusCheck.getStatus();
 
 		        if (InactiveUserConst.INACTIVE_USER_5.equals(userStatus)) {
-		            handleInactiveUserValidation(action, selectedInactiveUsers);
+		            handleInactiveUserValidation(action, userStatusResults);
 		        } else {
-		        	log.info("xoxoxoxo not 5");
-		            getManagedBean().setInactiveUserRevise(userStatus);
+		            getManagedBean().setUserStatusCheckResult(userStatus);
 		        }
 		    	
 		    } else {
-		    	log.info("xoxoxoxoxoxo handleInactiveUserValidation... ");
-		        handleInactiveUserValidation(action, selectedInactiveUsers);
+		        handleInactiveUserValidation(action, userStatusResults);
 		    }
 		}
 		//#30737 - End
@@ -8443,19 +8427,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		// #26688 end
 		
 		//#30737 - Start
-		log.info("xoxoxoxoxo2 getTaskName() : "+getTaskName());
-		log.info("xoxoxoxoxooxoxo2 action : "+action);
-		
 		if ((!CTProcessNameConst.SIGN_OFF_HT_NAME.equalsIgnoreCase(getTaskName()) 
 				&& BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) 
 					|| BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(action)) {
 
-			processInactiveUserForReviseCancel(action);
+			processContractAdminUserStatus(action);
 		}
 		
 //		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 //			log.info("xoxoxoxoxooxoxox REJECT AMENDMENT xoxoxoxoxo !!!!!! ERROR_100069");
-//			ctBackingBean.checkInactiveUserOnAction(BpmOutcomeConst.BPM_REJECT, getManagedBean().getTaskName(), getManagedBean().getApproverModel().getTarget(), MessageConst.ERROR_100069, "DOCS/MOF/888290", "RAMLEEE");
+//			ctBackingBean.validateUserStatusOnAction(BpmOutcomeConst.BPM_REJECT, getManagedBean().getTaskName(), getManagedBean().getApproverModel().getTarget(), MessageConst.ERROR_100069, "DOCS/MOF/888290", "RAMLEEE");
 //		}
 		//#30737 - End
 
@@ -10499,7 +10480,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 //
 //    	if (!supplierUsers.isEmpty()) {
 //
-//    	    List<SelectedInactiveUserDTO> inactiveSuppliers =
+//    	    List<UserStatusCheckDTO> inactiveSuppliers =
 //    	            getInactiveUsers(
 //    	                    supplierRole,
 //    	                    supplierUsers,
@@ -10508,7 +10489,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 //
 //    	    boolean hasInactiveSupplier = false;
 //
-//    	    for (SelectedInactiveUserDTO inactiveSupplier : inactiveSuppliers) {
+//    	    for (UserStatusCheckDTO inactiveSupplier : inactiveSuppliers) {
 //
 //    	        if (!Long.valueOf(1L).equals(inactiveSupplier.getStatus())) {
 //    	            hasInactiveSupplier = true;
@@ -10523,9 +10504,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 //    	}
 //	}
 	
-	private List<SelectedInactiveUserDTO> retrieveCommitteeInactiveUsers() {
+	private List<UserStatusCheckDTO> retrieveCommitteeInactiveUsers() {
 		
-		List<SelectedInactiveUserDTO> selectedInactiveUsers = new ArrayList<>();
+		List<UserStatusCheckDTO> userStatusResults = new ArrayList<>();
 		List<PmUser> committeeMembers = new ArrayList<PmUser>();
     	List<PmUser> committeeChairpersons = new ArrayList<PmUser>();
     	
@@ -10535,51 +10516,40 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(statusId)
 				|| ContractStatusConst.FA_PENDING_MEETING_DECISION_REVISION.equals(statusId)) {
 			ctCommitteeMembers = getFilteredCommitteeMembers();
-			log.info("xoxoxoxo total getFilteredCommitteeMembers() : "+ctCommitteeMembers.size());
 		} else {
 			ctCommitteeMembers = getContractVer().getCtAmendment().getCtCommitteeMembers();
-			log.info("xoxoxoxo total getCtCommitteeMembers() : "+ctCommitteeMembers.size());
 		}
 		
 		for(CtCommitteeMember member : ctCommitteeMembers){
-			log.info("xoxoxoxoxo list of member : "+member.getMemberName());
-			log.info("xoxoxoxoxo member role code : "+member.getMemberRole().getParameterCode());
-			
 			if(member.getMemberRole().getParameterCode().equals(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
-				log.info("xoxoxoxoxo "+member.getMemberName()+" as a chairperson");
 				committeeChairpersons.add(member.getPmUser());
 			} else if(member.getMemberRole().getParameterCode().equals(ParameterConst.COMMITTEE_ROLE_MEMBER)) {
-				log.info("xoxoxoxoxo "+member.getMemberName()+" as a member");
 				committeeMembers.add(member.getPmUser());
 			}
 		}
 		
 		if(!committeeChairpersons.isEmpty()) {
-			log.info("xoxoxoxoxo committeeChairpersons is not empty");
-			log.info("xoxoxoxoxo chairperson type : "+getManagedBean().getCommitteeType()+ "_CHAIRPERSON");
-			selectedInactiveUsers.addAll(checkUserStatus(
-					getManagedBean().getCommitteeType()+ "_CHAIRPERSON", 
+			userStatusResults.addAll(checkUserStatus(
+					getManagedBean().getCommitteeType() + SourcingConstants.ROLE_EXT_CHAIRPERSON, 
 					committeeChairpersons,
 					getContractVer().getDocType(),
 					ParameterConst.COMMITTEE_ROLE_CHAIRPERSON));
 		}
 		
 		if(!committeeMembers.isEmpty()) {
-			log.info("xoxoxoxoxo committeeMembers is not empty");
-			log.info("xoxoxoxoxo member type : "+getManagedBean().getCommitteeType()+ "_MEMBER");
-			selectedInactiveUsers.addAll(checkUserStatus(
-					getManagedBean().getCommitteeType()+"_MEMBER", 
+			userStatusResults.addAll(checkUserStatus(
+					getManagedBean().getCommitteeType() + SourcingConstants.ROLE_EXT_MEMBER, 
 					committeeMembers, 
 					getContractVer().getDocType(),
 					ParameterConst.COMMITTEE_ROLE_MEMBER));
 		}
 		
-		return selectedInactiveUsers;
+		return userStatusResults;
 	}
 	
-//	private List<SelectedInactiveUserDTO> retrieveSupplierInactiveUsers() {
+//	private List<UserStatusCheckDTO> retrieveSupplierInactiveUsers() {
 //
-//	    List<SelectedInactiveUserDTO> selectedInactiveUsers = new ArrayList<>();
+//	    List<UserStatusCheckDTO> userStatusResults = new ArrayList<>();
 //	    Map<String, List<PmUser>> roleUsersMap = new HashMap<String, List<PmUser>>();
 //	    
 //	    //find supplier
@@ -10600,7 +10570,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 //	    	String userRole = entry.getKey();
 //	        List<PmUser> users = entry.getValue();
 //	        
-//	        selectedInactiveUsers.addAll(
+//	        userStatusResults.addAll(
 //	                getInactiveUsers(
 //	                		userRole,
 //	                		users,
@@ -10608,18 +10578,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 //	                        null));
 //	    }
 //
-//	    return selectedInactiveUsers;
+//	    return userStatusResults;
 //	}
 	
-	private List<SelectedInactiveUserDTO> retrieveInactiveUsers(String action, String taskName, boolean isApprovalReq) {
-	    log.info("xoxoxoxoxo after checking....");
-
+	private List<UserStatusCheckDTO> retrieveUserStatusResults(String action, String taskName, boolean isApprovalReq) {
 	    String roleCode = determineRoleCode(action, taskName, isApprovalReq);
-	    log.info("xoxoxoxoxooxoxo roleCode : " + roleCode);
-
 	    List<PmUser> selectedUsers = determineUsers(action, taskName, isApprovalReq);
-	    log.info("xoxoxoxoxooxoxo selectedUsers : " + selectedUsers.size());
-
 	    return checkUserStatus(
 	            roleCode,
 	            selectedUsers,
@@ -10628,12 +10592,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	private String determineRoleCode(String action, String taskName, boolean isApprovalReq) {
-		log.info("xoxoxoxoxoxo [determineRoleCode]");
 		
 	    if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)) {
 	        // CA -> DO (pending meeting confirmation)
-	    	log.info("xoxoxoxoxoxo CA -> DO (pending meeting confirmation)");
-	        log.info("xoxoxoxoxoxo role do : " + getManagedBean().getCommitteeType() + "_SECRETARY");
 	        return getManagedBean().getCommitteeType() + "_SECRETARY";
 	    }
 
@@ -10654,7 +10615,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	private List<PmUser> determineUsers(String action, String taskName, boolean isApprovalReq) {
-		log.info("xoxoxoxoxoxo [determineUsers]");
 		
 		if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
 			
@@ -10662,16 +10622,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (CTProcessNameConst.PREPARE_LOA_HT_NAME.equalsIgnoreCase(taskName)) {
 				
 				if (isApprovalReq) {
-					log.info("xoxoxoxoxoxo MCA -> CA (isApprovalReq true)");
 					PmUser currentApprover = getCurrentApprover();
-					
 					List<PmUser> users = new ArrayList<>();
 			  		if (currentApprover != null) {
-			  			log.info("xoxoxoxoxooxoxo ctActorApprover name : "+currentApprover.getUserName());
 				        users.add(currentApprover);
 			  		}
 			  		return users;
-				
 				} 
 				
 //				else {
@@ -10694,7 +10650,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			
 			// MCA -> CA (approval)
-			return getSelectedUsers();
+			return getSelectedApprovers();
 		}
 		
 		else if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)) {
@@ -10703,7 +10659,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			List<PmUser> users = new ArrayList<PmUser>();
 			PmUser secretary = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary();
 			if (secretary != null) {
-				log.info("xoxoxoxoxo secretary : "+secretary.getUserName());
 				users.add(secretary);
 			}
 			return users;
@@ -10711,34 +10666,31 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		return null;
 	}
 	
-	private void processInactiveUserForReviseCancel(String action) {
-		log.info("xoxoxoxoxooxoxo action : REVISE / CANCEL / APPROVE(Review FA) / Chairperson SignOff / Ack FA");
+	private void processContractAdminUserStatus(String action) {
 		
-	    List<SelectedInactiveUserDTO> inactiveUsersForReviseOrCancel =
-	    		getInactiveUsersForRevise(
+	    List<UserStatusCheckDTO> userStatusResults =
+	    		getContractAdminUserStatus(
 	    				getContractVer().getContractVerId(),
 	    				getContractVer().getCtContract().getContractType().getParameterCode(),
 	    				getContractVer().getDocType());
 
-	    if (inactiveUsersForReviseOrCancel != null && !inactiveUsersForReviseOrCancel.isEmpty()) {
+	    if (userStatusResults != null && !userStatusResults.isEmpty()) {
 
-	        SelectedInactiveUserDTO inactiveUser = inactiveUsersForReviseOrCancel.get(0);
-
-            Long userStatus = inactiveUser.getStatus();
-            getManagedBean().setInactiveUserRevise(userStatus);
+	        UserStatusCheckDTO userStatusResult = userStatusResults.get(0);
+            Long userStatus = userStatusResult.getStatus();
+            getManagedBean().setUserStatusCheckResult(userStatus);
 
             if (InactiveUserConst.INACTIVE_USER_5.equals(userStatus)) {
-                log.info("xoxoxoxoxooxoxo REVISE / CANCEL / APPROVE(reviewfa) / Chairperson SignOff / Ack FA (+) return 5");
-                handleInactiveUserValidation(action, inactiveUsersForReviseOrCancel);
+                handleInactiveUserValidation(action, userStatusResults);
             } 
 	    }
 	}
 	
-	private boolean isInactiveUserChecking(Long inactiveUserCheckResult) {
-		return inactiveUserCheckResult != null
-				&& (inactiveUserCheckResult.equals(2L)
-				|| inactiveUserCheckResult.equals(3L)
-				|| inactiveUserCheckResult.equals(4L));
+	private boolean hasInactiveUserStatus(Long userStatusCheckResult) {
+		return userStatusCheckResult != null
+				&& (userStatusCheckResult.equals(2L)
+				|| userStatusCheckResult.equals(3L)
+				|| userStatusCheckResult.equals(4L));
 	}
 	
 	/**
@@ -10788,18 +10740,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	private PmUser resolveReplacementApprover(List<PmUser> contractApproverList, Long currentApproverUserId) {
 
-		Long contractVerId = getContractVer().getContractVerId();
-		String docType = getContractVer().getDocType();
-
-		log.info("xoxoxoxoxoxo docType : " + docType);
-		log.info("xoxoxoxoxoxo docId : " + contractVerId);
-
 		List<PmUser> approverList;
 		if (!contractApproverList.isEmpty()) {
-			log.info("xoxoxoxoxo get random approver from CtApprover");
+			// Get random approver from CtApprover
 			approverList = contractApproverList;
 		} else {
-			log.info("xoxoxoxoxo get random availableApproverList from PmUser");
+			// Get random availableApproverList from PmUser
 			approverList = getActiveCtApproverList(
 					getContractVer().getCtContract().getContractType().getParameterCode());
 		}
@@ -10807,7 +10753,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		for (PmUser pmUser : approverList) {
 			if (pmUser.isRecordStatus()
 					&& currentApproverUserId != pmUser.getUserId()) {
-				log.info("xoxoxoxoxo new approver : " + pmUser.getUserName());
 				return pmUser;
 			}
 		}
@@ -10821,7 +10766,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				determineContractApproverRole());
 		
 		if (currentApprover != null) {
-			log.info("xoxoxoxoxoxo currentApproverUser : " + currentApprover.getUser().getUserName());
 			return currentApprover.getUser();
 		}
 		return null;

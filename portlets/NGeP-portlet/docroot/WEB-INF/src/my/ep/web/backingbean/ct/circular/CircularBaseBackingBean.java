@@ -28,9 +28,9 @@ import my.ep.dto.ct.actor.CtActorReqDTO; //#30737 add import
 import my.ep.dto.ct.actor.CtActorResDTO; //#30737 add import
 import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
-import my.ep.dto.pm.authorization.user.InactiveUserReqDTO;
-import my.ep.dto.pm.authorization.user.InactiveUserResDTO;
-import my.ep.dto.pm.authorization.user.SelectedInactiveUserDTO; //#30737 add import
+import my.ep.dto.pm.authorization.user.UserStatusCheckReqDTO; //#30737
+import my.ep.dto.pm.authorization.user.UserStatusCheckResDTO; //#30737
+import my.ep.dto.pm.authorization.user.UserStatusCheckDTO; //#30737 add import
 import my.ep.constant.ct.ContractStatusConst;//34442
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -217,66 +217,66 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 	 * @param docNo -circular/cancel-circular doc number to use when building
 	 * validation error messages, since it cannot be reliably derived from
 	 * {@link #getCircularVer()} (that is null for the cancel-circular flow)
-	 * @param inactiveUserCheckResult -result code returned from inactive user checking process (SP)
+	 * @param userStatusResults -result code returned from inactive user checking process (SP)
 	 * @throws EpException if inactive user conditions are met during validation.
 	 * Different error messages will be generated based on the returned error code.
 	 */
-	public void handleInactiveUserValidation(String outcome, String docNo, List<SelectedInactiveUserDTO> selectedInactiveUsers) {
+	public void handleInactiveUserValidation(String outcome, String docNo, List<UserStatusCheckDTO> userStatusResults) {
         try {
-        	checkInactiveUserOnAction(
+        	validateUserStatusOnAction(
         		buildContractReqDTO(outcome, getUserRole()),
-        		selectedInactiveUsers
+        		userStatusResults
         	);
         } catch (EpException ex) {
-        	throw buildInactiveUserException(ex, docNo, selectedInactiveUsers);
+        	throw buildInactiveUserException(ex, docNo, userStatusResults);
         }
     }
 	
-	public void checkInactiveUserOnAction(CircularReqDTO reqDTO, List<SelectedInactiveUserDTO> selectedInactiveUsers) {
+	public void validateUserStatusOnAction(CircularReqDTO reqDTO, List<UserStatusCheckDTO> userStatusResults) {
 
-    	log.info("checkInactiveUserOnAction....");
+    	log.info("validateUserStatusOnAction....");
     	
-        List<SelectedInactiveUserDTO> invalidUsers = new ArrayList<SelectedInactiveUserDTO>();
+        List<UserStatusCheckDTO> inactiveUsers = new ArrayList<UserStatusCheckDTO>();
 
-        int activeCount = 0;
+        int activeUserCount = 0;
 
-        for (SelectedInactiveUserDTO user : selectedInactiveUsers) {
+        for (UserStatusCheckDTO user : userStatusResults) {
 
             Long status = user.getStatus();
 
             if (Long.valueOf(1L).equals(status)) {
-                activeCount++;
+            	activeUserCount++;
             }
 
             if (Long.valueOf(2L).equals(status)
                     || Long.valueOf(3L).equals(status)
                     || Long.valueOf(4L).equals(status)) {
 
-                invalidUsers.add(user);
+            	inactiveUsers.add(user);
             }
         }
 
      // Single selected user and inactive
-        if (selectedInactiveUsers.size() == 1 && !invalidUsers.isEmpty()) {
+        if (userStatusResults.size() == 1 && !inactiveUsers.isEmpty()) {
         	log.info("Single selected user and inactive");
             throw new EpException(MessageConst.ERROR_100068);
         }
 
         // Mixed active and inactive
-        if (activeCount > 0 && !invalidUsers.isEmpty()) {
+        if (activeUserCount > 0 && !inactiveUsers.isEmpty()) {
         	log.info("Mixed active and inactive");
-            String userNames = getSelectedInactiveUserNames(invalidUsers);
+            String userNames = getInactiveUserNames(inactiveUsers);
             throw new EpException(MessageConst.ERROR_100068, new String[] { userNames });
         }
 
         // All inactive (2,3,4)
-        if (activeCount == 0 && !invalidUsers.isEmpty()) {
+        if (activeUserCount == 0 && !inactiveUsers.isEmpty()) {
         	log.info("All inactive (2,3,4)");
             throw new EpException(MessageConst.ERROR_100068);
         }
 
         // All status = 5
-        if (Long.valueOf(5L).equals(selectedInactiveUsers.get(0).getStatus())) {
+        if (Long.valueOf(5L).equals(userStatusResults.get(0).getStatus())) {
         	log.info("All status = 5");
             throw new EpException(MessageConst.ERROR_100073);
         }
@@ -308,7 +308,7 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
      * @return localized {@link EpException} with resolved message
      * parameters
     */
-    protected EpException buildInactiveUserException(EpException ex, String docNo, List<SelectedInactiveUserDTO> selectedInactiveUsers) {
+    protected EpException buildInactiveUserException(EpException ex, String docNo, List<UserStatusCheckDTO> userStatusResults) {
     	log.info("Catch buildInactiveUserException");
 
         String errorCode = ex.getMessage();
@@ -318,7 +318,7 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
                 getInactiveUserMessageKeys(
                         errorCode,
                         docNo,
-                        getSelectedUserNames(selectedInactiveUsers),
+                        getSelectedUserNames(userStatusResults),
                         ex.getParameters());
         
         if (messageKeys != null && messageKeys.length > 0) {
@@ -344,20 +344,20 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
      * @param circularNo -circular/cancel-circular doc number, supplied by the
      * caller since it cannot be reliably derived from {@link #getCircularVer()}
      * (that is null for the cancel-circular flow)
-     * @param selectedUserName -selected user name used in message parameter generation
+     * @param selectedUserNames -selected user name used in message parameter generation
      * @return message parameters for inactive user validation message
      *
      * NOTE:
      * Complexity is caused by explicit business error code mapping.
     */
-    private String[] getInactiveUserMessageKeys(String errorCode, String circularNo, String selectedUserName, String[] parameters) {
+    private String[] getInactiveUserMessageKeys(String errorCode, String circularNo, String selectedUserNames, String[] parameters) {
 
         if (MessageConst.ERROR_100068.equals(errorCode)
         		|| MessageConst.ERROR_100070.equals(errorCode)) {
         	if(parameters != null){
         		return parameters;
         	}
-            return new String[]{selectedUserName};
+            return new String[]{selectedUserNames};
         }
 
         if (MessageConst.ERROR_100069.equals(errorCode)) {
@@ -367,7 +367,7 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
             	Collections.addAll(result, parameters);
             	return result.toArray(new String[result.size()]);
             }
-            return new String[] {circularNo, selectedUserName};
+            return new String[] {circularNo, selectedUserNames};
         }
 
         if (MessageConst.ERROR_100071.equals(errorCode)
@@ -380,9 +380,9 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
         return new String[0];
     }
     
-    private String getSelectedUserNames(List<SelectedInactiveUserDTO> selectedInactiveUsers) {
+    private String getSelectedUserNames(List<UserStatusCheckDTO> userStatusResults) {
         List<String> userNames = new ArrayList<String>();
-        for (SelectedInactiveUserDTO user : selectedInactiveUsers) {
+        for (UserStatusCheckDTO user : userStatusResults) {
             userNames.add(user.getUserName());
         }
         return buildUserNames(userNames);
@@ -413,11 +413,11 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 		}
 	}
 	
-	public List<SelectedInactiveUserDTO> getLoginStatusFromSP(CtCircular ctCircular, CtCircularVer ctCircularVer, List<PmUser> selectedUsers, String roleCode) {
+	public List<UserStatusCheckDTO> getLoginStatusFromSP(CtCircular ctCircular, CtCircularVer ctCircularVer, List<PmUser> selectedUsers, String roleCode) {
 		
 		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-		InactiveUserReqDTO inactiveDto = new InactiveUserReqDTO();
-		String userlist = populateInactiveUserIdIntoString(selectedUsers);
+		UserStatusCheckReqDTO inactiveDto = new UserStatusCheckReqDTO();
+		String userlist = buildUserIdString(selectedUsers);
 		inactiveDto.setUserIds(userlist); 
 		inactiveDto.setUserRoleCode(roleCode); 
 		inactiveDto.setOrgProfileId(ctCircular.getOwnerOrgProfile().getOrgProfileId());
@@ -425,18 +425,18 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 		inactiveDto.setDocNo(ctCircular.getCircularNo());
 		inactiveDto.setNotifyAdmin(RoleCode.PTJ_ADMIN.value());
 		
-		InactiveUserResDTO resDto = userSO.checkInactiveUserBySP(inactiveDto);
+		UserStatusCheckResDTO resDto = userSO.checkInactiveUserBySP(inactiveDto);
 		resDto.setRoleCode(roleCode);
 		log.info("checkInactiveUserBySP STATUSSS : "+  resDto.getStatus());
 		
-		return resolveInactiveUserStatus(selectedUsers, resDto);
+		return buildUserStatusCheckResults(selectedUsers, resDto);
 	}
 	
-	public List<SelectedInactiveUserDTO> getLoginStatusForCancelCircularFromSP(String docType, String cancelDocNo, List<PmUser> selectedUsers, String roleCode) {
+	public List<UserStatusCheckDTO> getLoginStatusForCancelCircularFromSP(String docType, String cancelDocNo, List<PmUser> selectedUsers, String roleCode) {
 		
 		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-		InactiveUserReqDTO inactiveDto = new InactiveUserReqDTO();
-		String userlist = populateInactiveUserIdIntoString(selectedUsers);
+		UserStatusCheckReqDTO inactiveDto = new UserStatusCheckReqDTO();
+		String userlist = buildUserIdString(selectedUsers);
 		inactiveDto.setUserIds(userlist); 
 		inactiveDto.setUserRoleCode(roleCode); 
 		inactiveDto.setOrgProfileId(getOwnerOrgProfile().getOrgProfileId());
@@ -444,14 +444,14 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 		inactiveDto.setDocNo(cancelDocNo);
 		inactiveDto.setNotifyAdmin(RoleCode.PTJ_ADMIN.value());
 		
-		InactiveUserResDTO resDto = userSO.checkInactiveUserBySP(inactiveDto);
+		UserStatusCheckResDTO resDto = userSO.checkInactiveUserBySP(inactiveDto);
 		resDto.setRoleCode(roleCode);
 		log.info("getLoginStatusForCancelCircularFromSP STATUSSS : "+  resDto.getStatus());
 		
-		return resolveInactiveUserStatus(selectedUsers, resDto);
+		return buildUserStatusCheckResults(selectedUsers, resDto);
 	}
 	
-	private String populateInactiveUserIdIntoString(List<PmUser> userIds){
+	private String buildUserIdString(List<PmUser> userIds){
 		StringBuilder sb = new StringBuilder();
 		
 		for(PmUser user : userIds){
@@ -467,16 +467,16 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 		
 	}
 	
-	private List<SelectedInactiveUserDTO> resolveInactiveUserStatus(List<PmUser> users, InactiveUserResDTO resDto) {
+	private List<UserStatusCheckDTO> buildUserStatusCheckResults(List<PmUser> users, UserStatusCheckResDTO resDto) {
 
-  	    List<SelectedInactiveUserDTO> selectedUsers = new ArrayList<SelectedInactiveUserDTO>();
+  	    List<UserStatusCheckDTO> selectedUsers = new ArrayList<UserStatusCheckDTO>();
   	    if (!users.isEmpty()) {
   	    	String[] statuses = resDto.getStatus().split(",");
   	  	    for (int i = 0; i < statuses.length; i++) {
   	  	    	
   	  	    	String userRoleDesc = RoleHelper.getInstance().getRoleDescByCode(resDto.getRoleCode()).getRoleName();
   	  	    	
-  	  	        SelectedInactiveUserDTO selectedUser = new SelectedInactiveUserDTO();
+  	  	        UserStatusCheckDTO selectedUser = new UserStatusCheckDTO();
   	  	        selectedUser.setUserId(users.get(i).getUserId());
   	  	        selectedUser.setUserName(users.get(i).getUserName());
   	  	        selectedUser.setUserRoleDesc(userRoleDesc);
@@ -487,9 +487,9 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
   	    return selectedUsers;
   	}
 	
-	private String getSelectedInactiveUserNames(List<SelectedInactiveUserDTO> inactiveUsers) {
+	private String getInactiveUserNames(List<UserStatusCheckDTO> inactiveUsers) {
         List<String> userNames = new ArrayList<String>();
-        for (SelectedInactiveUserDTO user : inactiveUsers) {
+        for (UserStatusCheckDTO user : inactiveUsers) {
             userNames.add(user.getUserName());
         }
         return buildUserNames(userNames);
