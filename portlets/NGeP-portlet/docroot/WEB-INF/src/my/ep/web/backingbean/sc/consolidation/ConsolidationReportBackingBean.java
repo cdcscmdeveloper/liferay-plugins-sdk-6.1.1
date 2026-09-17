@@ -808,6 +808,7 @@ public class ConsolidationReportBackingBean extends
 	public void downloadAllEvaluationReports() throws Exception {
 		debugLogger("downloadAllEvaluationReports");
 
+		List<ScAttachment> attachments = new ArrayList<>();//#25651 
 		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean().getEvaluationReportList();
 		// 37622 - start
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<>();
@@ -823,18 +824,62 @@ public class ConsolidationReportBackingBean extends
 			scAttachments.add(attachment);
 		}
 		// 37622 - end
+		
+		//#25651 - Start
+		attachments.addAll(scAttachments); 
+		attachments.addAll(getScqtFinalizationReportDetails());
+		//#25651 - End
+	
 
 		// Generate all the reports before submission
 		if (!getManagedBean().isSubmit()) {
 			//#28784 - Start
-			downloadSFAndRecommendationFiles("NGeP-Evaluation-Report", scAttachments);
+			downloadSFAndRecommendationFiles("NGeP-Evaluation-Report", attachments); //#25651 
 			//#28784 - End
 		}
 	}
 	
+	// #25651 - Start
+	/**
+	 * To download evaluation reports detail under Evaluation Report tab.
+	 * 
+	 * @throws Exception
+	 *             the exception that would be thrown in case of any error while
+	 *             downloading the report(s)
+	 */
+	private List<ScAttachment> getScqtFinalizationReportDetails() throws Exception {
+
+		List<ScAttachment> attachments = new ArrayList<>();
+		List<ScQtFinalizationReportDetail> scQtFinalizationReportDetails = getManagedBean()
+				.getEvaluationReportDetailList();
+		List<ScQtFinalizationReportDetailAttachment> scAttachmentsDetail = new ArrayList<>();
+
+		if (CollectionUtils.isNotEmpty(scQtFinalizationReportDetails)) {
+			for (ScQtFinalizationReportDetail reportDetail : scQtFinalizationReportDetails) {
+				ScQtFinalizationReportDetailAttachment attachment = reportDetail
+						.getScQtFinalizationReportDetailAttachment();
+
+				if (attachment == null) {
+					attachment = generateDocumentAttachmentDetail(reportDetail);
+					reportDetail.setScQtFinalizationReportDetailAttachment(attachment);
+				}
+				if (attachment != null) {
+					attachment.setTempFileName(reportDetail.getTitle());
+				}
+
+				scAttachmentsDetail.add(attachment);
+			}
+		}
+
+		attachments.addAll(scAttachmentsDetail);
+		return attachments;
+	}
+
+	// #25651 - End
+	
 	//#25651 - Start
 	/**
-	 * To combine download evalution report ScQtFinalizationReport and ScQtFinalizationReportDetail
+	 * To combine download evaluation report ScQtFinalizationReport and ScQtFinalizationReportDetail
 	 */
 	public void downloadCombinedReport(Object report) throws Exception {
 

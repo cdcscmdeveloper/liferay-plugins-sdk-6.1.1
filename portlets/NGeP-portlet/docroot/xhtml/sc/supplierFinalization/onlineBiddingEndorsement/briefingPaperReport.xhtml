@@ -60,26 +60,28 @@
 	
 	<p:dataTable id="reportTbl" 
 		widgetVar="reportWidget" var="report"
-		value="#{suppFinalBiddingBackingBean.managedBean.documentList}" 
+		value="#{suppFinalBiddingBackingBean.combinedEvaluationReportList}"
 		rows="10" styleClass="documentslist"
 		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-		rowKey="#{report}" rowIndexVar="rowIndex">
+		rowKey="#{report}" rowIndexVar="rowIndex" rendered="#{not empty suppFinalBiddingBackingBean.combinedEvaluationReportList}"> <ui:remove> 25651 </ui:remove>
 		
 		<ac:paginator for="reportTbl" />
 
 		<p:column headerText="#{lbl['lbl.sc.content']}" style="width:70%;">
-			<h:outputText value="#{report.title}" />
+			 <h:outputText value="#{suppFinalBiddingBackingBean.getReportTitle(report)}" /> <ui:remove> 25651 </ui:remove>
 		</p:column>			
 		
 		<p:column headerText="#{lbl['lbl.sc.type']}" style="width:15%; white-space:normal;">
-			<h:outputText value="#{suppFinalBiddingBackingBean.getParameterDesc(report.definationType)}" />
+			   <h:outputText
+		            value="#{suppFinalBiddingBackingBean.getParameterDesc(
+		                suppFinalBiddingBackingBean.getReportDefinationType(report))}" /> <ui:remove> 25651 </ui:remove>
 		</p:column>
 
 		<p:column headerText="#{lbl['lbl.sc.action']}"
 				  style="width:15%; white-space:normal; text-align: center;">
 			<p:commandButton id="download" icon="ui-icon-download" 
 					style="background-color:transparent !important; border:0px none;"
-					ajax="false" immediate="true" action="#{suppFinalBiddingBackingBean.downloadReport(report)}" />
+					ajax="false" immediate="true" action="#{suppFinalBiddingBackingBean.downloadCombinedReport(report)}" /> <ui:remove> 25651 </ui:remove>
 			
 		</p:column>
 	</p:dataTable>
@@ -96,7 +98,7 @@
 
 			<ac:paginator for="evaluationreportdetail" />
 			
-			<p:column style="width:2%" >
+			<p:column style="width:2%" rendered="#{!suppFinalBiddingBackingBean.documentBriefingPaperOnly(scQtFinalizationReportDetail.pmDocument.docDefinitionKey)}">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllChk" value="#{suppFinalBiddingBackingBean.managedBean.templateSpecBean.selectAll}" disabled="true">
 						<p:ajax partialSubmit="true" process="@this" update="@this" listener="#{suppFinalBiddingBackingBean.selectAll(suppFinalBiddingBackingBean.managedBean.templateSpecBean.selectAll, suppFinalBiddingBackingBean.managedBean.newBriefingPaperReportList)}"/>
@@ -116,12 +118,12 @@
 				</p:selectBooleanCheckbox>
 			</p:column>
 			
-			<p:column style="width:5%;white-space: normal;" styleClass="center-column">
+			<p:column style="width:5%;white-space: normal;" styleClass="center-column" rendered="#{!suppFinalBiddingBackingBean.documentBriefingPaperOnly(scQtFinalizationReportDetail.pmDocument.docDefinitionKey)}">
 			   <h:graphicImage value="/css/images/icon-expand.png" rendered="#{scQtFinalizationReportDetail.definationType.parameterCode eq 'SD' and scQtFinalizationReportDetail.pmDocument.docDefinitionKey ne 'KTU'}" styleClass="arrow-img" onclick="toggleRow(this)" />
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.report']}"
-				style="width:58%;white-space: normal;">
+				style="width:58%;white-space: normal;" rendered="#{!suppFinalBiddingBackingBean.documentBriefingPaperOnly(scQtFinalizationReportDetail.pmDocument.docDefinitionKey)}">
 				<h:inputText  value="#{scQtFinalizationReportDetail.title}" required="true" style="width:500px;"
 				disabled="#{suppFinalBiddingBackingBean.managedBean.readOnly}" label="#{lbl['lbl.sc.content']}"
 					rendered="#{empty scQtFinalizationReportDetail.pmDocument}" >
@@ -145,7 +147,7 @@
 			</p:column>
 
 			<p:column style="width:20%;text-align: center;"
-				headerText="#{lbl['lbl.sc.action']}">
+				headerText="#{lbl['lbl.sc.action']}" rendered="#{!suppFinalBiddingBackingBean.documentBriefingPaperOnly(scQtFinalizationReportDetail.pmDocument.docDefinitionKey)}">
 					<ui:fragment
 						rendered="#{scQtFinalizationReportDetail.definationType.parameterCode eq 'SD'}">
                      		

@@ -11356,6 +11356,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	public void downloadAllEvaluationReports() throws Exception {
 		debugLogger("downloadAllEvaluationReports");
 
+		List<ScAttachment> attachments = new ArrayList<>();//#25651 
 		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean().getEvaluationReportList();
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<ScQtFinalizationReportAttachment>();
 
@@ -11374,28 +11375,79 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 						.setScQtFinalizationReportAttachment(attachment);
 			}
 			
-			// Bug #35485@Syazani 08/02/2024 -- Start
-			File file = new File(getActualFilePath(attachment));
-			if (file.exists() && file.length() <= 1000 && ArrayUtils.contains(SourcingConstants.DOCUMENT_EVALUATIONS, docDefinitionKey)) {
-				regenEvaluationDownload(attachment, false);
-			}
-			// Bug #35485@Syazani 08/02/2024 -- End
-			attachment.setTempFileName(scQtFinalizationReport.getTitle()); // 37622
-			attachment.setDocNo(getManagedBean().getScQt().getQtNo());
-			scAttachments.add(attachment);
+			if (null != attachment && StringUtils.isNotBlank(attachment.getFilePath())) {//#25651
+				
+				// Bug #35485@Syazani 08/02/2024 -- Start
+				File file = new File(getActualFilePath(attachment));
+				if (file.exists() && file.length() <= 1000 && ArrayUtils.contains(SourcingConstants.DOCUMENT_EVALUATIONS, docDefinitionKey)) {
+					regenEvaluationDownload(attachment, false);
+				}
+				// Bug #35485@Syazani 08/02/2024 -- End
+				attachment.setTempFileName(scQtFinalizationReport.getTitle()); // 37622
+				attachment.setDocNo(getManagedBean().getScQt().getQtNo());
+				scAttachments.add(attachment);
+			
+			}//#25651
 		}
+		
+		//#25651 - Start
+		attachments.addAll(scAttachments); 
+		attachments.addAll(getScqtFinalizationReportDetails());
+		//#25651 - End
 
 		// Generate all the reports before submission
 		if (!getManagedBean().isSubmit()) {
 			//#28784 - Start
-			downloadSFAndRecommendationFiles("NGeP-Evaluation-Report", scAttachments);
+			downloadSFAndRecommendationFiles("NGeP-Evaluation-Report", attachments); //#25651
 			//#28784 - End
 		}
 	}
 	
+	// #25651 - Start
+	/**
+	 * To download evaluation reports detail under Evaluation Report tab.
+	 * 
+	 * @throws Exception
+	 *             the exception that would be thrown in case of any error while
+	 *             downloading the report(s)
+	 */
+	private List<ScAttachment> getScqtFinalizationReportDetails() throws Exception {
+
+		List<ScAttachment> attachments = new ArrayList<>();
+		List<ScQtFinalizationReportDetail> scQtFinalizationReportDetails = getManagedBean()
+				.getEvaluationReportDetailList();
+		List<ScQtFinalizationReportDetailAttachment> scAttachmentsDetail = new ArrayList<>();
+
+		for (ScQtFinalizationReportDetail reportDetail : scQtFinalizationReportDetails) {
+
+			ScQtFinalizationReportDetail scQtFinalizationReportDetail = reportDetail;
+			ScQtFinalizationReportDetailAttachment attachment = scQtFinalizationReportDetail
+					.getScQtFinalizationReportDetailAttachment();
+
+			if (attachment == null) {
+				attachment = generateDocumentAttachmentDetail(reportDetail);
+				reportDetail.setScQtFinalizationReportDetailAttachment(attachment);
+			}
+
+			if (null != attachment && StringUtils.isNotBlank(attachment.getFilePath())) {
+
+				attachment.setTempFileName(scQtFinalizationReportDetail.getTitle());
+				attachment.setDocNo(getManagedBean().getScQt().getQtNo());
+				scAttachmentsDetail.add(attachment);
+
+			}
+
+		}
+
+		attachments.addAll(scAttachmentsDetail);
+		return attachments;
+	}
+
+	// #25651 - End
+	
 	//#25651 - Start
 	/**
-	 * To combine download evalution report ScQtFinalizationReport and ScQtFinalizationReportDetail
+	 * To combine download evaluation report ScQtFinalizationReport and ScQtFinalizationReportDetail
 	 */
 	public void downloadCombinedReport(Object report) throws Exception {
 
@@ -11447,6 +11499,50 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		return combinedReportList;
 	}
 	//#25651 - End
+	
+	//#25651 - Start
+	/**
+	 * @param scQtFinalizationReportDetail
+	 * @return
+	 * @throws Exception
+	 */
+	private ScQtFinalizationReportDetailAttachment generateDocumentAttachmentDetail(
+			ScQtFinalizationReportDetail scQtFinalizationReportDetail) throws Exception {
+	
+		ScQtFinalization scQtFinalization = getManagedBean()
+				.getScQtFinalization();
+
+		ScQtFinalizationReportDetailAttachment reportAttachment = null;
+		String docDefinitionKey = scQtFinalizationReportDetail.getPmDocument()
+				.getDocDefinitionKey();
+		ScQt scQt = getManagedBean().getScQt();
+		reportAttachment = new ScQtFinalizationReportDetailAttachment();
+		reportAttachment.setScQtFinalizationReportDetail(scQtFinalizationReportDetail);
+		reportAttachment.setDocNo(scQtFinalization.getScQt().getQtNo());
+		StringBuilder filename = new StringBuilder();
+		// replace white space due to firefox
+		filename.append(scQtFinalizationReportDetail
+				.getTitle()
+				.replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE,
+						SourcingConstants.UNDER_SCORE)
+				.replaceAll(SourcingConstants.REG_EXP_BACK_SLASH,
+						SourcingConstants.UNDER_SCORE));
+
+		if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT
+				.equals(docDefinitionKey)) {
+			filename.append(".rtf");
+			reportAttachment.setFileName(filename.toString());
+			generateKertasTaklimatPdf(scQt, reportAttachment);
+		} else {
+			debugLogger("No document type exists with the key "
+					+ docDefinitionKey);
+			reportAttachment = null;
+		}
+
+	
+		return reportAttachment;
+	}
+	//#25651 - End
 
 	/**
 	 * @param scQtFinalizationReport
@@ -11496,7 +11592,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	}
 
 	private void generateKertasTaklimatPdf(ScQt qt,
-			ScQtFinalizationReportAttachment attachment) throws Exception {
+			ScAttachment attachment) throws Exception {//#25651
 		debugLogger("generateKertasTaklimatPdf");
 		populateAttachmentDetails(attachment);
 		//#35015 4ser -Start
@@ -12852,6 +12948,30 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		}
 		// 18685 - END.
 		
+		
+	// #25651 - Start.
+	/**
+	 * @param scQtFinalizationReportDetail
+	 * @return
+	 * @throws Exception
+	 */
+	public ScQtFinalizationReportDetailAttachment downloadBriefingPaperReportDetailForBidding(ScQtFinalizationReportDetail scQtFinalizationReportDetail) throws Exception {
+	    ScQtFinalizationReportDetailAttachment reportAttachment = null;
+		if (null != getManagedBean().getCurrentStatusId() 
+				&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_BIDDING_FINALIZATION.longValue()
+						|| getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_BIDDING_FINALIZATION_REVISION.longValue()
+						)) {
+			reportAttachment = generateDocumentAttachment(scQtFinalizationReportDetail, false);
+		} else {
+			reportAttachment = scQtFinalizationReportDetail.getScQtFinalizationReportDetailAttachment();
+
+			if (reportAttachment == null) {
+				reportAttachment = generateDocumentAttachment(scQtFinalizationReportDetail, false);
+			}
+		}
+		return reportAttachment;
+	}
+	// #25651 - End.	
 		
 	// #30567 - Start.
 	/**
