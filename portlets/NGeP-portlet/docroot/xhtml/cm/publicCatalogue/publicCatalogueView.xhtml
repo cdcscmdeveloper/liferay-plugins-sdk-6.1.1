@@ -58,17 +58,17 @@
         13)supplierItem[12]- SUPP_ITEM_ID
 		</ui:remove>
 
-        <!-- #10747 - Start -->
+		<!-- #10747 - Start -->
 		<script type="text/javascript">
 			function scrollToError() {
-	        var error = $('.ui-messages-error:visible');
+				var error = $('.ui-messages-error:visible');
 
-	     	if (error.length > 0) {
-	       		$('html, body').animate({
-	     		scrollTop: error.first().offset().top
-	         		}, 500);
-	        	}
-	    	}
+				if (error.length > 0) {
+					$('html, body').animate({
+						scrollTop : error.first().offset().top
+					}, 500);
+				}
+			}
 		</script>
 		<!-- #10747 - End -->
 
@@ -269,8 +269,8 @@
 												value="#{lbl['lbl.btn.search']}"
 												process=":form:catalogueTabId:resultpl"
 												action="#{pCatalogueBackingBean.searchCatalogueByPrice()}"
-												update=":form:catalogueTabId:catalogueGridViewID, :form:catalogueTabId:catalogueListingTable" 
-												oncomplete="scrollToError();"/></td> <!--shift between catalogueListingTable and catalogueGridViewID -->
+												update=":form:catalogueTabId:catalogueGridViewID, :form:catalogueTabId:catalogueListingTable"
+												oncomplete="scrollToError();" /></td> <!--shift between catalogueListingTable and catalogueGridViewID -->
 									</tr>
 									<!-- #10747 - Shafie, Soo, Azza- End -->
 								</table>
@@ -297,7 +297,7 @@
 									<!-- #10747 - Soo - Start -->
 									<p:commandLink title="#{lbl['lbl.cm.list.icon']}"
 									action="#{pCatalogueBackingBean.thumbnailView(false)}"
-									process="@this" update=":form" >
+									process="@this" update=":form">
 									<h:panelGroup rendered="#{pCatalogueBackingBean.managedBean.visible}">
 									<p:graphicImage id="list" value="/css/images/design/list.png"
 									style="font-size: 20px; float:right; margin-left: 10px; opacity: 0.3"></p:graphicImage>
@@ -321,7 +321,7 @@
 									</h:panelGroup>
 									</p:commandLink>
 									<p:outputLabel value="#{lbl['lbl.cm.pub.catalog.view']}" 
-									style="font-weight: bold; float: right; font-size: 15px; margin-left: 20px;  white-space:nowrap;"/>	
+									style="font-weight: bold; float: right; font-size: 15px; margin-left: 20px; white-space:nowrap;"/>	
 									
 									<p:selectOneMenu
 										label="#{lbl['lbl.cm.item.per.page']}"
@@ -335,7 +335,7 @@
 										update=":form:catalogueTabId:catalogueGridViewID, :form:catalogueTabId:catalogueListingTable"/>		<!-- shift between catalogueListingTable and catalogueGridViewID -->					
 									</p:selectOneMenu>
 									<p:outputLabel value="#{lbl['lbl.cm.item.per.page']}"
-									style="font-weight: bold; float: right; font-size: 15px; margin-left: 20px;  white-space:nowrap;"/>
+									style="font-weight: bold; float: right; font-size: 15px; margin-left: 20px; white-space:nowrap;"/>
 									
 									<p:selectOneMenu
 										label="#{lbl['lbl.cm.sort.by']}"
@@ -349,7 +349,7 @@
 										update=":form:catalogueTabId:catalogueGridViewID, :form:catalogueTabId:catalogueListingTable"/>		<!-- shift between catalogueListingTable and catalogueGridViewID -->				
 									</p:selectOneMenu>
 									<p:outputLabel value="#{lbl['lbl.cm.sort.by']}"
-									style="font-weight: bold; float: right; font-size: 15px;  white-space:nowrap;"/>
+									style="font-weight: bold; float: right; font-size: 15px; white-space:nowrap;"/>
 									<!-- #10747 - Soo - End -->
 
 									<br />
@@ -475,7 +475,7 @@
 											<p:commandLink value="#{supplierItem[8].replaceAll('N/A', '').replaceAll(' NA NA NA NA', '').replaceAll(' N A', '').replaceAll('(^|\\s|\\W)(NA)(\\s|\\W|$)', '')}"
 						    				styleClass="blue_font"
 						    				action="#{pCatalogueBackingBean.navigateToSupplierItemDet(supplierItem[12])}"
-											process="@this"/>
+											process="@this" />
 										</p:column>
 										<!-- Enhancement #31245, #10747 - end -->
 										<p:column style="width :40%;white-space:normal">
