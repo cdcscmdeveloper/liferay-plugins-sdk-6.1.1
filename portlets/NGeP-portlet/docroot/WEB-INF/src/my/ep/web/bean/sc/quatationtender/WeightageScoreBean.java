@@ -1,5 +1,6 @@
 package my.ep.web.bean.sc.quatationtender;
 
+//#38151 & #38679 use this
 public class WeightageScoreBean {
 	private double technicalTotalScore;
 	private double financialTotalScore;

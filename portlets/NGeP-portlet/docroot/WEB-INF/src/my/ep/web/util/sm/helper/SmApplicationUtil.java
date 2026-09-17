@@ -2358,6 +2358,12 @@ public class SmApplicationUtil {
 			/*} else if (per.getSmPersonnelAddresses() == null || per.getSmPersonnelAddresses().size() <= 0) {
 				validPersonnel = false;
 			}*/ //Commented for #31130
+			//#40801 START
+			if (per.getEpRole() != null && !per.getEpRole().isEmpty() &&
+					(per.getEmail() == null || per.getEmail().trim().isEmpty())) {
+				validPersonnel = false;
+		    }
+			//#40801 END
 			//31130-start
 			for (SmPersonnelAddress addressPer : per.getSmPersonnelAddresses()){
 				if (addressPer.getSmAddress() == null
@@ -4002,14 +4008,17 @@ public class SmApplicationUtil {
 
 	private static void validateOverlapCategory(SmApplicationManagedBean bean,
 			String currPage) {
+		SmAppl appl = bean.getSmAppl(); //#40444
 		String msg = currPage == null ? MessageConst.ERROR_722654
 				: MessageConst.ERROR_722661;
+		//#40444 START
 		//#31018 START
 		if(bean.isSupplierUser()) { 
-			if (EntityHelper.isCollectionEmpty(bean.getOverlapDocs())) {
+			if (EntityHelper.isCollectionEmpty(appl.getSmCategoryOverlapDocs())) {
 				throw new EpException(msg);
 			} else {
-				for (SmCategoryOverlapDoc doc : bean.getOverlapDocs()) {
+				for (SmCategoryOverlapDoc doc : appl.getSmCategoryOverlapDocs()) {
+					//#40444 END
 					if (doc.getPmDocument() == null
 							|| StringUtils.isBlank(doc.getFileName())) {
 						throw new EpException(msg);
@@ -4304,9 +4313,9 @@ public class SmApplicationUtil {
 			boolean isAdd = false;
 			boolean isSubAdd = false;
 			for (Object[] arr : resultList) {
-				// #39545 - Start
+				// #39545, #40444 - Start
 				applStatus = StringUtils.EMPTY;
-				// #39545 - End
+				// #39545, #40444 - End
 				catCode = arr[0] + "" + arr[1] + arr[2] + "";
 				isActiveAppl = arr[20] + "";
 				voTmp = (SmBulkApplOverlapCatVO) EntityHelper
@@ -16208,7 +16217,8 @@ public class SmApplicationUtil {
 		} else {
 			applNewReg = findHistoryOtherDesc(supplierId);
 		}
-			
+		
+		// Approved/Existing Category Codes
 		if (applNewReg != null) {
 			for (SmAppl appl : applNewReg) {
 				for (SmSupplierCategory previousKN : appl.getSmSupplierCategories()) {
@@ -16217,11 +16227,12 @@ public class SmApplicationUtil {
 					previousKN.setSmSuppCatOtherDescHistory(new ArrayList<SmSuppCatOtherDescHistory>());
 					previousKN.setSmSuppCatOtherDescHistory(retrieveActiveOtherDescHistory(previousKN.getSupplierCategoryId()));
 					
-					// WIP Site Visit After cannot display on Approved Category code.
+					// WIP Site Visit After cannot display on Approved Category code except KR(Existing Category Code).
 					boolean applSiteVisitAfter = managedBean.getSmAppl().getApplId().equals(previousKN.getSmAppl().getApplId()) &&
 							managedBean.getSmAppl().getPmStatus().getStatusId().equals
-							(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED);
-							
+							(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED) &&
+							!SupplierManagementConst.APPL_TYPE_RENEW_MOF.equalsIgnoreCase(managedBean.getSmAppl().getApplType());
+					
 					if ((previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE) ||
 							previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED) || 
 							previousKN.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)) &&													
@@ -16344,6 +16355,33 @@ public class SmApplicationUtil {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Retrieves the localized active role description for the specified user.
+	 *
+	 * This method queries the Profile Management service using the current
+	 * user's locale to obtain the active role description of the specified user.
+	 * If an active role exists, its description is returned; otherwise,
+	 * {@code null} is returned.
+	 *
+	 * @param userId the unique identifier of the user
+	 * @return the localized active role description of the user, or
+	 *         {@code null} if no active role is found
+	 */
+	public static PmRoleDesc epRoleNameByUserId(Long userId) {
+
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
+
+		String language = new FacesScopes().getUserLocale().getLanguage();
+		PmRoleDesc role = userSO.retrieveActiveRoleDescByUserId(userId, language);
+		if (role != null) {
+			return role;
+		}
+
+		return null;
 	}
 	// 36504 - END
 
@@ -16570,12 +16608,16 @@ public class SmApplicationUtil {
 				draft.setContractValue(exp.getContractValue());
 				draft.setSourceType(retrievePmParameterById(ParameterConst.SOURCE_TYPE_ID_SM));
 				draft.setClientType(exp.getClientType());
-				if(exp.getClientType().equalsIgnoreCase("F")){
+				draft.setOriAgencyName(exp.getClientName());
+				draft.setAgencyName(exp.getClientName());	
+				/*if(exp.getClientType().equalsIgnoreCase("F")){Latest FRS 2.9 Store all agency name
 					draft.setOriAgencyName(exp.getClientName());
 				}else if(exp.getClientType().equalsIgnoreCase("O")){
 					draft.setAgencyName(exp.getClientName());	
-				}
-				draft.setPaymentMethod(retrievePmParameterById(exp.getPaymentMethodId().longValue()));
+				}*/
+				if(exp.getPaymentMethodId() != null && exp.getPaymentMethodId().longValue() > 0) {
+					draft.setPaymentMethod(retrievePmParameterById(exp.getPaymentMethodId().longValue()));
+				}				
 				draft.setContractEffDate(exp.getProcurementDate());
 				if(isConsultant){
 					draft.setFileReferenceNo(exp.getRefNo());
@@ -16583,7 +16625,21 @@ public class SmApplicationUtil {
 					draft.setWorkServDesc(exp.getWorkServiceDesc());
 					draft.setConsultantFee(exp.getConsultantFee());
 				} else {
-					draft.setProcumentMode(retrievePmParameterById(exp.getProcurementModeId().longValue()));
+					
+					if(exp.getProcurementModeId() != null && exp.getProcurementModeId().longValue() > 0) {
+					    long pmId = exp.getProcurementModeId().longValue();
+					    long procurementModeId;
+					    if (pmId == SupplierManagementConst.PM_QUOTATION) {
+					        procurementModeId = SupplierManagementConst.PMQ_QUOTATION;
+					    } else if (pmId == SupplierManagementConst.PM_TENDER) {
+					        procurementModeId = SupplierManagementConst.PMQ_TENDER;
+					    } else if (pmId == SupplierManagementConst.PM_DIRECT_NEGO) {
+					        procurementModeId = SupplierManagementConst.PMQ_DIRECT_NEGO;
+					    } else {
+					        procurementModeId = pmId;
+					    }
+					    draft.setProcumentMode(retrievePmParameterById(procurementModeId));
+					}
 				}
 				List<SmCompExpCatDraft> catDraftList = new ArrayList<>();
 				for (SmCompanyExperienceCat cat : exp.getSmCompanyExperienceCats()) {

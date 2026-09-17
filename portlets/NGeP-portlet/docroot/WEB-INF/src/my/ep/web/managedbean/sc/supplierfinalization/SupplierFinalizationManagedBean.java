@@ -358,7 +358,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	
 	private boolean WeightageReq;//#38151
 	
-	private boolean weightage35384WIP; //#38151
+	private boolean weightage35384WIP; //#38151 & #38679
 	
 	/**
 	 * @return the activeIndex
@@ -2730,7 +2730,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.selectedSupplierOfferedPrice = selectedSupplierOfferedPrice;
 	}// #35320 - End
 
-	//#38151 - Start
+	//#38151 & #38679 - Start
 	public List<WeightageScoreBean> getWeightageScoreBeans() {
 		return weightageScoreBeans;
 	}
@@ -2778,6 +2778,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setWeightage35384WIP(boolean weightage35384WIP) {
 		this.weightage35384WIP = weightage35384WIP;
 	}
-	//#38151 - End
+	//#38151 & #38679 - End
 }
 // ***25201

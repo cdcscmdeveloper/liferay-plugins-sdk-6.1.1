@@ -20,16 +20,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;//#28188
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -263,6 +261,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtlHistory;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.LanguageCode;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.PTJLocalityCode;
 import my.ep.type.pm.RoleCode;
@@ -905,9 +904,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#28784
 			checkDemoPresentationByStatus();
 			//#10141 Start Vinod
+			this.getManagedBean().setShowInactiveChecklistWarning(inactiveCLWarn);
+			this.getManagedBean().setInActiveChecklistNotificationText(notifyText);
 			if(isSendNotificationButton){
-				this.getManagedBean().setShowInactiveChecklistWarning(inactiveCLWarn);
-				this.getManagedBean().setInActiveChecklistNotificationText(notifyText);
 				this.getManagedBean().setSaveForSendNotification(false);
 				FacesContext.getCurrentInstance().addMessage(
 						null,
@@ -3742,18 +3741,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		Long currentStatusId = scQt.getQtStatus().getStatusId();
 		
 		//#35320 - Start;
-		if (scQt.getFinalizationCommitte() != null && scQt.getFinalizationCommitte().getParameterCode() != null) {
-			if (scQt.getFinalizationCommitte().getParameterCode()
-					.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
-					|| scQt.getFinalizationCommitte().getParameterCode()
-							.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
-				if (isStatusTrigger(currentStatusId)) {
-					scQt.setFinalizationCommitte(new PmParameter());
-					scQt.setFinalizationSecratery(new PmUser());
-					this.getManagedBean().setQt(scQt);
-				}
-			}
-		}
+		resetFinalizationCommittee(scQt, currentStatusId);
 		//#35320 - End
 		
 		if (finalizationSecratary == null
@@ -3788,6 +3776,66 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		return finalizationSecratary;
 	}
+	
+	// #35320 - Start;
+		/**
+		 * #35320
+		 * Resets the finalization committee and secretary when the quotation
+		 * is finalized by a supported quotation committee and the current status
+		 * is a trigger status.
+		 *
+		 * @param scQt the quotation object to be updated
+		 * @param currentStatusId the current quotation status identifier
+		 */
+		private void resetFinalizationCommittee(ScQt scQt, Long currentStatusId) {
+		    if (!isValidFinalizationCommittee(scQt)) {
+		        return;
+		    }
+
+		    if (!isQuotationCommittee(scQt.getFinalizationCommitte())) {
+		        return;
+		    }
+
+		    if (!resetCommitteeByStatus(currentStatusId)) {
+		        return;
+		    }
+
+		    scQt.setFinalizationCommitte(new PmParameter());
+		    scQt.setFinalizationSecratery(new PmUser());
+		    this.getManagedBean().setQt(scQt);
+		}
+
+		/**
+		 * #35320
+		 * Checks whether the quotation has a valid finalization committee
+		 * and parameter code.
+		 *
+		 * @param scQt the quotation object
+		 * @return {@code true} if the committee and parameter code are present;
+		 *         {@code false} otherwise
+		 */
+		private boolean isValidFinalizationCommittee(ScQt scQt) {
+		    return scQt != null
+		            && scQt.getFinalizationCommitte() != null
+		            && scQt.getFinalizationCommitte().getParameterCode() != null;
+		}
+
+		/**
+		 * #35320
+		 * Determines whether the supplied parameter represents one of the
+		 * supported quotation committee types.
+		 *
+		 * @param committee the finalization committee parameter
+		 * @return {@code true} if the committee is quotation committee A or B;
+		 *         {@code false} otherwise
+		 */
+		private boolean isQuotationCommittee(PmParameter committee) {
+		    String parameterCode = committee.getParameterCode();
+
+		    return ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(parameterCode)
+		            || ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(parameterCode);
+		}
+		// #35320 - End;
 
 	/**
 	 * Retrieve business owner tab dtl.
@@ -7317,6 +7365,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			retrieveSuppQualificationTabDtl();
 			setAmmendMentBean(resDTO.getAmendMentBean());
 			getfulfilmentDtls(resDTO.getQtDetail());//#29474
+			//29661 && 41163 -start-
+			if(this.getManagedBean().getQt().isPanel()){
+				getPanelCategory();
+			}
+			//29661 && 41163 -end-
+			
 			break;
 		case 2:
 			//Added the validation for committee while save - 13342
@@ -7792,6 +7846,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				//#35285 & #25635 - End
 				if(!this.getManagedBean().getQt().isCloneEnabled()){//25635&34502-start
 					//#25077 - Start
+					setOtherApprovalLoaded();// 12471
 					if (!getManagedBean().isApproverTabLoaded()) {
 					    retrieveOthersApprovalTabDtl();
 					}
@@ -13354,8 +13409,6 @@ public void retrieveDemoQtDetails(Long qtId) {
 		checkStatus.add(SCProcessNameConst.PREPARE_QT_SCHEDULE);
 		checkStatus.add(SCProcessNameConst.REVISE_QT_SCHEDULE);
 		checkStatus.add(SCProcessNameConst.APPROVE_PUBLICATION);
-		checkStatus.add(SCProcessNameConst.REVISE_BPK);
-		checkStatus.add(SCProcessNameConst.APPROVE_BPK);
 		
 		if (checkStatus.contains(status)) {
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
@@ -13459,14 +13512,24 @@ public void retrieveDemoQtDetails(Long qtId) {
 
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
 		reqDTO.setQtId(getManagedBean().getQt().getQtId());
+		reqDTO.setCommitteeType(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
 		CommitteResDTO resDTO = null;
 		ICommitteSO committeSO;
+		PmUser secretaryUser = new PmUser();
 		try {
 			committeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 					ICommitteSO.class);
 			resDTO = committeSO.retrieveCommitteMembersByQtIdAndCommType(reqDTO);
 			List<ScCommitteeMember> committeeMembersList = resDTO.getCommMemberResultBean().getResultList();
 			qtReqDTO.setScCommitteeMemberList(committeeMembersList);
+			if (CollectionUtils.isNotEmpty(committeeMembersList)) {
+				for (ScCommitteeMember committeeMem : committeeMembersList) {
+					if (committeeMem.getMemberRole().getParameterCode().equals(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
+						secretaryUser = committeeMem.getPmUser();
+						break;
+					}
+				}
+			}
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_DETAIL_BACKINGBEAN,
 					this.getManagedBean().getQt().getQtNo(),
@@ -13474,10 +13537,16 @@ public void retrieveDemoQtDetails(Long qtId) {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
+		
+		String languageCode = secretaryUser.getPreferredLanguage() != null
+				|| !secretaryUser.getPreferredLanguage().isEmpty() ? secretaryUser
+				.getPreferredLanguage() : CommonConstants.DEFAULT_LANGUAGE_CODE;
+		Locale userLocale = new Locale(languageCode,
+				LanguageCode.getCountryCode(languageCode.toUpperCase()));
 
 		qtReqDTO.setQtdetail(this.getManagedBean().getQt());
 		qtReqDTO.setInActiveChecklist(this.getManagedBean().getInActiveChecklist());
-		qtReqDTO.setProcurementModeStr(this.getParameterDesc(this.getManagedBean().getQt().getProcurementMode()));
+		qtReqDTO.setProcurementModeStr(this.getParameterDesc(this.getManagedBean().getQt().getProcurementMode(), userLocale));
 		qtResDTO = detailSO.updateChecklistNotify(qtReqDTO);
 
 		if (qtResDTO.isSuccessful()) {
@@ -15001,19 +15070,11 @@ public void retrieveDemoQtDetails(Long qtId) {
 			this.getManagedBean().setCtPanelCategory(true);
 			//#29661 #40094 Start
 			this.getManagedBean().setShowCategoryCodePanel(true);
-			if (isQTStatusPublished(status)){
-				List<TabBean> committeeTabList = this.getManagedBean().getScCommitteeMemberTabList();//#29661 #40093 27th Apr
-				for (TabBean committeeTab :  committeeTabList != null ? committeeTabList : Collections.<TabBean>emptyList()) {
-					if (!ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equals(committeeTab.getTabType())){
-						this.getManagedBean().setShowCategoryCodePanel(false);
-						break;
-					}
-				}
-				//#29661 #40093 27th Apr start
-				if (CollectionUtils.isEmpty(this.getManagedBean().getScCommitteeMemberTabList())){
-					this.getManagedBean().setShowCategoryCodePanel(false);
-				}
-			} //#29661 #40093 27th Apr end
+			//#41068 start
+			if (isQTStatusGreaterThanOrEquals(status, QTStatusConst.QT_CLOSED)){
+				this.getManagedBean().setShowCategoryCodePanel(false);
+			}
+			//#41068 end
 		}
 		//#29661 #40094 End
 	}
@@ -15142,13 +15203,8 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 * @param statusId
 	 * @return boolean
 	 */
-	private static boolean isStatusTrigger(long statusId) {
-        final List<Long> triggerStatuses = Arrays.asList(
-                QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
-                QTStatusConst.QT_REVISION_PUBLICATION,
-                QTStatusConst.QT_PENDING_SCHEDULE_REVISION,
-                QTStatusConst.CMT_PENDING_ASSIGN_FC_SECRETARY
-        );
+	private static boolean resetCommitteeByStatus(long statusId) {
+        final List<Long> triggerStatuses = Arrays.asList(QTStatusConst.RESET_COMMITTEE_BY_STATUS);
         return triggerStatuses.contains(statusId);
 	}
 	
@@ -15301,198 +15357,6 @@ public void retrieveDemoQtDetails(Long qtId) {
 		}
 	}
 	//28188 -end-
-	
-	//#28188 - Start
-	private List<ScQtBsvDtl> groupAndSortSiteVisitList(List<ScQtBsvDtl> inputList) {
-
-	    if (CollectionUtils.isEmpty(inputList)) {
-	        return new ArrayList<ScQtBsvDtl>();
-	    }
-
-	    // STEP 1: Build id -> dtl map for lookup (only non-null IDs)
-		List<Long> parentIdList = new ArrayList<>();
-		for (ScQtBsvDtl dtl : inputList) {
-
-			if (dtl.getParentPostponeId() != null
-					&& !parentIdList.contains(dtl.getParentPostponeId())) {
-
-				parentIdList.add(dtl.getParentPostponeId());
-			}
-		}
-
-	    // STEP 2: Group by root ancestor key (walks up via getParentBsvId).
-	    Map<Long, List<ScQtBsvDtl>> grouped = new LinkedHashMap<Long, List<ScQtBsvDtl>>();
-	    long phantomKey = Long.MIN_VALUE;
-
-	    for (ScQtBsvDtl dtl : inputList) {
-	        Long rootKey = getRootParentBsvId(dtl, parentIdList);
-	       
-	        if (rootKey == null) {
-	            rootKey = phantomKey--;
-	        }
-
-	        if (!grouped.containsKey(rootKey)) {
-	            grouped.put(rootKey, new ArrayList<ScQtBsvDtl>());
-	        }
-	        List<ScQtBsvDtl> list = grouped.get(rootKey);
-	        if(CollectionUtils.isNotEmpty(list)){
-	        	list.add(dtl);
-	        	grouped.put(rootKey, list);
-	        }else{
-	        	grouped.get(rootKey).add(dtl);
-	        }
-	        
-			// 28188 -start-
-			if (null != dtl
-					&& null != dtl.getQtBsvDtlId()
-					&& dtl.getRecordStatusFlg().equals(
-							DbValueConst.RECORD_STATUS_PENDING_ACTIVATION)) {
-				dtl.setBsvStatus(getPmStatusByStatusId(QTStatusConst.BSV_PENDING));
-			}
-			// 28188 -end-
-	        
-	    }
-	    // STEP 3: sort grouped list based on status
-	    for (Map.Entry<Long, List<ScQtBsvDtl>> entry : grouped.entrySet()) {
-            Long key = entry.getKey();
-            List<ScQtBsvDtl> list = entry.getValue();
-            
-            List<ScQtBsvDtl> sortedList = new ArrayList<>();
-            List<ScQtBsvDtl> postponeList = new ArrayList<>();
-            List<ScQtBsvDtl> rejectList = new ArrayList<>();
-            List<ScQtBsvDtl> pendingList = new ArrayList<>();
-            List<ScQtBsvDtl> completedList = new ArrayList<>();
-            List<ScQtBsvDtl> pendingUpdateApprList = new ArrayList<>();
-			for (ScQtBsvDtl scQtBsvDtl : list) {
-				if (scQtBsvDtl.getBsvStatus() != null
-						&& scQtBsvDtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_POSTPONE)) {
-					postponeList.add(scQtBsvDtl);
-				} else if (scQtBsvDtl.getBsvStatus() != null
-						&& scQtBsvDtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_REQUEST_REJECT)) {
-					rejectList.add(scQtBsvDtl);
-				} else if (scQtBsvDtl.getBsvStatus() != null
-						&& scQtBsvDtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING)) {
-					pendingList.add(scQtBsvDtl);
-				} else if (scQtBsvDtl.getBsvStatus() != null
-						&& scQtBsvDtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_COMPLETED)) {
-					completedList.add(scQtBsvDtl);
-				} else if (scQtBsvDtl.getBsvStatus() != null
-						&& scQtBsvDtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING_UPDATE_APPROVAL)) {
-					pendingUpdateApprList.add(scQtBsvDtl);
-				}
-			}
-			
-			if (CollectionUtils.isNotEmpty(rejectList)) {
-				sortedList.addAll(rejectList);
-			}
-            if(CollectionUtils.isNotEmpty(postponeList)){
-            	sortedList.addAll(postponeList);
-	        }
-           
-            if(CollectionUtils.isNotEmpty(pendingList)){
-            	sortedList.addAll(pendingList);
-	        }
-            if(CollectionUtils.isNotEmpty(completedList)){
-            	sortedList.addAll(completedList);
-	        }
-            if(CollectionUtils.isNotEmpty(pendingUpdateApprList)){
-            	sortedList.addAll(pendingUpdateApprList);
-	        }
-            
-            if(CollectionUtils.isNotEmpty(sortedList)){
-	        	grouped.put(key, sortedList);
-	        }
-        }
-
-	    // STEP 4: Flatten - each group kept together, ordered by root ID
-	    List<Map.Entry<Long, List<ScQtBsvDtl>>> list =
-                new LinkedList<Map.Entry<Long, List<ScQtBsvDtl>>>(grouped.entrySet());
-
-        Collections.sort(list, new Comparator<Map.Entry<Long, List<ScQtBsvDtl>>>() {
-            public int compare(Map.Entry<Long, List<ScQtBsvDtl>> o1, Map.Entry<Long, List<ScQtBsvDtl>> o2) {
-                return (o1.getKey()).compareTo(o2.getKey());
-            }
-        });
-
-        Map<Long, List<ScQtBsvDtl>> result = new LinkedHashMap<>();
-        for (Map.Entry<Long, List<ScQtBsvDtl>> entry : list) {
-            result.put(entry.getKey(), entry.getValue());
-        }
-	   
-	    List<ScQtBsvDtl> finalList = new ArrayList<>();
-	    for (List<ScQtBsvDtl> bsvList : result.values()) {
-	        finalList.addAll(bsvList);
-	    }
-
-	    return finalList;
-	}
-	//#28188 - End
-
-	//#28188 - Start
-	private ScQtBsvDtl getRootDtl(List<ScQtBsvDtl> list) {
-
-	    if (CollectionUtils.isEmpty(list)) {
-	        return null;
-	    }
-
-	    for (ScQtBsvDtl dtl : list) {
-	        if (dtl.getParentPostponeId() == null) {
-	            return dtl;
-	        }
-	    }
-
-	    return list.get(0);
-	}
-	//#28188 - End
-
-	//#28188 - Start
-	private int compareById(ScQtBsvDtl dtl1, ScQtBsvDtl dtl2) {
-
-	    Long id1 = dtl1 != null ? dtl1.getQtBsvDtlId() : null;
-	    Long id2 = dtl2 != null ? dtl2.getQtBsvDtlId() : null;
-
-	    if (id1 == null && id2 == null) {
-	        return 0;
-	    }
-
-	    if (id1 == null) {
-	        return 1; // null ID last
-	    }
-
-	    if (id2 == null) {
-	        return -1;
-	    }
-
-	    return id1.compareTo(id2);
-	}
-	//#28188 - End
-
-	//#28188 - Start
-	private Long getRootParentBsvId(ScQtBsvDtl dtl, List<Long> parentIdList) {
-	    if (dtl == null) return null;
-         
-	    if (dtl.getParentPostponeId() == null) {
-	    	  return dtl.getQtBsvDtlId(); // may be null for brand-new roots
-	    }
-	    Long parentId=dtl.getQtBsvDtlId();
-	    
-        if(CollectionUtils.isNotEmpty(parentIdList)){
-        	
-        	if(null!=parentId && parentIdList.contains(parentId)){
-        		 
-        		return parentId;	
-        	}else if(null!=parentId && !parentIdList.contains(parentId)){
-        		
-        		 return dtl.getParentPostponeId();
-        	}else if(null==parentId){
-        		
-        		return dtl.getParentPostponeId();
-        	}
-        }
-	    
-	    return parentId;
-	}
-	//#28188 - End
 	
 	//28188 -start-
 	/**

@@ -1110,6 +1110,50 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		return items.toArray(new SelectItem[0]);
 	}
+	
+	 /**
+	  * Retrieves dropdown values by combining new and old WIP parameters.
+	  *
+	  * @param newParameterType the new parameter type
+	  * @param oldParameterType the old parameter type
+	  * @param oldParameterCode the old parameter code to include
+	  * @return an array of dropdown values
+	  */
+	public SelectItem[] getDropdownValuesWithWIP(String newParameterType, String oldParameterType,
+			String oldParameterCode) {
+
+		List<SelectItem> items = new ArrayList<>();
+
+		try {
+			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
+					.getParameterDescList(newParameterType);
+
+			for (PmParameterDesc desc : parameterDescs) {
+				items.add(new SelectItem(desc.getPmParameter().getParameterId(), desc.getCodeName()));
+			}
+
+			parameterDescs = ParameterHelper.getInstance().getParameterDescList(oldParameterType);
+
+			for (PmParameterDesc desc : parameterDescs) {
+				if (oldParameterCode != null
+						&& oldParameterCode.equalsIgnoreCase(desc.getPmParameter().getParameterCode())) {
+					items.add(new SelectItem(desc.getPmParameter().getParameterId(), desc.getCodeName()));
+				}
+			}
+
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE,
+					SLALogConstant.COMMON_BASE_BACKINGBEAN, SSTConstant.EMPTY_STRING,
+					SLALogConstant.DP_GET_RADIOBUTTON_CODEVALUES_COMBINE_WIP_PARAM,
+					getUserIdSessionFromLoginId(), e);
+
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+
+		return items.toArray(new SelectItem[0]);
+	}
+	
 
 	// 27868 - end
 	
@@ -4985,4 +5029,18 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			codificationBB.getManagedBean().setHideExtension(itemName.trim().isEmpty());
 		}
 		//End - #31341
+	
+	// 29661 - start
+	public <ENTITY_CLASS extends BaseEntity> boolean isSelected(List<ENTITY_CLASS> list) {
+		if(null == list){
+			return false;
+		}
+		for (ENTITY_CLASS entity : list) {
+			if (entity.isSelected()) {
+				return true;
+			}
+		}
+		return false;
+	}
+	// 29661 - end
 }
