@@ -49,10 +49,7 @@
 				<p:column headerText="#{lbl['lbl.sc.spec.cheque.sign']}"
 					style="width : 25%;">
 					<!-- #30447 start -->
-					<!-- <h:outputText value="#{cheque.smPersonnel.title.salutationName.concat(' ').concat(cheque.smPersonnel.name)}"></h:outputText> -->
-					<!-- #30447 - upperCase salutation check start -->
-					<h:outputText value="#{supplierProposalDetailBackingBean.formattedChequeSignatoryName(cheque)}"></h:outputText>
-					<!-- #30447 - upperCase salutation check end -->
+					<h:outputText value="#{supplierProposalDetailBackingBean.getFormattedSalutationName(cheque.smPersonnel.title.salutationName, cheque.smPersonnel.name)}"></h:outputText>
 					<!-- #30447 end -->
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.spec.passport.no']}"
