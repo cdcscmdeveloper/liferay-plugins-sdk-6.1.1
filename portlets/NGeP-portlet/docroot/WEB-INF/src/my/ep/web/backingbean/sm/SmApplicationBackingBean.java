@@ -4267,6 +4267,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				setApplicationShareHolders(getManagedBean().getSmAppl()
 						.getSmPersonnels());
 			}
+			reattachSelectedShareHolder();	//#40112
 			retrieveBusinessTypeList();
 			assignSupplierBusinessType(getManagedBean().getSmAppl()
 					.getSmSupplier());
@@ -5611,6 +5612,14 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * of the application.
 	 */
 	public void addOrUpdateAssocToSmAppl() {
+		// #36718 - Start - to validate perm addr postcode since use listener.
+		if (getManagedBean().getSelectedAssocCompany() != null) {
+			SmAddress addr = getManagedBean().getSelectedAssocCompany().getSmAddress();
+			if (addr != null && addr.getPostcode() != null) {
+				checkPostcode(addr.getPostcode());
+			}
+		}
+		// #36718 - End
 		SmCommonUtil.getInstance().setUserDetails(
 				getManagedBean().getSelectedAssocCompany());
 		EntityHelper.addOrUpdateEntityToList(getManagedBean()
@@ -8530,6 +8539,25 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 	//#40112 - end
 
+	//#40112 - start
+	// the appl graph was just replaced, so a selectedShareHolder kept from the previous read is
+	// detached; merging it on the next save fails with an OptimisticLockException
+	private void reattachSelectedShareHolder() {
+		SmPersonnel selected = getManagedBean().getSelectedShareHolder();
+		if (selected == null || selected.getPersonnelId() == null
+				|| EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
+						.getSmPersonnels())) {
+			return;
+		}
+		for (SmPersonnel per : getManagedBean().getSmAppl().getSmPersonnels()) {
+			if (selected.getPersonnelId().equals(per.getPersonnelId())) {
+				getManagedBean().setSelectedShareHolder(per);
+				return;
+			}
+		}
+	}
+	//#40112 - end
+
 	/**
 	 * Update category record status if category record status is 1 and
 	 * application type is new
@@ -8640,6 +8668,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				.getMaxAdditionalMofAuthorizedUser()) {
 			getManagedBean().setValidSmUserLimit(true);
 		}
+		// #36718 - Start
+		getManagedBean().setReassignAddress(true);
+		// #36718 - End
 		RequestContext.getCurrentInstance().reset(":form:tt:shareHolderDialog");
 	}
 
@@ -9452,6 +9483,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				.getAccountNo())) {
 			throw new EpException(MessageConst.ERROR_722616);
 		}
+		
+		// #36718 - Start
+		if (getManagedBean().getSelectedBank() != null) {
+			SmAddress addr = getManagedBean().getSelectedBank().getSmAddress();
+			if (addr != null && addr.getPostcode() != null) {
+				checkPostcode(addr.getPostcode());
+			}
+		}
+		// #36718 - End
 		
 		// #34166 - Start
 		if (getManagedBean().getSelectedBank().getSignatureInstruction().contains("<")
@@ -14400,7 +14440,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	/**
 	 * Calc personnel list count for supplier.
 	 */
-	private void calcPersonnelListCount() {
+	public void calcPersonnelListCount() {	//#40112
 		log.info("*** Start calcPersonnelListCount**** ");
 		SmPersonnleCalcVO calcVO = SmCommonUtil.calcPersonnelListCount(
 				getManagedBean().getSmAppl().getSmPersonnels(),
@@ -18578,6 +18618,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				getManagedBean().setSelectedShareHolder(this.getManagedBean().getSelectedShareHolder());
 			}
 		}
+		// #36718 - Start
+		getManagedBean().setReassignAddress(false);
+		// #36718 - End
 	}
 	//#32014 - END
 	//30766 START
@@ -20027,6 +20070,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 
 	public boolean isAiUploadDocRow(PmDocument doc){
+		if (SmAIDocBackingBean.isTenancyDoc(doc)){
+			return isShowTenancyAiBtn();
+		}
 		return isAiAvailable()
 				&& SmAIDocBackingBean.isAiUploadDocRow(getManagedBean().getSmAppl(), doc);
 	}

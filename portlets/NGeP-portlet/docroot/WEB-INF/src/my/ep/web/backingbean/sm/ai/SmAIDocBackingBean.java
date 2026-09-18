@@ -592,6 +592,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				// ticking nothing is still a decision - re-derive the icons against the new latches
 				validateEPF(appl);
 			}
+			// the decision is latched, so a reopened dialog starts unticked
+			selectedEmployees = null;
 		} else if (TYPE_TENANCY.equals(docType)){
 			submitTenancy();
 		}
@@ -643,6 +645,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if (bb != null){
 			bb.saveOrUpdateAppl();
 			SmApplicationUtil.sortPersonnelByRoleInCompany(bb.getManagedBean().getSmAppl());
+			// the reload drops the @Transient roleName, same as every other personnel mutator
+			bb.calcPersonnelListCount();
 			validateEPF(bb.getManagedBean().getSmAppl());
 		}
 	}
@@ -739,9 +743,10 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		long startTime = System.currentTimeMillis();
 		boolean hasError = showErrorMessage(TYPE_BANK, jsonWrappers);
 		
+		// a rejected file gets its verdict icon too; only the mismatch messages are skipped
+		List<AiBankDocDTO> docEntities = processBank(jsonWrappers);
+		validateBankEntity(appl, suppDoc, docEntities);
 		if (!hasError){
-			List<AiBankDocDTO> docEntities = processBank(jsonWrappers);
-			validateBankEntity(appl, suppDoc, docEntities);
 			showErrorMessageBank(docEntities, "ai");
 		}
 		
@@ -1383,9 +1388,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		List<AiBankDocDTO> docEnts = new ArrayList<>();
 		for (JsonWrapper json : jsonWrappers){
-			if (json.entities == null){
-				continue;
-			}
+			// null entities yields an error DTO, so a wrong document is crossed rather than skipped
 			docEnts.add(AiDocParser.toBankDoc(json.apiId, json.entities));
 		}
 		return docEnts;
@@ -1470,7 +1473,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	/**
-	 * Verdict icon for one uploaded file, whatever the dialog's document type.
+	 * Verdict icon for one uploaded file. Tenancy carries no verdict of its own, per BA.
 	 * 1 = mapped, 2 = wrong company or nothing mappable, 0 = nothing to show.
 	 * @param doc
 	 * @return
@@ -1478,9 +1481,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	public int getDocVerdict(AIApiResponse doc){
 		if (TYPE_EPF.equals(docType)){
 			return getEpfDocVerdict(doc);
-		}
-		if (TYPE_TENANCY.equals(docType)){
-			return (tenancy == null || blockSubmit) ? 2 : 1;
 		}
 		return 0;
 	}
@@ -1493,12 +1493,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	public String getDocLabel(AIApiResponse doc){
 		if (TYPE_EPF.equals(docType)){
 			return getEpfDocLabel(doc);
-		}
-		if (TYPE_TENANCY.equals(docType)){
-			if (tenancy == null){
-				return AiDocParser.label("lbl.sm.ai.doc.invalid");
-			}
-			return blockSubmit ? AiDocParser.label("lbl.sm.ai.tnc.mismatch") : "";
 		}
 		return "";
 	}
@@ -1601,27 +1595,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		return tenancy;
 	}
 
-	/**
-	 * A tick means "this employee is on the application", so one deleted from the personnel list
-	 * must come back unticked. The list only ever holds employees a submit already added, so an
-	 * entry with no personnel behind it was deleted since.
-	 * @return
-	 */
 	public List<AiEpfResultDTO.AiEmployeeDTO> getSelectedEmployees() {
-		if (EntityHelper.isCollectionEmpty(selectedEmployees) || smAppl == null){
-			return selectedEmployees;
-		}
-		Set<String> onAppl = new HashSet<>();
-		if (!EntityHelper.isCollectionEmpty(smAppl.getSmPersonnels())){
-			for (SmPersonnel per : smAppl.getSmPersonnels()){
-				onAppl.add(AiDocValidator.normalizeNric(per.getIdentificationNo()));
-			}
-		}
-		for (Iterator<AiEpfResultDTO.AiEmployeeDTO> it = selectedEmployees.iterator(); it.hasNext();){
-			if (!onAppl.contains(AiDocValidator.normalizeNric(it.next().getNricNumber()))){
-				it.remove();
-			}
-		}
 		return selectedEmployees;
 	}
 
