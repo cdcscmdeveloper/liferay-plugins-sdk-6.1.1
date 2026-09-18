@@ -2942,9 +2942,9 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 * @return the onlineBiddingFinalizationMeetingActiveIndex
 	 */
 	public int getOnlineBiddingFinalizationMeetingActiveIndex() {
-		if (getManagedBean().isOnlineBiddingEscalation()) {
-			return -1;
-		} else if(mofFinal){// #27502 - Start
+		// #27502 - Start
+		if (getManagedBean().isOnlineBiddingEscalation() || mofFinal) {
+		// #27502 - End
 			return -1;
 		} else {
 			return ONLINE_BIDDING_FINALIZATION_MEETING_ACTIVE_INDEX;
