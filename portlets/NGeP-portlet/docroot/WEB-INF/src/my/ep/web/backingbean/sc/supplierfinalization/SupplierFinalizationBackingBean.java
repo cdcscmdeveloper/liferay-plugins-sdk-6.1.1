@@ -39,6 +39,9 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.approveauthority.IApproveAuthorityCommitteeSO;
+import my.ep.biz.service.pm.common.approveauthority.IApproveAuthoritySO;
+import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
@@ -73,6 +76,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.approveauthority.AuthorityCommitteeReqDTO;
+import my.ep.dto.pm.common.approveauthority.AuthorityCommitteeResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
@@ -105,6 +110,8 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
+import my.ep.persistence.entity.pm.common.PmAuthority;
+import my.ep.persistence.entity.pm.common.PmAuthorityCommittee;
 import my.ep.persistence.entity.pm.common.PmAppVersion; //#38151
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
@@ -229,6 +236,10 @@ public class SupplierFinalizationBackingBean extends
 	private static final int PREPARE_ACTIVE_INDEX_COMMITTEE = 1;
 	private static final int PREPARE_ACTIVE_INDEX_JOIN_IN = 2;
 	
+	//#27502 - New DO MOF Role and Process
+	private static final int PREPARE_ACTIVE_INDEX_MINISTRY_OF_FINANCE = 1;
+
+	
 	private static final Long DEFAULT_ITEM = 0L;
 	private static final Long DEFAULT_ZONE = 0L;
 	private static final String JUSTIFICATION_OTHERS = "OTHERS";
@@ -282,8 +293,7 @@ public class SupplierFinalizationBackingBean extends
 			retrievescoresettings(scQt); //#38151
 			getManagedBean().getScQt().setScQtScoreSettings(this.getManagedBean().getScQt().getScQtScoreSettings()); //#38151
 			
-			boolean isBpkCentralContract = false;
-			isBpkCentralContract = isBpkCentralContract(scQt);
+			boolean isBpkCentralContract = isBpkCentralContract(scQt);
 			
 			//#31632
 			getManagedBean().setMofCntralCtc(isBpkCentralContract);
@@ -432,8 +442,7 @@ public class SupplierFinalizationBackingBean extends
 		QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
 		qtBackingBean.retrieveQuationTenderDetails(qtId);
 		ScQt scQt = qtBackingBean.getManagedBean().getQt();	
-		boolean isBpkCentralContract = false;
-		isBpkCentralContract = isBpkCentralContract(scQt);
+		boolean isBpkCentralContract = isBpkCentralContract(scQt);
 		// #27502 -- END
 		
 		if (getManagedBean().isInitialDecisionFwdToBPK()) {			
@@ -453,8 +462,8 @@ public class SupplierFinalizationBackingBean extends
 			
 			// #27502 -- Start
 		} else if (isBpkCentralContract) {
-			getManagedBean().setPreparationTabIndex(-1);
-			getManagedBean().setEvaluationReportIndex(-1);
+			getManagedBean().setPreparationTabIndex(tabIndex++);//#27502 - New DO MOF Role and Process
+			getManagedBean().setEvaluationReportIndex(tabIndex++);//#27502 - New DO MOF Role and Process
 			getManagedBean().setReportTabIndex(tabIndex++);
 			getManagedBean().setFinalizationTabIndex(tabIndex++);
 			getManagedBean().setCommEndorsementTabIndex(-1);		
@@ -870,8 +879,7 @@ public class SupplierFinalizationBackingBean extends
 		qtBackingBean.retrieveQuationTenderDetails(this.getManagedBean().getScQt().getQtId());
 
 		ScQt scQt = qtBackingBean.getManagedBean().getQt();
-		boolean isBpkCentralContract = false;
-		isBpkCentralContract = isBpkCentralContract(scQt);
+		boolean isBpkCentralContract = isBpkCentralContract(scQt);
 
 		// Retrieve finalization endorsement remarks
 		if (isBpkCentralContract || this.getManagedBean().isSecretaryUser()) {
@@ -946,6 +954,73 @@ public class SupplierFinalizationBackingBean extends
 			}
 		}
 		// #28834 - End.
+	// #27502 - New DO MOF Role and Process - Start
+	/**
+	 * This loadCommitteeList method is to load data from pm_authority_committee
+	 * and display to user
+	 * 
+	 * @param eventTab
+	 *            the tab where the user has clicked
+	 */
+	public void changeApprovalAuth() {
+		IApproveAuthorityCommitteeSO approveAuthorityCommitteeSo = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IApproveAuthorityCommitteeSO.class);
+
+		PmAuthority authority = this.getManagedBean().getApprovalAuthority();
+		List<PmAuthorityCommittee> newComList = new ArrayList<>();
+		if (authority != null && authority.getAuthId() != null) {
+			AuthorityCommitteeReqDTO reqDTO = new AuthorityCommitteeReqDTO();
+			reqDTO.setAuthority(authority);
+
+			AuthorityCommitteeResDTO resDTO = approveAuthorityCommitteeSo.retrieveListApproveAuthority(reqDTO);
+			if (resDTO.getListAuthorityCommittee() != null && !resDTO.getListAuthorityCommittee().isEmpty()) {
+				for (PmAuthorityCommittee committee : resDTO.getListAuthorityCommittee()) {
+					newComList.add(committee);
+				}
+
+				Collections.sort(newComList, new Comparator<PmAuthorityCommittee>() {
+					@Override
+					public int compare(PmAuthorityCommittee c1, PmAuthorityCommittee c2) {
+						return c1.getAuthCommitteeId().compareTo(c2.getAuthCommitteeId());
+					}
+				});
+			}
+		} else {
+			this.getManagedBean().setApprovalAuthCommittee(new PmAuthorityCommittee());
+		}
+
+		if (this.getManagedBean().getApprovalAuthCommittee() == null) {
+			this.getManagedBean().setApprovalAuthCommittee(new PmAuthorityCommittee());
+		}
+		this.getManagedBean().setListApprovalAuthCommittee(newComList);
+	}
+
+	// #27502 -end-
+
+	// #27502 -start-
+	public void changeCommApprovalAuth() {
+		log.info("start changeCommApprovalAuth");
+	}
+
+	// #27502 -end-
+
+	// #27502 -start-
+	private void getListApprovalAuthority() {
+		// to retrieve Approval Authority
+		IApproveAuthoritySO approveAuthoritySo = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IApproveAuthoritySO.class);
+
+		List<PmAuthority> resultComittee = approveAuthoritySo.getPMAuthorityList();
+
+		if (this.getManagedBean().getApprovalAuthority() == null) {
+			this.getManagedBean().setApprovalAuthority(new PmAuthority());
+		}
+
+		this.getManagedBean().setListApprovalAuthority(resultComittee);
+
+	}
+
+	// #27502 - New DO MOF Role and Process - end
 
 		private void retrievePreparationDtls(Long qtId, String committeeType) {
 		log.info("..In retrievePreparationDtls()..");
@@ -1113,6 +1188,11 @@ public class SupplierFinalizationBackingBean extends
 
 			// Meeting Details
 			List<ScQtMeeting> meetingList = getManagedBean().getMeetingList();
+			// 20230727@asyrafhaziq #27502 - New DO MOF Role and Process - Start
+			if (getManagedBean().isBpkCentralContract()) {
+				this.getManagedBean().setDisableBfButton(true);
+			}
+			// 20230727@asyrafhaziq #27502 - New DO MOF Role and Process - End
 			getManagedBean().setMeetingList(meetingList);
 		} finally {
 		}
@@ -1133,8 +1213,14 @@ public class SupplierFinalizationBackingBean extends
 			// meeting.setPmStatus(new PmStatus());
 			meeting.setQtCommittee(this.getManagedBean().getScQtCommittee());
 			setUserDetails(meeting);
-			meeting.setMeetingStatus(getPmStatusByStatusId(QTStatusConst.MS_PENDING));
-
+			// 20230727@asyrafhaziq #27502 - New DO MOF Role and Process - Start
+			if (this.getManagedBean().isBpkCentralContract()) {
+				meeting.setMeetingStatusStr(QTStatusConst.MS_DONE);
+				meeting.setMeetingStatus(getPmStatusByStatusId(QTStatusConst.MS_DONE));
+			} else {
+				meeting.setMeetingStatus(getPmStatusByStatusId(QTStatusConst.MS_PENDING));
+			}
+			// 20230727@asyrafhaziq #27502 - New DO MOF Role and Process - End
 			meetingList.add(meeting);
 			this.getManagedBean().setMeetingList(meetingList);
 		} finally {
@@ -1224,7 +1310,7 @@ public class SupplierFinalizationBackingBean extends
 			
 		}
 	}
-
+	
 	/**
 	 * Event to update the status of the selected meeting
 	 * 
@@ -1266,6 +1352,18 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setPrepareActiveIndex(
 				PREPARE_ACTIVE_INDEX_COMMITTEE);
 	}
+	
+	// 20230727@asyrafhaziq #27502 - New DO MOF Role and Process - Start
+	/**
+	 * To retrieve committee details
+	 */
+	public void retrieveCommitteeMOFDtls() {
+		this.getManagedBean().setPrepareActiveIndex(PREPARE_ACTIVE_INDEX_MINISTRY_OF_FINANCE);
+
+		getListApprovalAuthority();
+	}
+
+	// 20230727@asyrafhaziq #27502 - New DO MOF Role and Process - End
 
 	/**
 	 * To retrieve meeting attendance details corresponding to the selected
@@ -1568,8 +1666,7 @@ public class SupplierFinalizationBackingBean extends
 			qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
 
 			scQt = qtBackingBean.getManagedBean().getQt();
-			boolean isBpkCentralContract = false;
-			isBpkCentralContract = isBpkCentralContract(scQt);
+			boolean isBpkCentralContract = isBpkCentralContract(scQt);
 
 			if (isBpkCentralContract) {
 				reqDTO = validateInfo(2, skipValidation);
@@ -2130,8 +2227,7 @@ public class SupplierFinalizationBackingBean extends
 		qtBackingBean.retrieveQuationTenderDetails(qtId);
 
 		ScQt scQt = qtBackingBean.getManagedBean().getQt();
-		boolean isBpkCentralContract = false;
-		isBpkCentralContract = isBpkCentralContract(scQt);
+		boolean isBpkCentralContract = isBpkCentralContract(scQt);
 
 		if (isBpkCentralContract) {
 			this.getManagedBean().setActiveIndex(5);
@@ -2588,7 +2684,14 @@ public class SupplierFinalizationBackingBean extends
 	 * 
 	 */
 	public void navigateToSubmissionPopup() {
-		RequestContext.getCurrentInstance().execute("submissionPopup.show()");
+		// @asyrafhaziq #27502 - New DO MOF Role and Process - Start
+		if (getManagedBean().isBpkCentralContract()) {
+			RequestContext.getCurrentInstance().execute("confirmBriefPopup2.show()");
+		} else {
+			RequestContext.getCurrentInstance().execute("submissionPopup.show()");
+		}
+		// @asyrafhaziq #27502 - New DO MOF Role and Process - End
+
 	}
 	// #28834 - End.
 	
@@ -2654,7 +2757,8 @@ public class SupplierFinalizationBackingBean extends
 			boolean submit = Arrays.asList(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION,
 					QTStatusConst.SF_PENDING_ESCALATION_TO_BPK, QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION,
 					QTStatusConst.SF_PENDING_BIDDING_FINALIZATION_REVISION,
-					QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION_REVISION).contains(currentStatusId);
+					QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION_REVISION,
+					QTStatusConst.SF_MOF_COMMITTEE).contains(currentStatusId); //#27502 - New DO MOF Role and Process
 			this.getManagedBean().setSubmit(submit);
 			// 38523 - refactor codes - end
 			
@@ -2917,8 +3021,11 @@ public class SupplierFinalizationBackingBean extends
 						)  {
 					RequestContext.getCurrentInstance().execute("confirmBriefPopup1.show()");
 				}
-				else
-				{
+				//@asyrafhaziq #27502 - New DO MOF Role and Process - Start
+				else if (getManagedBean().isBpkCentralContract()) {
+					RequestContext.getCurrentInstance().execute("confirmBriefPopup2.show()");
+				} else {
+				//@asyrafhaziq #27502 - New DO MOF Role and Process - End
 					RequestContext.getCurrentInstance().execute("submissionPopup.show()");
 				}
 			}
@@ -3018,8 +3125,7 @@ public class SupplierFinalizationBackingBean extends
 		qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
 		scQt = qtBackingBean.getManagedBean().getQt();
 		Long statusId = scQt.getQtStatus().getStatusId();//#39344
-		boolean isBpkCentralContract = false;
-		isBpkCentralContract = isBpkCentralContract(scQt);
+		boolean isBpkCentralContract = isBpkCentralContract(scQt);
 		boolean hidden = false;
 
 		if (!isBpkCentralContract && !statusId.equals(QTStatusConst.QT_RE_FINALIZATION)){//#39344
@@ -3331,8 +3437,7 @@ public class SupplierFinalizationBackingBean extends
 				qtBackingBean.retrieveQuationTenderDetails(reqDTO.getScQt().getQtId());
 
 				ScQt scQt = qtBackingBean.getManagedBean().getQt();
-				boolean isBpkCentralContract = false;
-				isBpkCentralContract = isBpkCentralContract(scQt);
+				boolean isBpkCentralContract = isBpkCentralContract(scQt);
 
 				if (isBpkCentralContract) {
 					this.getManagedBean().setBpkCentralContract(true);
@@ -3514,7 +3619,8 @@ public class SupplierFinalizationBackingBean extends
                 || getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION.longValue()
                 || getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_BIDDING_FINALIZATION_REVISION.longValue()
                 || getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION_REVISION.longValue()
-                || getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER.longValue())) {
+                || getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER.longValue()
+                || getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_MOF_COMMITTEE.longValue())) { //27502 - New DO MOF Role and Process
 			if (ParameterConst.DECISION_CANCEL.equals(decisionTypeCode) || ParameterConst.DECISION_RBP.equals(decisionTypeCode) ) {
 				boolean remarksNotFound = true;
 				if (!CollectionUtils.isEmpty(getManagedBean().getFinalizationRemarks())) {
@@ -3552,7 +3658,8 @@ public class SupplierFinalizationBackingBean extends
 			//25638 - for 25037 note 284 no validation for committee during sf revision - start
 			if (Arrays.asList(new Long[]{
 					QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION, 
-					QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION })
+					QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION,
+					QTStatusConst.SF_MOF_COMMITTEE,})//27502 - New DO MOF Role and Process
 					.contains(this.getManagedBean().getCurrentStatusId())) {
 			//25638 - for 25037 note 284 no validation for committee during sf revision - end
 				// #28834 - #31934 - starts.
@@ -3883,8 +3990,7 @@ public class SupplierFinalizationBackingBean extends
 				qtBackingBean.retrieveQuationTenderDetails(reqDTO.getScQt().getQtId());
 
 				ScQt scQt = qtBackingBean.getManagedBean().getQt();
-				boolean isBpkCentralContract = false;
-				isBpkCentralContract = isBpkCentralContract(scQt);
+				boolean isBpkCentralContract = isBpkCentralContract(scQt);
 
 				if (isBpkCentralContract) {
 					this.getManagedBean().setBpkCentralContract(true);
@@ -4085,8 +4191,7 @@ public class SupplierFinalizationBackingBean extends
 			QTDetailBackingBean qtBackingBean =   new QTDetailBackingBean();
 			qtBackingBean.retrieveQuationTenderDetails(this.getManagedBean().getScQt().getQtId());
 			ScQt scQt = qtBackingBean.getManagedBean().getQt();
-			boolean isBpkCentralContract = false;
-			isBpkCentralContract = isBpkCentralContract(scQt);
+			boolean isBpkCentralContract = isBpkCentralContract(scQt);
 			//27502 - Start.
 			// #28834 - Start.
 			getManagedBean().setBpkCentralContract(isBpkCentralContract);
@@ -5512,8 +5617,7 @@ public class SupplierFinalizationBackingBean extends
 			QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
 			qtBackingBean.retrieveQuationTenderDetails(getManagedBean().getScQt().getQtId());
 			ScQt scQt = qtBackingBean.getManagedBean().getQt();
-			boolean isBpkCentralContract = false;
-			isBpkCentralContract = isBpkCentralContract(scQt);
+			boolean isBpkCentralContract = isBpkCentralContract(scQt);
 
 			if (isBpkCentralContract) {
 				statusIds.add(QTStatusConst.SF_MOF_COMMITTEE);//#27901
@@ -6016,7 +6120,8 @@ public class SupplierFinalizationBackingBean extends
 		}
 		//END - #26169
 		if (getManagedBean().isInitialDecisionFwdToBPK() || 
-				getManagedBean().isDisableFwdToHighAuthorityOption()) {
+				getManagedBean().isDisableFwdToHighAuthorityOption() ||
+				this.getManagedBean().isBpkCentralContract()) {//@asyrafhaziq #27502 - New DO MOF Role and Process
 			if (excludedDecisionList == null) {
 				excludedDecisionList = new ArrayList<String>();
 			}
@@ -6575,8 +6680,7 @@ public class SupplierFinalizationBackingBean extends
 		QTDetailBackingBean qtBackingBean =   new QTDetailBackingBean();
 		qtBackingBean.retrieveQuationTenderDetails(this.getManagedBean().getScQt().getQtId());
 		ScQt scQt = qtBackingBean.getManagedBean().getQt();
-		boolean isBpkCentralContract = false;
-		isBpkCentralContract = isBpkCentralContract(scQt);
+		boolean isBpkCentralContract = isBpkCentralContract(scQt);
 		if (isBpkCentralContract ){
 			getManagedBean().setFinalizationMethod(null);//#27502, null the 'Supplier Finalization Method' for re-evaluation 
 		}
@@ -6889,9 +6993,32 @@ public class SupplierFinalizationBackingBean extends
       String tabMenuChangeCommonAction = "onMainTabMenuChangeAction([ {name : 'selectedTabIndex', value : ";
       
       // #27502 -- Start
-      boolean isBpkCentralContract = false;
-      isBpkCentralContract = isBpkCentralContract(scQt);
+      boolean isBpkCentralContract = isBpkCentralContract(scQt);
       if (isBpkCentralContract) {
+			// #27502 - New DO MOF Role and Process
+			// Meeting Record
+			menuItem = new MenuItem();
+			menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.record", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+			menuItem.setStyle("width:15%;");
+			menuItem.setTransient(true);
+			menuItem.setPartialSubmit(true);
+			menuItem.setProcess("@form");
+			menuItem.setUpdate("@form");
+			menuItem.setOncomplete(tabMenuChangeCommonAction + (0) + "}]); ");
+			mainMenuModel.addMenuItem(menuItem);
+
+			// Evaluation Report
+			menuItem = new MenuItem();
+			menuItem.setValue(ResourceBundleUtils.getMessage("lbl.sc.evaluation.report",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			menuItem.setStyle("width:15%;");
+			menuItem.setTransient(true);
+			menuItem.setPartialSubmit(true);
+			menuItem.setProcess("@form");
+			menuItem.setUpdate("@form");
+			menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 1 : (1)) + "}]); ");
+			mainMenuModel.addMenuItem(menuItem);
 
           // Briefing Paper Menu Item
           menuItem = new MenuItem();
@@ -6903,7 +7030,7 @@ public class SupplierFinalizationBackingBean extends
           menuItem.setProcess("@form");
           menuItem.setUpdate("@form");
 //        menuItem.setOncomplete(tabMenuChangeCommonAction + (tabIndex++) + "}]); ");
-          menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 0 : (2)) + "}]); ");
+          menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 2 : (2)) + "}]); ");//#27502 - New DO MOF Role and Process
           mainMenuModel.addMenuItem(menuItem);
 
           // Supplier Finalization Menu Item
@@ -6917,7 +7044,7 @@ public class SupplierFinalizationBackingBean extends
           menuItem.setProcess("@form");
           menuItem.setUpdate("@form");
 //        menuItem.setOncomplete(tabMenuChangeCommonAction + (tabIndex++) + "}]); ");
-          menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 1 : (3)) + "}]); ");
+          menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 3 : (3)) + "}]); ");//#27502 - New DO MOF Role and Process
           mainMenuModel.addMenuItem(menuItem);
 
           menuItem = new MenuItem();
@@ -6929,10 +7056,11 @@ public class SupplierFinalizationBackingBean extends
           menuItem.setProcess("@form");
           menuItem.setUpdate("@form");        
           //menuItem.setOncomplete(tabMenuChangeCommonAction + (tabIndex++) + "}]); ");
-          menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 2 : (5)) + "}]); ");
+          menuItem.setOncomplete(tabMenuChangeCommonAction + (isBPKUser ? 4 : (5)) + "}]); ");//#27502 - New DO MOF Role and Process
           mainMenuModel.addMenuItem(menuItem);
-          
-          navigateToSupplierFinalizationTab();
+		// #27502 - New DO MOF Role and Process
+		// navigateToSupplierFinalizationTab();
+
 
           // #27502 -- End
 
@@ -10673,8 +10801,7 @@ public class SupplierFinalizationBackingBean extends
 		QTDetailBackingBean qtBackingBean =   new QTDetailBackingBean();
 		qtBackingBean.retrieveQuationTenderDetails(this.getManagedBean().getScQt().getQtId());
 		ScQt scQt = qtBackingBean.getManagedBean().getQt();
-		boolean isBpkCentralContract = false;
-		isBpkCentralContract = isBpkCentralContract(scQt);
+		boolean isBpkCentralContract = isBpkCentralContract(scQt);
 		
 		if (!isBpkCentralContract) {
 
@@ -12423,7 +12550,7 @@ public class SupplierFinalizationBackingBean extends
 		if (isCurrent && isNotSameStatus) {
 			boolean isSecStatusRole = Arrays.asList(
 					new Long[] { QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION,
-							QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION }).contains(workFlowStatusId);
+							QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION, QTStatusConst.SF_MOF_COMMITTEE }).contains(workFlowStatusId);//27502 - New DO MOF Role and Process
 			if (this.getManagedBean().isSecretaryUser() && !isSecStatusRole) {
 				return false;
 			}
