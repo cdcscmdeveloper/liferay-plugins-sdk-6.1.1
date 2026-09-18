@@ -22,11 +22,6 @@
 			.ui-fileupload td.start {
 		        display: none;
 		    }
-
-			/* #40112 - keep a tall dialog (many EPF personnel + several docs) inside the viewport */
-			.aiDlgFit .ui-dialog-content {
-				max-height: 70vh;
-			}
 		</style>
 		
 		<ui:param name="ai" value="#{smAIDocBackingBean}" />
@@ -42,16 +37,16 @@
 		</p:dialog>
 		
 		<p:dialog id="#{cc.attrs.aiDlg}" widgetVar="#{cc.attrs.aiDlg}" modal="true"
-			dynamic="true" resizable="false" width="700px" 
+			dynamic="true" resizable="true" width="700px" height="500px"
 			header="#{lbl['lbl.btn.upload.doc']}"
-			styleClass="pop_up_top aiDlgFit">
+			styleClass="pop_up_top">
 			
 		<p:outputPanel id="pnl#{cc.attrs.aiDlg}" layout="block">
 		
 			<f:event type="preRenderComponent" listener="#{ai.initContext(cc.attrs.docType, cc.attrs.smAppl)}" />
 			
 			<h:inputHidden id="ai"/>
-			<p:messages id="messages" for="ai" showDetail="true" autoUpdate="true" closable="true"/>
+			<p:messages id="messages" for="ai" showSummary="false" showDetail="true" autoUpdate="true" closable="true"/>
 			
 			<h:outputText value="#{lbl['lbl.sm.ai.tnc.instruction']}" rendered="#{cc.attrs.docType eq 'tenancy'}"
 				styleClass="instruction" escape="false"/>
@@ -61,16 +56,16 @@
 			<p:dataTable id="docs#{cc.attrs.aiDlg}" var="doc" value="#{ai.getDocs()}" emptyMessage="">
 				<p:column style="width:5%;text-align:center;"
 					rendered="#{cc.attrs.docType eq 'epf'}">
-					<p:outputPanel rendered="#{ai.getEpfDocVerdict(doc) eq 1}">
+					<p:outputPanel rendered="#{ai.getDocVerdict(doc) eq 1}">
 						<p:graphicImage id="imgAiEpf1" value="/css/images/ai/yes.png" />
-						<p:tooltip for="imgAiEpf1">
-							<p:outputLabel escape="false" value="#{ai.getEpfDocLabel(doc)}"/>
+						<p:tooltip for="imgAiEpf1" rendered="#{not empty ai.getDocLabel(doc)}">
+							<p:outputLabel escape="false" value="#{ai.getDocLabel(doc)}"/>
 						</p:tooltip>
 					</p:outputPanel>
-					<p:outputPanel rendered="#{ai.getEpfDocVerdict(doc) eq 2}">
+					<p:outputPanel rendered="#{ai.getDocVerdict(doc) eq 2}">
 						<p:graphicImage id="imgAiEpf2" value="/css/images/ai/no.png" />
-						<p:tooltip for="imgAiEpf2" rendered="#{not empty ai.getEpfDocLabel(doc)}">
-							<p:outputLabel escape="false" value="#{ai.getEpfDocLabel(doc)}"/>
+						<p:tooltip for="imgAiEpf2" rendered="#{not empty ai.getDocLabel(doc)}">
+							<p:outputLabel escape="false" value="#{ai.getDocLabel(doc)}"/>
 						</p:tooltip>
 					</p:outputPanel>
 				</p:column>
@@ -80,7 +75,13 @@
         			</h:commandLink>
 				</p:column>
 				<p:column style="width:5%;text-align:center;">
-					<p:commandLink action="#{ai.deleteDoc(doc)}" process="@this" update=":#{p:component(pnlId)}">
+					<p:commandLink action="#{ai.deleteDoc(doc)}" process="@this" update=":#{p:component(pnlId)}"
+						rendered="#{empty cc.attrs.updateId}">
+						<p:graphicImage value="/css/images/design/trash.png" />
+					</p:commandLink>
+					<p:commandLink action="#{ai.deleteDoc(doc)}" process="@this"
+						update=":#{p:component(pnlId)} :#{p:component(cc.attrs.updateId)}"
+						rendered="#{not empty cc.attrs.updateId}">
 						<p:graphicImage value="/css/images/design/trash.png" />
 					</p:commandLink>
 				</p:column>
@@ -165,7 +166,7 @@
 					value="#{lbl['lbl.btn.submit']}"
 					action="#{ai.submit(cc.attrs.docType, cc.attrs.smAppl)}"
 					process="@this dt#{cc.attrs.aiDlg}"
-					update=":#{p:component(cc.attrs.updateId)}"
+					update=":#{p:component(cc.attrs.updateId)} :#{p:component(pnlId)}"
 					rendered="#{not empty cc.attrs.updateId}"
 					onclick="#{cc.attrs.aiDlg}.hide();"
 					onstart="block#{cc.attrs.aiDlg}.show()"
