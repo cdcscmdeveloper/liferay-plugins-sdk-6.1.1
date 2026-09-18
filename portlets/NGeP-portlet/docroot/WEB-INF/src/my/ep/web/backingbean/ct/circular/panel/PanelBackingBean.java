@@ -4067,100 +4067,168 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 	//#40498,#30014 - End
 	
 	//#30737 - start
-	public List<UserStatusCheckDTO> validateInactiveUserForRevise(CtCircular circular, CtCircularVer ctCircularVer, String userRole) {
-		
+	/**
+	 * Retrieves the contract actor holding the given role for the given
+	 * circular version and checks that actor's login status for a revise
+	 * action.
+	 * 
+	 * @param circular
+	 *            the circular the actor and status check are performed against
+	 * @param ctCircularVer
+	 *            the circular version used to look up the contract actor
+	 * @param userRole
+	 *            the role code used to look up the contract actor
+	 * @return the single {@code BPK_CCA} status check result for the actor, or
+	 *         an empty list if no actor is found or an error occurs
+	 */
+	public List<UserStatusCheckDTO> validateInactiveUserForRevise(
+			CtCircular circular, CtCircularVer ctCircularVer, String userRole) {
+
 		ICircularSO circularSO = null;
-		
+
 		try {
-			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, ICircularSO.class);
-			CtActor ctActor = circularSO.retrieveContractActor(ctCircularVer.getCircularVerId(), ctCircularVer.getDocType(), userRole);
+			circularSO = (ICircularSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
+							ICircularSO.class);
+			CtActor ctActor = circularSO.retrieveContractActor(
+					ctCircularVer.getCircularVerId(),
+					ctCircularVer.getDocType(), userRole);
 			if (ctActor != null) {
 				List<PmUser> users = new ArrayList<PmUser>();
 				users.add(ctActor.getUser());
 
-				return getLoginStatusFromSP(circular, 
-						ctCircularVer,
-						users,
+				return getLoginStatusFromSP(circular, ctCircularVer, users,
 						RoleCode.BPK_CCA.value());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
 		} finally {
 			circularSO = null;
 		}
 		return new ArrayList<UserStatusCheckDTO>();
 	}
 	
-	public List<UserStatusCheckDTO> validateInactiveUserForReviseFromCancelCircular(String docType, String cancelDocNo, String userRole) {
-        
-        ICircularSO circularSO = null;
-        
-        try {
-            circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, ICircularSO.class);
-            CtActor ctActor = circularSO.retrieveContractActor(
-                    getManagedBean().getCancelCircularReq().getCtCancelCircularList().get(0).getCircularVer().getCircularVerId(), 
-                    docType, userRole);
-            if (ctActor != null) {
-                List<PmUser> users = new ArrayList<PmUser>();
-                users.add(ctActor.getUser());
+	/**
+	 * Retrieves the contract actor holding the given role for the
+	 * cancel-circular request's first circular version and checks that actor's
+	 * login status for a revise action.
+	 * 
+	 * @param docType
+	 *            the document type to check the actor's status against
+	 * @param cancelDocNo
+	 *            the cancel-circular document number to check status against
+	 * @param userRole
+	 *            the role code used to look up the contract actor
+	 * @return the single {@code BPK_CCA} status check result for the actor, or
+	 *         an empty list if no actor is found or an error occurs
+	 */
+	public List<UserStatusCheckDTO> validateInactiveUserForReviseFromCancelCircular(
+			String docType, String cancelDocNo, String userRole) {
 
-                return getLoginStatusForCancelCircularFromSP(docType, 
-                        cancelDocNo,
-                        users,
-                        RoleCode.BPK_CCA.value());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-        } finally {
-            circularSO = null;
-        }
-        return new ArrayList<UserStatusCheckDTO>();
-    }
-	
-	public void checkingInactiveUserViaProcess(String action) {
-		List<UserStatusCheckDTO> userListStatus = new ArrayList<UserStatusCheckDTO>();
-        
-        if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
-            log.info("saveCancelCircularReq inactive action : "+action);
-           String userRole = null;
-           if(getManagedBean().getCircularDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR)){
-               userRole = RoleCode.BPK_CQ_APPROVER.value();
-           } else if(getManagedBean().getCircularDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)){
-               userRole = RoleCode.BPK_PQ_APPROVER.value();
-           }
-           userListStatus = getLoginStatusForCancelCircularFromSP(getManagedBean().getCircularDocType(),
-                getManagedBean().getCancelCircularReq().getCancelCircularReqNo(),
-                   getManagedBean().getApproverModel().getTarget(),
-                userRole);
-            handleInactiveUserValidation(action, getManagedBean().getCancelCircularReq().getCancelCircularReqNo(), userListStatus);
-        }
-        
-        if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
-            log.info("saveCancelCircularReq inactive action : "+action);
-            
-            userListStatus = validateInactiveUserForReviseFromCancelCircular(getManagedBean().getCircularDocType(), 
-                getManagedBean().getCancelCircularReq().getCancelCircularReqNo(), 
-                RoleCode.BPK_PCA.value());
-            
-            if (!userListStatus.isEmpty()) {
-                 Long userStatus = null;
-                 
-                 for(UserStatusCheckDTO inactiveActor : userListStatus){
-                     userStatus = inactiveActor.getStatus();
-                     this.getManagedBean().setUserStatusCheckResult(inactiveActor.getStatus());
-                     break;
-                    }
-                 
-                 if(InactiveUserConst.INACTIVE_USER_5.equals(userStatus)){
-                    log.info("xoxoxoxoxooxoxo REVISE + return 5");
-                    handleInactiveUserValidation(action, getManagedBean().getCancelCircularReq().getCancelCircularReqNo(), userListStatus);
-                 }
-            }
-        }
+		ICircularSO circularSO = null;
+
+		try {
+			circularSO = (ICircularSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
+							ICircularSO.class);
+			CtActor ctActor = circularSO.retrieveContractActor(getManagedBean()
+					.getCancelCircularReq().getCtCancelCircularList().get(0)
+					.getCircularVer().getCircularVerId(), docType, userRole);
+			if (ctActor != null) {
+				List<PmUser> users = new ArrayList<PmUser>();
+				users.add(ctActor.getUser());
+
+				return getLoginStatusForCancelCircularFromSP(docType,
+						cancelDocNo, users, RoleCode.BPK_CCA.value());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		} finally {
+			circularSO = null;
+		}
+		return new ArrayList<UserStatusCheckDTO>();
 	}
 	
+	/**
+	 * Runs the inactive-user status check for a cancel-circular action and
+	 * raises validation errors via {@link #handleInactiveUserValidation} when
+	 * applicable.
+	 * 
+	 * @param action
+	 *            the action outcome, e.g. {@code BPM_SUBMIT} or
+	 *            {@code BPM_REVISE}
+	 * @throws EpException
+	 *             if inactive user conditions are met during validation
+	 */
+	public void checkingInactiveUserViaProcess(String action) {
+		List<UserStatusCheckDTO> userListStatus = new ArrayList<UserStatusCheckDTO>();
+
+		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
+			log.info("saveCancelCircularReq inactive action : " + action);
+			String userRole = null;
+			if (getManagedBean().getCircularDocType().equalsIgnoreCase(
+					ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR)) {
+				userRole = RoleCode.BPK_CQ_APPROVER.value();
+			} else if (getManagedBean().getCircularDocType().equalsIgnoreCase(
+					ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
+				userRole = RoleCode.BPK_PQ_APPROVER.value();
+			}
+			userListStatus = getLoginStatusForCancelCircularFromSP(
+					getManagedBean().getCircularDocType(), getManagedBean()
+							.getCancelCircularReq().getCancelCircularReqNo(),
+					getManagedBean().getApproverModel().getTarget(), userRole);
+			handleInactiveUserValidation(action, getManagedBean()
+					.getCancelCircularReq().getCancelCircularReqNo(),
+					userListStatus);
+		}
+
+		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
+			log.info("saveCancelCircularReq inactive action : " + action);
+
+			userListStatus = validateInactiveUserForReviseFromCancelCircular(
+					getManagedBean().getCircularDocType(), getManagedBean()
+							.getCancelCircularReq().getCancelCircularReqNo(),
+					RoleCode.BPK_PCA.value());
+
+			if (!userListStatus.isEmpty()) {
+				Long userStatus = null;
+
+				for (UserStatusCheckDTO inactiveActor : userListStatus) {
+					userStatus = inactiveActor.getStatus();
+					this.getManagedBean().setUserStatusCheckResult(
+							inactiveActor.getStatus());
+					break;
+				}
+
+				if (InactiveUserConst.INACTIVE_USER_5.equals(userStatus)) {
+					log.info("xoxoxoxoxooxoxo REVISE + return 5");
+					handleInactiveUserValidation(action, getManagedBean()
+							.getCancelCircularReq().getCancelCircularReqNo(),
+							userListStatus);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Runs the inactive-user status check for a panel circular action and
+	 * raises validation errors via {@link #handleInactiveUserValidation} when
+	 * applicable.
+	 * 
+	 * @param outcome
+	 *            the action outcome, e.g. {@code BPM_SUBMIT} or
+	 *            {@code BPM_REVISE}
+	 * @throws EpException
+	 *             if inactive user conditions are met during validation
+	 */
 	public void validateUserToCheckStatus(String outcome) {
 		List<UserStatusCheckDTO> userListStatus = new ArrayList<UserStatusCheckDTO>();
 
@@ -4172,7 +4240,8 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 			userListStatus = getLoginStatusFromSP(
 					ctCircularVer.getCtCircular(), ctCircularVer,
 					getManagedBean().getApproverModel().getTarget(), userRole);
-			handleInactiveUserValidation(outcome, ctCircularVer.getCtCircular().getCircularNo(), userListStatus);
+			handleInactiveUserValidation(outcome, ctCircularVer.getCtCircular()
+					.getCircularNo(), userListStatus);
 		}
 
 		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
@@ -4194,7 +4263,8 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 
 				if (InactiveUserConst.INACTIVE_USER_5.equals(userStatus)) {
 					log.info("xoxoxoxoxooxoxo REVISE + return 5");
-					handleInactiveUserValidation(outcome, ctCircularVer.getCtCircular().getCircularNo(), userListStatus);
+					handleInactiveUserValidation(outcome, ctCircularVer
+							.getCtCircular().getCircularNo(), userListStatus);
 				}
 			}
 		}

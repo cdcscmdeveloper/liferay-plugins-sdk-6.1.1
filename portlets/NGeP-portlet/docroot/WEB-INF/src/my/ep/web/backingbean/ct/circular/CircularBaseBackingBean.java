@@ -55,11 +55,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.RoleHelper;
 
-//#30737
-
-import org.apache.log4j.Logger;
-//#30737
-
 //Start Fix - #34367
 /**
  * @author bob
@@ -212,196 +207,251 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 	
 	/**
 	 * Handles inactive user validation during actions.
-	 *
-	 * @param outcome -action outcome such as SUBMIT or REVISE
-	 * @param docNo -circular/cancel-circular doc number to use when building
-	 * validation error messages, since it cannot be reliably derived from
-	 * {@link #getCircularVer()} (that is null for the cancel-circular flow)
-	 * @param userStatusResults -result code returned from inactive user checking process (SP)
-	 * @throws EpException if inactive user conditions are met during validation.
-	 * Different error messages will be generated based on the returned error code.
+	 * 
+	 * @param outcome
+	 *            -action outcome such as SUBMIT or REVISE
+	 * @param docNo
+	 *            -circular/cancel-circular doc number to use when building
+	 *            validation error messages, since it cannot be reliably derived
+	 *            from {@link #getCircularVer()} (that is null for the
+	 *            cancel-circular flow)
+	 * @param userStatusResults
+	 *            -result code returned from inactive user checking process (SP)
+	 * @throws EpException
+	 *             if inactive user conditions are met during validation.
+	 *             Different error messages will be generated based on the
+	 *             returned error code.
 	 */
-	public void handleInactiveUserValidation(String outcome, String docNo, List<UserStatusCheckDTO> userStatusResults) {
-        try {
-        	validateUserStatusOnAction(
-        		buildContractReqDTO(outcome, getUserRole()),
-        		userStatusResults
-        	);
-        } catch (EpException ex) {
-        	throw buildInactiveUserException(ex, docNo, userStatusResults);
-        }
-    }
-	
-	public void validateUserStatusOnAction(CircularReqDTO reqDTO, List<UserStatusCheckDTO> userStatusResults) {
-
-    	log.info("validateUserStatusOnAction....");
-    	
-        List<UserStatusCheckDTO> inactiveUsers = new ArrayList<UserStatusCheckDTO>();
-
-        int activeUserCount = 0;
-
-        for (UserStatusCheckDTO user : userStatusResults) {
-
-            Long status = user.getStatus();
-
-            if (Long.valueOf(1L).equals(status)) {
-            	activeUserCount++;
-            }
-
-            if (Long.valueOf(2L).equals(status)
-                    || Long.valueOf(3L).equals(status)
-                    || Long.valueOf(4L).equals(status)) {
-
-            	inactiveUsers.add(user);
-            }
-        }
-
-     // Single selected user and inactive
-        if (userStatusResults.size() == 1 && !inactiveUsers.isEmpty()) {
-        	log.info("Single selected user and inactive");
-            throw new EpException(MessageConst.ERROR_100068);
-        }
-
-        // Mixed active and inactive
-        if (activeUserCount > 0 && !inactiveUsers.isEmpty()) {
-        	log.info("Mixed active and inactive");
-            String userNames = getInactiveUserNames(inactiveUsers);
-            throw new EpException(MessageConst.ERROR_100068, new String[] { userNames });
-        }
-
-        // All inactive (2,3,4)
-        if (activeUserCount == 0 && !inactiveUsers.isEmpty()) {
-        	log.info("All inactive (2,3,4)");
-            throw new EpException(MessageConst.ERROR_100068);
-        }
-
-        // All status = 5
-        if (Long.valueOf(5L).equals(userStatusResults.get(0).getStatus())) {
-        	log.info("All status = 5");
-            throw new EpException(MessageConst.ERROR_100073);
-        }
-
-        // Single active or all active
-        log.info("PASSED!");
-        //throw new EpException(MessageConst.ERROR_100068); //TEMP
-        return;
-    }
-	
-	private CircularReqDTO buildContractReqDTO(String outcome, String userRole) {
-		CircularReqDTO reqDTO = new CircularReqDTO();
-        reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-        reqDTO.setUserRole(userRole);
-        reqDTO.setOutcome(outcome);
-        
-        log.info("buildContractReqDTO user role : "+reqDTO.getUserRole());
-		log.info("buildContractReqDTO user : "+reqDTO.getPmUser());
-    	
-        return reqDTO;
-    }
+	public void handleInactiveUserValidation(String outcome, String docNo,
+			List<UserStatusCheckDTO> userStatusResults) {
+		try {
+			validateUserStatusOnAction(
+					buildContractReqDTO(outcome, getUserRole()),
+					userStatusResults);
+		} catch (EpException ex) {
+			throw buildInactiveUserException(ex, docNo, userStatusResults);
+		}
+	}
 	
 	/**
-     * Builds and returns a localized {@link EpException} based on the
-     * inactive user validation error code.
-     *
-     * @param ex the original exception containing the inactive user
-     * validation error code
-     * @return localized {@link EpException} with resolved message
-     * parameters
-    */
-    protected EpException buildInactiveUserException(EpException ex, String docNo, List<UserStatusCheckDTO> userStatusResults) {
-    	log.info("Catch buildInactiveUserException");
+	 * Validates the given per-user status check results and blocks the action
+	 * when they fall into a disallowed combination.
+	 * 
+	 * @param reqDTO
+	 *            the built request context for the action (outcome and user
+	 *            role)
+	 * @param userStatusResults
+	 *            the per-user status check results to validate
+	 * @throws EpException
+	 *             if the users' statuses fail validation; the error
+	 *             code/message depends on which invalid combination was found
+	 */
+	public void validateUserStatusOnAction(CircularReqDTO reqDTO,
+			List<UserStatusCheckDTO> userStatusResults) {
 
-        String errorCode = ex.getMessage();
-        log.info("BuildInactiveUserException errorCode : "+errorCode);
+		log.info("validateUserStatusOnAction....");
 
-        String[] messageKeys =
-                getInactiveUserMessageKeys(
-                        errorCode,
-                        docNo,
-                        getSelectedUserNames(userStatusResults),
-                        ex.getParameters());
-        
-        if (messageKeys != null && messageKeys.length > 0) {
+		List<UserStatusCheckDTO> inactiveUsers = new ArrayList<UserStatusCheckDTO>();
 
-            String[] resolvedMessages = new String[messageKeys.length];
-            for (int i = 0; i < messageKeys.length; i++) {
-                resolvedMessages[i] =
-                    ResourceBundleUtils.getMessage(
-                        messageKeys[i],
-                        ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-                        getFacesScopes().getUserLocale()
-                    );
-            }
-            return new EpException(errorCode, resolvedMessages);
-        }
-        return new EpException(errorCode);
-    }
-    
-    /**
-     * Returns message parameters based on inactive user validation error code.
-     *
-     * @param errorCode -inactive user validation error code
-     * @param circularNo -circular/cancel-circular doc number, supplied by the
-     * caller since it cannot be reliably derived from {@link #getCircularVer()}
-     * (that is null for the cancel-circular flow)
-     * @param selectedUserNames -selected user name used in message parameter generation
-     * @return message parameters for inactive user validation message
-     *
-     * NOTE:
-     * Complexity is caused by explicit business error code mapping.
-    */
-    private String[] getInactiveUserMessageKeys(String errorCode, String circularNo, String selectedUserNames, String[] parameters) {
+		int activeUserCount = 0;
 
-        if (MessageConst.ERROR_100068.equals(errorCode)
-        		|| MessageConst.ERROR_100070.equals(errorCode)) {
-        	if(parameters != null){
-        		return parameters;
-        	}
-            return new String[]{selectedUserNames};
-        }
+		for (UserStatusCheckDTO user : userStatusResults) {
 
-        if (MessageConst.ERROR_100069.equals(errorCode)) {
-            if (parameters != null) {
-            	List<String> result = new ArrayList<String>();
-            	result.add(circularNo);
-            	Collections.addAll(result, parameters);
-            	return result.toArray(new String[result.size()]);
-            }
-            return new String[] {circularNo, selectedUserNames};
-        }
+			Long status = user.getStatus();
 
-        if (MessageConst.ERROR_100071.equals(errorCode)
-        		|| MessageConst.ERROR_100073.equals(errorCode)) {
-        	if(parameters != null){
-        		return parameters;
-        	}
-        }
-        
-        return new String[0];
-    }
-    
-    private String getSelectedUserNames(List<UserStatusCheckDTO> userStatusResults) {
-        List<String> userNames = new ArrayList<String>();
-        for (UserStatusCheckDTO user : userStatusResults) {
-            userNames.add(user.getUserName());
-        }
-        return buildUserNames(userNames);
-    }
+			if (Long.valueOf(1L).equals(status)) {
+				activeUserCount++;
+			}
+
+			if (Long.valueOf(2L).equals(status)
+					|| Long.valueOf(3L).equals(status)
+					|| Long.valueOf(4L).equals(status)) {
+
+				inactiveUsers.add(user);
+			}
+		}
+
+		// Single selected user and inactive
+		if (userStatusResults.size() == 1 && !inactiveUsers.isEmpty()) {
+			log.info("Single selected user and inactive");
+			throw new EpException(MessageConst.ERROR_100068);
+		}
+
+		// Mixed active and inactive
+		if (activeUserCount > 0 && !inactiveUsers.isEmpty()) {
+			log.info("Mixed active and inactive");
+			String userNames = getInactiveUserNames(inactiveUsers);
+			throw new EpException(MessageConst.ERROR_100068,
+					new String[] { userNames });
+		}
+
+		// All inactive (2,3,4)
+		if (activeUserCount == 0 && !inactiveUsers.isEmpty()) {
+			log.info("All inactive (2,3,4)");
+			throw new EpException(MessageConst.ERROR_100068);
+		}
+
+		// All status = 5
+		if (Long.valueOf(5L).equals(userStatusResults.get(0).getStatus())) {
+			log.info("All status = 5");
+			throw new EpException(MessageConst.ERROR_100073);
+		}
+
+		// Single active or all active
+		log.info("PASSED!");
+		return;
+	}
 	
+	/**
+	 * Builds a {@link CircularReqDTO} from the current session user, the given
+	 * outcome and role.
+	 * 
+	 * @param outcome
+	 *            the action outcome to apply (e.g. SUBMIT or REVISE)
+	 * @param userRole
+	 *            the role code the current user is acting under
+	 * @return the populated request DTO
+	 */
+	private CircularReqDTO buildContractReqDTO(String outcome, String userRole) {
+		CircularReqDTO reqDTO = new CircularReqDTO();
+		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+		reqDTO.setUserRole(userRole);
+		reqDTO.setOutcome(outcome);
+
+		log.info("buildContractReqDTO user role : " + reqDTO.getUserRole());
+		log.info("buildContractReqDTO user : " + reqDTO.getPmUser());
+
+		return reqDTO;
+	}
+	
+	/**
+	 * Builds and returns a localized {@link EpException} based on the inactive
+	 * user validation error code.
+	 * 
+	 * @param ex
+	 *            the original exception containing the inactive user validation
+	 *            error code
+	 * @return localized {@link EpException} with resolved message parameters
+	 */
+	protected EpException buildInactiveUserException(EpException ex,
+			String docNo, List<UserStatusCheckDTO> userStatusResults) {
+		log.info("Catch buildInactiveUserException");
+
+		String errorCode = ex.getMessage();
+		log.info("BuildInactiveUserException errorCode : " + errorCode);
+
+		String[] messageKeys = getInactiveUserMessageKeys(errorCode, docNo,
+				getSelectedUserNames(userStatusResults), ex.getParameters());
+
+		if (messageKeys != null && messageKeys.length > 0) {
+
+			String[] resolvedMessages = new String[messageKeys.length];
+			for (int i = 0; i < messageKeys.length; i++) {
+				resolvedMessages[i] = ResourceBundleUtils.getMessage(
+						messageKeys[i],
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						getFacesScopes().getUserLocale());
+			}
+			return new EpException(errorCode, resolvedMessages);
+		}
+		return new EpException(errorCode);
+	}
+    
+	/**
+	 * Returns message parameters based on inactive user validation error code.
+	 * 
+	 * @param errorCode
+	 *            -inactive user validation error code
+	 * @param circularNo
+	 *            -circular/cancel-circular doc number, supplied by the caller
+	 *            since it cannot be reliably derived from
+	 *            {@link #getCircularVer()} (that is null for the
+	 *            cancel-circular flow)
+	 * @param selectedUserNames
+	 *            -selected user name used in message parameter generation
+	 * @return message parameters for inactive user validation message
+	 * 
+	 * NOTE: Complexity is caused by explicit business error code
+	 *       mapping.
+	 */
+	private String[] getInactiveUserMessageKeys(String errorCode,
+			String circularNo, String selectedUserNames, String[] parameters) {
+
+		if (MessageConst.ERROR_100068.equals(errorCode)
+				|| MessageConst.ERROR_100070.equals(errorCode)) {
+			if (parameters != null) {
+				return parameters;
+			}
+			return new String[] { selectedUserNames };
+		}
+
+		if (MessageConst.ERROR_100069.equals(errorCode)) {
+			if (parameters != null) {
+				List<String> result = new ArrayList<String>();
+				result.add(circularNo);
+				Collections.addAll(result, parameters);
+				return result.toArray(new String[result.size()]);
+			}
+			return new String[] { circularNo, selectedUserNames };
+		}
+
+		if (MessageConst.ERROR_100071.equals(errorCode)
+				|| MessageConst.ERROR_100073.equals(errorCode)) {
+			if (parameters != null) {
+				return parameters;
+			}
+		}
+
+		return new String[0];
+	}
+    
+	/**
+	 * Extracts the user names from the given status check results and joins
+	 * them into a single human-readable, comma-separated string (with "and"
+	 * before the last name).
+	 * 
+	 * @param userStatusResults
+	 *            the status check results to extract user names from
+	 * @return the joined user names, e.g. "Alice, Bob and Ali"
+	 */
+	private String getSelectedUserNames(
+			List<UserStatusCheckDTO> userStatusResults) {
+		List<String> userNames = new ArrayList<String>();
+		for (UserStatusCheckDTO user : userStatusResults) {
+			userNames.add(user.getUserName());
+		}
+		return buildUserNames(userNames);
+	}
+	
+	/**
+	 * Determines the current user's role code for the active circular task,
+	 * based on the managed bean's task name and the roles held by the session
+	 * user.
+	 * 
+	 * @return the resolved role code
+	 * @throws EpException
+	 *             if no matching role could be resolved for the current
+	 *             task/user
+	 */
 	private String getUserRole() {
 		String userRole = null;
 		if (getManagedBean().getTaskName() == null
-				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_CIRCULAR_CONTRACT)
-				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_CIRCULAR_CONTRACT)
-				|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_CIRCULAR_CONTRACT)) {
+				|| getManagedBean().getTaskName().equalsIgnoreCase(
+						CTProcessNameConst.UPDATE_CIRCULAR_CONTRACT)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(
+						CTProcessNameConst.SUBMIT_CIRCULAR_CONTRACT)
+				|| getManagedBean().getTaskName().equalsIgnoreCase(
+						CTProcessNameConst.REVISE_CIRCULAR_CONTRACT)) {
 			if (getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
 				userRole = RoleCode.BPK_CCA.value();
 			}
 		} else if (getManagedBean().getTaskName() != null
-				&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_CIRCULAR_CONTRACT))) {
+				&& (getManagedBean().getTaskName()
+						.equalsIgnoreCase(CTProcessNameConst.REVIEW_CIRCULAR_CONTRACT))) {
 			if (getFacesScopes().hasRoleUser(RoleCode.BPK_CQ_APPROVER.value())) {
 				userRole = RoleCode.BPK_CQ_APPROVER.value();
-			} else if(getFacesScopes().hasRoleUser(RoleCode.BPK_PQ_APPROVER.value())) {
+			} else if (getFacesScopes().hasRoleUser(
+					RoleCode.BPK_PQ_APPROVER.value())) {
 				userRole = RoleCode.BPK_PQ_APPROVER.value();
 			}
 		}
@@ -413,124 +463,216 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 		}
 	}
 	
-	public List<UserStatusCheckDTO> getLoginStatusFromSP(CtCircular ctCircular, CtCircularVer ctCircularVer, List<PmUser> selectedUsers, String roleCode) {
-		
-		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+	/**
+	 * Checks login/inactive status for the given users against a circular
+	 * document, delegating to {@link #buildUserStatusCheckResults} to assemble
+	 * the results.
+	 * 
+	 * @param ctCircular
+	 *            the circular whose owner org profile and doc number are
+	 *            checked against
+	 * @param ctCircularVer
+	 *            the circular version supplying the document type to check
+	 *            against
+	 * @param selectedUsers
+	 *            the users to check, in the order results should be returned in
+	 * @param roleCode
+	 *            the role code the users are being checked under
+	 * @return one {@link UserStatusCheckDTO} per selected user with id, name,
+	 *         role description and parsed status
+	 */
+	public List<UserStatusCheckDTO> getLoginStatusFromSP(CtCircular ctCircular,
+			CtCircularVer ctCircularVer, List<PmUser> selectedUsers,
+			String roleCode) {
+
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		UserStatusCheckReqDTO inactiveDto = new UserStatusCheckReqDTO();
 		String userlist = buildUserIdString(selectedUsers);
-		inactiveDto.setUserIds(userlist); 
-		inactiveDto.setUserRoleCode(roleCode); 
-		inactiveDto.setOrgProfileId(ctCircular.getOwnerOrgProfile().getOrgProfileId());
+		inactiveDto.setUserIds(userlist);
+		inactiveDto.setUserRoleCode(roleCode);
+		inactiveDto.setOrgProfileId(ctCircular.getOwnerOrgProfile()
+				.getOrgProfileId());
 		inactiveDto.setDocType(ctCircularVer.getDocType());
 		inactiveDto.setDocNo(ctCircular.getCircularNo());
 		inactiveDto.setNotifyAdmin(RoleCode.PTJ_ADMIN.value());
-		
-		UserStatusCheckResDTO resDto = userSO.checkInactiveUserBySP(inactiveDto);
+
+		UserStatusCheckResDTO resDto = userSO
+				.checkInactiveUserBySP(inactiveDto);
 		resDto.setRoleCode(roleCode);
-		log.info("checkInactiveUserBySP STATUSSS : "+  resDto.getStatus());
-		
+		log.info("checkInactiveUserBySP STATUSSS : " + resDto.getStatus());
+
 		return buildUserStatusCheckResults(selectedUsers, resDto);
 	}
 	
-	public List<UserStatusCheckDTO> getLoginStatusForCancelCircularFromSP(String docType, String cancelDocNo, List<PmUser> selectedUsers, String roleCode) {
-		
-		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+	/**
+	 * Checks login/inactive status for the given users against a
+	 * cancel-circular document, delegating to
+	 * {@link #buildUserStatusCheckResults} to assemble the results.
+	 * 
+	 * @param docType
+	 *            the document type of the cancel-circular request being checked
+	 * @param cancelDocNo
+	 *            the cancel-circular document number to check status against
+	 * @param selectedUsers
+	 *            the users to check, in the order results should be returned in
+	 * @param roleCode
+	 *            the role code the users are being checked under
+	 * @return one {@link UserStatusCheckDTO} per selected user with id, name,
+	 *         role description and parsed status
+	 */
+	public List<UserStatusCheckDTO> getLoginStatusForCancelCircularFromSP(
+			String docType, String cancelDocNo, List<PmUser> selectedUsers,
+			String roleCode) {
+
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		UserStatusCheckReqDTO inactiveDto = new UserStatusCheckReqDTO();
 		String userlist = buildUserIdString(selectedUsers);
-		inactiveDto.setUserIds(userlist); 
-		inactiveDto.setUserRoleCode(roleCode); 
+		inactiveDto.setUserIds(userlist);
+		inactiveDto.setUserRoleCode(roleCode);
 		inactiveDto.setOrgProfileId(getOwnerOrgProfile().getOrgProfileId());
 		inactiveDto.setDocType(docType);
 		inactiveDto.setDocNo(cancelDocNo);
 		inactiveDto.setNotifyAdmin(RoleCode.PTJ_ADMIN.value());
-		
-		UserStatusCheckResDTO resDto = userSO.checkInactiveUserBySP(inactiveDto);
+
+		UserStatusCheckResDTO resDto = userSO
+				.checkInactiveUserBySP(inactiveDto);
 		resDto.setRoleCode(roleCode);
-		log.info("getLoginStatusForCancelCircularFromSP STATUSSS : "+  resDto.getStatus());
-		
+		log.info("getLoginStatusForCancelCircularFromSP STATUSSS : "
+				+ resDto.getStatus());
+
 		return buildUserStatusCheckResults(selectedUsers, resDto);
 	}
 	
-	private String buildUserIdString(List<PmUser> userIds){
+	/**
+	 * Joins the ids of the given users into a single comma-separated string.
+	 * 
+	 * @param userIds
+	 *            the users whose ids are to be joined
+	 * @return the comma-separated user ids, or an empty string if userIds is
+	 *         empty
+	 */
+	private String buildUserIdString(List<PmUser> userIds) {
 		StringBuilder sb = new StringBuilder();
-		
-		for(PmUser user : userIds){
-			
-			if (sb.length() > 0) {
-		        sb.append(",");
-		    }
 
-		    sb.append(user.getUserId());
+		for (PmUser user : userIds) {
+
+			if (sb.length() > 0) {
+				sb.append(",");
+			}
+
+			sb.append(user.getUserId());
 		}
-		
+
 		return sb.toString();
-		
+
 	}
 	
-	private List<UserStatusCheckDTO> buildUserStatusCheckResults(List<PmUser> users, UserStatusCheckResDTO resDto) {
+	/**
+	 * Combines each selected user with the corresponding status code returned
+	 * by the inactive-user check, in the order both lists share.
+	 * 
+	 * @param users
+	 *            the users that were checked, in the same order as the status
+	 *            codes in resDto
+	 * @param resDto
+	 *            the check result holding a comma-separated status per user and
+	 *            the role code
+	 * @return one {@link UserStatusCheckDTO} per user with id, name, role
+	 *         description and parsed status; empty list if users is empty
+	 */
+	private List<UserStatusCheckDTO> buildUserStatusCheckResults(
+			List<PmUser> users, UserStatusCheckResDTO resDto) {
 
-  	    List<UserStatusCheckDTO> selectedUsers = new ArrayList<UserStatusCheckDTO>();
-  	    if (!users.isEmpty()) {
-  	    	String[] statuses = resDto.getStatus().split(",");
-  	  	    for (int i = 0; i < statuses.length; i++) {
-  	  	    	
-  	  	    	String userRoleDesc = RoleHelper.getInstance().getRoleDescByCode(resDto.getRoleCode()).getRoleName();
-  	  	    	
-  	  	        UserStatusCheckDTO selectedUser = new UserStatusCheckDTO();
-  	  	        selectedUser.setUserId(users.get(i).getUserId());
-  	  	        selectedUser.setUserName(users.get(i).getUserName());
-  	  	        selectedUser.setUserRoleDesc(userRoleDesc);
-  	  	        selectedUser.setStatus(Long.parseLong(statuses[i].trim()));
-  	  	        selectedUsers.add(selectedUser);
-  	  	    }
-  	    }
-  	    return selectedUsers;
-  	}
+		List<UserStatusCheckDTO> selectedUsers = new ArrayList<UserStatusCheckDTO>();
+		if (!users.isEmpty()) {
+			String[] statuses = resDto.getStatus().split(",");
+			for (int i = 0; i < statuses.length; i++) {
+
+				String userRoleDesc = RoleHelper.getInstance()
+						.getRoleDescByCode(resDto.getRoleCode()).getRoleName();
+
+				UserStatusCheckDTO selectedUser = new UserStatusCheckDTO();
+				selectedUser.setUserId(users.get(i).getUserId());
+				selectedUser.setUserName(users.get(i).getUserName());
+				selectedUser.setUserRoleDesc(userRoleDesc);
+				selectedUser.setStatus(Long.parseLong(statuses[i].trim()));
+				selectedUsers.add(selectedUser);
+			}
+		}
+		return selectedUsers;
+	}
 	
+	/**
+	 * Extracts the user names from the given inactive users and joins them into
+	 * a single human-readable, comma-separated string (with "and" before the
+	 * last name).
+	 * 
+	 * @param inactiveUsers
+	 *            the inactive users to extract user names from
+	 * @return the joined user names, e.g. "Alice, Bob and Ali"
+	 */
 	private String getInactiveUserNames(List<UserStatusCheckDTO> inactiveUsers) {
-        List<String> userNames = new ArrayList<String>();
-        for (UserStatusCheckDTO user : inactiveUsers) {
-            userNames.add(user.getUserName());
-        }
-        return buildUserNames(userNames);
-    }
+		List<String> userNames = new ArrayList<String>();
+		for (UserStatusCheckDTO user : inactiveUsers) {
+			userNames.add(user.getUserName());
+		}
+		return buildUserNames(userNames);
+	}
     
-    private String buildUserNames(List<String> userNames) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < userNames.size(); i++) {
-            if (i > 0) {
-                if (i == userNames.size() - 1) {
-                    sb.append(" and ");
-                } else {
-                    sb.append(", ");
-                }
-            }
-            sb.append(userNames.get(i));
-        }
-        return sb.toString();
-    }
+	/**
+	 * Joins the given user names into a single human-readable string, separated
+	 * by commas with "and" before the last name.
+	 * 
+	 * @param userNames
+	 *            the user names to join
+	 * @return the joined names, e.g. "Alice, Bob and Ali"
+	 */
+	private String buildUserNames(List<String> userNames) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < userNames.size(); i++) {
+			if (i > 0) {
+				if (i == userNames.size() - 1) {
+					sb.append(" and ");
+				} else {
+					sb.append(", ");
+				}
+			}
+			sb.append(userNames.get(i));
+		}
+		return sb.toString();
+	}
     
-    /**
-	 * Method used to retrieve actor by document Id, document type and role code.
+	/**
+	 * Method used to retrieve actor by document Id, document type and role
+	 * code.
+	 * 
 	 * @Param docId, docType, roleCode
 	 * @return CtActor
 	 */
-    public CtActor retrieveContractActor(Long docId, String docType, String roleCode) {
+	public CtActor retrieveContractActor(Long docId, String docType,
+			String roleCode) {
 		ICtActorSO ctActorSO = null;
 		CtActorResDTO ctActorResDTO = new CtActorResDTO();
 
 		try {
-			ctActorSO = (ICtActorSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.CONTRACT_MANAGEMENT, ICtActorSO.class);
+			ctActorSO = (ICtActorSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
+							ICtActorSO.class);
 
 			CtActorReqDTO ctActorReqDTO = new CtActorReqDTO();
 			ctActorReqDTO.setDocId(docId);
 			ctActorReqDTO.setDocType(docType);
 			ctActorReqDTO.setRoleCode(roleCode);
-			ctActorResDTO = ctActorSO.retrieveCtActorByDocIdAndTypeAndRole(ctActorReqDTO);
+			ctActorResDTO = ctActorSO
+					.retrieveCtActorByDocIdAndTypeAndRole(ctActorReqDTO);
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
 		}
 		return ctActorResDTO.getCtActor();
 	}
