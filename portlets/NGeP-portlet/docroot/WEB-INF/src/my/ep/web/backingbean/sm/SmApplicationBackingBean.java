@@ -20105,7 +20105,7 @@ public class SmApplicationBackingBean extends
 		if (te == null){
 			return;
 		}
-		SmAIDocBackingBean.clearTenancyUserEdit(getManagedBean().getSmAppl());
+		SmAIDocBackingBean.acceptTenancyUserEdit(getManagedBean().getSmAppl());	//#40112
 		SmFacility fac = getManagedBean().getBasicCompanyFacility();
 		fac.setRentalRate(te.getMonthlyRental());
 		fac.setOwnerName(te.getLandlordsName());
