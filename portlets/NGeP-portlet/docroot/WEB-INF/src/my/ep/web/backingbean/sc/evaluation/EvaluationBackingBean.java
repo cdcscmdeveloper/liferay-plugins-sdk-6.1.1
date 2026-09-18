@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.net.URLConnection;
+import java.sql.Timestamp; //#38151
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -101,6 +102,7 @@ import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmAppVersion; //#38151
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -2463,6 +2465,8 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 					 * );
 					 */
 					evaluationStageStatusCheck();
+					checkWeightage35384WIP(); //#38151
+					summaryReqDTO.setWeightage35384WIP(this.getManagedBean().isWeightage35384WIP());//#38151
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
 					getManagedBean().setFinancialSummaryGenerated(true);
@@ -2499,6 +2503,8 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 							&& !getManagedBean().isFinancialSummaryGenerated()) {
 						// #25638 -end-
 						evaluationStageStatusCheck();
+						checkWeightage35384WIP(); //#38151
+						summaryReqDTO.setWeightage35384WIP(this.getManagedBean().isWeightage35384WIP());//#38151
 						evaluationSo
 								.prepareFinancialEvaluationSummary(summaryReqDTO);
 						getManagedBean().setFinancialSummaryGenerated(true);
@@ -2667,6 +2673,8 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 				        // #35384 recalculate at endorse or sign off -end-
 				) {
 					financialCheckListStatusCheck();
+					checkWeightage35384WIP(); //#38151
+					summaryReqDTO.setWeightage35384WIP(this.getManagedBean().isWeightage35384WIP());//#38151
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
 					getManagedBean().setFinancialSummaryGenerated(true);
@@ -2716,6 +2724,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 				resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE);
 				resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_ITEM);
 				summaryReqDTO.setResultStages(resultStg2);
+				summaryReqDTO.setWeightage35384WIP(this.getManagedBean().isWeightage35384WIP()); //#38151
 
 				if (// #25638 -Start.
 						(this.getManagedBean().getCurrentStatusId()
@@ -2731,6 +2740,8 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 					 * );
 					 */
 					financialCheckListStatusCheck();
+					checkWeightage35384WIP(); //#38151
+					summaryReqDTO.setWeightage35384WIP(this.getManagedBean().isWeightage35384WIP());//#38151
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
 					getManagedBean().setFinancialSummaryGenerated(true);
@@ -2786,6 +2797,8 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 					resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE);
 					resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_ITEM);
 					summaryReqDTO.setResultStages(resultStg2);
+					checkWeightage35384WIP(); //#38151
+					summaryReqDTO.setWeightage35384WIP(this.getManagedBean().isWeightage35384WIP());//#38151
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
 					getManagedBean().setFinancialSummaryGenerated(true);
@@ -8650,7 +8663,8 @@ private void retriveCommitteeRemarksList(){
 			evalReqDTO.setAnswersList(answers);
 			evalReqDTO.setChecklistType(getManagedBean().getCheckListType());
 			evalReqDTO.setScQt(this.getManagedBean().getScQt()); //#40791
-			
+			evalReqDTO.setSaveActionClick(true);//#38151
+
 			List<ScQtCheckList> qtCheckLists = null;
 			if ("T".equalsIgnoreCase(getManagedBean().getCheckListType())) {
 				evalReqDTO
@@ -9143,6 +9157,7 @@ private void retriveCommitteeRemarksList(){
 		
 		retriveMeetingDtls(evaluationDataType.getQtId().longValue(),
 				evaluationDataType.getCommitteeType(), 1);
+		checkWeightage35384WIP();//#38151
 		String taskName = this.getManagedBean().getTaskName();
 		PmUser curLogedInUser = facesScopes.getUserSessionBean();
 		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
@@ -14239,4 +14254,72 @@ private void retriveCommitteeRemarksList(){
 		}
 	}
 	//#28784 - End
+
+	//#38151 Start
+	private void checkWeightage35384WIP() {
+		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTDetailSO.class);
+		ScQt qt = this.getManagedBean().getScQt();
+		Date publishDate = qt.getPublishDate();
+		Date createdDate = qt.getCreatedDate();
+
+		if (null == publishDate) {
+			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
+			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
+
+			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
+
+			Date effDate = appVerDtls.getEffDate();
+			Timestamp effTimestamp = new Timestamp(effDate.getTime());
+
+			if (createdDate.before(effTimestamp)) {
+				this.getManagedBean().setWeightage35384WIP(true);
+			}
+		}else{
+			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
+			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
+
+			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
+
+			Date effDate = appVerDtls.getEffDate();
+
+			if (publishDate.before(effDate)) {
+				this.getManagedBean().setWeightage35384WIP(true);
+			}
+		}
+	}
+	//#38151 End
+
+	//#38151 start
+	/**
+	 * Calculates the popup score by applying the weightage with rounding.
+	 *
+	 *
+	 * <p>If weightage is not enabled, the original score value is returned
+	 * without any calculation.</p>
+	 *
+	 * @param scoreValue the original score value
+	 * @param weightage the weightage to be applied to the score
+	 * @param isWeightage {@code true} to apply weightage calculation;
+	 *                    {@code false} to return the original score value
+	 * @return the calculated score rounded to 2 decimal places when weightage is
+	 *         applied; otherwise, the original score value
+	 */
+	public BigDecimal scorePopUpRounding(BigDecimal scoreValue, BigDecimal weightage, boolean isWeightage) {
+		BigDecimal newScoreValue = scoreValue;
+
+		if (!isWeightage) {
+			return newScoreValue;
+		} else {
+			if (null != scoreValue && null != weightage) {
+				BigDecimal roundedWeightage = weightage.setScale(2, RoundingMode.HALF_UP);
+
+				newScoreValue = scoreValue.multiply(roundedWeightage).setScale(2, RoundingMode.HALF_UP);
+			}
+		}
+		return newScoreValue;
+	}
+	//#38151 end
 }

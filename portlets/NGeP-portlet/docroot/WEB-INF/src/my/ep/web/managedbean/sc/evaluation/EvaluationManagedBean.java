@@ -526,6 +526,10 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private boolean supplierRejected;
 	// 6906 - end
 	private boolean allSupplierRejectEpv;//#21692
+
+	private boolean comingFromNextButton;//#38151
+	private boolean weightage35384WIP; //#38151,#38679
+
 	/*#29187 Start Vinod*/
 	private TplSpecZoneDtl tplSpecZoneDtl;
 	private boolean isComplianceCnfrm;
@@ -3995,4 +3999,28 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.tooltipDemo = tooltipDemo;
 	}
 	//#28784 - End
+
+	//#38151,#38679 - start
+	/**
+	 * @return the flag from nextbutton
+	 */
+	public boolean isComingFromNextButton() {
+		return comingFromNextButton;
+	}
+
+	/**
+	 * @param set flag from nextbutton
+	 */
+	public void setComingFromNextButton(boolean comingFromNextButton) {
+		this.comingFromNextButton = comingFromNextButton;
+	}
+
+	public boolean isWeightage35384WIP() {
+		return weightage35384WIP;
+	}
+
+	public void setWeightage35384WIP(boolean weightage35384WIP) {
+		this.weightage35384WIP = weightage35384WIP;
+	}
+	//#38151,#38679 - end
 }

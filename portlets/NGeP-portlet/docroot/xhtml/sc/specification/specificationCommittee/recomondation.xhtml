@@ -11,11 +11,12 @@
 	<h:panelGroup id="recommendationid">
 			<p:panel id="package" toggleable="true">
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sc.by.package']}" />
-					<ac:iconTooltip
-						value="#{lbl['lbl.sc.by.package.recommendation.tooltip']}" />
-				</f:facet>
+					<h:outputText value="#{lbl['lbl.sc.by.package.item']}" rendered="#{!specificationBackingBean.managedBean.weightage35384WIP}"/>
 
+					<h:outputText value="#{lbl['lbl.sc.by.package']}" rendered="#{specificationBackingBean.managedBean.weightage35384WIP}" />
+					<ac:iconTooltip
+						value="#{lbl['lbl.sc.by.package.item.recommendation.tooltip']}" rendered="#{!specificationBackingBean.managedBean.weightage35384WIP}"/>
+				</f:facet>
 				<table>
 					<tr>
 						<td><h:outputText value="*" styleClass="mandatory" /> <h:outputLabel
@@ -23,10 +24,15 @@
 						<td><p:inputText style="text-align:right" maxlength="3"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationPackageScore.overallTechnical}">
-
+ 								<f:convertNumber integerOnly="true" />
 								<p:ajax event="blur" update="@([id$=package])"
 									process="@this,package"
-									listener="#{specificationBackingBean.calculateTotalPackage(specificationBackingBean.managedBean.recommendationPackageScore,true)}"></p:ajax>
+									listener="#{specificationBackingBean.calculateTotalPackage(specificationBackingBean.managedBean.recommendationPackageScore,true)}"
+									rendered="#{specificationBackingBean.managedBean.weightage35384WIP}"></p:ajax>
+								<p:ajax event="blur" update="@([id$=package])"
+									process="@this,package"
+									listener="#{specificationBackingBean.calculateonesetscoring(specificationBackingBean.managedBean.recommendationPackageScore,true)}"
+									rendered="#{!specificationBackingBean.managedBean.weightage35384WIP}"></p:ajax>
 							</p:inputText></td>
 					</tr>
 					<tr>
@@ -36,10 +42,14 @@
 								readonly="true"
 								disabled="true"
 								value="#{specificationBackingBean.managedBean.recommendationPackageScore.overallFin}">
-
 								<p:ajax event="blur" update="@([id$=package])"
 									process="@this,package"
-									listener="#{specificationBackingBean.calculateTotalPackage(specificationBackingBean.managedBean.recommendationPackageScore,true)}"></p:ajax>
+									listener="#{specificationBackingBean.calculateTotalPackage(specificationBackingBean.managedBean.recommendationPackageScore,true)}"
+									rendered="#{specificationBackingBean.managedBean.weightage35384WIP}"></p:ajax>
+								<p:ajax event="blur" update="@([id$=package])"
+									process="@this,package"
+									listener="#{specificationBackingBean.calculateonesetscoring(specificationBackingBean.managedBean.recommendationPackageScore,true)}"
+									rendered="#{!specificationBackingBean.managedBean.weightage35384WIP}"></p:ajax>
 							</p:inputText></td>
 					</tr>
 					<tr>
@@ -63,8 +73,7 @@
 				</table>
 			</p:panel>
 
-
-
+			<c:if test="#{specificationBackingBean.managedBean.weightage35384WIP}">
 			<p:panel id="item" toggleable="true">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.by.item']}" />
@@ -173,7 +182,7 @@
 
 
 			</p:panel>
-		
+			</c:if>
 	</h:panelGroup>
 
 </ui:composition>

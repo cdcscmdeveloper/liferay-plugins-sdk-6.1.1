@@ -4,7 +4,7 @@
  *                ePerolehan 
  * Release 1.00    
  *    
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
  */
@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.Timestamp;  //#38151
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -136,6 +137,7 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
+import my.ep.persistence.entity.pm.common.PmAppVersion; //#38151
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
@@ -2558,10 +2560,15 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						if (recommnendationSetting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_RECOMMENDATION_BY_ITEM) {
 							this.getManagedBean().setRecommendationScore(
 									recommnendationSetting);
-							calculateRecommendtechnicalScore(this
-									.getManagedBean().getRecommendationScore());
-							calculateRecommendFinancialScore(this
-									.getManagedBean().getRecommendationScore());
+							// #38151 start WIP
+							if (this.getManagedBean().isWeightage35384WIP()) {
+								calculateRecommendtechnicalScore(this.getManagedBean().getRecommendationScore());
+								calculateRecommendFinancialScore(this.getManagedBean().getRecommendationScore());
+
+							} else {
+								calculateonesetscoring(this.getManagedBean().getRecommendationPackageScore(), false);
+							}
+							// #38151 end Wip
 						}
 
 					}
@@ -7542,10 +7549,13 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			if (null == technical.getOverallFin()) {
 				technical.setOverallFin(new BigDecimal(0));
 			}
-			BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_WEIGHTAGE);
-			if (null!=passingScore && technical.getOverallTechnical().intValue() < passingScore.intValue()
-					&& !this.getManagedBean().isReadOnly() && isValidationRequired) {
-				throw new EpException(MessageConst.ERROR_760365,new String[] { String.valueOf(passingScore) });
+//			#38151, #38679 wip
+			if (this.getManagedBean().isWeightage35384WIP()) {
+				BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_WEIGHTAGE);
+				if (null != passingScore && technical.getOverallTechnical().intValue() < passingScore.intValue()
+						&& !this.getManagedBean().isReadOnly() && isValidationRequired) {
+					throw new EpException(MessageConst.ERROR_760365, new String[] { String.valueOf(passingScore) });
+				}
 			}
 			int financialScore = 100 - technical.getOverallTechnical()
 					.intValue();
@@ -7561,19 +7571,89 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 	}
 
+	//#38151 start
+	/**
+	 * Calculate total package & item.calculate package & item Technical and Financial scores
+	 * in Recommendation Menu.
+	 *
+	 * @param technical
+	 *            (ScQtScoreSetting package).
+	 */
+	public void calculateonesetscoring(ScQtScoreSetting technical,
+			boolean isValidationRequired) {
+		try {
+			if (null == technical.getOverallTechnical()) {
+				technical.setOverallTechnical(new BigDecimal(0));
+			}
+			if (null == technical.getOverallFin()) {
+				technical.setOverallFin(new BigDecimal(0));
+			}
+			technical.setOverallOtherFlag(Boolean.TRUE);
+
+			BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_WEIGHTAGE);
+			if (null != passingScore
+					&& technical.getOverallTechnical().intValue() < passingScore
+							.intValue()&& !this.getManagedBean().isReadOnly() && isValidationRequired) {
+				throw new EpException(MessageConst.ERROR_760826,
+						new String[] { String.valueOf(passingScore.intValue()) });
+			}
+
+			if (null != technical.getOverallTechnical()
+					&& technical.getOverallTechnical().intValue() >= 100) {
+				throw new EpException(MessageConst.ERROR_760825,
+						new String[] { String.valueOf(100) });
+			}
+			if (null != this.getManagedBean().getRecommendationPackageScore().getPassingScore() &&
+						this.getManagedBean().getRecommendationPackageScore().getPassingScore().intValue() > 100) {
+				throw new EpException(MessageConst.ERROR_760827,
+						new String[] { String.valueOf(100) });
+			}
+			if (null != this.getManagedBean().getRecommendationPackageScore().getPassingScore() &&
+					this.getManagedBean().getRecommendationPackageScore().getPassingScore().intValue() < 0) {
+			throw new EpException(MessageConst.ERROR_760828,
+					new String[] { String.valueOf(0) });
+			}
+			int financialScore = 100 - technical.getOverallTechnical()
+					.intValue();
+			technical.setOverallFin(new BigDecimal(financialScore));
+			this.getManagedBean().setRecommendationPackageScore(technical);
+			this.getManagedBean().getRecommendationPackageScore().setOverallOtherFlag(true);
+
+			int local = technical.getOverallTechnical().intValue()
+					+ technical.getOverallFin().intValue();
+
+			this.getManagedBean().setRecommendationPackageTotal(
+					new BigDecimal(local));
+
+			calculateRecommendtechnicalScore(technical);
+			calculateRecommendFinancialScore(technical);
+		} finally {
+
+		}
+	}
+	//#38151 end
+
 	/**
 	 * Calculate recommendtechnical score.calculate Item Technical Scores in
 	 * Recommendation Menu.
-	 * 
+	 *
 	 * @param technical
 	 *            (ScQtScoreSetting technical).
 	 */
 	public void calculateRecommendtechnicalScore(ScQtScoreSetting technical) {
 		try {
-			int value1=technical.getOverallTechnical()!=null?technical.getOverallTechnical().intValue():0;
-			int value2=technical.getOverallOtherTechnical()!=null?technical.getOverallOtherTechnical().intValue():0;
-			int local = value1
-					+ value2;
+			int value1 = technical.getOverallTechnical() != null ? technical
+					.getOverallTechnical().intValue() : 0;
+			//#38151 start
+			int local = 0;
+			if(this.getManagedBean().isWeightage35384WIP()){
+			int value2 = technical.getOverallOtherTechnical() != null ? technical
+					.getOverallOtherTechnical().intValue() : 0;
+				 local = value1 + value2;
+			}else{
+				 local = value1;
+			}
+			//#38151 end
 			this.getManagedBean().setRecommendTechnicalScore(
 					new BigDecimal(local));
 			int financialScore = 0;
@@ -7583,13 +7663,14 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			}
 			this.getManagedBean().setTotalScore(
 					new BigDecimal(local + financialScore));
-			if ((null != this.getManagedBean().getTotalScore())
-					&& this.getManagedBean().getTotalScore()
-							.intValue() > 100) {
-				throw new EpException(MessageConst.ERROR_760257);
+			//#38151 Start
+			if (this.getManagedBean().isWeightage35384WIP()
+					&& (null != this.getManagedBean().getTotalScore() && this.getManagedBean().getTotalScore()
+							.intValue() > 100)) {
+				throw new EpException(MessageConst.ERROR_7602571);
 
 			}
-
+			//#38151 End
 		} finally {
 
 		}
@@ -7598,16 +7679,24 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	/**
 	 * Calculate recommend financial score.calculate Item Financial Scores in
 	 * Recommendation Menu.
-	 * 
+	 *
 	 * @param financial
 	 *            (ScQtScoreSetting financial).
 	 */
 	public void calculateRecommendFinancialScore(ScQtScoreSetting financial) {
 		try {
-			int value1=financial.getOverallFin()!=null?financial.getOverallFin().intValue():0;
-			int value2=financial.getOverallOtherFin()!=null?financial.getOverallOtherFin().intValue():0;
-			int local = value1
-					+ value2;
+			int value1 = financial.getOverallFin() != null ? financial
+					.getOverallFin().intValue() : 0;
+//		    #38151 Start
+			int local = 0;
+			if (this.getManagedBean().isWeightage35384WIP()) {
+				int value2 = financial.getOverallOtherFin() != null ? financial.getOverallOtherFin().intValue() : 0;
+				 local = value1 + value2;
+			}else{
+				 local = value1 ;
+			}
+//          #38151 End
+
 			this.getManagedBean().setRecommendfinancialScore(
 					new BigDecimal(local));
 
@@ -7618,12 +7707,14 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			}
 			this.getManagedBean().setTotalScore(
 					new BigDecimal(local + technicalScore));
-			if ((null != this.getManagedBean().getTotalScore())
-					&& this.getManagedBean().getTotalScore()
-							.intValue() > 100) {
+//		    #38151 Start
+			if (this.getManagedBean().isWeightage35384WIP()
+					&& (null != this.getManagedBean().getTotalScore() && this.getManagedBean().getTotalScore()
+							.intValue() > 100)) {
 				throw new EpException(MessageConst.ERROR_760257);
 
 			}
+//			#38151 End
 
 		} finally {
 
@@ -8420,7 +8511,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			// #25638 - Start.
 			spReqDTO.setSpecMaintenance(getManagedBean().isSpecMaintenance());
 			// #25638 - End.
-			
+			spReqDTO.setWeightage35384WIP(this.getManagedBean().isWeightage35384WIP());//#38151
+
 			SpecificationResDTO resDTO = specSO.updateBPMAction(spReqDTO);
 			if (resDTO.isSuccessful()) {
 				ScQt qt = resDTO.getScQt();
@@ -10654,12 +10746,37 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			if(newItemScoreSetting != null && newItemScoreSetting.getQtScoreSettingId() != null
 					&& !this.getManagedBean().getQt().isCloned()){//#28784 cloning error
 				newItemScoreSetting.setWeightageReq(itemScoreSetting.isWeightageReq());//Bug #34744 under 28784
-				newItemScoreSetting.setPassingScore(itemScoreSetting.getPassingScore());
-				newItemScoreSetting.setOverallTechnical(itemScoreSetting.getOverallTechnical());
+				//#38151 To apply the same scoring settings/calculation for both packages and items.
+				newItemScoreSetting.setPassingScore(
+					    this.getManagedBean().isWeightage35384WIP()
+					        ? itemScoreSetting.getPassingScore()
+					        : packageScoreSetting.getPassingScore()
+					);
+
+				//#38151 To apply the same scoring settings/calculation for both packages and items.
+				newItemScoreSetting.setOverallTechnical(
+					    this.getManagedBean().isWeightage35384WIP()
+					        ? itemScoreSetting.getOverallTechnical()
+					        : packageScoreSetting.getOverallTechnical()
+					);
+
 				newItemScoreSetting.setOverallOtherTechnical(itemScoreSetting.getOverallOtherTechnical());
-				newItemScoreSetting.setOverallFin(itemScoreSetting.getOverallFin());
+
+				//#38151 To apply the same scoring settings/calculation for both packages and items.
+				newItemScoreSetting.setOverallFin(
+						    this.getManagedBean().isWeightage35384WIP()
+						        ? itemScoreSetting.getOverallFin()
+						        : packageScoreSetting.getOverallFin()
+						);
+
+				//#38151 Apply a flag to recognize in specification maintenance data wip before and after revise.
+				newItemScoreSetting.setOverallOtherFlag(
+				        this.getManagedBean().isWeightage35384WIP()
+				            ? null
+				            : Boolean.TRUE
+				    );
+
 				newItemScoreSetting.setOverallOtherFin(itemScoreSetting.getOverallOtherFin());
-				
 				itemScoreSetting = newItemScoreSetting;
 			}//#28784 - End
 			scoreSetting.add(itemScoreSetting);
@@ -10825,7 +10942,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			boolean isPanel = this.getManagedBean().getPanel();
 			boolean isDropdownPresent = this.getManagedBean().isProcMethodDropdownPresent();
 		ScWorkFlowStatus scWorkFlowStatus=	this.getManagedBean().getSpecMaintenanceWorkFlowStatus();
-					
+			boolean weightage35384WIP = this.getManagedBean().isWeightage35384WIP();//#38151
+
 			SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 			List<ScQtDeliveryLoc> deliveryRemoveList = this.getManagedBean()
 					.getDeliveryLocRemoveList();
@@ -11018,6 +11136,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 				specReqDTO.setScoreSettings(scoreSetting);
 				specReqDTO.setScQt(delivery);
+				specReqDTO.setWeightage35384WIP(this.getManagedBean().isWeightage35384WIP()); //#38151
+
 				if (!this.getManagedBean().isReadOnly()) {
 					calculateRecommendationPackageAndItemScores(
 							packageScoreSetting, itemScoreSetting);
@@ -11127,6 +11247,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		    this.getManagedBean().setSpecMaintenanceScreen(specScreenMaintenance);
 		    this.getManagedBean().setSpecMaintenance(specMaintenance);
 		    this.getManagedBean().setUpdateSpec(updateSpec);
+			this.getManagedBean().setWeightage35384WIP(weightage35384WIP); //#38151
+
 			if(null!=this.getManagedBean().getCtContract()){
 				this.getManagedBean().getCtContract().setContractNo(this.getManagedBean().getQt().getExistingContractNo());
 			}
@@ -11222,6 +11344,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		CommitteResDTO CommitteeresDTO = committeSO
 				.retrieveCommitteMemberByUserId(committeReqDTO);
 		ScCommitteeMember member = CommitteeresDTO.getCommMember();
+		checkWeightage35384WIP();// #38151
 		if (member != null
 				&& member
 						.getMemberRole()
@@ -11799,8 +11922,11 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		// #25638 - Start.
 		spReqDTO.setSpecMaintenance(getManagedBean().isSpecMaintenance());
 		// #25638 - End.
-		
+
 		IQTSpecSO specSO = getSpecSO();
+
+		spReqDTO.setWeightage35384WIP(this.getManagedBean().isWeightage35384WIP());//#38151
+
 		SpecificationResDTO resDTO = new SpecificationResDTO();
 		
 		try {
@@ -15097,6 +15223,19 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			throw new EpException(MessageConst.ERROR_760365,new String[] { String.valueOf(passingScore) });
 		}
 		if (null != recommendationItem) {
+			//#38151 start
+			if(!this.getManagedBean().isWeightage35384WIP()){
+				//To apply the same scoring settings/calculation for both packages and items.
+				recommendationItem.setOverallTechnical(recommendationPackage.getOverallTechnical());
+				recommendationItem.setOverallFin(recommendationPackage.getOverallFin());
+				recommendationItem.setPassingScore(recommendationPackage.getPassingScore());
+				//#38151 && 40044 -start-
+				recommendationItem.setOverallOtherFlag(true);
+				recommendationItem.setOverallOtherTechnical(BigDecimal.ZERO);
+				recommendationItem.setOverallOtherFin(BigDecimal.ZERO);
+				//#38151 && 40044 -end-
+			}
+			//#38151 end
 			int itemPassingScore = 0;
 			int value1=recommendationItem.getOverallTechnical()!=null?recommendationItem.getOverallTechnical().intValue():0;
 			int value2= recommendationItem.getOverallOtherTechnical()!=null? recommendationItem.getOverallOtherTechnical().intValue():0;
@@ -15812,6 +15951,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		// #25638 - Start.
 		spReqDTO.setSpecMaintenance(getManagedBean().isSpecMaintenance());
 		// #25638 - End.
+		spReqDTO.setWeightage35384WIP(this.getManagedBean().isWeightage35384WIP());//#38151
 
 		spReqDTO.setSampleExist(checkISSampleExistWIPChecklist()); // 11104-Reendorse
 
@@ -15955,6 +16095,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			}
 		}
 		retriveSpecdetails(quotationTenderDataType.getQtId().longValue());
+		checkWeightage35384WIP();// #38151
+
 		ScQt scQt = this.getManagedBean().getQt();
 		if (null == this.getManagedBean().getQt().getContractType()) {
 			this.getManagedBean().getQt().setContractType(new PmParameter());
@@ -16324,6 +16466,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		spReqDTO.setRoleCode(getUserRoleCode());
 		spReqDTO.setPrepareSpecStatus(this.getManagedBean().getCurrentStatusId());
 		spReqDTO.setUserLocale(facesScopes.getUserLocale());
+		spReqDTO.setWeightage35384WIP(this.getManagedBean().isWeightage35384WIP());//#38151
+
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)){
 			//Bug #26214
 			spReqDTO.setAllowZeroVariance(true);
@@ -19869,4 +20013,41 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						.getSpecMaintenanceScreen() != getSpecMaintenance()));
 	}
 	// #40245 - end
+
+	// #38151 && 40044 Start
+	private void checkWeightage35384WIP() {
+		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTDetailSO.class);
+		ScQt qt = this.getManagedBean().getQt();
+		Date publishDate = qt.getPublishDate();
+		Date createdDate = qt.getCreatedDate();
+
+		if (null == publishDate) {
+			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
+			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
+
+			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
+
+			Date effDate = appVerDtls.getEffDate();
+			Timestamp effTimestamp = new Timestamp(effDate.getTime());
+
+			if (createdDate.before(effTimestamp)) {
+				this.getManagedBean().setWeightage35384WIP(true);
+			}
+		} else {
+			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
+			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
+
+			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
+
+			Date effDate = appVerDtls.getEffDate();
+
+			if (publishDate.before(effDate)) {
+				this.getManagedBean().setWeightage35384WIP(true);
+			}
+		}
+	}
+	// #38151 End
 }
