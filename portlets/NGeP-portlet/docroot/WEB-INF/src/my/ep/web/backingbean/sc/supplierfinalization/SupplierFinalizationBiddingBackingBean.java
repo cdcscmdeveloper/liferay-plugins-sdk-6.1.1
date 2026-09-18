@@ -3643,6 +3643,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 		
 		//#25651 - Start
 		attachments.addAll(scAttachments); 
+		attachments.addAll(getScqtFinalizationUploadReportDetails());
 		attachments.addAll(getScqtFinalizationReportDetails());
 		attachments.addAll(getBriefingReportDetails());
 		//#25651 - Start
@@ -3653,7 +3654,34 @@ public class SupplierFinalizationBiddingBackingBean extends
 	
 	// #25651 - Start
 	/**
-	 * To download evaluation reports detail under Evaluation Report tab.
+	 * To download briefing reports detail under Briefing Report tab.
+	 * 
+	 * @throws Exception
+	 *             the exception that would be thrown in case of any error while
+	 *             downloading the report(s)
+	 */
+	private List<ScAttachment> getScqtFinalizationUploadReportDetails() throws Exception {
+
+		List<ScAttachment> attachments = new ArrayList<>();
+		List<ScQtFinalizationReportDetailAttachment> scAttachmentsDetail = new ArrayList<>();
+
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getScQtFinalizationReportDetail())) {
+			for (ScQtFinalizationReportDetail uploadedSfReportDetail : this.getManagedBean().getScQtFinalizationReportDetail()) {
+				if (uploadedSfReportDetail.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)
+						&& null != uploadedSfReportDetail.getScQtFinalizationReportDetailAttachment()) {
+					scAttachmentsDetail.add(uploadedSfReportDetail.getScQtFinalizationReportDetailAttachment());
+				}
+			}
+		}
+		attachments.addAll(scAttachmentsDetail);
+		return attachments;
+	}
+
+	// #25651 - End
+	
+	// #25651 - Start
+	/**
+	 * To download evaluation reports detail under Briefing Report tab.
 	 * 
 	 * @throws Exception
 	 *             the exception that would be thrown in case of any error while
@@ -3689,7 +3717,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	
 	// #25651 - Start
 	/**
-	 * To download briefing reports detail under Evaluation Report tab.
+	 * To download briefing reports detail under Briefing Report tab.
 	 * 
 	 * @throws Exception
 	 *             the exception that would be thrown in case of any error while

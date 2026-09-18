@@ -670,8 +670,10 @@ public class ConsolidationReportBackingBean extends
 	
 		List<ScAttachment> attachments = new ArrayList<>(); 
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<>();
+		List<ScQtFinalizationReportDetailAttachment> scAttachmentDetails = new ArrayList<>();
 		List<ScQtFinalizationReport> scQtFinalizationReports = briefingPaperDisplayFilter(getManagedBean()
 				.getScQtFinalization().getScQtFinalizationReports());
+		
 		for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReports) {
 			ScQtFinalizationReportAttachment attachment;
 			if (scQtFinalizationReport.getTitle().contains(QTConstants.QT_REPORT_BRIEFING_PAPER)) {
@@ -692,8 +694,18 @@ public class ConsolidationReportBackingBean extends
 				}
 			}
 		}
-		
 		attachments.addAll(scAttachments);
+		
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getScQtFinalizationReportDetail())) {
+			for (ScQtFinalizationReportDetail uploadedSfReportDetail : this.getManagedBean().getScQtFinalizationReportDetail()) {
+				if (uploadedSfReportDetail.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)
+						&& null != uploadedSfReportDetail.getScQtFinalizationReportDetailAttachment()) {
+					scAttachmentDetails.add(uploadedSfReportDetail.getScQtFinalizationReportDetailAttachment());
+				}
+			}
+		}
+		attachments.addAll(scAttachmentDetails);
+		
 		List<Object[]> reportDetailList = reportDetailAttachmentType();
 		List<ScQtFinalizationReportDetail> scQtFinalizationReportDetail = this.getManagedBean().getScQtFinalizationReportDetail();
 		if (CollectionUtils.isNotEmpty(scQtFinalizationReportDetail)) {
