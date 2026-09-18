@@ -7727,7 +7727,7 @@ public class SupplierFinalizationBackingBean extends
 		int recommendCount = 0;
 		boolean multipleLOIandRefinalized = ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(getManagedBean().getFinalizationMethod()) 
 				&& this.getManagedBean().getQtRefinalized(); 
-		if(CollectionUtils.isNotEmpty(scQtRecommend.getRecommendDtls()) && multipleLOIandRefinalized){
+		if(CollectionUtils.isNotEmpty(scQtRecommend.getRecommendDtls()) && multipleLOIandRefinalized && !isQTCancelledBidSchedule()){//#40396
 			for (ScQtRecommendDtl recommendDtl: scQtRecommend.getRecommendDtls()) {
 				boolean isLoiAwarded = recommendDtl.getLoiAwarded() == null ? false: recommendDtl.getLoiAwarded();
 				if(recommendDtl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE) && isLoiAwarded){
