@@ -4304,6 +4304,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			boolean isAdd = false;
 			boolean isSubAdd = false;
 			for (Object[] arr : resultList) {
+				applStatus = StringUtils.EMPTY; //#40444
 				catCode = arr[0] + "" + arr[1] + arr[2] + "";
 				isActiveAppl = arr[20] + "";
 				voTmp = (SmBulkApplOverlapCatVO) EntityHelper
