@@ -339,7 +339,8 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					resDTO = fulfilmentOrderSO.saveAP58AL(AttachreqDTO);
 				}
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_AP58_PROCEED)){
-					if(getManagedBean().isAssignNewUser()) { // #31788 - assign new user
+					// #31788 - assign new user
+					if (getManagedBean().isAssignNewUser()) {
 						reqDTO.setAssignNewUser(Boolean.TRUE);
 						reqDTO.setNewUser(getManagedBean().getNewUser());
 					}
@@ -2550,18 +2551,18 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			resDTO = fulfilmentOrderSO.hideYEPtasklist(reqDTOnonAP58);
 			log.info("29440: "+resDTO.isSuccessful());
 			if(resDTO.isSuccessful()) {
-				if (reqDTOnonAP58.isAssignNewUser()) { // 31788 - acknowledge new assign user
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-									MessageConst.INFO_700128,
-									new String[] {
-											getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, getManagedBean()
-													.getFulfilmentOrder().getDocType()),
-											getManagedBean().getFulfilmentOrder().getDocNo(),
-											reqDTOnonAP58.getNewUser().getUserName() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-				} else {
+			if (reqDTOnonAP58.isAssignNewUser()) { // 31788 - acknowledge new assign user
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+								MessageConst.INFO_700128,
+								new String[] {
+										getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, getManagedBean()
+												.getFulfilmentOrder().getDocType()),
+										getManagedBean().getFulfilmentOrder().getDocNo(),
+										reqDTOnonAP58.getNewUser().getUserName() },
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			} else {
 					successMessage(MessageConst.INFO_700005, ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_PURCHASE_ORDER,getManagedBean().getFulfilmentOrder().getDocNo().toString(), Boolean.FALSE);
 				}
@@ -2890,7 +2891,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	/**
 	 * Validate User for YEP
 	 */
-	private void validateUserYep(){
+	private void validateUserYep() {
 		IFulfilmentOrderSO fulfilmentRequestSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,

@@ -204,7 +204,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				// 36247-End
 				
 				// 31788 - START
-				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)){
+				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 					IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 					IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(
@@ -212,17 +212,20 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 					FlActor flActor = fulfilmentSO.retrieveFlActors(ParameterConst.DOCTYPE_FULFILMENT_NOTE,
 							getManagedBean().getFulfilmentNote().getFulfilmentNoteId(),
 							RoleCode.RECEIVING_OFFICER.value());
-					FlDeliveryAddress flDelAddress = getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getFlDeliveryAddress();
+					FlDeliveryAddress flDelAddress = getManagedBean().getFulfilmentNote().getFlDeliveryOrder()
+							.getFlDeliveryAddress();
 					Long addressId = flDelAddress.getPmAddressId();
 					PmOrgProfile addressOrgProfile = getManagedBean().getFulfilmentRequest().getPreparedOrgProfile();
-					if(flDelAddress.getReceivingGrp()!=null && flDelAddress.getReceivingGrp().getAddressTypeId()!=null) { // in case of Manual address
-						IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+					if (flDelAddress.getReceivingGrp() != null
+							&& flDelAddress.getReceivingGrp().getAddressTypeId() != null) {
+						IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 						AddressReqDTO addrReqDTO = new AddressReqDTO();
 						addrReqDTO.setAddressTypeId(flDelAddress.getReceivingGrp().getAddressTypeId());
 						AddressResDTO addrResDTO = addressSO.retrieveAddressTypeByAddressTypeId(addrReqDTO);
 						addressId = addrResDTO.getPmAddressType().getPmAddress().getAddressId();
 						addressOrgProfile = addrResDTO.getPmAddressType().getPmOrgProfile();
-					}		
+					}
 					UserReqDTO userReqDTO = new UserReqDTO();
 					userReqDTO.setUserId(flActor.getUser().getUserId());
 					userReqDTO.setOrgProfileId(getOrgProfileByReceivingOfficerAddress(getManagedBean()
@@ -239,13 +242,13 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 						AddressReqDTO addressReqDTO = new AddressReqDTO();
 						addressReqDTO.setAddressId(addressId);
 						addressReqDTO.setAddressType(AddressType.RECEIVING_OFFICER_ADDRESS.value());
-						AddressResDTO addressResDTO = addressSO.retrieveReceivingOfficerListWithLoginHistory(addressReqDTO);
+						AddressResDTO addressResDTO = addressSO
+								.retrieveReceivingOfficerListWithLoginHistory(addressReqDTO);
 						getManagedBean().setNewUser(addressResDTO.getAddressTypeList().get(0).getPmUser());
 					} else if (userResDTO.getUserStatus().equals(0)) {
 						throw new EpException(MessageConst.ERROR_700128, new String[] {
 								getEpRoleDescByRoleCode(RoleCode.RECEIVING_OFFICER.value()),
-								addressOrgProfile.getOrgValidity()
-										.getOrgName() });
+								addressOrgProfile.getOrgValidity().getOrgName() });
 					}
 				}
 				// #31788 - END
@@ -2347,12 +2350,18 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		return fulfilmentSO.hasInvalidActiveFrnVsWorkflow(reqId);
 	}
 
-	// #31788 - Get Org Profile ID by RO Address
-	private Long getOrgProfileByReceivingOfficerAddress(FlFulfilmentNote fulfilmentNote){
+	// #31788 
+	/**
+	 * Get Org Profile ID by RO Address
+	 * @param fulfilmentNote
+	 * @return
+	 */
+	private Long getOrgProfileByReceivingOfficerAddress(FlFulfilmentNote fulfilmentNote) {
 		Long orgProfileId = fulfilmentNote.getFlRequest().getPreparedOrgProfile().getOrgProfileId();
 		FlDeliveryAddress flDelAddress = fulfilmentNote.getFlDeliveryOrder().getFlDeliveryAddress();
-		if(flDelAddress.getReceivingGrp()!=null && flDelAddress.getReceivingGrp().getAddressTypeId()!=null) {
-			IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+		if (flDelAddress.getReceivingGrp() != null && flDelAddress.getReceivingGrp().getAddressTypeId() != null) {
+			IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 			AddressReqDTO reqDTO = new AddressReqDTO();
 			reqDTO.setAddressTypeId(flDelAddress.getReceivingGrp().getAddressTypeId());
 			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);

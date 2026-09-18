@@ -1172,14 +1172,18 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				}
 			}
 		}
-		//#31788 - Check FL Approver active status (modification/cancel)
-		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
+		// #31788 - Check FL Approver active status (modification/cancel)
+		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)
+				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 			FlFulfilmentRequest flRequest = getManagedBean().getFulfilmentRequest();
-			IFulfilmentSO fulfilmentSO = (IFulfilmentSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+			IFulfilmentSO fulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
 			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IUserSO.class);
-			FlActor flApprover = fulfilmentSO.retrieveFlActors(flRequest.getDocType(), flRequest.getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
-			BigDecimal sumItemAmt = fulfilmentSO.getSumTotalItemsAmtByReqId(getManagedBean().getFulfilmentRequest().getFulfilmentReqId());
+			FlActor flApprover = fulfilmentSO.retrieveFlActors(flRequest.getDocType(), flRequest.getFulfilmentReqId(),
+					RoleCode.FL_APPROVER.value());
+			BigDecimal sumItemAmt = fulfilmentSO.getSumTotalItemsAmtByReqId(getManagedBean().getFulfilmentRequest()
+					.getFulfilmentReqId());
 			UserReqDTO userReqDTO = new UserReqDTO();
 			userReqDTO.setUserId(flApprover.getUser().getUserId());
 			userReqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
@@ -1279,10 +1283,11 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				reqDTO.setAddressId(addressId);
 				reqDTO.setAddressType(AddressType.RECEIVING_OFFICER_ADDRESS.value());
 				AddressResDTO resDTO = addressSO.retrieveReceivingOfficerList(reqDTO);
-				if(resDTO.getAddressTypeList().isEmpty()){//TODO others as well needed to throw if list is empty
-					// #31788 - Update New Message for No Active Receiving Officer  
-					//throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.receivingOfficer",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
-					throw new EpException(MessageConst.ERROR_740130, new String[]{ flDeliveryAddress.getFlAddress().getAddressName(), getEpRoleDescByRoleCode(RoleCode.RECEIVING_OFFICER.value()) });
+				if (resDTO.getAddressTypeList().isEmpty()) {
+					// #31788 - Update New Message RO
+					throw new EpException(MessageConst.ERROR_740130, new String[] {
+							flDeliveryAddress.getFlAddress().getAddressName(),
+							getEpRoleDescByRoleCode(RoleCode.RECEIVING_OFFICER.value()) });
 				}
 			}
 		}

@@ -299,7 +299,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				listOfApprover = sortApproverUserList(resDTO.getApproverGroupUserList(),actor.getUser(),getManagedBean().getInvoice().getFlRequest().getPmUserGroup().getUserGroupId());
 				
 				// #31788 - Update new user need to be assigned
-				if(getManagedBean().isAssignNewUser()){
+				if (getManagedBean().isAssignNewUser()) {
 					reqDTO.setAssignNewUser(Boolean.TRUE);
 					reqDTO.setNewUser(listOfApprover.get(0));
 				}
@@ -355,7 +355,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				listOfApprover = sortApproverUserList(resDTO.getApproverGroupUserList(),approver,getManagedBean().getInvoice().getFlRequest().getPmUserGroup().getUserGroupId());
 				reqDTO.setApproverUserList(listOfApprover);
 				// #31788 - Update new user need to be assigned
-				if(getManagedBean().isAssignNewUser()){
+				if (getManagedBean().isAssignNewUser()) {
 					reqDTO.setAssignNewUser(Boolean.TRUE);
 					reqDTO.setNewUser(listOfApprover.get(0));
 				}
@@ -1868,9 +1868,12 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 	public String signingAction(String outcome) throws Exception{
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		IInvoiceSO invoiceSO = (IInvoiceSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IInvoiceSO.class);
-		IFulfilmentSO fulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class); //#31788 - fulfilmentSO
+		//#31788 - fulfilmentSO
+		IFulfilmentSO fulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		FlFulfilmentRequest flRequest = getManagedBean().getInvoice().getFlRequest(); // #31788 - get Fulfilment Request
+		// #31788 - get Fulfilment Request
+		FlFulfilmentRequest flRequest = getManagedBean().getInvoice().getFlRequest();
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 			if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
 				getManagedBean().setSelectedTabIndex(0);
@@ -2011,20 +2014,21 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					throw new EpException(MessageConst.ERROR_745072);
 				}
 				//#31788 - Check PMO without DAN
-				if(!isDanExists()){
-					IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);//28719
+				if (!isDanExists()) {
+					IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);// 28719
 					UserReqDTO userReqDTO = new UserReqDTO();
 					userReqDTO.setRoleCode(RoleCode.PAY_OFFICER.value());
-					userReqDTO.setOrgProfileId(getManagedBean().getInvoice().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
+					userReqDTO.setOrgProfileId(getManagedBean().getInvoice().getFlRequest().getPreparedOrgProfile()
+							.getOrgProfileId());
 					UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
-					if(userResDTO.getUserList() == null || userResDTO.getUserList().isEmpty()){
+					if (userResDTO.getUserList() == null || userResDTO.getUserList().isEmpty()) {
 						PmOrgProfile orgProfile = getManagedBean().getInvoice().getFlRequest().getPreparedOrgProfile();
-						throw new EpException(MessageConst.ERROR_740130,
-								new String[] { orgProfile.getOrgValidity().getOrgName(),
-										getEpRoleDescByRoleCode(RoleCode.PAY_OFFICER.value()) });
-						//throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.paymentMatchOfficer",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+						throw new EpException(MessageConst.ERROR_740130, new String[] {
+								orgProfile.getOrgValidity().getOrgName(),
+								getEpRoleDescByRoleCode(RoleCode.PAY_OFFICER.value()) });
 					}
-				}				
+				}			
 			}
 			reqDTO.setOutcome(outcome);
 			reqDTO.setInvoice(getManagedBean().getInvoice());
@@ -2952,40 +2956,42 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 	}
 	// #34443 end
 	
-	//#31788 - START
+	// #31788 - START
 	/**
-	 * Checks whether any invoice item summary has a DAN (positive adjusted amount).
-	 *
+	 * Checks whether any invoice item summary has a DAN (positive adjustedamount).
+	 * 
 	 * @param invoiceItemSummaries list of invoice item summaries to check
 	 * @return true if DAN exists, false otherwise
 	 */
 	private boolean isDanExists() {
 		List<FlInvoiceItemSummary> invoiceItemSummaries = getManagedBean().getInvoice().getFlInvoiceItemSummary();
-	    for (FlInvoiceItemSummary invItemSumm : invoiceItemSummaries) {
-	        BigDecimal adjustedAmt = invItemSumm.getInvAmt().subtract(invItemSumm.getOrderedAmt());
+		for (FlInvoiceItemSummary invItemSumm : invoiceItemSummaries) {
+			BigDecimal adjustedAmt = invItemSumm.getInvAmt().subtract(invItemSumm.getOrderedAmt());
 
-	        if (invItemSumm.getRecalledAmt() != null && invItemSumm.getRecalledAmt().doubleValue() > 0) {
-	            BigDecimal receivedItemAmount = new BigDecimal(0);
+			if (invItemSumm.getRecalledAmt() != null && invItemSumm.getRecalledAmt().doubleValue() > 0) {
+				BigDecimal receivedItemAmount = new BigDecimal(0);
 
-	            for (FlInvoiceItem invItem : invItemSumm.getFlInvoiceItem()) {
-	                if (invItem.getReceivedQty() != null && invItem.getReceivedQty().doubleValue() >= 0
-	                        && invItem.getGstUnitPrice() != null && invItem.getGstUnitPrice().doubleValue() >= 0) {
-	                    BigDecimal receivedAmt = invItem.getReceivedQty().multiply(invItem.getGstUnitPrice());
-	                    receivedItemAmount = receivedItemAmount.add(receivedAmt);
-	                }
-	            }
+				for (FlInvoiceItem invItem : invItemSumm.getFlInvoiceItem()) {
+					if (invItem.getReceivedQty() != null && invItem.getReceivedQty().doubleValue() >= 0
+							&& invItem.getGstUnitPrice() != null && invItem.getGstUnitPrice().doubleValue() >= 0) {
+						BigDecimal receivedAmt = invItem.getReceivedQty().multiply(invItem.getGstUnitPrice());
+						receivedItemAmount = receivedItemAmount.add(receivedAmt);
+					}
+				}
 
-	            adjustedAmt = invItemSumm.getInvAmt()
-	                    .subtract(receivedItemAmount.setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE, BigDecimal.ROUND_HALF_UP));
-	        }
+				adjustedAmt = invItemSumm.getInvAmt().subtract(
+						receivedItemAmount.setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,
+								BigDecimal.ROUND_HALF_UP));
+			}
 
-	        if (adjustedAmt.doubleValue() > 0) {
-	            return true;
-	        }
-	    }
-	    return false;
+			if (adjustedAmt.doubleValue() > 0) {
+				return true;
+			}
+		}
+		return false;
 	}
-	//#31788 - END
+
+	// #31788 - END
 
 	//40793-start
 	/**
