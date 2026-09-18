@@ -1126,6 +1126,7 @@ public class QTDetailBackingBean extends
 		debugLogger("editQuationTenderDetails, @Managedbean = "+ this.getManagedBean());
 		this.getManagedBean().setReadOnly(!editable);
 		this.getManagedBean().setMaintanceFlow(true);
+		checkRolesToAuditView(); // #35500
 		IQTDetailSO detailSO;
 		String REDIRECT_PAGE = QTConstants.MAINTANANCE_PAGE;
 
@@ -1382,7 +1383,7 @@ public class QTDetailBackingBean extends
 		
 		Long qtId = scQt.getQtId();
 		Long loaId = findDocIdByDocType(qtId, ParameterConst.DOCTYPE_DIRECT_NEGO);
-		
+		checkRolesToAuditView(); // #35500
 		return new DirectLOABackingBean().retriveLoaDetails(loaId, previousPageUrl, true);
 	}	
 	
@@ -1410,7 +1411,7 @@ public class QTDetailBackingBean extends
 		
 		SupplierFinalizationBackingBean sfbb =  new SupplierFinalizationBackingBean();
 		sfbb.renewSesionObject();
-		
+		checkRolesToAuditView(); // #35500
 		return sfbb.editSupplierFinalizationDetails(scQt, previousPageUrl, false, justAllowRoleCodes);
 	}
 	// #19336, #25201, #17376, #19287 -end-
@@ -1429,6 +1430,7 @@ public class QTDetailBackingBean extends
 		debugLogger("viewSupplierProposalDetails");
 		Long qtId = scQt.getQtId();
 		String docType = getManagedBean().getQtnTenderSearchBean().getResultDocType();
+		checkRolesToAuditView(); // #35500
 		
 		if (ParameterConst.DOCTYPE_QUOTATION.equals(docType) || 
 				ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL.equals(docType)) {
@@ -1466,7 +1468,7 @@ public class QTDetailBackingBean extends
 		ScQt scQt = null;
 		ScLoiForQt scLoiForQt = null;
 		ScLoaForQt scLoaForQt = null;
-		
+		checkRolesToAuditView(); // #35500
 		if(getManagedSearchBeanDocumentTypeIsLOA() || getManagedSearchBeanDocumentTypeIsLOI()){
 			if (obj instanceof ScLoiForQt) {
 				/* Bug #27412 START */
@@ -2039,6 +2041,11 @@ public class QTDetailBackingBean extends
 
 		quationTenderReqDTO.setToBeRemovedCommitteMembers(this.getManagedBean()
 				.getToBeDelCommitteMemebers());
+		// 28895 - 35500
+		quationTenderReqDTO.setDeletedCommitteeMembersAuditTrailList(this.getManagedBean()
+				.getToBeDelCommitteMemebers());
+		quationTenderReqDTO.setCommitteeMemberModifiedRoleAuditTrail(this.getManagedBean().getMapModifiedRole());//#35500 issue fix 4-9
+
 		//20210325@asyrafhaziq_30518 - Start
 	    List <ScQtCommittee> scQtCommittees = getQtCommiteDtlsByQtId(scQt.getQtId());
 	    List<ScQtCommittee> toBeRemovedScQtCommittees = new ArrayList<ScQtCommittee>() ;
@@ -3729,6 +3736,12 @@ public class QTDetailBackingBean extends
 				committeReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 				committeReqDTO.setToBeDeletedMembers(this.getManagedBean()
 						.getToBeDelCommitteMemebers());
+				//#28895 - 35500 start
+				committeReqDTO.setNewScCommitteeMemberAuditTrailList(this.getManagedBean().getNewScCommitteeMemberAuditTrailList()); 
+				committeReqDTO.setCommitteeMemberModifiedRoleAuditTrail(this.getManagedBean().getMapModifiedRole());//#35500 issue fix 4-9
+				committeReqDTO.setToBeRemovedCommitteeMemberAuditTrailList(this.getManagedBean()
+						.getDeletedScCommitteeMemberAuditTrailList());
+				//#28895 - 35500 end
 				committeReqDTO.setTaskName(taskName); // Bug #34972@Syazani 09/08/2023
 				committeResDto = committeSO.updateBPMAction(committeReqDTO);
 				
@@ -7459,6 +7472,14 @@ public class QTDetailBackingBean extends
 			quationTenderReqDTO.setDoaList(this.getManagedBean().getPmuserContactpersonList());
 			quationTenderReqDTO.setToken(fs.getBPMAuthenticationCtxToken());
 			// end #25037
+			//28895 - 35500 start
+			quationTenderReqDTO.setDeletedDoaaList(this.getManagedBean().getPmUserDeletedContactPersonList());
+			//#35500 fix issue 5 Start
+			quationTenderReqDTO.setModifiedDoaList(this.getManagedBean().getModifiedDoaList());
+			quationTenderReqDTO.setNewDoaList(this.getManagedBean().getNewDoaList());
+			//#35500 fix issue 5 End
+			quationTenderReqDTO.setNewCommitteeMembersAuditTrailList(this.getManagedBean().getNewScCommitteeMemberAuditTrailList());
+			//28895 - 35500 end
 			
 			//#28188 - Start
 			List<ScQtBsvRegistration> briefingRegistrationList = getBriefingRegistrationListFromSession();
@@ -11728,6 +11749,21 @@ public class QTDetailBackingBean extends
 		return facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value());
 	}
 	// 29732 end
+	
+	/**
+	 * #35500 check user role to access audit Trails
+	 * 
+	 */
+	public void checkRolesToAuditView() {
+		FacesScopes facesScopes = new FacesScopes();
+		if (isQTSearchScreen()
+				&& (facesScopes.hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
+						|| facesScopes.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
+						|| facesScopes.hasRoleUser(RoleCode.BPK_AUDITOR.value()) || facesScopes
+							.hasRoleUser(RoleCode.EP_ADMIN.value()))) {
+			this.getManagedBean().setAuditViewRole(true);
+		}
+	}	
 
 	// 25791-start
 	/**

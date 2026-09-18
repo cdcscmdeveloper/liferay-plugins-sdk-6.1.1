@@ -33,12 +33,19 @@
 	
 	<table width="100%">
 		<tr>
+			<ui:remove> #35500 Start </ui:remove>
 			<td style="vertical-align: bottom;" align="right">
+				<p:commandLink value="#{lbl['lbl.audit.link.auditTrail']}" 
+					action="#{auditQTBackingBean.redirectToAuditTrailsViews(qTDetailBB.managedBean.qt.qtId)}"
+					immediate="true" rendered="#{qTDetailBB.managedBean.auditViewRole}" />
+					&#160;&#160;&#160;
+					
 				<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
 				style="float:right;"
 				action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeQuotation, qTDetailBB.managedBean.qt.qtId)}"
 				immediate="true" rendered="#{qTDetailBB.managedBean.maintanceFlow}"/>
 			</td>
+			<ui:remove> #35500 End </ui:remove>
 		</tr>
 		<!-- 29464 -start- -->
 		<c:if test="#{qTDetailBB.managedBean.maintanceFlow and !qTDetailBB.approvalScreen and not empty qTDetailBB.managedBean.qt.childQt}">
