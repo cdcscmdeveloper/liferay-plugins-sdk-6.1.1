@@ -9185,6 +9185,35 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 	//#25651 - End
 	
+	//#25651 - Start
+	/**
+	 * To filter except others document briefing paper report detail.
+	 * 
+	 * @param docDefinitionKey
+	 * @return true or false
+	 */
+	public Boolean documentBriefingPaperOnly(String docDefinitionKey) {
+
+		if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(docDefinitionKey)) {
+			return true;
+		}
+
+		if (SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT.equals(docDefinitionKey)) {
+			return true;
+		}
+
+		if (SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT.equals(docDefinitionKey)) {
+			return true;
+		}
+
+		if (SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT.equals(docDefinitionKey)) {
+			return true;
+		}
+
+		return false;
+	}
+	//#25651 - End
+	
 	// #28188 - Start
 	/**
 	 * Group and sort briefingsitevist details.

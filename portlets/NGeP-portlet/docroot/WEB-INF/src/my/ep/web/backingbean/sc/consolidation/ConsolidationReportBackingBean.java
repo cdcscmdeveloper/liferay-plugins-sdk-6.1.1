@@ -670,8 +670,10 @@ public class ConsolidationReportBackingBean extends
 	
 		List<ScAttachment> attachments = new ArrayList<>(); 
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<>();
+		List<ScQtFinalizationReportDetailAttachment> scAttachmentDetails = new ArrayList<>();
 		List<ScQtFinalizationReport> scQtFinalizationReports = briefingPaperDisplayFilter(getManagedBean()
 				.getScQtFinalization().getScQtFinalizationReports());
+		
 		for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReports) {
 			ScQtFinalizationReportAttachment attachment;
 			if (scQtFinalizationReport.getTitle().contains(QTConstants.QT_REPORT_BRIEFING_PAPER)) {
@@ -692,8 +694,18 @@ public class ConsolidationReportBackingBean extends
 				}
 			}
 		}
-		
 		attachments.addAll(scAttachments);
+		
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getScQtFinalizationReportDetail())) {
+			for (ScQtFinalizationReportDetail uploadedSfReportDetail : this.getManagedBean().getScQtFinalizationReportDetail()) {
+				if (uploadedSfReportDetail.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)
+						&& null != uploadedSfReportDetail.getScQtFinalizationReportDetailAttachment()) {
+					scAttachmentDetails.add(uploadedSfReportDetail.getScQtFinalizationReportDetailAttachment());
+				}
+			}
+		}
+		attachments.addAll(scAttachmentDetails);
+		
 		List<Object[]> reportDetailList = reportDetailAttachmentType();
 		List<ScQtFinalizationReportDetail> scQtFinalizationReportDetail = this.getManagedBean().getScQtFinalizationReportDetail();
 		if (CollectionUtils.isNotEmpty(scQtFinalizationReportDetail)) {
@@ -808,6 +820,7 @@ public class ConsolidationReportBackingBean extends
 	public void downloadAllEvaluationReports() throws Exception {
 		debugLogger("downloadAllEvaluationReports");
 
+		List<ScAttachment> attachments = new ArrayList<>();//#25651 
 		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean().getEvaluationReportList();
 		// 37622 - start
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<>();
@@ -823,18 +836,62 @@ public class ConsolidationReportBackingBean extends
 			scAttachments.add(attachment);
 		}
 		// 37622 - end
+		
+		//#25651 - Start
+		attachments.addAll(scAttachments); 
+		attachments.addAll(getScqtFinalizationReportDetails());
+		//#25651 - End
+	
 
 		// Generate all the reports before submission
 		if (!getManagedBean().isSubmit()) {
 			//#28784 - Start
-			downloadSFAndRecommendationFiles("NGeP-Evaluation-Report", scAttachments);
+			downloadSFAndRecommendationFiles("NGeP-Evaluation-Report", attachments); //#25651 
 			//#28784 - End
 		}
 	}
 	
+	// #25651 - Start
+	/**
+	 * To download evaluation reports detail under Evaluation Report tab.
+	 * 
+	 * @throws Exception
+	 *             the exception that would be thrown in case of any error while
+	 *             downloading the report(s)
+	 */
+	private List<ScAttachment> getScqtFinalizationReportDetails() throws Exception {
+
+		List<ScAttachment> attachments = new ArrayList<>();
+		List<ScQtFinalizationReportDetail> scQtFinalizationReportDetails = getManagedBean()
+				.getEvaluationReportDetailList();
+		List<ScQtFinalizationReportDetailAttachment> scAttachmentsDetail = new ArrayList<>();
+
+		if (CollectionUtils.isNotEmpty(scQtFinalizationReportDetails)) {
+			for (ScQtFinalizationReportDetail reportDetail : scQtFinalizationReportDetails) {
+				ScQtFinalizationReportDetailAttachment attachment = reportDetail
+						.getScQtFinalizationReportDetailAttachment();
+
+				if (attachment == null) {
+					attachment = generateDocumentAttachmentDetail(reportDetail);
+					reportDetail.setScQtFinalizationReportDetailAttachment(attachment);
+				}
+				if (attachment != null) {
+					attachment.setTempFileName(reportDetail.getTitle());
+				}
+
+				scAttachmentsDetail.add(attachment);
+			}
+		}
+
+		attachments.addAll(scAttachmentsDetail);
+		return attachments;
+	}
+
+	// #25651 - End
+	
 	//#25651 - Start
 	/**
-	 * To combine download evalution report ScQtFinalizationReport and ScQtFinalizationReportDetail
+	 * To combine download evaluation report ScQtFinalizationReport and ScQtFinalizationReportDetail
 	 */
 	public void downloadCombinedReport(Object report) throws Exception {
 
