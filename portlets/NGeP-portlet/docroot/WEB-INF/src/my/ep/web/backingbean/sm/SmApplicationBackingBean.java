@@ -15298,6 +15298,14 @@ public class SmApplicationBackingBean extends
 					.setMandatoryDocs(new ArrayList<SmApplSupportDoc>());
 			for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
 					.getSmApplSupportDocs()) {
+				//#40112 - start
+				doc.setSmAppl(getManagedBean().getSmAppl());
+				if (!EntityHelper.isCollectionEmpty(doc.getSmApplDocFiles())) {
+					for (SmApplDocFile file : doc.getSmApplDocFiles()) {
+						file.setSmApplSupportDoc(doc);
+					}
+				}
+				//#40112 - end
 				if (doc.getPmDocument() != null) {
 					if (doc.getPmDocument().isMandatory()) {
 						if (doc.getPmDocument().isLicenseReq()
