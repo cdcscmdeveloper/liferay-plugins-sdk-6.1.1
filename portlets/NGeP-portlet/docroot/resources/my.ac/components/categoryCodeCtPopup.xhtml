@@ -159,6 +159,9 @@
 					<h:selectOneMenu id="catCodeCtLvl2" label="#{lbl['lbl.ct.tbl.sub.category']}"
 						value="#{categoryCodeSearchBackingBean.managedBean.categoryCodeIdLvl2}"
 						style="width: 500px;">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+        										  itemValue=""
+        										  noSelectionOption="true" /> <!-- #41031,#30014 -->
 						<f:selectItems value="#{categoryCodeSearchBackingBean.level2CategoryCodes}" />
 						<p:ajax event="change" partialSubmit="true" process="@this" update="catCodeCtLvl3" />
 					</h:selectOneMenu>
@@ -172,6 +175,9 @@
 					<h:selectOneMenu id="catCodeCtLvl3" label="#{lbl['lbl.ct.tbl.sub.category.div']}"
 						value="#{categoryCodeSearchBackingBean.managedBean.categoryCodeIdLvl3}"
 						style="width: 500px;">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+        										  itemValue=""
+        										  noSelectionOption="true" /> <!-- #41031,#30014 -->
 						<f:selectItems value="#{categoryCodeSearchBackingBean.level3CategoryCodes}" />
 						<p:ajax event="change" partialSubmit="true" process="@this" />
 					</h:selectOneMenu>

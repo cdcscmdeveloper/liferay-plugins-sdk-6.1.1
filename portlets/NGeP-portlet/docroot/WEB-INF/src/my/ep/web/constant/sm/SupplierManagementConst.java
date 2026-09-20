@@ -788,6 +788,18 @@ public class SupplierManagementConst {
 	public static final String SM_COMP_EXP_FILE_PATH = "/SM/COMPEXP/";
 	public static final Long APP_VERSION_REDMINE_NO_9299 = 9299L;
 	public static final int PHASE_1 = 1;
+	
+
+	/** Procurement Mode (PARAMETER_TYPE = 'PM') */
+	public static final long PM_QUOTATION    = 121L;
+	public static final long PM_TENDER       = 122L;
+	public static final long PM_DIRECT_NEGO  = 123L;
+
+	/** Procurement Mode Quotation (PARAMETER_TYPE = 'PMQ') */
+	public static final long PMQ_QUOTATION   = 185L;
+	public static final long PMQ_TENDER      = 186L;
+	public static final long PMQ_DIRECT_NEGO = 187L;
+	
 	// #9299 End
 	public static final Long APP_VERSION_REDMINE_NO_40112 = 40112L;		//#40112
 	
@@ -1679,4 +1691,30 @@ public class SupplierManagementConst {
 	}
 	
 //	#37925 END
+	
+	//Start 9299
+	public static long getPmDirectNego() {
+		return PM_DIRECT_NEGO;
+	}
+
+	public static long getPmQuotation() {
+		return PM_QUOTATION;
+	}
+
+	public static long getPmTender() {
+		return PM_TENDER;
+	}
+
+	public static long getPmqQuotation() {
+		return PMQ_QUOTATION;
+	}
+
+	public static long getPmqTender() {
+		return PMQ_TENDER;
+	}
+
+	public static long getPmqDirectNego() {
+		return PMQ_DIRECT_NEGO;
+	}
+	//End 9299
 }
