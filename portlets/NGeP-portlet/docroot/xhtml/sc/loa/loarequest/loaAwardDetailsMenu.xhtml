@@ -25,16 +25,25 @@
 				<p:graphicImage value="/css/images/design/ico-viewnedit.png"
 				id="supplierUpdateInstructionIcon" rendered="#{lOADetailBackingBean.managedBean.updateSupplierInstructionFlag &amp;&amp; !isDocTypeQuotation}"
 				style="max-width: 16px; padding-right: 7px; padding-left: 7px;" />			
-			<ui:remove>#26059 - Start</ui:remove>
 			<h:outputText styleClass="instruction" rendered="#{lOADetailBackingBean.managedBean.updateSupplierInstructionFlag &amp;&amp; !isDocTypeQuotation}"
 				value="#{lbl['lbl.sc.update.supplier.latest.offered.instruction.end']}" />
 				<h:outputText styleClass="instruction" rendered="#{lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlagQT &amp;&amp; isDocTypeQuotation &amp;&amp; lOADetailBackingBean.managedBean.supPropSpecUpdate}"
 				value="#{lbl['lbl.sc.loiloa.loa.zone.instruction']}" />
 				<p:graphicImage value="/css/images/design/ico-viewnedit.png"
 				id="supplierUpdateInstructionIconQT" rendered="#{lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlagQT &amp;&amp; isDocTypeQuotation &amp;&amp; lOADetailBackingBean.managedBean.supPropSpecUpdate}"
-				style="max-width: 16px; padding-right: 7px; padding-left: 7px;" /><br />
-			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.loa.agency.instruction.verification']}" /><br />
-			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.loa.agency.instruction.verification2']}" />
+				style="max-width: 16px; padding-right: 7px; padding-left: 7px;" />
+			<ui:remove>
+			    #26059 - Start 
+			    Add Instruction at QT will be cater after FRS 29362 is deployed.
+			</ui:remove>
+			<h:panelGroup rendered="#{!isDocTypeQuotation}" layout="block">
+				<br />
+				<h:outputText styleClass="instruction"
+					value="#{lbl['lbl.sc.loa.agency.instruction.verification']}" />
+				<br />
+				<h:outputText styleClass="instruction"
+					value="#{lbl['lbl.sc.loa.agency.instruction.verification2']}" />
+			</h:panelGroup>
 			<ui:remove>#26059 - End</ui:remove>
 			<p:spacer height="10" />
 			<p:panel id="supplierSearchCriteria" rendered="#{!isDocTypeQuotation}"

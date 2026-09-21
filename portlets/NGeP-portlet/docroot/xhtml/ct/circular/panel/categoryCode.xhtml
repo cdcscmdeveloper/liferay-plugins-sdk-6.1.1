@@ -37,6 +37,12 @@
 		justify-content: center !important;
 		align-items: center !important;
 	}
+	.confirm-ui-dialog .ui-dialog-content .ui-outputlabel {
+    display: block !important;
+    width: 100%;
+    text-align: center !important;
+    padding-left: 0 !important;
+}<!-- #40498,#30014 -->
 	</style>
 
 	<p:panel id="categoriCodeId"
@@ -116,12 +122,13 @@
 		<h:panelGroup id="addButtonId">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.add']}"
-					process="@this, panelCategoryCodeDt"
+					process="@this"
 					partialSubmit="true"
-					update="@([id$=catCodeCtPopup])"
 					oncomplete="catCodePopup.show();"
+					actionListener="#{panelBackingBean.beforeOpenCategoryPopup}"
+					update="@([id$=catCodeCtPnl])"
 					rendered="#{!panelBackingBean.managedBean.viewContract}"
-					action="#{categoryCodeSearchBackingBean.renewSesionObject}" />
+					action="#{categoryCodeSearchBackingBean.renewSesionObject}" /> <!-- #40498,#30014 -->
 
 				<p:commandButton id="deleteButtonId"
 					value="#{lbl['lbl.ct.delete']}"
@@ -139,9 +146,9 @@
 			widget="categoryCodeDeletePopUp"
 			okAction="panelBackingBean.deleteCategoryCode"
 			width="400" height="200"
-			title="#{lbl['lbl.ct.tbl.category']}"
+			title="#{lbl['lbl.ct.menu.category.code']}"
 			content="#{lbl['lbl.ct.dialog.confirm.category.code']}"
-			update=":form:panelCategoryCodeDt,:form:deleteButtonId"/>
+			update=":form:panelCategoryCodeDt,:form:deleteButtonId"/> <!-- #40499,#30014 -->
 
 		<ac:categoryCodeCtPopup id="catCodeCtPopup"
 			okAction="panelBackingBean.addNewCategoryCode"

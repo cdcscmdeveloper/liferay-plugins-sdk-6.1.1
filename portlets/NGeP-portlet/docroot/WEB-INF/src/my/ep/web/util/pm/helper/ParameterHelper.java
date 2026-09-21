@@ -623,7 +623,10 @@ public class ParameterHelper implements Serializable{
 		    	String[][] paramDescArry = new String[MAP_VALUE_PARAMETER_CODE+1][list.size()];
 		    	
 		    	for (Object[] object : list) {
-		    		paramDescArry[MAP_VALUE_PARAMETER_DESC_ID][i] = ((Long)object[1]).toString();
+					// 12471 - start - correct the id stored, should store
+					// paramDescId instead of paramId
+					paramDescArry[MAP_VALUE_PARAMETER_DESC_ID][i] = ((Long) object[2]).toString();
+					// 12471 - end
 		    		paramDescArry[MAP_VALUE_PARAMETER_CODE][i] = (String)object[0];
 		    		
 		    		i++;

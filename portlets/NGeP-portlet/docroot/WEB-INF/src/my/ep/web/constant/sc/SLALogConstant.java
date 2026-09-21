@@ -20,9 +20,13 @@ public class SLALogConstant {
 	public static final String COMMON_BASE_BACKINGBEAN = "BaseBackingBean";
 	public static final String QT_LOA_DETAIL_BACKINGBEAN = "LOADetailBackingBean";
 	public static final String QT_DIRECT_LOA_DETAIL_BACKINGBEAN = "DirectLOABackingBean";	
-	//12471 //28895-35500 - start
+	// 12471 - start
+	public static final String QT_COMMITTEE_BACKINGBEAN = "QTCommitteBackingBean";
+	public static final String QT_EVALUATION_MEETING_BACKINGBEAN = "EvaluationMeetingBackingBean";
 	public static final String QT_SUPPLIER_FINALIZATION_MEETING_BACKINGBEAN = "SupplierFinalizationMeetingBackingBean";
-	//12471 - end	
+	public static final String QT_USER_COMMITTEE_PAGING_DATA_MODEL = "UserCommitteePagingDataModel";
+	public static final String QT_USER_QC_PAGING_DATA_MODEL = "UserQCPagingDataModel";
+	// 12471 - end
 	// 25037 - start
 	public static final String QT_APPROVAL_BACKINGBEAN = "ApprovalBackingBean";
 	public static final String QT_DETAIL_BACKINGBEAN = "QTDetailBackingBean";
@@ -116,6 +120,12 @@ public class SLALogConstant {
 	public static final String DP_GET_RADIOBUTTON_CODEVALUES = "getReasonCodeDropdownValues";
 	// #27868 - end
 	
+	//12471 - start
+	public static final String QT_BUILD_ORG_NAME_DD = "buildOrgNameDD";
+	public static final String QT_BUILD_PTJ_DD = "buildPtjDD";
+	public static final String QT_PAGE_CHANGE_LISTENER = "pageChangeListener";
+	//12471 - end
+
 	private SLALogConstant(){
 		
 	}	

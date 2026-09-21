@@ -58,7 +58,7 @@
 							oncomplete="if(!args.validationFailed)submissionConfirmDlg.show()" 
 							rendered="#{svoSiteVisitBackingBean.managedBean.activePage eq 'S'}" 
 							disabled="#{!svoSiteVisitBackingBean.managedBean.claimTask}"
-							process="@this @([id$=recommendationId])">
+							process="@this @([id$=recommendationId],[id$=actualSvDate],[id$=bumiRecommendId])">
 							<f:param name="disableValidation" value="true" />
 						</p:commandButton>
 						

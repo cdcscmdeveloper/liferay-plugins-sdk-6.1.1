@@ -52,8 +52,10 @@
 								value="#{lbl['lbl.btn.yes']}"
 								disabled="#{!backingBean.managedBean.updateRecordTC}"
 								partialSubmit="true"
-								update=":form"
-								action="#{backingBean.saveOtherDescriptionEdit}" />
+								process="@form"
+    							update="@form"
+								action="#{backingBean.saveOtherDescriptionEdit}"
+								oncomplete="otherDescriptionEditDlg.hide()" />
 							<p:commandButton id="btnNo"
 								value="#{lbl['lbl.btn.no']}"
 								action="#{backingBean.resetOtherDescriptionEdit}"
