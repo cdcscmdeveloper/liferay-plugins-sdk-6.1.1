@@ -120,10 +120,12 @@
 				<p:outputLabel value="#{lbl['lbl.sc.contact.person']}" />
 			</td>
 			<!-- #30447 start -->
-			<td>				
+			<td>                
+			<!-- #30447 - upperCase salutation check start -->
 				<p:inputText id="suppContact" size="50"
-					value="#{lOIDetailBackingBean.managedBean.scLoi.scSupplierAddress.pmContactUserID.salutationCode.salutationName.concat(' ').concat(lOIDetailBackingBean.managedBean.scLoi.scSupplierAddress.contactPerson)}"
+					value="#{lOIDetailBackingBean.formattedContactPerson}"
 					disabled="true" />
+			<!-- #30447 - upperCase salutation check end -->
 			</td>
 			<!-- #30447 end -->
 			<td>
@@ -258,20 +260,24 @@
 				<td colspan="3">
 				<c:if test="#{!isEditableStatus or (!isPendingSubmissionStatus and !isPendingApprovalStatus and !isPendingRevisionStatus)}">
 						<!-- #30447 start -->
+						<!-- #30447 - upperCase salutation check start -->
 						<p:inputText size="106"
-							value="#{lOIDetailBackingBean.managedBean.contractSignerUser.salutationCode.salutationName.concat(' ').concat(lOIDetailBackingBean.managedBean.contractSignerUser.userName)}"
+							value="#{lOIDetailBackingBean.formattedContractSignerUserName}"
 							disabled="true" />
+						<!-- #30447 - upperCase salutation check end -->
 						<!-- #30447 end -->
 				</c:if>	
 
 					<c:if test="#{isEditableStatus and (isPendingSubmissionStatus or isPendingApprovalStatus or isPendingRevisionStatus)}">
 						<p:outputPanel id="opPtjOrgCode" >
+						<!-- #30447 start -->
 							<p:inputText 
 								size="106"
 								id="itSelectedUserPtj" 
-								value="#{lOIDetailBackingBean.managedBean.contractSignerUser.salutationCode.salutationName.concat(' ').concat(lOIDetailBackingBean.managedBean.contractSignerUser.userName)}" 
+								value="#{lOIDetailBackingBean.formattedContractSignerUserName}" 
 								readonly="true"
 								/>
+						<!-- #30447 end -->
 							&#160;
 							<p:commandLink id="ptjSearchCL" partialSubmit="true"
 								process="@this" update=":form:userPtjOrg:userPtjPopup"

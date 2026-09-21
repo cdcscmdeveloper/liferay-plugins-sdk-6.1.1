@@ -4267,6 +4267,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				setApplicationShareHolders(getManagedBean().getSmAppl()
 						.getSmPersonnels());
 			}
+			reattachSelectedShareHolder();	//#40112
 			retrieveBusinessTypeList();
 			assignSupplierBusinessType(getManagedBean().getSmAppl()
 					.getSmSupplier());
@@ -5611,6 +5612,14 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * of the application.
 	 */
 	public void addOrUpdateAssocToSmAppl() {
+		// #36718 - Start - to validate perm addr postcode since use listener.
+		if (getManagedBean().getSelectedAssocCompany() != null) {
+			SmAddress addr = getManagedBean().getSelectedAssocCompany().getSmAddress();
+			if (addr != null && addr.getPostcode() != null) {
+				checkPostcode(addr.getPostcode());
+			}
+		}
+		// #36718 - End
 		SmCommonUtil.getInstance().setUserDetails(
 				getManagedBean().getSelectedAssocCompany());
 		EntityHelper.addOrUpdateEntityToList(getManagedBean()
@@ -8500,12 +8509,54 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 			retriveLatestApplAfterUpdate("", "");
 
+			reseedAiState();	//#40112
+
 			// set section editor VO after update
 			SmSideMenuIconUtil.setAllSectionEditorVO(getManagedBean(), false,
 					getManagedBean().getCurrentPageType());
 			setBranchDisplayTable(); //29727 , #34135
 		}
 	}
+
+	//#40112 - start
+	// retriveLatestApplAfterUpdate() swaps in a fresh appl graph, so every @Transient AI field is
+	// null again; re-derive them here so no caller has to remember.
+	private void reseedAiState() {
+		String pageType = getManagedBean().getCurrentPageType();
+		if (!getManagedBean().isSupplierUser() || pageType == null) {
+			return;
+		}
+		if (SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC.equalsIgnoreCase(pageType)) {
+			SmAIDocBackingBean.loadTenancyDocs(getManagedBean().getSmAppl());
+			SmAIDocBackingBean.validateTenancy(getManagedBean().getSmAppl());
+		} else if (SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL.equalsIgnoreCase(pageType)) {
+			SmAIDocBackingBean.loadEpfDocs(getManagedBean().getSmAppl());
+			SmAIDocBackingBean.validateEPF(getManagedBean().getSmAppl());
+		} else if (SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS.equalsIgnoreCase(pageType)) {
+			SmAIDocBackingBean.attachPendingAiFiles(getManagedBean().getSmAppl());
+			SmAIDocBackingBean.initAiState(getManagedBean().getSmAppl());
+		}
+	}
+	//#40112 - end
+
+	//#40112 - start
+	// the appl graph was just replaced, so a selectedShareHolder kept from the previous read is
+	// detached; merging it on the next save fails with an OptimisticLockException
+	private void reattachSelectedShareHolder() {
+		SmPersonnel selected = getManagedBean().getSelectedShareHolder();
+		if (selected == null || selected.getPersonnelId() == null
+				|| EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
+						.getSmPersonnels())) {
+			return;
+		}
+		for (SmPersonnel per : getManagedBean().getSmAppl().getSmPersonnels()) {
+			if (selected.getPersonnelId().equals(per.getPersonnelId())) {
+				getManagedBean().setSelectedShareHolder(per);
+				return;
+			}
+		}
+	}
+	//#40112 - end
 
 	/**
 	 * Update category record status if category record status is 1 and
@@ -8617,6 +8668,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				.getMaxAdditionalMofAuthorizedUser()) {
 			getManagedBean().setValidSmUserLimit(true);
 		}
+		// #36718 - Start
+		getManagedBean().setReassignAddress(true);
+		// #36718 - End
 		RequestContext.getCurrentInstance().reset(":form:tt:shareHolderDialog");
 	}
 
@@ -9429,6 +9483,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				.getAccountNo())) {
 			throw new EpException(MessageConst.ERROR_722616);
 		}
+		
+		// #36718 - Start
+		if (getManagedBean().getSelectedBank() != null) {
+			SmAddress addr = getManagedBean().getSelectedBank().getSmAddress();
+			if (addr != null && addr.getPostcode() != null) {
+				checkPostcode(addr.getPostcode());
+			}
+		}
+		// #36718 - End
 		
 		// #34166 - Start
 		if (getManagedBean().getSelectedBank().getSignatureInstruction().contains("<")
@@ -10614,6 +10677,20 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			SmCommonUtil.setRoleName(getManagedBean().getSmAppl().getSupplierType(),getManagedBean().getSmAppl().getSmPersonnels());
 		} finally {
 			initNonMandatoryAndMandatoryDocs();
+			//#40112 - start
+			if (getManagedBean().isSupplierUser()){
+				if (SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC.equalsIgnoreCase(currentPageType)){
+					SmAIDocBackingBean.loadTenancyDocs(getManagedBean().getSmAppl());
+					SmAIDocBackingBean.validateTenancy(getManagedBean().getSmAppl());
+				} else if (SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL.equalsIgnoreCase(currentPageType)){
+					SmAIDocBackingBean.loadEpfDocs(getManagedBean().getSmAppl());
+					SmAIDocBackingBean.validateEPF(getManagedBean().getSmAppl());
+				} else if (SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS.equalsIgnoreCase(currentPageType)){
+					SmAIDocBackingBean.attachPendingAiFiles(getManagedBean().getSmAppl());
+					SmAIDocBackingBean.initAiState(getManagedBean().getSmAppl());
+				}
+			}
+			//#40112 - end
 		}
 		
 		// start #28689 - set percentage to 0.000 if null
@@ -11190,6 +11267,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	private void updateRegistrationStatus(SmApplSectionReview latestPOChange) {
 	    Long currentRegStatusId = getCurrRegStatusId();
 	    Long prevRegStatusId = getPreviousRegStatusId(latestPOChange);
+	    if(prevRegStatusId == null){
+	    	prevRegStatusId = currentRegStatusId;
+	    }
 	    
 	    // S1125: Simplified boolean expressions
 	    boolean sdmAfterPOSubmit = prevRegStatusId != null && !prevRegStatusId.equals(currentRegStatusId);
@@ -14360,7 +14440,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	/**
 	 * Calc personnel list count for supplier.
 	 */
-	private void calcPersonnelListCount() {
+	public void calcPersonnelListCount() {	//#40112
 		log.info("*** Start calcPersonnelListCount**** ");
 		SmPersonnleCalcVO calcVO = SmCommonUtil.calcPersonnelListCount(
 				getManagedBean().getSmAppl().getSmPersonnels(),
@@ -15088,6 +15168,14 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					.setMandatoryDocs(new ArrayList<SmApplSupportDoc>());
 			for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
 					.getSmApplSupportDocs()) {
+				//#40112 - start
+				doc.setSmAppl(getManagedBean().getSmAppl());
+				if (!EntityHelper.isCollectionEmpty(doc.getSmApplDocFiles())) {
+					for (SmApplDocFile file : doc.getSmApplDocFiles()) {
+						file.setSmApplSupportDoc(doc);
+					}
+				}
+				//#40112 - end
 				if (doc.getPmDocument() != null) {
 					if (doc.getPmDocument().isMandatory()) {
 						if (doc.getPmDocument().isLicenseReq()
@@ -18538,6 +18626,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				getManagedBean().setSelectedShareHolder(this.getManagedBean().getSelectedShareHolder());
 			}
 		}
+		// #36718 - Start
+		getManagedBean().setReassignAddress(false);
+		// #36718 - End
 	}
 	//#32014 - END
 	//30766 START
@@ -19987,6 +20078,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 
 	public boolean isAiUploadDocRow(PmDocument doc){
+		if (SmAIDocBackingBean.isTenancyDoc(doc)){
+			return isShowTenancyAiBtn();
+		}
 		return isAiAvailable()
 				&& SmAIDocBackingBean.isAiUploadDocRow(getManagedBean().getSmAppl(), doc);
 	}
@@ -19995,7 +20089,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		if (te == null){
 			return;
 		}
-		SmAIDocBackingBean.clearTenancyUserEdit(getManagedBean().getSmAppl());
+		SmAIDocBackingBean.acceptTenancyUserEdit(getManagedBean().getSmAppl());	//#40112
 		SmFacility fac = getManagedBean().getBasicCompanyFacility();
 		fac.setRentalRate(te.getMonthlyRental());
 		fac.setOwnerName(te.getLandlordsName());
