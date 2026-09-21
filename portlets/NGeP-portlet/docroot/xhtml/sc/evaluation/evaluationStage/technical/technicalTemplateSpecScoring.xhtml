@@ -15,6 +15,20 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
 		</p:blockUI>
+		<ui:remove>#10098 Start Vinod 21092026</ui:remove>
+		<p:blockUI block=":form" widgetVar="blockWidgetAutoSave">
+			<div
+				style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+				<h:panelGrid columns="1">
+					<h:graphicImage value="/css/images/ajax-loader-autosave.gif" />
+				</h:panelGrid>
+				<h:panelGrid columns="1">
+					<h:outputText escape="false" style="font-weight: bold;"
+						value="#{lbl['lbl.tpl.autosave.loading.msg']}" />
+				</h:panelGrid>
+			</div>
+		</p:blockUI>
+		<ui:remove>#10098 End Vinod 21092026</ui:remove>
 		<p:messages id="technicalEvaluationmsgId" autoUpdate="true"
 			closable="true" showDetail="true" showSummary="false"
 			severity="error,info"></p:messages>
@@ -22,6 +36,17 @@
 		<ui:include src="technicalspecbuttons.xhtml"></ui:include>
 
 		<ui:include src="technicalspeccompliancelist.xhtml"></ui:include>
+
+		<ui:remove>#10098 Start Vinod 21092026</ui:remove>
+		<p:poll interval="900" id="autoSaveTemplateId"
+			rendered="#{!(evaluationBackingBean.managedBean.readOnly 
+			or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired 
+			or evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1')}"
+			listener="#{evaluationBackingBean.autoSaveTemplateChecklist}"
+			onstart="blockWidgetAutoSave.show();"
+			oncomplete="blockWidgetAutoSave.hide();"
+			update="@all" />
+		<ui:remove>#10098 End Vinod 21092026</ui:remove>
 		
 		<c:if test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '0'}">
 			<ac:templateSpec

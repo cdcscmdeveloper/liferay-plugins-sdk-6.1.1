@@ -11044,6 +11044,22 @@ private void retriveCommitteeRemarksList(){
 		}
 		autoSaveTemplateChecklist();
 	}
+
+	/**
+	 * Autosave the technical document compliance checklist on the 15 minute
+	 * poll.
+	 */
+	public void autoSaveComplianceChecklist() {
+		try {
+			saveComplianceUploadCheckList();
+		} catch (Exception e) {
+			String qtNo = this.getManagedBean().getScQt() != null
+					&& this.getManagedBean().getScQt().getQtNo() != null ? this.getManagedBean().getScQt().getQtNo()
+					: " ";
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_EVALUATION_BACKINGBEAN,
+					qtNo, SLALogConstant.QT_AUTOSAVE_COMPLIANCE_CHECKLIST, getUserIdSessionFromLoginId(), e);
+		}
+	}
 	// #10098 End Vinod 21092026
 
 	/**

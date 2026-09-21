@@ -17,6 +17,20 @@
 			<p:blockUI block=":form" widgetVar="blockWidget">
 				<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
 			</p:blockUI>
+		<ui:remove>#10098 Start Vinod 21092026</ui:remove>
+		<p:blockUI block=":form" widgetVar="blockWidgetAutoSave">
+			<div
+				style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+				<h:panelGrid columns="1">
+					<h:graphicImage value="/css/images/ajax-loader-autosave.gif" />
+				</h:panelGrid>
+				<h:panelGrid columns="1">
+					<h:outputText escape="false" style="font-weight: bold;"
+						value="#{lbl['lbl.tpl.autosave.loading.msg']}" />
+				</h:panelGrid>
+			</div>
+		</p:blockUI>
+		<ui:remove>#10098 End Vinod 21092026</ui:remove>
 			<p:messages id="technicalCompliance" showDetail="true"
 				autoUpdate="true" closable="true" severity="error,info"
 				showSummary="false" />
@@ -29,9 +43,18 @@
 							action="#{evaluationBackingBean.evaluationBackaction}" /> <p:commandButton
 							value="#{lbl['lbl.btn.save']}"
 							disabled="#{evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired}"
-							style="float:right;" update="@all" onstart="blockWidget.show();"
-							oncomplete="blockWidget.hide();" 
+							style="float:right;" update="@all" onstart="blockWidgetAutoSave.show();"
+							oncomplete="blockWidgetAutoSave.hide();" 
 							action="#{evaluationBackingBean.saveComplianceUploadCheckList}" />
+					<ui:remove>#10098 Start Vinod 21092026</ui:remove>
+					<p:poll interval="900" id="autoSaveComplianceId"
+						rendered="#{!(evaluationBackingBean.managedBean.statusOnly 
+						or evaluationBackingBean.managedBean.complianceReEvaluateRequired)}"
+						listener="#{evaluationBackingBean.autoSaveComplianceChecklist}"
+						onstart="blockWidgetAutoSave.show();"
+						oncomplete="blockWidgetAutoSave.hide();"
+						update="@all" />
+					<ui:remove>#10098 End Vinod 21092026</ui:remove>
 					</td>
 				</tr>
 			</table>

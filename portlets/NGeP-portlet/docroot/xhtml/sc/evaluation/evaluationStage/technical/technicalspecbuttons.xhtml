@@ -25,8 +25,8 @@
 							value="#{lbl['lbl.btn.save']}" style="display:none;" id="hidSaveButton" binding="#{hidSaveButton}"
 							disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
 							or evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'}"
-							update="@all" onstart="blockWidget.show();"
-							oncomplete="blockWidget.hide();"
+							update="@all" onstart="blockWidgetAutoSave.show();"
+							oncomplete="blockWidgetAutoSave.hide();"
 							action="#{evaluationBackingBean.saveTempleateSpecDtls}" />
 							<p:commandButton 
 							value="#{lbl['lbl.btn.save']}" style="float:right;"

@@ -41,8 +41,7 @@
 
 			<ui:remove>#10098 Start Vinod</ui:remove>
 			<p:poll interval="900" id="autoSaveTemplateId"
-				rendered="#{evaluationBackingBean.managedBean.templateSpecBean.finTemplateUpdateFromQT 
-				and !(evaluationBackingBean.managedBean.readOnly 
+				rendered="#{!(evaluationBackingBean.managedBean.readOnly 
 				or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired)}"
 				listener="#{evaluationBackingBean.autoSaveTemplateChecklist}"
 				onstart="blockWidgetAutoSave.show();"
