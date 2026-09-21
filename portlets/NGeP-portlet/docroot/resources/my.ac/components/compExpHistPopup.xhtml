@@ -24,7 +24,11 @@
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				id="historyDataTable" lazy="true" rowIndexVar="index" rows="10"
 				value="#{cc.attrs.mBean.historyDataModel}" var="history">
+			
 				<ac:paginator for="historyDataTable" />
+				<p:ajax event="page"
+					oncomplete="compExpHistPopupWV.jq.scrollTop(0);
+                compExpHistPopupWV.jq.find('.ui-dialog-content').scrollTop(0);" />
 				<p:columnGroup type="header">
 					<p:row>
 						<p:column
