@@ -1032,7 +1032,6 @@ public class BSVAttendanceBackingBean extends
 	// #30447 - Start
 	/**
 	 * To set salutation name for supplier.
-	 * UpperCase salutation check.
 	 * 
 	 * @param identificationNo
 	 * @return salutationName
@@ -1114,8 +1113,6 @@ public class BSVAttendanceBackingBean extends
 		
 		// #30447 - Start
 		for (ScQtBsvAttendance attaned : attanedList) {
-		// #30447 - upperCase salutation check	
-		//attaned.setSalutation(setSalutationSupplierName(attaned.getIcPassPort()));
 			attaned.setSalutation(setSalutationSupplierName(attaned.getIcPassPort(), attaned.getName()));
 		}
 		// #30447 - End
