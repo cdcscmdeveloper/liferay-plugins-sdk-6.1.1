@@ -5675,6 +5675,14 @@ public class SmApplicationBackingBean extends
 	 * of the application.
 	 */
 	public void addOrUpdateAssocToSmAppl() {
+		// #36718 - Start - to validate perm addr postcode since use listener.
+		if (getManagedBean().getSelectedAssocCompany() != null) {
+			SmAddress addr = getManagedBean().getSelectedAssocCompany().getSmAddress();
+			if (addr != null && addr.getPostcode() != null) {
+				checkPostcode(addr.getPostcode());
+			}
+		}
+		// #36718 - End
 		SmCommonUtil.getInstance().setUserDetails(
 				getManagedBean().getSelectedAssocCompany());
 		EntityHelper.addOrUpdateEntityToList(getManagedBean()
@@ -8740,6 +8748,9 @@ public class SmApplicationBackingBean extends
 				.getMaxAdditionalMofAuthorizedUser()) {
 			getManagedBean().setValidSmUserLimit(true);
 		}
+		// #36718 - Start
+		getManagedBean().setReassignAddress(true);
+		// #36718 - End
 		RequestContext.getCurrentInstance().reset(":form:tt:shareHolderDialog");
 	}
 
@@ -9567,6 +9578,15 @@ public class SmApplicationBackingBean extends
 			throw new EpException(MessageConst.ERROR_722616);
 		}
 		
+		// #36718 - Start
+		if (getManagedBean().getSelectedBank() != null) {
+			SmAddress addr = getManagedBean().getSelectedBank().getSmAddress();
+			if (addr != null && addr.getPostcode() != null) {
+				checkPostcode(addr.getPostcode());
+			}
+		}
+		// #36718 - End
+
 		// #34166 - Start
 		if (getManagedBean().getSelectedBank().getSignatureInstruction().contains("<")
 				|| getManagedBean().getSelectedBank().getSignatureInstruction().contains(">")) {
@@ -15298,6 +15318,14 @@ public class SmApplicationBackingBean extends
 					.setMandatoryDocs(new ArrayList<SmApplSupportDoc>());
 			for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
 					.getSmApplSupportDocs()) {
+				//#40112 - start
+				doc.setSmAppl(getManagedBean().getSmAppl());
+				if (!EntityHelper.isCollectionEmpty(doc.getSmApplDocFiles())) {
+					for (SmApplDocFile file : doc.getSmApplDocFiles()) {
+						file.setSmApplSupportDoc(doc);
+					}
+				}
+				//#40112 - end
 				if (doc.getPmDocument() != null) {
 					if (doc.getPmDocument().isMandatory()) {
 						if (doc.getPmDocument().isLicenseReq()
@@ -18735,6 +18763,9 @@ public class SmApplicationBackingBean extends
 				getManagedBean().setSelectedShareHolder(this.getManagedBean().getSelectedShareHolder());
 			}
 		}
+		// #36718 - Start
+		getManagedBean().setReassignAddress(false);
+		// #36718 - End
 	}
 	//#32014 - END
 	//30766 START
@@ -20105,7 +20136,7 @@ public class SmApplicationBackingBean extends
 		if (te == null){
 			return;
 		}
-		SmAIDocBackingBean.clearTenancyUserEdit(getManagedBean().getSmAppl());
+		SmAIDocBackingBean.acceptTenancyUserEdit(getManagedBean().getSmAppl());	//#40112
 		SmFacility fac = getManagedBean().getBasicCompanyFacility();
 		fac.setRentalRate(te.getMonthlyRental());
 		fac.setOwnerName(te.getLandlordsName());
