@@ -15,23 +15,27 @@
 
 					<p:menuitem value="#{lbl['lbl.sc.technical']}"
 						action="#{evaluationBackingBean.retriveComplianceTechnical}"
-						update="@form" />
+						update="@form"
+						actionListener="#{evaluationBackingBean.autoSaveEvaluationMenuChange()}"/>
 					<c:if
 						test="#{evaluationBackingBean.managedBean.scQt.sampleReq eq 'true'}">
 						<p:menuitem value="#{lbl['lbl.sc.sample']}"
 							action="#{evaluationBackingBean.retriveComplianceSample}"
-							update="@form" />
+							update="@form"
+							actionListener="#{evaluationBackingBean.autoSaveEvaluationMenuChange()}"/>
 					</c:if>
 					<p:menuitem value="#{lbl['lbl.sc.financial']}"
 						action="#{evaluationBackingBean.retriveComplianceFinancial(true)}"
-						update="@form" />
+						update="@form"
+						actionListener="#{evaluationBackingBean.autoSaveEvaluationMenuChange()}"/>
 
 					<c:if
 						test="#{((evaluationBackingBean.managedBean.scQt.sampleReq eq 'true' and evaluationBackingBean.managedBean.complianceActiveIndex eq '3') or (evaluationBackingBean.managedBean.scQt.sampleReq eq 'false' and evaluationBackingBean.managedBean.complianceActiveIndex eq '2') or(evaluationBackingBean.managedBean.complianceOnly eq 'true'))}">
 						<p:menuitem value="#{lbl['lbl.sc.summary']}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{evaluationBackingBean.retriveComplianceSummary}"
-							update="@form">
+							update="@form"
+							actionListener="#{evaluationBackingBean.autoSaveEvaluationMenuChange()}">
 
 						</p:menuitem>
 					</c:if>

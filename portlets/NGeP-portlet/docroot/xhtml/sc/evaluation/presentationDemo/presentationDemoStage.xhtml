@@ -16,11 +16,13 @@
 
 					<p:menuitem value="#{lbl['lbl.sc.present.demo']}"
 						action="#{evaluationBackingBean.retrivePresentationDemo}"
-						update="@form" />
+						update="@form"
+						actionListener="#{evaluationBackingBean.autoSaveEvaluationMenuChange()}"/>
 
 					<p:menuitem value="#{lbl['lbl.sc.summary']}"
 						action="#{evaluationBackingBean.retrivePresentationDemoSummary}"
-						update="@form" />
+						update="@form"
+						actionListener="#{evaluationBackingBean.autoSaveEvaluationMenuChange()}"/>
 
 
 				</p:tabMenu></td>

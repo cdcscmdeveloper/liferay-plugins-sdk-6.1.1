@@ -11040,8 +11040,27 @@ private void retriveCommitteeRemarksList(){
 	 * @param outputTab
 	 */
 	private void autoSaveEvaluationTabChange(int currentTab, int outputTab) {
-		// mirrors the main save button: hidden on the status tab, disabled once the committee is modified
-		if (currentTab == outputTab || this.getManagedBean().isReadOnly()
+		if (currentTab == outputTab) {
+			return;
+		}
+		autoSaveEvaluationMain();
+	}
+
+	/**
+	 * Autosave on evaluation side menu change. Bound from the menu items so the
+	 * retrieve actions they call stay unaffected.
+	 */
+	public void autoSaveEvaluationMenuChange() {
+		autoSaveEvaluationMain();
+	}
+
+	/**
+	 * Runs the evaluation screen's main save, under the same conditions as its
+	 * save button: hidden on the status tab, disabled once the committee is
+	 * modified.
+	 */
+	private void autoSaveEvaluationMain() {
+		if (this.getManagedBean().isReadOnly()
 				|| this.getManagedBean().getTabActiveIndex() == EVALUATION_STATUS_TAB_INDEX) {
 			return;
 		}
