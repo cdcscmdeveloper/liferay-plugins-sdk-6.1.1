@@ -1405,6 +1405,9 @@ public class SpecificationBackingBean extends
 			break;
 
 		}
+		// #10098 Start Vinod 21092026
+		autoSaveSpecTabChange();
+		// #10098 End Vinod 21092026
 		switch (activeIndex) {
 		case 0:
 
@@ -25442,6 +25445,33 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	}
 
 	// #10098 End Vinod
+
+	// #10098 Start Vinod 21092026
+	/**
+	 * Autosave the specification checklist on side menu change, while the
+	 * document is in specification preparation.
+	 */
+	private void autoSaveSpecTabChange() {
+		Long statusId = this.getManagedBean().getQt() != null
+				&& this.getManagedBean().getQt().getQtStatus() != null ? this.getManagedBean().getQt().getQtStatus()
+				.getStatusId() : 0L;
+		List<Long> specPrepareStatus = Arrays.asList(new Long[] {
+				QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
+				QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION });
+		if (this.getManagedBean().isReadOnly() || !specPrepareStatus.contains(statusId)) {
+			return;
+		}
+		try {
+			validatePrepareQtChecklist();
+		} catch (Exception e) {
+			String qtNo = this.getManagedBean().getQt() != null
+					&& this.getManagedBean().getQt().getQtNo() != null ? this.getManagedBean().getQt().getQtNo() : " ";
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+					SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo,
+					SLALogConstant.QT_AUTOSAVE_SPEC_TAB_CHANGE, getUserIdSessionFromLoginId(), e);
+		}
+	}
+	// #10098 End Vinod 21092026
 	
 	// #40138 Start Vinod
 	public void checkAndUpdateNewMandatoryChecklist(ScQt scQt, String specType) {//#40980
