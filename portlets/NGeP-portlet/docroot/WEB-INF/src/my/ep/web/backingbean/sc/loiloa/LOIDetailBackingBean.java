@@ -1526,6 +1526,25 @@ public class LOIDetailBackingBean extends
 	 * @param selectedTabIndex
 	 *            the selected tab index.
 	 */
+	// #10098 Start Vinod 21092026
+	/**
+	 * Autosave the LOI details on side menu change. Bound from the menu items
+	 * so the internal tabMenuListener callers stay unaffected.
+	 */
+	public void autoSaveLoiTabChange() {
+		if (this.getManagedBean().isReadOnly()) {
+			return;
+		}
+		try {
+			saveAction();
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+					SLALogConstant.QT_LOI_DETAIL_BACKINGBEAN, " ",
+					SLALogConstant.QT_AUTOSAVE_LOI_TAB_CHANGE, getUserIdSessionFromLoginId(), e);
+		}
+	}
+	// #10098 End Vinod 21092026
+
 	public void tabMenuListener(Integer selectedTabIndex) {
 		debugLogger("tabMenuListener");
 		

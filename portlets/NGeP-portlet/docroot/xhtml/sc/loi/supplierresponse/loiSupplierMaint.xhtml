@@ -24,14 +24,16 @@
 						styleClass="sidemenu">
 
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.loi.details']}"
-							update="@form">
+							update="@form"
+							actionListener="#{lOIDetailBackingBean.autoSaveLoiTabChange()}">
 							<f:setPropertyActionListener
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="0" />
 						</p:menuitem>
 
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.letter.of.intent']}"
-							update="@form">
+							update="@form"
+							actionListener="#{lOIDetailBackingBean.autoSaveLoiTabChange()}">
 							<f:setPropertyActionListener
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="1" />

@@ -78,7 +78,8 @@
 
 			<ui:remove> 34491 - start </ui:remove>
 			<p:menuitem value="#{lbl['lbl.sc.preparation']}"
-				process="@form" update="@form">
+				process="@form" update="@form"
+				actionListener="#{lOIDetailBackingBean.autoSaveLoiTabChange()}">
 				<f:setPropertyActionListener
 					target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 					value="0" />
@@ -88,33 +89,38 @@
 			</p:menuitem>
 			<ui:remove> 34491 - end </ui:remove>
 			<p:menuitem value="#{lbl['lbl.sc.negotiation.result']}"
-				process="@form" update="@form">
+				process="@form" update="@form"
+				actionListener="#{lOIDetailBackingBean.autoSaveLoiTabChange()}">
 				<f:setPropertyActionListener
 					target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 					value="1" /><ui:remove> 34491 - shift index by 1 </ui:remove>
 			</p:menuitem>
 
 			<p:menuitem value="#{lbl['lbl.sc.negotation.committee']}" process="@form"
-				update="@form">
+				update="@form"
+				actionListener="#{lOIDetailBackingBean.autoSaveLoiTabChange()}">
 				<f:setPropertyActionListener
 					target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 					value="2" /><ui:remove> 34491 - shift index by 1 </ui:remove>
 			</p:menuitem>
 			<p:menuitem value="#{lbl['lbl.sc.briefing.paper.preparation.previous']}" process="@form"
-				update="@form">
+				update="@form"
+				actionListener="#{lOIDetailBackingBean.autoSaveLoiTabChange()}">
 				<f:setPropertyActionListener
 					target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 					value="3" /><ui:remove> 34491 - shift index by 1 </ui:remove>
 			</p:menuitem>
 			<p:menuitem value="#{lbl['lbl.sc.recommendation']}" process="@form"
-				update="@form">
+				update="@form"
+				actionListener="#{lOIDetailBackingBean.autoSaveLoiTabChange()}">
 				<f:setPropertyActionListener
 					target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 					value="4" /><ui:remove> 34491 - shift index by 1 </ui:remove>
 			</p:menuitem>
 
 			<p:menuitem value="#{lbl['lbl.sc.report.summary']}" process="@form"
-				update="@form">
+				update="@form"
+				actionListener="#{lOIDetailBackingBean.autoSaveLoiTabChange()}">
 				<f:setPropertyActionListener
 					target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 					value="5" /><ui:remove> 34491 - shift index by 1 </ui:remove>

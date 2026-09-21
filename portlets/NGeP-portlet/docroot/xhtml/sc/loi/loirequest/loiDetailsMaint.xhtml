@@ -61,14 +61,16 @@
 						styleClass="sidemenu">
 
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.loi.details']}"
-							update="@form">
+							update="@form"
+							actionListener="#{lOIDetailBackingBean.autoSaveLoiTabChange()}">
 							<f:setPropertyActionListener
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="0" />
 						</p:menuitem>
 
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}"
-							update="@form">
+							update="@form"
+							actionListener="#{lOIDetailBackingBean.autoSaveLoiTabChange()}">
 							<f:setPropertyActionListener
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="1" />
@@ -76,7 +78,8 @@
 
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.nego.details']}"
 							rendered="#{!isPendingNegotiation and !isCompleted}"
-							update="@form">
+							update="@form"
+							actionListener="#{lOIDetailBackingBean.autoSaveLoiTabChange()}">
 							<f:setPropertyActionListener
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="2" />
@@ -84,7 +87,8 @@
 
 						<p:menuitem value="#{lbl['lbl.sc.approval.details']}"
 							update="@form"
-							  disabled="#{!lOIDetailBackingBean.managedBean.scLoi.approvalReq}">
+							  disabled="#{!lOIDetailBackingBean.managedBean.scLoi.approvalReq}"
+							actionListener="#{lOIDetailBackingBean.autoSaveLoiTabChange()}">
 							<f:setPropertyActionListener
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="3" />
@@ -98,28 +102,32 @@
 						activeIndex="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 						styleClass="sidemenu">
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.loi.details']}"
-							update="@form">
+							update="@form"
+							actionListener="#{lOIDetailBackingBean.autoSaveLoiTabChange()}">
 							<f:setPropertyActionListener
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="0" />
 						</p:menuitem>
 
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}"
-							update="@form">
+							update="@form"
+							actionListener="#{lOIDetailBackingBean.autoSaveLoiTabChange()}">
 							<f:setPropertyActionListener
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="1" />
 						</p:menuitem>
 
 						<p:menuitem value="#{lbl['lbl.sc.approval.details']}"
-							update="@form" disabled="#{!lOIDetailBackingBean.managedBean.scLoi.approvalReq}">
+							update="@form" disabled="#{!lOIDetailBackingBean.managedBean.scLoi.approvalReq}"
+							actionListener="#{lOIDetailBackingBean.autoSaveLoiTabChange()}">
 							<f:setPropertyActionListener
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="2" />
 						</p:menuitem>
 
 						<p:menuitem value="#{lbl['lbl.sc.negotiation.result']}"
-							update="@form">
+							update="@form"
+							actionListener="#{lOIDetailBackingBean.autoSaveLoiTabChange()}">
 							<f:setPropertyActionListener
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="3" />
