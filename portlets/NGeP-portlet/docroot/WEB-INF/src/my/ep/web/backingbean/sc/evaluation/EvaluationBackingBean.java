@@ -7897,6 +7897,9 @@ public void saveComplianceSample() {
 	 */
 	public void evaluationMaintainPreviousNextTabIndex(int currentTab,
 			int outputTab) throws Exception {
+		// #10098 Start Vinod 21092026
+		autoSaveEvaluationTabChange(currentTab, outputTab);
+		// #10098 End Vinod 21092026
 		IQTEvaluationSO evaluationSo = null;
 		EvaluationResDTO evalResDTO = new EvaluationResDTO();
 		boolean noProposalSubmitted = this.getManagedBean().isNoProposalSubmitted();//6906
@@ -11011,6 +11014,37 @@ private void retriveCommitteeRemarksList(){
 		}
 	}
 	// #10098 End Vinod 11092026
+
+	// #10098 Start Vinod 21092026
+	/**
+	 * Autosave the evaluation checklist when the evaluation menu changes.
+	 * 
+	 * @param currentTab
+	 * @param outputTab
+	 */
+	private void autoSaveEvaluationTabChange(int currentTab, int outputTab) {
+		if (currentTab == outputTab || this.getManagedBean().isReadOnly()
+				|| this.getManagedBean().isTechnicalOrFinancialReEvaluateRequired()) {
+			return;
+		}
+		List<Long> evaluationStatus = Arrays.asList(new Long[] {
+				QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL, QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL,
+				QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION,
+				QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL,
+				QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_REVISION,
+				QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL,
+				QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL_REVISION });
+		if (!evaluationStatus.contains(this.getManagedBean().getCurrentStatusId())) {
+			return;
+		}
+		TemplateSpecBean evalTemplateSpecBean = this.getManagedBean().getTemplateSpecBean();
+		if (null == evalTemplateSpecBean || CollectionUtils.isEmpty(evalTemplateSpecBean.getSpecAnswerList())
+				|| null == this.getManagedBean().getQtProposalChecklist()) {
+			return;
+		}
+		autoSaveTemplateChecklist();
+	}
+	// #10098 End Vinod 21092026
 
 	/**
 	 * Revise proposal evaluation.Event handle when member revise in evaluation.
