@@ -1224,11 +1224,14 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * @return
 	 */
 	public String getSuppDocLabel(SmApplDocFile file){
+		return getSuppDocLabel(file, file.getSmApplSupportDoc().getSmAppl());
+	}
+	
+	public String getSuppDocLabel(SmApplDocFile file, SmAppl appl){
 		if (file == null){
 			return null;
 		}
 		SmApplSupportDoc suppDoc = file.getSmApplSupportDoc();
-		SmAppl appl = suppDoc == null ? null : suppDoc.getSmAppl();
 		if (file.getAiApiResponseId() == null || appl == null || appl.getSmSupplier() == null
 				|| suppDoc.getPmDocument() == null){
 			return file.getMappedFieldAI();
