@@ -4829,7 +4829,7 @@ return	remarksNotFound;
 		ScQtFinalizationReportDetailAttachment reportAttachment = scQtFinalizationReportDetail.getScQtFinalizationReportDetailAttachment();
 
 		if (reportAttachment == null) {
-			reportAttachment = generateDocumentAttachment(scQtFinalizationReportDetail, false);
+			reportAttachment = generateDocumentAttachmentDetail(scQtFinalizationReportDetail, false);
 			scQtFinalizationReportDetail
 					.setScQtFinalizationReportDetailAttachment(reportAttachment);
 		}
@@ -4928,7 +4928,6 @@ return	remarksNotFound;
 	 * @return ScAttachment
 	 */
 	private ScAttachment generateDocumentAttachment(String docDefinitionKey, String fileReportName) throws Exception {
-		debugLogger("generateDocumentAttachment");
 		
 		ScAttachment reportAttachment = new ScQtFinalizationReportDetailAttachment();
 		ScQt scQt = getManagedBean().getScQt();
@@ -5174,9 +5173,9 @@ return	remarksNotFound;
 	 *@return the ScQtFinalizationReportDetailAttachment instance.
 	 *             
 	 */
-	public ScQtFinalizationReportDetailAttachment generateDocumentAttachment(
+	public ScQtFinalizationReportDetailAttachment generateDocumentAttachmentDetail(
 			ScQtFinalizationReportDetail scQtFinalizationReportDetail, boolean isDirectDownload) throws Exception {
-		log.info("generateDocumentAttachment");
+
 		String definitionType = scQtFinalizationReportDetail.getDefinationType()
 				.getParameterCode();
 		ScQtFinalization scQtFinalization = getManagedBean()
@@ -11479,8 +11478,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	 */
 	public List<Object> getCombinedEvaluationReportList() {
 
-		List<Object> combinedReportList = new ArrayList<Object>();
-		ScQt scQt = getManagedBean().getScQt();
+		List<Object> combinedReportList = new ArrayList<>();
+		Long qtId = this.getManagedBean().getScQt().getQtId();
+
 
 		List<ScQtFinalizationReport> reports = getManagedBean().getEvaluationReportList();
 		List<ScQtFinalizationReportDetail> details = getManagedBean().getEvaluationReportDetailList();
@@ -11489,7 +11489,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			for (ScQtFinalizationReport report : reports) {
 				String key = report.getPmDocument().getDocDefinitionKey();
 
-				if (!isWipEvaluationReportExisting(key, scQt.getQtId())) {
+				if (!isWipEvaluationReportExisting(key, qtId)) {
 					combinedReportList.addAll(reports);
 					break;
 				}
@@ -11500,7 +11500,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			for (ScQtFinalizationReportDetail detail : details) {
 				String key = detail.getPmDocument().getDocDefinitionKey();
 
-				if (isWipEvaluationReportExisting(key, scQt.getQtId())) {
+				if (isWipEvaluationReportExisting(key, qtId)) {
 					combinedReportList.addAll(details);
 					break;
 				}
@@ -11526,7 +11526,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		ScQtFinalizationReportDetailAttachment reportAttachment = null;
 		String docDefinitionKey = scQtFinalizationReportDetail.getPmDocument()
 				.getDocDefinitionKey();
-		ScQt scQt = getManagedBean().getScQt();
+	
 		reportAttachment = new ScQtFinalizationReportDetailAttachment();
 		reportAttachment.setScQtFinalizationReportDetail(scQtFinalizationReportDetail);
 		reportAttachment.setDocNo(scQtFinalization.getScQt().getQtNo());
@@ -12972,12 +12972,12 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_BIDDING_FINALIZATION.longValue()
 						|| getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_BIDDING_FINALIZATION_REVISION.longValue()
 						)) {
-			reportAttachment = generateDocumentAttachment(scQtFinalizationReportDetail, false);
+			reportAttachment = generateDocumentAttachmentDetail(scQtFinalizationReportDetail, false);
 		} else {
 			reportAttachment = scQtFinalizationReportDetail.getScQtFinalizationReportDetailAttachment();
 
 			if (reportAttachment == null) {
-				reportAttachment = generateDocumentAttachment(scQtFinalizationReportDetail, false);
+				reportAttachment = generateDocumentAttachmentDetail(scQtFinalizationReportDetail, false);
 			}
 		}
 		return reportAttachment;
