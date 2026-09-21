@@ -6238,6 +6238,14 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * of the application.
 	 */
 	public void addOrUpdateEquityCompanyToSmAppl() {
+		// #36718 - Start
+		if (getManagedBean().getSelectedEquityCompany() != null) {
+			SmAddress addr = getManagedBean().getSelectedEquityCompany().getSmAddress();
+			if (addr != null && addr.getPostcode() != null) {
+				checkPostcode(addr.getPostcode());
+			}
+		}
+		// #36718 - End
 		SmCommonUtil.getInstance().setUserDetails(
 				getManagedBean().getSelectedEquityCompany());
 		EntityHelper.addOrUpdateEntityToList(getManagedBean()
