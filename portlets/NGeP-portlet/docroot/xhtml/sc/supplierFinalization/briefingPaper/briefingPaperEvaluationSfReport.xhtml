@@ -189,7 +189,7 @@
 
 			<ac:paginator for="evaluationreportdetail" />
 			
-			<p:column style="width:2%" >
+			<p:column style="width:2%" rendered="#{!suppFinalizationBackingBean.documentBriefingPaperOnly(scQtFinalizationReportDetail.pmDocument.docDefinitionKey)}">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllChk" value="#{suppFinalizationBackingBean.managedBean.templateSpecBean.selectAll}" disabled="true">
 						<p:ajax partialSubmit="true" process="@this" update="@this" listener="#{suppFinalizationBackingBean.selectAll(suppFinalizationBackingBean.managedBean.templateSpecBean.selectAll, suppFinalizationBackingBean.managedBean.scQtFinalizationReportDetail)}"/>
@@ -209,12 +209,12 @@
 				</p:selectBooleanCheckbox>
 			</p:column>
 			
-			<p:column style="width:5%;white-space: normal;" styleClass="center-column">
+			<p:column style="width:5%;white-space: normal;" styleClass="center-column" rendered="#{!suppFinalizationBackingBean.documentBriefingPaperOnly(scQtFinalizationReportDetail.pmDocument.docDefinitionKey)}">
 			   <h:graphicImage value="/css/images/icon-expand.png" rendered="#{scQtFinalizationReportDetail.definationType.parameterCode eq 'SD' and scQtFinalizationReportDetail.pmDocument.docDefinitionKey ne 'KTU'}" styleClass="arrow-img" onclick="toggleRow(this)" />
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.report']}"
-				style="width:58%;white-space: normal;">
+				style="width:58%;white-space: normal;" rendered="#{!suppFinalizationBackingBean.documentBriefingPaperOnly(scQtFinalizationReportDetail.pmDocument.docDefinitionKey)}">
 				<h:inputText  value="#{scQtFinalizationReportDetail.title}" required="true" style="width:500px;"
 				disabled="#{suppFinalizationBackingBean.managedBean.readOnly}" label="#{lbl['lbl.sc.content']}"
 					rendered="#{empty scQtFinalizationReportDetail.pmDocument}" >
@@ -238,7 +238,7 @@
 			</p:column>
 
 			<p:column style="width:20%;text-align: center;"
-				headerText="#{lbl['lbl.sc.action']}">
+				headerText="#{lbl['lbl.sc.action']}" rendered="#{!suppFinalizationBackingBean.documentBriefingPaperOnly(scQtFinalizationReportDetail.pmDocument.docDefinitionKey)}">
 					<ui:fragment
 						rendered="#{scQtFinalizationReportDetail.definationType.parameterCode eq 'SD'}">
                      		
