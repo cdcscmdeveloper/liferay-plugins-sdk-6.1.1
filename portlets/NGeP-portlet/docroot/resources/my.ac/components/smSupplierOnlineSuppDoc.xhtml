@@ -184,6 +184,12 @@
 							<p:outputLabel escape="false" value="#{smAIDocBackingBean.getSuppDocLabel(applDocs)}"/>
 						</p:tooltip>
 					</p:outputPanel>
+					<p:outputPanel rendered="#{applDocs.validatedAI eq 3}">
+						<p:graphicImage id="imgHasAI3" value="/css/images/ai/warning.png" />
+						<p:tooltip for="imgHasAI3" rendered="#{not empty applDocs.mappedFieldAI}">
+							<p:outputLabel escape="false" value="#{smAIDocBackingBean.getSuppDocLabel(applDocs)}"/>
+						</p:tooltip>
+					</p:outputPanel>
 					<br/>
 				</ui:repeat>
 			</p:column>
