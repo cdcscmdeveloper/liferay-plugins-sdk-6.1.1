@@ -21,6 +21,7 @@
 							<ui:remove>#29187 Start Moved update to backingbean for note #582 Vinod
 							Added hidden button to update data note #721
 							</ui:remove>
+							<ui:remove>#10098 Start Vinod 21092026 updated blockWidget</ui:remove>
 							<p:commandButton
 							value="#{lbl['lbl.btn.save']}" style="display:none;" id="hidSaveButton" binding="#{hidSaveButton}"
 							disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
@@ -28,6 +29,7 @@
 							update="@all" onstart="blockWidgetAutoSave.show();"
 							oncomplete="blockWidgetAutoSave.hide();"
 							action="#{evaluationBackingBean.saveTempleateSpecDtls}" />
+							<ui:remove>#10098 End Vinod 21092026</ui:remove>
 							<p:commandButton 
 							value="#{lbl['lbl.btn.save']}" style="float:right;"
 							disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired

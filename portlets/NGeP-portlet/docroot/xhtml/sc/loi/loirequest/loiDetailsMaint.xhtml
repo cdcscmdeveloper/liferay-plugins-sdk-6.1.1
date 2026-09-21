@@ -60,6 +60,7 @@
 						activeIndex="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 						styleClass="sidemenu">
 
+						<ui:remove>#10098 Start Vinod 21092026</ui:remove>
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.loi.details']}"
 							update="@form"
 							actionListener="#{lOIDetailBackingBean.autoSaveLoiTabChange()}">
@@ -67,7 +68,9 @@
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="0" />
 						</p:menuitem>
+						<ui:remove>#10098 End Vinod 21092026</ui:remove>
 
+						<ui:remove>#10098 Start Vinod 21092026</ui:remove>
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}"
 							update="@form"
 							actionListener="#{lOIDetailBackingBean.autoSaveLoiTabChange()}">
@@ -75,7 +78,9 @@
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="1" />
 						</p:menuitem>
+						<ui:remove>#10098 End Vinod 21092026</ui:remove>
 
+						<ui:remove>#10098 Start Vinod 21092026</ui:remove>
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.nego.details']}"
 							rendered="#{!isPendingNegotiation and !isCompleted}"
 							update="@form"
@@ -84,7 +89,9 @@
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="2" />
 						</p:menuitem>
+						<ui:remove>#10098 End Vinod 21092026</ui:remove>
 
+						<ui:remove>#10098 Start Vinod 21092026</ui:remove>
 						<p:menuitem value="#{lbl['lbl.sc.approval.details']}"
 							update="@form"
 							  disabled="#{!lOIDetailBackingBean.managedBean.scLoi.approvalReq}"
@@ -93,6 +100,7 @@
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="3" />
 						</p:menuitem>
+						<ui:remove>#10098 End Vinod 21092026</ui:remove>
 					</p:tabMenu> 
 					
 					<!-- nego edit and view LOI -->
@@ -101,6 +109,7 @@
 					    rendered="#{isLoiNegoCompleted}"
 						activeIndex="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 						styleClass="sidemenu">
+						<ui:remove>#10098 Start Vinod 21092026</ui:remove>
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.loi.details']}"
 							update="@form"
 							actionListener="#{lOIDetailBackingBean.autoSaveLoiTabChange()}">
@@ -108,7 +117,9 @@
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="0" />
 						</p:menuitem>
+						<ui:remove>#10098 End Vinod 21092026</ui:remove>
 
+						<ui:remove>#10098 Start Vinod 21092026</ui:remove>
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}"
 							update="@form"
 							actionListener="#{lOIDetailBackingBean.autoSaveLoiTabChange()}">
@@ -116,7 +127,9 @@
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="1" />
 						</p:menuitem>
+						<ui:remove>#10098 End Vinod 21092026</ui:remove>
 
+						<ui:remove>#10098 Start Vinod 21092026</ui:remove>
 						<p:menuitem value="#{lbl['lbl.sc.approval.details']}"
 							update="@form" disabled="#{!lOIDetailBackingBean.managedBean.scLoi.approvalReq}"
 							actionListener="#{lOIDetailBackingBean.autoSaveLoiTabChange()}">
@@ -124,7 +137,9 @@
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="2" />
 						</p:menuitem>
+						<ui:remove>#10098 End Vinod 21092026</ui:remove>
 
+						<ui:remove>#10098 Start Vinod 21092026</ui:remove>
 						<p:menuitem value="#{lbl['lbl.sc.negotiation.result']}"
 							update="@form"
 							actionListener="#{lOIDetailBackingBean.autoSaveLoiTabChange()}">
@@ -132,6 +147,7 @@
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="3" />
 						</p:menuitem>
+						<ui:remove>#10098 End Vinod 21092026</ui:remove>
 					</p:tabMenu></td>
 				<td width="80%" valign="top"><h:panelGroup>
 						<c:if

@@ -23,6 +23,7 @@
 						activeIndex="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 						styleClass="sidemenu">
 
+						<ui:remove>#10098 Start Vinod 21092026</ui:remove>
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.loi.details']}"
 							update="@form"
 							actionListener="#{lOIDetailBackingBean.autoSaveLoiTabChange()}">
@@ -30,7 +31,9 @@
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="0" />
 						</p:menuitem>
+						<ui:remove>#10098 End Vinod 21092026</ui:remove>
 
+						<ui:remove>#10098 Start Vinod 21092026</ui:remove>
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.letter.of.intent']}"
 							update="@form"
 							actionListener="#{lOIDetailBackingBean.autoSaveLoiTabChange()}">
@@ -38,6 +41,7 @@
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="1" />
 						</p:menuitem>
+						<ui:remove>#10098 End Vinod 21092026</ui:remove>
 
 					</p:tabMenu></td>
 				<td width="80%">

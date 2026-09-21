@@ -40,12 +40,15 @@
 					<td align="right"><p:commandButton
 							value="#{lbl['lbl.btn.back']}" style="float:left;"
 							immediate="true" 
-							action="#{evaluationBackingBean.evaluationBackaction}" /> <p:commandButton
+							action="#{evaluationBackingBean.evaluationBackaction}" />
+					<ui:remove>#10098 Start Vinod 21092026 updated blockWidget</ui:remove>
+					<p:commandButton
 							value="#{lbl['lbl.btn.save']}"
 							disabled="#{evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired}"
 							style="float:right;" update="@all" onstart="blockWidgetAutoSave.show();"
 							oncomplete="blockWidgetAutoSave.hide();" 
 							action="#{evaluationBackingBean.saveComplianceUploadCheckList}" />
+					<ui:remove>#10098 End Vinod 21092026</ui:remove>
 					<ui:remove>#10098 Start Vinod 21092026</ui:remove>
 					<p:poll interval="900" id="autoSaveComplianceId"
 						rendered="#{!(evaluationBackingBean.managedBean.statusOnly 
