@@ -3690,8 +3690,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	private List<ScAttachment> getScqtFinalizationReportDetails() throws Exception {
 
 		List<ScAttachment> attachments = new ArrayList<>();
-		List<ScQtFinalizationReportDetail> scQtFinalizationReportDetails = getManagedBean()
-				.getEvaluationReportDetailList();
+		List<ScQtFinalizationReportDetail> scQtFinalizationReportDetails = getManagedBean().getDocumentDetailList();
 		List<ScQtFinalizationReportDetailAttachment> scAttachmentsDetail = new ArrayList<>();
 
 		if (CollectionUtils.isNotEmpty(scQtFinalizationReportDetails)) {
