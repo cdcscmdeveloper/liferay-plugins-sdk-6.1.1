@@ -7729,6 +7729,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * @param selectedTabIndex the selected tab index
 	 */
 	public void tabChangeAction(int selectedTabIndex){
+		// #10098 Start Vinod 21092026
+		autoSaveLoaTabChange();
+		// #10098 End Vinod 21092026
 
 		if(selectedTabIndex != 0 && this.getManagedBean().isDisplayAlert()){
 			this.getManagedBean().setDisplayAlert(false);
@@ -7737,6 +7740,24 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 
 	}
+
+	// #10098 Start Vinod 21092026
+	/**
+	 * Autosave the LOA supplier response on side menu change.
+	 */
+	private void autoSaveLoaTabChange() {
+		if (this.getManagedBean().isReadOnly()) {
+			return;
+		}
+		try {
+			saveAction(true);
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+					SLALogConstant.QT_LOA_DETAIL_BACKINGBEAN, " ",
+					SLALogConstant.QT_AUTOSAVE_LOA_TAB_CHANGE, getUserIdSessionFromLoginId(), e);
+		}
+	}
+	// #10098 End Vinod 21092026
 
 	/**
 	 * The method to used auto update of request.

@@ -644,6 +644,9 @@ public class SupplierFinalizationBackingBean extends
 	 */
 	public void onTabMenuChangeAction() {
 		log.info("onTabMenuChangeAction");
+		// #10098 Start Vinod 21092026
+		autoSaveSuppFinalizationTabChange();
+		// #10098 End Vinod 21092026
 		Integer selectedTabIndex = null; 
 		String selectedTabIndexStr = FacesContext
 				.getCurrentInstance().getExternalContext()
@@ -692,6 +695,24 @@ public class SupplierFinalizationBackingBean extends
 				break;
 		}
 	}
+
+	// #10098 Start Vinod 21092026
+	/**
+	 * Autosave the supplier finalization details on side menu change.
+	 */
+	private void autoSaveSuppFinalizationTabChange() {
+		if (this.getManagedBean().isReadOnly()) {
+			return;
+		}
+		try {
+			saveSupplierFinalization();
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+					SLALogConstant.QT_SUPPLIER_FINALIZATION_BACKINGBEAN, " ",
+					SLALogConstant.QT_AUTOSAVE_SUPP_FINALIZATION_TAB_CHANGE, getUserIdSessionFromLoginId(), e);
+		}
+	}
+	// #10098 End Vinod 21092026
 
 	private void navigateToPreparationTab() {
 		log.info("navigateToPreparationTab");

@@ -90,6 +90,9 @@ public class SLALogConstant {
 	// #10098 Start Vinod 21092026
 	public static final String QT_AUTOSAVE_SPEC_TAB_CHANGE = "autoSaveSpecTabChange";
 	public static final String QT_AUTOSAVE_COMPLIANCE_CHECKLIST = "autoSaveComplianceChecklist";
+	public static final String QT_AUTOSAVE_SUPP_FINALIZATION_TAB_CHANGE = "autoSaveSuppFinalizationTabChange";
+	public static final String QT_AUTOSAVE_LOA_TAB_CHANGE = "autoSaveLoaTabChange";
+	public static final String QT_AUTOSAVE_DIRECT_LOA_TAB_CHANGE = "autoSaveDirectLoaTabChange";
 	// #10098 End Vinod 21092026
 	// #10098 End Vinod
 	public static final String QT_GET_RADIOBUTTONCODEVALUES_SEARCHBEAN = "getRadioButtonCodeValuesBySearchBean";

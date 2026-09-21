@@ -13287,10 +13287,31 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 			validateTierQuantityAndUnitPriceForSideMenueOrSave();
 		}
+		// #10098 Start Vinod 21092026
+		autoSaveDirectLoaTabChange();
+		// #10098 End Vinod 21092026
 		
 		this.getManagedBean().setSelectedTabIndex(selectedTabIndex);
 
 	}
+
+	// #10098 Start Vinod 21092026
+	/**
+	 * Autosave the direct LOA details on side menu change.
+	 */
+	private void autoSaveDirectLoaTabChange() {
+		if (this.getManagedBean().isReadOnly()) {
+			return;
+		}
+		try {
+			saveAction(false);
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+					SLALogConstant.QT_DIRECT_LOA_DETAIL_BACKINGBEAN, " ",
+					SLALogConstant.QT_AUTOSAVE_DIRECT_LOA_TAB_CHANGE, getUserIdSessionFromLoginId(), e);
+		}
+	}
+	// #10098 End Vinod 21092026
 
 	// #29468 Vinod End
 	
