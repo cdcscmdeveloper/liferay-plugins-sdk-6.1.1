@@ -10045,8 +10045,12 @@ private void retriveCommitteeRemarksList(){
 			/* ***#25638#99 - end */
 			retriveMeetingDtls(qtId, committeeType, index);
 			if (save) {// 10542
-				successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.sc.prepare.evaluation"), QtNum,
-						Boolean.FALSE);
+				// #10098 Start Vinod 21092026
+				if (!autoSaveFlow) {
+					successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.sc.prepare.evaluation"), QtNum,
+							Boolean.FALSE);
+				}
+				// #10098 End Vinod 21092026
 
 				// 10542 - start
 				EvaluationReqDTO qtReqDTO = new EvaluationReqDTO();
@@ -11008,6 +11012,7 @@ private void retriveCommitteeRemarksList(){
 
 	// #10098 Start Vinod 21092026 suppresses the success message on autosave
 	private boolean autoSaveFlow;
+	private static final int EVALUATION_STATUS_TAB_INDEX = 5;
 	// #10098 End Vinod 21092026
 
 	// #10098 Start Vinod 11092026
@@ -11035,28 +11040,25 @@ private void retriveCommitteeRemarksList(){
 	 * @param outputTab
 	 */
 	private void autoSaveEvaluationTabChange(int currentTab, int outputTab) {
+		// mirrors the main save button: hidden on the status tab, disabled once the committee is modified
 		if (currentTab == outputTab || this.getManagedBean().isReadOnly()
-				|| this.getManagedBean().isTechnicalOrFinancialReEvaluateRequired()) {
+				|| this.getManagedBean().getTabActiveIndex() == EVALUATION_STATUS_TAB_INDEX) {
 			return;
 		}
-		List<Long> evaluationStatus = Arrays.asList(new Long[] {
-				QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL, QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL,
-				QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION,
-				QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL,
-				QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_REVISION,
-				QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL,
-				QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL_REVISION });
-		if (!evaluationStatus.contains(this.getManagedBean().getCurrentStatusId())) {
-			return;
-		}
-		TemplateSpecBean evalTemplateSpecBean = this.getManagedBean().getTemplateSpecBean();
-		if (null == evalTemplateSpecBean || CollectionUtils.isEmpty(evalTemplateSpecBean.getSpecAnswerList())
-				|| null == this.getManagedBean().getQtProposalChecklist()) {
+		EvaluationMeetingBackingBean meetingBB = this.getManagedBean().getMeetingBB();
+		if (null != meetingBB && null != meetingBB.getManagedBean()
+				&& meetingBB.getManagedBean().isCommitteeModified()) {
 			return;
 		}
 		autoSaveFlow = true;
 		try {
-			autoSaveTemplateChecklist();
+			saveMeetingDtls(true);
+		} catch (Exception e) {
+			String qtNo = this.getManagedBean().getScQt() != null
+					&& this.getManagedBean().getScQt().getQtNo() != null ? this.getManagedBean().getScQt().getQtNo()
+					: " ";
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_EVALUATION_BACKINGBEAN,
+					qtNo, SLALogConstant.QT_AUTOSAVE_EVALUATION_TAB_CHANGE, getUserIdSessionFromLoginId(), e);
 		} finally {
 			autoSaveFlow = false;
 		}
