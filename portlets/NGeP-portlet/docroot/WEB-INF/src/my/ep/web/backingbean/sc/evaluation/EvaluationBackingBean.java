@@ -11015,7 +11015,6 @@ private void retriveCommitteeRemarksList(){
 	 * Autosave the evaluation template checklist on the 15 minute poll.
 	 */
 	public void autoSaveTemplateChecklist() {
-		autoSaveFlow = true;
 		try {
 			saveTempleateSpecDtls();
 		} catch (Exception e) {
@@ -11024,8 +11023,6 @@ private void retriveCommitteeRemarksList(){
 					: " ";
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_EVALUATION_BACKINGBEAN,
 					qtNo, SLALogConstant.QT_AUTOSAVE_TEMPLATE_CHECKLIST, getUserIdSessionFromLoginId(), e);
-		} finally {
-			autoSaveFlow = false;
 		}
 	}
 	// #10098 End Vinod 11092026
@@ -11057,7 +11054,12 @@ private void retriveCommitteeRemarksList(){
 				|| null == this.getManagedBean().getQtProposalChecklist()) {
 			return;
 		}
-		autoSaveTemplateChecklist();
+		autoSaveFlow = true;
+		try {
+			autoSaveTemplateChecklist();
+		} finally {
+			autoSaveFlow = false;
+		}
 	}
 
 	/**
@@ -11065,7 +11067,6 @@ private void retriveCommitteeRemarksList(){
 	 * poll.
 	 */
 	public void autoSaveComplianceChecklist() {
-		autoSaveFlow = true;
 		try {
 			saveComplianceUploadCheckList();
 		} catch (Exception e) {
@@ -11074,8 +11075,6 @@ private void retriveCommitteeRemarksList(){
 					: " ";
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_EVALUATION_BACKINGBEAN,
 					qtNo, SLALogConstant.QT_AUTOSAVE_COMPLIANCE_CHECKLIST, getUserIdSessionFromLoginId(), e);
-		} finally {
-			autoSaveFlow = false;
 		}
 	}
 	// #10098 End Vinod 21092026
