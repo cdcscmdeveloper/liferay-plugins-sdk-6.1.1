@@ -35,6 +35,7 @@ import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO; //#28865
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.web.constant.sc.DPConstants; //#33224
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -44,6 +45,8 @@ import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.authorization.user.InactiveUserReqDTO; //#33224
+import my.ep.dto.pm.authorization.user.InactiveUserResDTO; //#33224
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
@@ -942,6 +945,10 @@ public class PurchaseInDefaultBackingBean extends
 				purchaseInDefaultSO.savePurchaseInDefault(reqDTO);
 	
 				reqDTO.setSupRes(true);
+				//#33224 - Start (Gate 4)
+				reqDTO.setInactiveUserResDTO(checkUserStatus());		
+				//#33224 - End (Gate 4)
+				
 				resDTO = purchaseInDefaultSO.updateResponsePurchaseInDefault(reqDTO);
 			}else if(DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(stsId)){						
 				boolean validateRemark = true; //#31603 - set to true
@@ -3380,4 +3387,27 @@ public class PurchaseInDefaultBackingBean extends
 		return updateBPMTask(outcome, null);
 	}
 	// 34449 - end
+	
+	// #33224 (Gate 4) - start
+	/**
+	 * Checks whether the purchase inquiry creator is an inactive user.
+	 * 
+	 * @return the inactive user response containing the creator's status
+	 */
+	public InactiveUserResDTO checkUserStatus() {
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
+
+		ScPurchaseInDefault purchaseInDefault = getManagedBean().getPurchaseInDefault();
+
+		InactiveUserReqDTO reqDTO = new InactiveUserReqDTO();
+		reqDTO.setUserIds(purchaseInDefault.getCreatedBy().toString());
+		reqDTO.setUserRoleCode(DPConstants.ROLE_CODE_REQUISITIONER);
+		reqDTO.setOrgProfileId(purchaseInDefault.getPmOrgProfile().getOrgProfileId());
+		reqDTO.setDocType(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT);
+		reqDTO.setDocNo(purchaseInDefault.getPurchaseInDefaultNo());
+
+		return userSO.checkInactiveUserBySP(reqDTO);
+	}
+	// #33224 (Gate 4) - end
 }
