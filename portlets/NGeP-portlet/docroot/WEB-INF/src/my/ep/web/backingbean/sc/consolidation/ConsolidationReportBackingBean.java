@@ -912,8 +912,8 @@ public class ConsolidationReportBackingBean extends
 	 */
 	public List<Object> getCombinedEvaluationReportList() {
 
-		List<Object> combinedReportList = new ArrayList<Object>();
-		ScQt scQt = getManagedBean().getScQt();
+		List<Object> combinedReportList = new ArrayList<>();
+		Long qtId = this.getManagedBean().getScQt().getQtId();
 
 		List<ScQtFinalizationReport> reports = getManagedBean().getEvaluationReportList();
 		List<ScQtFinalizationReportDetail> details = getManagedBean().getEvaluationReportDetailList();
@@ -922,7 +922,7 @@ public class ConsolidationReportBackingBean extends
 			for (ScQtFinalizationReport report : reports) {
 				String key = report.getPmDocument().getDocDefinitionKey();
 
-				if (!isWipEvaluationReportExisting(key, scQt.getQtId())) {
+				if (!isWipEvaluationReportExisting(key, qtId)) {
 					combinedReportList.addAll(reports);
 					break;
 				}
@@ -933,7 +933,7 @@ public class ConsolidationReportBackingBean extends
 			for (ScQtFinalizationReportDetail detail : details) {
 				String key = detail.getPmDocument().getDocDefinitionKey();
 
-				if (isWipEvaluationReportExisting(key, scQt.getQtId())) {
+				if (isWipEvaluationReportExisting(key, qtId)) {
 					combinedReportList.addAll(details);
 					break;
 				}
