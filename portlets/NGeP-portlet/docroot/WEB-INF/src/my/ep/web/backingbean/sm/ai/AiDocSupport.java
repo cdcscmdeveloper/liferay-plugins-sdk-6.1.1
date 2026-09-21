@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -77,9 +78,8 @@ public final class AiDocSupport {
 	public static final class AiUserEdit {
 
 		public static final String KEY_TENANCY = "hq";
-		// #40112 - never an NRIC: marks the applicant's EPF tick/untick decision as recorded
-		public static final String KEY_EPF_DECIDED = "_decided";
-		public static final String F_DECIDED = "decided";
+		// accepted fields hang off the same map under a prefixed key, so the CLOB keeps one shape
+		private static final String ACCEPTED_PREFIX = "+";
 		public static final String F_EPF_NO = "epf_no";
 		public static final String F_NAME = "name";
 		public static final String F_IC = "ic";
@@ -93,6 +93,9 @@ public final class AiDocSupport {
 		public static final String F_STATE = "state";
 		public static final String F_DISTRICT = "district";
 		public static final String F_CITY = "city";
+		// submitting the dialog applies the whole extracted statement, so all of these are accepted at once
+		public static final String[] F_TENANCY_ALL = { F_OWNER_NAME, F_RENTAL_RATE, F_ADDRESS1,
+				F_ADDRESS2, F_ADDRESS3, F_POSTCODE, F_COUNTRY, F_STATE, F_DISTRICT, F_CITY };
 
 		private static final Logger log = Logger.getLogger(AiUserEdit.class);
 
@@ -157,6 +160,18 @@ public final class AiDocSupport {
 
 		public static boolean clear(Map<String, Set<String>> edits, String entityKey) {
 			return entityKey != null && edits.remove(entityKey) != null;
+		}
+
+		/**
+		 * Fields the applicant applied by submitting the AI Assistant dialog. Nothing outside this
+		 * set ever carries an AI icon, whatever the typed value happens to be.
+		 */
+		public static Set<String> accepted(Map<String, Set<String>> edits, String entityKey) {
+			return fields(edits, entityKey == null ? null : ACCEPTED_PREFIX + entityKey);
+		}
+
+		public static boolean accept(Map<String, Set<String>> edits, String entityKey, String field) {
+			return add(edits, entityKey == null ? null : ACCEPTED_PREFIX + entityKey, field);
 		}
 	}
 
@@ -417,18 +432,15 @@ public final class AiDocSupport {
 				return dto;
 			}
 			try {
-				Set<String> seen = new HashSet<>();
+				List<AiBankDocDTO.AiBankStatementDTO> parsed = new ArrayList<>();
 				for (int i = 0; i < entities.length(); i++) {
 					JSONObject bankEntity = entities.getJSONObject(i);
 					String entityId = bankEntity.getString("entity");
 					JSONArray properties = bankEntity.getJSONArray(PROPERTIES);
-					AiBankDocDTO.AiBankStatementDTO bank = toBankStatement(properties, entityId);
-					// one row per bank name + account number, per FRS 2.4
-					String key = AiDocValidator.bankAccountKey(bank);
-					if (key == null || seen.add(key)) {
-						dto.getBankStatements().add(bank);
-					}
+					parsed.add(toBankStatement(properties, entityId));
 				}
+				// one row per account, per FRS 2.4; the whole list is needed to decide
+				dto.setBankStatements(AiDocValidator.dedupeBankStatements(parsed));
 			} catch (JSONException e) {
 				log.error("Error DocEntity", e);
 				dto.setError(true);
@@ -656,7 +668,7 @@ public final class AiDocSupport {
 			if (serviceTypes.isEmpty()) {
 				addBankServiceTypes(serviceTypes, null);
 			}
-			// #40112 - keyed by canonical name, not id: PM_FINANCIAL_ORG holds the same bank under several ids,
+			// keyed by canonical name, not id: PM_FINANCIAL_ORG holds the same bank under several ids,
 			// and identical names would otherwise cancel each other out on the runner-up margin below
 			Map<String, PmFinancialOrg> candidates = new HashMap<>();
 			for (String serviceType : serviceTypes) {
@@ -730,17 +742,40 @@ public final class AiDocSupport {
 		}
 		
 		/**
-		 * Grouping key for an extracted bank record: bank name + account number, per FRS 2.4.
-		 * @param bank
-		 * @return null when neither is present, so the record is never treated as a duplicate
+		 * One row per account, per FRS 2.4. The OCR segments a statement per printed section, so the same
+		 * account arrives once per section; and a section it read no account number from, carrying a company
+		 * name that is already listed against an account, is that same statement re-read, not another account.
+		 * A company name that is not already listed is kept, so a statement in someone else's name still
+		 * mismatches. The bank name is not part of the identity: it is the field MIN_CONFIDENCE blanks.
+		 * @param banks every record parsed out of one response, in the order the OCR returned them
+		 * @return the records to show, first occurrence first
 		 */
-		public static String bankAccountKey(AiBankDocDTO.AiBankStatementDTO bank) {
-			if (bank == null || (StringUtils.isBlank(bank.getBankName())
-					&& StringUtils.isBlank(bank.getAccountNo()))) {
-				return null;
+		public static List<AiBankDocDTO.AiBankStatementDTO> dedupeBankStatements(
+				List<AiBankDocDTO.AiBankStatementDTO> banks) {
+			// collected over the whole list before anything is dropped, so the OCR's order cannot change the outcome
+			Set<String> holdersWithAccount = new HashSet<>();
+			for (AiBankDocDTO.AiBankStatementDTO bank : banks) {
+				if (!normalizeAccountNo(bank.getAccountNo()).isEmpty()) {
+					holdersWithAccount.add(canonicalizeCompanyName(bank.getAccountHolderName()));
+				}
 			}
-			return canonicalizeCompanyName(bank.getBankName()) + "|"
-					+ normalizeAccountNo(bank.getAccountNo());
+			Map<String, AiBankDocDTO.AiBankStatementDTO> kept = new LinkedHashMap<>();
+			for (AiBankDocDTO.AiBankStatementDTO bank : banks) {
+				String accountNo = normalizeAccountNo(bank.getAccountNo());
+				String holder = canonicalizeCompanyName(bank.getAccountHolderName());
+				if (accountNo.isEmpty() && holdersWithAccount.contains(holder)) {
+					continue;
+				}
+				// a record with no account number is identified by its company name instead
+				String key = accountNo.isEmpty() ? "|" + holder : accountNo;
+				AiBankDocDTO.AiBankStatementDTO seen = kept.get(key);
+				// the first record wins, unless MIN_CONFIDENCE blanked its bank name and a later one kept its own
+				if (seen == null || (StringUtils.isBlank(seen.getBankName())
+						&& !StringUtils.isBlank(bank.getBankName()))) {
+					kept.put(key, bank);
+				}
+			}
+			return new ArrayList<>(kept.values());
 		}
 
 		public static String canonicalizeCompanyName(String name) {
@@ -940,45 +975,46 @@ public final class AiDocSupport {
 			}
 		}
 
-		// display AI icons when values match
-		public static void setTenancyAiFields(SmFacility fac, AiTenancyDTO te, Set<String> edited) {
+		// #40112 - populate a shadow field only where the applicant submitted it and has not since
+		// edited it; a value she typed herself carries no AI icon even when it equals the extraction
+		public static void setTenancyAiFields(SmFacility fac, AiTenancyDTO te, Set<String> accepted) {
 			if (fac == null || te == null) {
 				return;
 			}
-			if (!edited.contains(AiUserEdit.F_OWNER_NAME)) {
+			if (accepted.contains(AiUserEdit.F_OWNER_NAME)) {
 				fac.setOwnerNameAI(te.getLandlordsName());
 			}
-			if (!edited.contains(AiUserEdit.F_RENTAL_RATE)) {
+			if (accepted.contains(AiUserEdit.F_RENTAL_RATE)) {
 				fac.setRentalRateAI(te.getMonthlyRental());
 			}
 			SmAddress addr = fac.getSmAddress();
 			if (addr != null) {
-				if (!edited.contains(AiUserEdit.F_ADDRESS1)) {
+				if (accepted.contains(AiUserEdit.F_ADDRESS1)) {
 					addr.setAddress1AI(te.getAddr1());
 				}
-				if (!edited.contains(AiUserEdit.F_ADDRESS2)) {
+				if (accepted.contains(AiUserEdit.F_ADDRESS2)) {
 					addr.setAddress2AI(te.getAddr2());
 				}
-				if (!edited.contains(AiUserEdit.F_ADDRESS3)) {
+				if (accepted.contains(AiUserEdit.F_ADDRESS3)) {
 					addr.setAddress3AI(te.getAddr3());
 				}
-				if (!edited.contains(AiUserEdit.F_POSTCODE)) {
+				if (accepted.contains(AiUserEdit.F_POSTCODE)) {
 					addr.setPostcodeAI(te.getPostcode());
 				}
 				PmCity city = te.getPmCity();
 				if (city != null) {
-					if (!edited.contains(AiUserEdit.F_CITY)) {
+					if (accepted.contains(AiUserEdit.F_CITY)) {
 						addr.setCityIdAI(city.getCityId());
 					}
-					if (!edited.contains(AiUserEdit.F_COUNTRY)) {
+					if (accepted.contains(AiUserEdit.F_COUNTRY)) {
 						addr.setCountryIdAI(SmCommonUtil.getMyCountryId());
 					}
 					if (city.getPmDistrict() != null) {
-						if (!edited.contains(AiUserEdit.F_DISTRICT)) {
+						if (accepted.contains(AiUserEdit.F_DISTRICT)) {
 							addr.setDistrictIdAI(city.getPmDistrict().getDistrictId());
 						}
 						if (city.getPmDistrict().getPmState() != null
-								&& !edited.contains(AiUserEdit.F_STATE)) {
+								&& accepted.contains(AiUserEdit.F_STATE)) {
 							addr.setStateIdAI(city.getPmDistrict().getPmState().getStateId());
 						}
 					}
@@ -1312,8 +1348,10 @@ public final class AiDocSupport {
 			if (this.bankStatements.size() == 1) {
 				return bankStatements.get(0).getLabel();
 			}
+			// number the rows that are shown; the OCR's own entity index skips whatever was de-duped
+			int bankNo = 1;
 			for (AiBankStatementDTO bank : this.bankStatements) {
-				sb.append("Bank " + bank.getEntityId().substring(5)).append(":<br/>");
+				sb.append("Bank ").append(bankNo++).append(":<br/>");
 				sb.append(bank.getLabel()).append(BR);
 			}
 			return sb.toString();

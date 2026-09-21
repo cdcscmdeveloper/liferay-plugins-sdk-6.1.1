@@ -3964,7 +3964,15 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 					// #30447 - Start
 					String newName = personnel.getName();
 					String salutation = supplierSalutation(personnel.getIdentificationNo());
-					newName = (StringUtils.isNotBlank(salutation)) ? salutation.concat(" " + newName) : newName;
+					
+					if (StringUtils.isNotBlank(salutation)) {
+					    String formattedSalutation = newName.equals(newName.toUpperCase()) 
+					        ? StringUtils.upperCase(salutation) 
+					        : salutation;
+					        
+					    newName = formattedSalutation + " " + newName;
+					}
+
 					personnel.setName(newName);
 					// #30447 - End
 					
@@ -4049,36 +4057,6 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 
 		return NAV_TO_SUPPLIER_DETAILS_PAGE;
 	}
-	
-	// #30447 - formating and remove duplication salutation start
-	public String getFormattedChequeSignatoryName(SmChequeSignatory rowItem) {
-
-	    if (rowItem == null || rowItem.getSmPersonnel() == null) {
-	        return "";
-	    }
-
-	    String name = StringUtils.trimToEmpty(rowItem.getSmPersonnel().getName());
-	    String salutation = "";
-
-	    if (rowItem.getSmPersonnel().getTitle() != null) {
-	        salutation = StringUtils.trimToEmpty(rowItem.getSmPersonnel().getTitle().getSalutationName());
-	    }
-
-	    if (name.isEmpty() || salutation.isEmpty()) {
-	        return name;
-	    }
-
-	    if (StringUtils.startsWithIgnoreCase(name, salutation)) {
-	        return name;
-	    }
-
-	    if (name.equals(name.toUpperCase())) {
-	        salutation = salutation.toUpperCase();
-	    }
-
-	    return salutation + " " + name;
-	}
-	// #30447 - formating and remove duplication salutation end
 
 	/**
 	 * Gets the GST info.
@@ -4980,8 +4958,13 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 
 		if (pmUser != null) {
 			// #30447 - start
+
 			if (pmUser.getSalutationCode() != null) {
-				context.put("salutation", pmUser.getSalutationCode().getSalutationName());
+				    String formattedSalutation = pmUser.getUserName().equals(pmUser.getUserName().toUpperCase()) 
+				        ? StringUtils.upperCase(pmUser.getSalutationCode().getSalutationName()) 
+				        : pmUser.getSalutationCode().getSalutationName();
+				        
+					context.put("salutation", formattedSalutation);				
 			}
 			// #30447 - end
 			context.put("userName", pmUser.getUserName());
@@ -7020,4 +7003,11 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 	}
 	//Bug #39517@Syazani 07/01/2026 -- End
 
+	// #41190 - Start
+	public boolean isSupplierInfoReminderStage() {
+		ScQt scQt = this.getManagedBean().getQt();
+		PmStatus qtStatus = scQt != null ? scQt.getQtStatus() : null;
+		return qtStatus != null && QTStatusConst.QT_PROPOSAL_PREPARATION.equals(qtStatus.getStatusId());
+	}
+	// #41190 - End
 }

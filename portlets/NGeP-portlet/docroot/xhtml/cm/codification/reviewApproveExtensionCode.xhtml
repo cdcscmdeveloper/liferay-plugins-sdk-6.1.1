@@ -57,7 +57,6 @@
 					id="pendExtCodeApp_endorsePublishDlg" widget="pendExtCodeApp_endorsePublishDlg"
 					loadingWidget="pageBlockWidget"
 					okParam="#{unspscCodeBackingBean.submitToReviewExt('SUBMIT')}" hasParam="true"
-					title="#{lbl['lbl.cm.dialog.cofirm.header']}"
 					content="#{lbl['lbl.cd.dialog.message.endorse']}"
 					selectedExtItem="#{unspscCodeBackingBean.managedBean.reviewExtCodeList[0]}"
 					update="@form">
@@ -67,7 +66,6 @@
 					id="pendExtCodeApp_recommendToSupplierDlg" widget="pendExtCodeApp_recommendToSupplierDlg"
 					loadingWidget="pageBlockWidget"
 					okParam="#{unspscCodeBackingBean.bpmTesting('RECOMMEND_TO_SUPPLIER')}" hasParam="true"
-					title="#{lbl['lbl.cm.dialog.cofirm.header']}"
 					content="#{lbl['lbl.cd.dialog.message.recommend']}"
 					itemList="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes}"
 					update="@form">

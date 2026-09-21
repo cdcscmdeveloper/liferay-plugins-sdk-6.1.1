@@ -765,7 +765,11 @@ public class LOIDetailBackingBean extends
 	        salutation = StringUtils.trimToEmpty(this.getManagedBean().getScLoi().getScSupplierAddress().getPmContactUserID().getSalutationCode().getSalutationName());
 	    }
 
-        return getFormattedNameWithSalutation(name, salutation);
+        return getFormattedSalutationName(salutation, name);
+	}
+	
+	// # 30447 - start
+	public void setFormattedContactPerson(String value) {
 	}
 	// # 30447 - end
 	
@@ -784,27 +788,14 @@ public class LOIDetailBackingBean extends
             salutation = StringUtils.trimToEmpty(this.getManagedBean().getContractSignerUser().getSalutationCode().getSalutationName());
         }
         
-        return getFormattedNameWithSalutation(name, salutation);
+        return getFormattedSalutationName(salutation, name);
 	}
 	// # 30447 - end
 	
 	// # 30447 - start
-	public String getFormattedNameWithSalutation(String name,String salutation) {
-		name = StringUtils.trimToEmpty(name);
-		salutation = StringUtils.trimToEmpty(salutation);
-		
-        if (name.isEmpty() || salutation.isEmpty()) {
-            return name;
-        }
-        if (StringUtils.startsWithIgnoreCase(name, salutation)) {
-            return name;
-        }
-        if (name.equals(name.toUpperCase())) {
-            salutation = salutation.toUpperCase();
-        }
-        return salutation + " " + name;
+	public void setFormattedContractSignerUserName(String value) {
 	}
-	// #30447 - upperCase salutation check end
+	// # 30447 - end
 	
 	/**
 	 * Pre render page navigation to multiple loi page based on task id
@@ -4295,6 +4286,9 @@ public class LOIDetailBackingBean extends
 					getManagedBean().getContractSignerUser().getSalutationCode() : null;
 			if (getManagedBean().getContractSignerUser() != null && salutationCode != null) {
 				salutation = getManagedBean().getContractSignerUser().getSalutationCode().getSalutationName();
+				if (!loiSigner.isEmpty() && loiSigner.equals(loiSigner.toUpperCase())) {
+				    salutation = salutation.toUpperCase();
+				}
 			}
 			context.put("salutation", salutation);
 			// #30447 end
