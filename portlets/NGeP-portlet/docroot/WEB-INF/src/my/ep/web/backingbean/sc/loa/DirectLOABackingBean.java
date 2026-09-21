@@ -834,7 +834,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			getManagedBean().setPayLoad(awardDateType);
 
 			getSupplierDeatilsByLoaId(loaId);
-
+			setDisciplinaryAction(this.getManagedBean().getScLoa()); // 26247
 			this.getManagedBean().setValidatewitness(Boolean.TRUE); //#17376-144
 
 		} catch (Exception e) {
@@ -2528,7 +2528,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				scLoa.setScLoiLoa(scLoiLoa);
 			}
 		}
-
+		setDisciplinaryAction(scLoa);// 26247
 	}
 			
 	public SelectItem[] getSelectRadioButtonCodeValues(String type) {		
@@ -4795,7 +4795,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (scLoa.getEstimatedPrice() != null) {
 			scQt.setEstimatedAmount(scLoa.getEstimatedPrice());
 		}
-
+		
+		setDisciplinaryAction(scLoa);// 26247
+		
 		this.getManagedBean().setContractSignerList(
 				awardResDTO.getContractSignerList());
 		this.getManagedBean().setSupplierHQPersonnel(
@@ -11378,6 +11380,23 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	}
 	// 29007 End
 	
+	/* #31033, #26247 STARTS */
+	public boolean isHiddenDownloadButtonDAHistory() {
+		boolean hidden = false;
+		Long statusId = this.getManagedBean().getScLoa().getPmStatus().getStatusId();
+		
+		if (statusId.equals(QTStatusConst.LOA_PENDING_SUBMISSION)
+				|| statusId.equals(QTStatusConst.LOA_PENDING_APPROVAL)
+				|| statusId.equals(QTStatusConst.LOA_PENDING_REVISION)
+				|| statusId.equals(QTStatusConst.LOA_PENDING_VERIFICATION)
+				|| statusId.equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)) {
+			hidden = true;
+		}
+
+		return hidden;
+	}
+	/* #31033, #26247 End */
+	
 	/* #29007 Start Vinod */
 	/**
 	 * this method to display N/A or T/B based on language for Supplier remark.
@@ -11565,4 +11584,25 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		return categoryCode;
 	}
 	// 26770 - end fix sonarlint
+
+	// 26247 - start
+	/**
+	 * Populate scLoa with disciplinary action informations
+	 * @param scLoa
+	 */
+	private void setDisciplinaryAction(ScLoa scLoa) {
+		if (null == scLoa || null == scLoa.getScLoiLoa() || null == scLoa.getScLoiLoa().getSmSupplier()
+				|| null == scLoa.getScLoiLoa().getSmSupplier().getSupplierId()) {
+			return;
+		}
+		Long qtId = scLoa.getScLoiLoa().getDocId();
+		if (!Arrays.asList(ParameterConst.DOCTYPE_DIRECT_NEGO, ParameterConst.DOCTYPE_QUOTATION).contains(
+				scLoa.getScLoiLoa().getDocType())) {
+			qtId = null;
+		}
+		SmSupplier smSupplier = this.getQtSuppFinalizationSO().evaluateDisciplinaryActions(
+				scLoa.getScLoiLoa().getSmSupplier(), qtId);
+		scLoa.getScLoiLoa().setSmSupplier(smSupplier);
+	}
+	// 26247 - end
 }

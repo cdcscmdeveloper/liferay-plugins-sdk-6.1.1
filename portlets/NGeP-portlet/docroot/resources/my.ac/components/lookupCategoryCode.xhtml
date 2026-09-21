@@ -16,7 +16,10 @@
 	<cc:attribute name="categoryType"   type="java.lang.String"	/>
 	<cc:attribute name="bumiPercentage" type="java.lang.Integer"/>
 	<cc:attribute name="businessTypeCode" type="java.lang.String"/>
+	<cc:attribute name="supplierId" type="java.lang.Long"/>
 	<cc:attribute name="catcodeL1" type="java.lang.String"/>
+	<cc:attribute name="activeCategoryList" type="java.util.List"/> <!-- #33387 -->
+	
 </cc:interface>
 
 <cc:implementation>
@@ -84,7 +87,9 @@
 						value="#{categoryCodeSearchBackingBean.managedBean.categoryCodeIdLvl3}"
 						style="width: 500px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems value="#{categoryCodeSearchBackingBean.retrieveCategoryL3List(categoryCodeSearchBackingBean.managedBean.categoryCodeIdLvl2, cc.attrs.supplierType, cc.attrs.facilityType, cc.attrs.paidUpCapital, cc.attrs.bumiPercentage, cc.attrs.categoryType, cc.attrs.businessTypeCode)}" />
+						<!-- #33387(26238) - START -->
+						<f:selectItems value="#{categoryCodeSearchBackingBean.retrieveCategoryL3List(categoryCodeSearchBackingBean.managedBean.categoryCodeIdLvl2, cc.attrs.supplierType, cc.attrs.facilityType, cc.attrs.paidUpCapital, cc.attrs.bumiPercentage, cc.attrs.categoryType, cc.attrs.supplierId, cc.attrs.businessTypeCode, cc.attrs.activeCategoryList)}" />
+						<!-- #33387(26238) - END -->
 						<p:ajax event="change" partialSubmit="true" process="@this" update="@this" />
 					</h:selectOneMenu>
 				</td>
@@ -127,10 +132,12 @@
 				</tr>
 				<tr>
 					<td colspan="2" class="ppRightBtn">
+						<!-- 32629 - Start -->
 						<p:commandButton
 							value="#{lbl['lbl.btn.search']}"
-							action="#{categoryCodeSearchBackingBean.categorySearchAction(cc.attrs.supplierType,cc.attrs.facilityType,cc.attrs.paidUpCapital,cc.attrs.bumiPercentage,cc.attrs.categoryType,cc.attrs.businessTypeCode,cc.attrs.catcodeL1)}" 
+							action="#{categoryCodeSearchBackingBean.categorySearchAction(cc.attrs.supplierType,cc.attrs.facilityType,cc.attrs.paidUpCapital,cc.attrs.bumiPercentage,cc.attrs.categoryType,cc.attrs.businessTypeCode,cc.attrs.catcodeL1, cc.attrs.supplierId)}" 
 							process="catCodePnl" update="catDescrTbl" />
+						<!-- 32629 - End -->
 						<p:commandButton value="#{lbl['lbl.btn.reset']}"
 							action="#{categoryCodeSearchBackingBean.categoryResetAction}" 
 							resetValues="true" 
@@ -154,25 +161,50 @@
 	
 					<ac:paginator for="catDescrTbl" />
 		
-					<p:column>
+					<!-- 32629 - START -->	
+					<p:ajax event="rowSelect" partialSubmit="true" process="@this"
+						listener="#{categoryCodeSearchBackingBean.unSelectDACategories}"
+						update="catDescrTbl" ></p:ajax>
+					<p:ajax event="rowUnselect"
+						listener="#{categoryCodeSearchBackingBean.unSelectDACategories}"
+						update="catDescrTbl" ></p:ajax>
+					<p:ajax event="rowSelectCheckbox"
+						listener="#{categoryCodeSearchBackingBean.unSelectDACategories}"
+						update="catDescrTbl" ></p:ajax>
+					<p:ajax event="rowUnselectCheckbox"
+						listener="#{categoryCodeSearchBackingBean.unSelectDACategories}"
+						update="catDescrTbl" ></p:ajax>
+					<p:ajax event="rowDblselect"
+						listener="#{categoryCodeSearchBackingBean.unSelectDACategories}"
+						update="catDescrTbl" ></p:ajax>
+					
+			
+					<p:column disabledSelection="#{categoryCodeSearchBackingBean.managedBean.disabledDACategories}">
+					<!-- 32629 - END -->
 						<f:facet name="header">
 							<h:outputText value="#{lbl['lbl.sc.category.code']}" />
 						</f:facet>
 						#{pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{pmCategoryL3.pmCategoryL2.categoryL2Code}#{pmCategoryL3.categoryL3Code}
 					</p:column>
-					<p:column>
+					<!-- 32629 - START -->	
+					<p:column disabledSelection="#{categoryCodeSearchBackingBean.managedBean.disabledDACategories}">
+					<!-- 32629 - END -->
 						<f:facet name="header">
 							<h:outputText value="#{lbl['lbl.sc.main.category']}" />
 						</f:facet>
 						#{pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName}
 					</p:column>
-					<p:column>
+					<!-- 32629 - START -->	
+					<p:column disabledSelection="#{categoryCodeSearchBackingBean.managedBean.disabledDACategories}">
+					<!-- 32629 - END -->
 						<f:facet name="header">
 							<h:outputText value="#{lbl['lbl.sc.sub.category']}" />
 						</f:facet>
 						#{pmCategoryL3.pmCategoryL2.categoryName}
 					</p:column>
-					<p:column>
+					<!-- 32629 - START -->	
+					<p:column disabledSelection="#{categoryCodeSearchBackingBean.managedBean.disabledDACategories}">
+					<!-- 32629 - END -->
 						<f:facet name="header">
 							<h:outputText
 								value="#{lbl['lbl.sc.sub.category.division']}" />

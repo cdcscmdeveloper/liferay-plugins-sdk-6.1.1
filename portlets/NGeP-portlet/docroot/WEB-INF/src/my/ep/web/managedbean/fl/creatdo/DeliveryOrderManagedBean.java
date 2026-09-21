@@ -24,8 +24,10 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.vo.DisciplinaryActionVO;
 
 /**
  * Managed Bean for Create Delivery Order.
@@ -124,6 +126,11 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	private boolean delAddressSelected = false;
 	private List<FlDeliveryOrder> submittedDoList;
 	private String supplierUserName;
+	//26279 - start
+	private String disciplinaryActionMessage;
+	private List<DisciplinaryActionVO> disciplinaryActionVO;
+	private SmDisciplinaryAction smDisciplinaryAction;
+	//26279 - end
 	
 	// 28855 - Start
 	private String supplierOffer;
@@ -1270,6 +1277,31 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 		this.prevHideRemarks = prevHideRemarks;
 	}
 	
+	//26279 - start
+	public String getDisciplinaryActionMessage() {
+		return disciplinaryActionMessage;
+	}
+
+	public void setDisciplinaryActionMessage(String disciplinaryActionMessage) {
+		this.disciplinaryActionMessage = disciplinaryActionMessage;
+	}	
+
+	public List<DisciplinaryActionVO> getDisciplinaryActionVO() {
+		return disciplinaryActionVO;
+	}
+
+	public void setDisciplinaryActionVO(List<DisciplinaryActionVO> disciplinaryActionVO) {
+		this.disciplinaryActionVO = disciplinaryActionVO;
+	}
+
+	public SmDisciplinaryAction getSmDisciplinaryAction() {
+		return smDisciplinaryAction;
+	}
+
+	public void setSmDisciplinaryAction(SmDisciplinaryAction smDisciplinaryAction) {
+		this.smDisciplinaryAction = smDisciplinaryAction;
+	}
+	//26279 - end
 	// 28855 - start
 	public String getSupplierOffer() {
 		return supplierOffer;
