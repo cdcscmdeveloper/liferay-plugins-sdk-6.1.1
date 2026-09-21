@@ -378,7 +378,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			}
 			
 			// #31788 - Update reqDTO if new user to be reassigned
-			if(getManagedBean().isAssignNewUser()){
+			if (getManagedBean().isAssignNewUser()) {
 				reqDTO.setAssignNewUser(Boolean.TRUE);
 				reqDTO.setNewUser(getManagedBean().getNewUser());
 			}
@@ -396,7 +396,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					messageId = MessageConst.INFO_745004;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 					// #31788 - Message ID for reassign new user
-					if(getManagedBean().isAssignNewUser()) {
+					if (getManagedBean().isAssignNewUser()) {
 						messageId = MessageConst.INFO_700128;
 					} else {
 						messageId = MessageConst.INFO_700009;
@@ -3592,7 +3592,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 							ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 					UserReqDTO userReqDTO = new UserReqDTO();
 					userReqDTO.setUserId(getManagedBean().getFulfilmentRequest().getApproverId());
-					userReqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
+					userReqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile()
+							.getOrgProfileId());
 					userReqDTO.setGroupId(getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());
 					userReqDTO.setRoleCode(RoleCode.FL_APPROVER.value());
 					userReqDTO.setNotify(Boolean.TRUE);
@@ -3605,8 +3606,10 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 								.getUserName() });
 					} else if (resDTO.getUserStatus().equals(0)) {
 						// Send notification PTJ Admin
-						throw new EpException(MessageConst.ERROR_700128, new String[] { getEpRoleDescByRoleCode(RoleCode.FL_APPROVER.value()),
-								getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgValidity().getOrgName() });
+						throw new EpException(MessageConst.ERROR_700128, new String[] {
+								getEpRoleDescByRoleCode(RoleCode.FL_APPROVER.value()),
+								getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgValidity()
+										.getOrgName() });
 					}
 				}
 				if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && getManagedBean().getSelectedApprover() == null){
@@ -3636,16 +3639,17 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					getManagedBean().setSelectedTabIndex(0);
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
-				if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)){
+				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 					// #31788 - validate requisitioner active/inactive
 					IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 					UserReqDTO userReqDTO = new UserReqDTO();
-					userReqDTO.setUserId(getManagedBean().getFulfilmentRequest().getRequistioner().getUser().getUserId());
+					userReqDTO.setUserId(getManagedBean().getFulfilmentRequest().getRequistioner().getUser()
+							.getUserId());
 					userReqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile()
 							.getOrgProfileId());
 					userReqDTO.setRoleCode(RoleCode.REQUISITIONER.value());
-					userReqDTO.setNotify(Boolean.TRUE);	
+					userReqDTO.setNotify(Boolean.TRUE);
 					userReqDTO.setDocType(getManagedBean().getFulfilmentRequest().getDocType());
 					userReqDTO.setDocNo(getManagedBean().getFulfilmentRequest().getDocNo());
 					UserResDTO resDTO = userSO.validateUserAlt(userReqDTO);
@@ -3654,8 +3658,10 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 						UserResDTO availableUser = userSO.retrieveUserByRoleWithLoginHistory(userReqDTO);
 						getManagedBean().setNewUser(availableUser.getPmUser());
 					} else if (resDTO.getUserStatus().equals(0)) {
-						throw new EpException(MessageConst.ERROR_700128, new String[] { getEpRoleDescByRoleCode(RoleCode.REQUISITIONER.value()),
-								getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgValidity().getOrgName() });
+						throw new EpException(MessageConst.ERROR_700128, new String[] {
+								getEpRoleDescByRoleCode(RoleCode.REQUISITIONER.value()),
+								getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgValidity()
+										.getOrgName() });
 					}
 				}
 			}
@@ -4025,7 +4031,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			AddressResDTO resDTO = addressSO.retrieveReceivingOfficerList(reqDTO);
 			if(resDTO.getAddressTypeList().isEmpty()){//TODO others as well needed to throw if list is empty
 				// 31788 - Update alert message when receiving officer is not exist
-				throw new EpException(MessageConst.ERROR_745077, new String[]{delAddr.getFlAddress().getAddressName()});
+				throw new EpException(MessageConst.ERROR_745077,
+						new String[] { delAddr.getFlAddress().getAddressName() });
 			}
 		}
 		

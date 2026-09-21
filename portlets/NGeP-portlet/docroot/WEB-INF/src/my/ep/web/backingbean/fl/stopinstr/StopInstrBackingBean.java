@@ -178,7 +178,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			
 			// #31788 - Start update reqDTO for new user
-			if(getManagedBean().isAssignNewUser()){
+			if (getManagedBean().isAssignNewUser()) {
 				reqDTO.setAssignNewUser(Boolean.TRUE);
 				reqDTO.setNewUser(getManagedBean().getNewUser());
 			}
@@ -617,7 +617,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				getManagedBean().getApproverList().addAll(approverUserList);
 				
 				//#31788 - start assign new user if needed
-				if(getManagedBean().isAssignNewUser()){
+				if (getManagedBean().isAssignNewUser()) {
 					getManagedBean().setNewUser(approverUserList.get(0));
 				}
 				//#31788 - end
