@@ -7,7 +7,7 @@
 	
 	<ui:remove>#RUU Start : Display payment summary for all application</ui:remove>
 	<p:panel header="#{lbl['lbl.sm.payment.details']}"
-		rendered="#{!backingBean.managedBean.smAppl.applType ne 'C'}"
+		rendered="#{backingBean.managedBean.smAppl.applType ne 'C'}"
 		toggleable="true" >
 	<ui:remove>#RUU End</ui:remove>
 		

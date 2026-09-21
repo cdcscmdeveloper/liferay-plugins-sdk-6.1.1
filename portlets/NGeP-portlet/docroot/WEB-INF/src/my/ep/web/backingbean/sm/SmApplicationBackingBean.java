@@ -20348,6 +20348,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		String regDetails = "";
 		String proDetails = "";
 		String lateDetails = "";
+		String bumiDetails = "";
 		if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
 			regDetails = getParameterDesc(ParameterTypeConst.SUPP_PAYMENT_ITEM, SupplierManagementConst.MOF_PAYMENT);
 			proDetails = getParameterDesc(ParameterTypeConst.SUPP_PAYMENT_ITEM, SupplierManagementConst.PROCESSING_PAYMENT);
@@ -20356,6 +20357,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			proDetails = "MOF Processing Fee (Add Category)";
 		} else if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)){
 			regDetails = "MOF Registration Fee (Bumiputera Status Application Application)";
+			bumiDetails = "Bumiputra Certification Fee";
 			proDetails = "MOF Processing Fee (Bumiputera Status Application Application)";
 		} else if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
 			regDetails = "MOF Registration Fee (Update MOF Profile)";
@@ -20381,7 +20383,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 		SmPaymentDetailsVO proPaymentVO = new SmPaymentDetailsVO();
 		proPaymentVO.setDetails(proDetails);
-		proPaymentVO.setPrice(new BigDecimal(100));
+		proPaymentVO.setPrice(SmRuleHelper.getInstance().getProcessingFee());
 		proPaymentVO.setTotalAmount(proPaymentVO.getPrice());
 		getManagedBean().getPaymentDetailsVOList().add(proPaymentVO);
 		
@@ -20429,6 +20431,14 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			cPaymentVO.setHasQuantity(true);
 			cPaymentVO.setTotalAmount(cPaymentVO.getPrice().multiply(BigDecimal.valueOf(getManagedBean().getCancelledCount())));
 			getManagedBean().getPaymentDetailsVOList().add(cPaymentVO);
+		}
+		
+		if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)){
+			SmPaymentDetailsVO bumiPaymentVO = new SmPaymentDetailsVO();
+			bumiPaymentVO.setDetails(bumiDetails);
+			bumiPaymentVO.setPrice(new BigDecimal(600));
+			bumiPaymentVO.setTotalAmount(bumiPaymentVO.getPrice());
+			getManagedBean().getPaymentDetailsVOList().add(bumiPaymentVO);
 		}
 
 		for (SmPaymentDetailsVO paymentDetailsVO : getManagedBean()
@@ -20556,7 +20566,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			sPyBill.setItemDesc("Special Category Fee");
 			BigDecimal itemPrice = new BigDecimal(1200);
 			sPyBill.setItemPrice(itemPrice.multiply(BigDecimal.valueOf(getManagedBean().getSpecialCodeCount())));
-			sPyBill.setItemQty(getManagedBean().getCancelledCount());
+			sPyBill.setItemQty(getManagedBean().getSpecialCodeCount());
 			catPyBillList.add(sPyBill);
 		}
 		
