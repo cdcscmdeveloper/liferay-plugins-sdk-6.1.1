@@ -20,14 +20,12 @@
 						<c:when test="#{evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}">
 						<p:menuitem value="#{lbl['lbl.sc.eva.financial.itemized']}"
 							action="#{evaluationBackingBean.retriveFinancialEvaluationStage}"
-							update="@form"
-							actionListener="#{evaluationBackingBean.autoSaveEvaluationMenuChange()}"/>
+							update="@form" />
 						</c:when>
 						<c:otherwise>
 							<p:menuitem value="#{lbl['lbl.sc.financial']}"
 							action="#{evaluationBackingBean.retriveFinancialEvaluationStage}"
-							update="@form"
-								actionListener="#{evaluationBackingBean.autoSaveEvaluationMenuChange()}"/>
+							update="@form" />
 						</c:otherwise>
 						</c:choose>
 					</c:if>
@@ -37,8 +35,7 @@
 						and evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}">
 						<p:menuitem value="#{lbl['lbl.sc.eva.financial.package']}"  disabled="#{evaluationBackingBean.managedBean.singleSpecQuestion or evaluationBackingBean.managedBean.noSupplierPackageExist ne null and evaluationBackingBean.managedBean.noSupplierPackageExist}"
 							action="#{evaluationBackingBean.retriveFinancialEvaluationStagePackage}"
-							update="@form"
-							actionListener="#{evaluationBackingBean.autoSaveEvaluationMenuChange()}"/>
+							update="@form" />
 					</c:if>
 <!-- #34588 end cater WIP -->
 					<c:if
@@ -46,8 +43,7 @@
 						<p:menuitem value="#{lbl['lbl.sc.eva.financial.summary']}" process="@this" partialSubmit="true" 
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{evaluationBackingBean.retriveOneTierFinancialSupplierSummary}"
-							update="@form"
-							actionListener="#{evaluationBackingBean.autoSaveEvaluationMenuChange()}"/>
+							update="@form" />
 					</c:if>
 
 					<!-- <c:if
@@ -57,8 +53,7 @@
 						<p:menuitem value="#{lbl['lbl.sc.eva.recommendation.summary']}" process="@this" partialSubmit="true" 
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{evaluationBackingBean.retriveOneTierRecommendationSupplierSummary}"
-							update="@form"
-							actionListener="#{evaluationBackingBean.autoSaveEvaluationMenuChange()}"/>
+							update="@form" />
 					</c:if> -->
 
 				</p:tabMenu></td>

@@ -18,8 +18,7 @@
 						test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore or evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}">
 						<p:menuitem value="#{lbl['lbl.sc.eva.technical.item']}"
 							action="#{evaluationBackingBean.retriveTechnicalEvaluationStage}"
-							update="@form"
-							actionListener="#{evaluationBackingBean.autoSaveEvaluationMenuChange()}"/>
+							update="@form" />
 					</c:if>
 					<!-- Technical package tab -->
 					<!-- Bug #33178 adding noSupplierPackageExist-->
@@ -29,16 +28,14 @@
 						or evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}">
 						<p:menuitem value="#{lbl['lbl.sc.eva.technical.package']}" disabled="#{evaluationBackingBean.managedBean.scQt.evaluateBy eq SourcingConstants.EVALUATE_BY__ITEM or evaluationBackingBean.managedBean.noSupplierPackageExist}"
 							action="#{evaluationBackingBean.retriveTechnicalEvaluationStagePackage}"
-							update="@form"
-							actionListener="#{evaluationBackingBean.autoSaveEvaluationMenuChange()}"/><!-- 32453 -->
+							update="@form" /><!-- 32453 -->
 					</c:if>
 					<c:if
 						test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent 
 						or evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
 						<p:menuitem value="#{lbl['lbl.sc.technical']}"
 							action="#{evaluationBackingBean.retriveTechnicalEvaluationStage}"
-							update="@form"
-							actionListener="#{evaluationBackingBean.autoSaveEvaluationMenuChange()}"/>
+							update="@form" />
 					</c:if>
 					<!-- 34588 wip below -->
 					<!-- Financial item tab -->
@@ -47,12 +44,10 @@
 						test="#{((evaluationBackingBean.managedBean.committeeType eq 'EC' and !evaluationBackingBean.managedBean.scQt.techEvaluationReq) or (evaluationBackingBean.managedBean.committeeType eq 'FEC'))}">
 						<p:menuitem value="#{lbl['lbl.sc.eva.financial.itemized']}"
 							action="#{evaluationBackingBean.retriveFinancialEvaluationStage}"
-							update="@form" rendered="#{evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}"
-							actionListener="#{evaluationBackingBean.autoSaveEvaluationMenuChange()}"/>
+							update="@form" rendered="#{evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}"/>
 						<p:menuitem value="#{lbl['lbl.sc.financial']}"
 							action="#{evaluationBackingBean.retriveFinancialEvaluationStage}"
-							update="@form" rendered="#{evaluationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}"
-							actionListener="#{evaluationBackingBean.autoSaveEvaluationMenuChange()}"/>
+							update="@form" rendered="#{evaluationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}"/>
 					</c:if>
 					<!-- Bug #33178 adding noSupplierPackageExist-->
 					<ui:remove>
@@ -64,55 +59,48 @@
 						or (evaluationBackingBean.managedBean.committeeType eq 'FEC' and evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore))}">
 						<p:menuitem value="#{lbl['lbl.sc.eva.financial.package']}" disabled="#{evaluationBackingBean.managedBean.singleSpecQuestion or evaluationBackingBean.managedBean.noSupplierPackageExist}"
 							action="#{evaluationBackingBean.retriveFinancialEvaluationStagePackage}"
-							update="@form"
-							actionListener="#{evaluationBackingBean.autoSaveEvaluationMenuChange()}"/>
+							update="@form" />
 					</c:if>
 					<c:if
 						test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and !evaluationBackingBean.managedBean.scQt.techEvaluationReq}">
 						<p:menuitem value="#{lbl['lbl.sc.eva.financial.summary']}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{evaluationBackingBean.retriveOneTierWithoutTechnicalFinancialSupplierSummary}"
-							update="@form"
-							actionListener="#{evaluationBackingBean.autoSaveEvaluationMenuChange()}"/>
+							update="@form" />
 
 
 						<p:menuitem value="#{lbl['lbl.sc.eva.recommendation.summary']}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{evaluationBackingBean.retriveSummaryEvaluationStage}"
-							update="@form"
-							actionListener="#{evaluationBackingBean.autoSaveEvaluationMenuChange()}"/>
+							update="@form" />
 					</c:if>
 					<c:if
 						test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq}">
 						<p:menuitem value="#{lbl['lbl.sc.summary']}" process="@this" partialSubmit="true" 
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{evaluationBackingBean.retriveSummaryEvaluationStage}"
-							update="@form"
-							actionListener="#{evaluationBackingBean.autoSaveEvaluationMenuChange()}"/>
+							update="@form" />
 					</c:if>
 					<c:if
 						test="#{evaluationBackingBean.managedBean.committeeType eq 'FEC'}">
 						<p:menuitem value="#{lbl['lbl.sc.summary']}" process="@this" partialSubmit="true" 
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{evaluationBackingBean.retriveSummaryEvaluationStage}"
-							update="@form"
-							actionListener="#{evaluationBackingBean.autoSaveEvaluationMenuChange()}"/>
+							update="@form" />
 					</c:if>
 					<c:if
 						test="#{evaluationBackingBean.managedBean.committeeType eq 'TEC'}">
 						<p:menuitem value="#{lbl['lbl.sc.summary']}" process="@this" partialSubmit="true" 
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{evaluationBackingBean.retriveSummaryEvaluationStage}"
-							update="@form"
-							actionListener="#{evaluationBackingBean.autoSaveEvaluationMenuChange()}"/>
+							update="@form" />
 					</c:if>
 					<c:if
 						test="#{evaluationBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeTechnicalEvaluationCommittee and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true' and evaluationBackingBean.managedBean.demoWip eq 'false'}"><ui:remove>#28784 WIP @idham</ui:remove>
 						<p:menuitem value="#{lbl['lbl.sc.eva.technical.presentation.demo']}" process="@this" partialSubmit="true" 
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{evaluationBackingBean.retrivePresentationOrDemoEvaluationStage}"
-							update="@form"
-							actionListener="#{evaluationBackingBean.autoSaveEvaluationMenuChange()}"/>
+							update="@form" />
 					</c:if>
 
 				</p:tabMenu></td>

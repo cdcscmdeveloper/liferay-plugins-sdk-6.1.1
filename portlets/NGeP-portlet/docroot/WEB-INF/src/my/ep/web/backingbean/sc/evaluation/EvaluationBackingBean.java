@@ -1565,12 +1565,8 @@ public void saveComplianceSample() {
 				complianceChangeScQtStatusUpdate();
 			}
 
-			// #10098 Start Vinod 21092026
-			if (!autoSaveFlow) {
-				successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.sc.prepare.evaluation.compliance"), " ",
-						Boolean.FALSE);
-			}
-			// #10098 End Vinod 21092026
+			successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.sc.prepare.evaluation.compliance"), " ",
+					Boolean.FALSE);
 		} finally {
 			evaluationSo = null;
 		}
@@ -7901,9 +7897,6 @@ public void saveComplianceSample() {
 	 */
 	public void evaluationMaintainPreviousNextTabIndex(int currentTab,
 			int outputTab) throws Exception {
-		// #10098 Start Vinod 21092026
-		autoSaveEvaluationTabChange(currentTab, outputTab);
-		// #10098 End Vinod 21092026
 		IQTEvaluationSO evaluationSo = null;
 		EvaluationResDTO evalResDTO = new EvaluationResDTO();
 		boolean noProposalSubmitted = this.getManagedBean().isNoProposalSubmitted();//6906
@@ -10045,12 +10038,8 @@ private void retriveCommitteeRemarksList(){
 			/* ***#25638#99 - end */
 			retriveMeetingDtls(qtId, committeeType, index);
 			if (save) {// 10542
-				// #10098 Start Vinod 21092026
-				if (!autoSaveFlow) {
-					successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.sc.prepare.evaluation"), QtNum,
-							Boolean.FALSE);
-				}
-				// #10098 End Vinod 21092026
+				successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.sc.prepare.evaluation"), QtNum,
+						Boolean.FALSE);
 
 				// 10542 - start
 				EvaluationReqDTO qtReqDTO = new EvaluationReqDTO();
@@ -10997,23 +10986,14 @@ private void retriveCommitteeRemarksList(){
 			resetComplianceConfirmationFlag();
 			// #29187 End Vinod
 
-			// #10098 Start Vinod 21092026
-			if (!autoSaveFlow) {
-				successMessage(MessageConst.INFO_700004,
-						getMessageCommon("lbl.sc.prepare.evaluation.evaluationStage.scores"), " ", Boolean.FALSE);
-			}
-			// #10098 End Vinod 21092026
+			successMessage(MessageConst.INFO_700004,
+					getMessageCommon("lbl.sc.prepare.evaluation.evaluationStage.scores"), " ", Boolean.FALSE);
    
 		} finally {
 			evaluationSO = null;
 		}
 		return evalResDTO;
 	}
-
-	// #10098 Start Vinod 21092026 suppresses the success message on autosave
-	private boolean autoSaveFlow;
-	private static final int EVALUATION_STATUS_TAB_INDEX = 5;
-	// #10098 End Vinod 21092026
 
 	// #10098 Start Vinod 11092026
 	/**
@@ -11033,56 +11013,6 @@ private void retriveCommitteeRemarksList(){
 	// #10098 End Vinod 11092026
 
 	// #10098 Start Vinod 21092026
-	/**
-	 * Autosave the evaluation checklist when the evaluation menu changes.
-	 * 
-	 * @param currentTab
-	 * @param outputTab
-	 */
-	private void autoSaveEvaluationTabChange(int currentTab, int outputTab) {
-		if (currentTab == outputTab) {
-			return;
-		}
-		autoSaveEvaluationMain();
-	}
-
-	/**
-	 * Autosave on evaluation side menu change. Bound from the menu items so the
-	 * retrieve actions they call stay unaffected.
-	 */
-	public void autoSaveEvaluationMenuChange() {
-		autoSaveEvaluationMain();
-	}
-
-	/**
-	 * Runs the evaluation screen's main save, under the same conditions as its
-	 * save button: hidden on the status tab, disabled once the committee is
-	 * modified.
-	 */
-	private void autoSaveEvaluationMain() {
-		if (this.getManagedBean().isReadOnly()
-				|| this.getManagedBean().getTabActiveIndex() == EVALUATION_STATUS_TAB_INDEX) {
-			return;
-		}
-		EvaluationMeetingBackingBean meetingBB = this.getManagedBean().getMeetingBB();
-		if (null != meetingBB && null != meetingBB.getManagedBean()
-				&& meetingBB.getManagedBean().isCommitteeModified()) {
-			return;
-		}
-		autoSaveFlow = true;
-		try {
-			saveMeetingDtls(true);
-		} catch (Exception e) {
-			String qtNo = this.getManagedBean().getScQt() != null
-					&& this.getManagedBean().getScQt().getQtNo() != null ? this.getManagedBean().getScQt().getQtNo()
-					: " ";
-			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_EVALUATION_BACKINGBEAN,
-					qtNo, SLALogConstant.QT_AUTOSAVE_EVALUATION_TAB_CHANGE, getUserIdSessionFromLoginId(), e);
-		} finally {
-			autoSaveFlow = false;
-		}
-	}
-
 	/**
 	 * Autosave the technical document compliance checklist on the 15 minute
 	 * poll.
