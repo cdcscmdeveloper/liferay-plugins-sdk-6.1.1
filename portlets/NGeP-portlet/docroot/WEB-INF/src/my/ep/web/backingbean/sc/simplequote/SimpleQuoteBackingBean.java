@@ -2579,6 +2579,17 @@ public class SimpleQuoteBackingBean extends
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);
 			}
+			
+			//#25725 start
+			ParameterReqDTO prmtrReqDTO = new ParameterReqDTO();
+			prmtrReqDTO.setParameterId(quote
+					.getProcurementType().getParameterId());
+			PmParameter procType = getParameterSO()
+					.retrieveParameterById(prmtrReqDTO)
+					.getPmParameter();
+			quote.setProcurementType(procType);
+			
+			//#25725 end
 		} finally {
 			// quoteSO = null;
 		}
