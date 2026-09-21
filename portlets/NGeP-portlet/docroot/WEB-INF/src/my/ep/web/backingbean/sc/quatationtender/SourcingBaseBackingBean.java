@@ -5464,14 +5464,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 								}
 							} else if (SourcingConstants.EVALUATION_TYPE_TIER2.equals(evaluationType)) {
-								if (SourcingConstants.DEMO_EVALUATION_REPORT.equalsIgnoreCase(reportDetail.getTitle())
-										|| SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT.equals(reportDetail.getPmDocument().getDocDefinitionKey())
+								if (SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT.equals(reportDetail.getPmDocument().getDocDefinitionKey())
 										|| SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT.equals(reportDetail.getPmDocument().getDocDefinitionKey())
-										|| SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT.equals(reportDetail.getPmDocument().getDocDefinitionKey())
+										|| SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT.equals(reportDetail.getPmDocument().getDocDefinitionKey()) 
 										|| SourcingConstants.DEMO_EVALUATION_REPORT.equalsIgnoreCase(reportDetail.getTitle())) {
 									getManagedBean().getEvaluationReportDetailList().add(reportDetail);
-
-								}
+								}	
 							}
 					
 						}
@@ -9127,10 +9125,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public Boolean checkWipExistingECReports(Long qtId) {
 		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
-		if (qtSuppFinalizationSO.checkWipExistingECReports(qtId)) {
-			return true;
-		}
-		return false;
+		return qtSuppFinalizationSO.checkWipExistingECReports(qtId);
 	}
 	//#25651 - End
 	
@@ -9144,10 +9139,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public Boolean checkWipExistingOCReports(Long qtId) {
 		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
-		if (qtSuppFinalizationSO.checkWipExistingOCReports(qtId)) {
-			return true;
-		}
-		return false;
+		return qtSuppFinalizationSO.checkWipExistingTECReports(qtId);
 	}
 	//#25651 - End
 	
@@ -9161,10 +9153,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public Boolean checkWipExistingTECReports(Long qtId) {
 		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
-		if (qtSuppFinalizationSO.checkWipExistingTECReports(qtId)) {
-			return true;
-		}
-		return false;
+		return qtSuppFinalizationSO.checkWipExistingTECReports(qtId);
 	}
 	//#25651 - End
 	
@@ -9178,10 +9167,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public Boolean checkWipExistingFECReports(Long qtId) {
 		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
-		if (qtSuppFinalizationSO.checkWipExistingFECReports(qtId)) {
-			return true;
-		}
-		return false;
+		return qtSuppFinalizationSO.checkWipExistingFECReports(qtId);
 	}
 	//#25651 - End
 	

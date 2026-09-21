@@ -3500,7 +3500,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 */
 	public List<Object> getCombinedEvaluationReportList() {
 		
-		List<Object> combinedReportList = new ArrayList<Object>();
+		List<Object> combinedReportList = new ArrayList<>();
 
 		List<ScQtFinalizationReport> reports = getManagedBean().getDocumentList();
 		List<ScQtFinalizationReportDetail> details = getManagedBean().getDocumentDetailList();
