@@ -1,4 +1,4 @@
-/* Copyright © 2014 Archisoft. All rights reserved. */
+/* Copyright  2014 Archisoft. All rights reserved. */
 package my.ep.web.backingbean.sc.bsvattendance;
 
 import java.io.FileNotFoundException;
@@ -1027,24 +1027,28 @@ public class BSVAttendanceBackingBean extends
 		}
 		return salutationName;
 	}
-
 	// #30447 - End
-	
+
 	// #30447 - Start
 	/**
-	 * To set salutation name for supplier
+	 * To set salutation name for supplier.
 	 * 
 	 * @param identificationNo
 	 * @return salutationName
 	 */
-	public String setSalutationSupplierName(String identificationNo) {
+	public String setSalutationSupplierName(String identificationNo, String name) {	
 		String salutation = supplierSalutation(identificationNo);
+
 		if (StringUtils.isNotBlank(salutation)) {
+			if ( StringUtils.isNotBlank(name) && name.equals(name.toUpperCase())) {
+				return StringUtils.upperCase(salutation);
+			}
+
 			return salutation;
 		}
+		
 		return StringUtils.EMPTY;
 	}
-
 	// #30447 - End
 
 	private void getAttandanceDtlsBySelectedRegistartion(
@@ -1109,7 +1113,7 @@ public class BSVAttendanceBackingBean extends
 		
 		// #30447 - Start
 		for (ScQtBsvAttendance attaned : attanedList) {
-			attaned.setSalutation(setSalutationSupplierName(attaned.getIcPassPort()));
+			attaned.setSalutation(setSalutationSupplierName(attaned.getIcPassPort(), attaned.getName()));
 		}
 		// #30447 - End
 		

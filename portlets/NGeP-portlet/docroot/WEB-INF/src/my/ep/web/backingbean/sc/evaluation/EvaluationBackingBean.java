@@ -20544,6 +20544,12 @@ private void retriveCommitteeRemarksList(){
 		this.getManagedBean().setCompanyExpProcRelatedPagingModel(
 				new ViewSupplierCompExpDtlsPagingDataModel(procRelated,
 						evaluationProcReqDTO));
+		
+		// 29661 && 41300 -start-
+		this.getManagedBean().getCompanyExpProcRelatedPagingModel().resetData();
+		this.getManagedBean().getCompanyExpProcRelatedPagingModel()
+				.reloadData();
+		// 29661 && 41300 -end-
 
 		EvaluationResDTO cmpExpProcStatusValue = retrieveContractStatusValueCount(
 				this.getManagedBean().getQtProposalChecklist(), this
@@ -20588,6 +20594,14 @@ private void retriveCommitteeRemarksList(){
 		this.getManagedBean().setCompanyExpNonProcRelatedPagingModel(
 				new ViewSupplierCompExpDtlsPagingDataModel(procNotRelated,
 						evaluationNonProcReqDTO));
+		
+		// 29661 && 41300 -start-
+		this.getManagedBean().getCompanyExpNonProcRelatedPagingModel()
+				.resetData();
+		this.getManagedBean().getCompanyExpNonProcRelatedPagingModel()
+				.reloadData();
+		// 29661 && 41300 -end-
+
 
 		EvaluationResDTO cmpExpNonPrcCountValue = retrieveContractStatusValueCount(
 				this.getManagedBean().getQtProposalChecklist(), this
