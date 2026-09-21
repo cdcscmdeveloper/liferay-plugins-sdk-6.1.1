@@ -8,7 +8,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<ui:define name="resourceSection">
-		<ui:remove>#41341 Start</ui:remove>
+		<ui:remove>#9299 - #41341 Start</ui:remove>
 		<!-- Keep project category descriptions readable at increased browser zoom. -->
 		<style type="text/css">
 			.sm-comp-exp-categories .ui-selectonemenu {
@@ -20,12 +20,12 @@
 				box-sizing: border-box;
 				padding-right: 28px !important;
 				white-space: normal;
-				word-wrap: break-word;
+				height: auto !important;
 				overflow-wrap: anywhere;
 			}
 			.sm-comp-exp-categories td {
 				white-space: normal;
-				word-wrap: break-word;
+				height: auto !important;
 				overflow-wrap: anywhere;
 			}
 			.ui-selectonemenu-panel.sm-comp-exp-category-panel {
@@ -38,11 +38,11 @@
 			}
 			.sm-comp-exp-category-panel .ui-selectonemenu-list-item {
 				white-space: normal;
-				word-wrap: break-word;
+				height: auto !important;
 				overflow-wrap: anywhere;
 			}
 		</style>
-		<ui:remove>#41341 End</ui:remove>
+		<ui:remove>#9299 - #41341 End</ui:remove>
 		<script>
 			$('#portlet_smCompExp_WAR_NGePportlet').find('.portlet-title-text')
 					.html("#{smCompExpMB.headerTitle}");
