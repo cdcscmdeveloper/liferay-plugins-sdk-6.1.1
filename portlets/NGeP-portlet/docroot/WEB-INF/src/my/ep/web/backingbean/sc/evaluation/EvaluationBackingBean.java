@@ -1565,8 +1565,12 @@ public void saveComplianceSample() {
 				complianceChangeScQtStatusUpdate();
 			}
 
-			successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.sc.prepare.evaluation.compliance"), " ",
-					Boolean.FALSE);
+			// #10098 Start Vinod 21092026
+			if (!autoSaveFlow) {
+				successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.sc.prepare.evaluation.compliance"), " ",
+						Boolean.FALSE);
+			}
+			// #10098 End Vinod 21092026
 		} finally {
 			evaluationSo = null;
 		}
@@ -10989,8 +10993,12 @@ private void retriveCommitteeRemarksList(){
 			resetComplianceConfirmationFlag();
 			// #29187 End Vinod
 
-			successMessage(MessageConst.INFO_700004,
-					getMessageCommon("lbl.sc.prepare.evaluation.evaluationStage.scores"), " ", Boolean.FALSE);
+			// #10098 Start Vinod 21092026
+			if (!autoSaveFlow) {
+				successMessage(MessageConst.INFO_700004,
+						getMessageCommon("lbl.sc.prepare.evaluation.evaluationStage.scores"), " ", Boolean.FALSE);
+			}
+			// #10098 End Vinod 21092026
    
 		} finally {
 			evaluationSO = null;
@@ -10998,11 +11006,16 @@ private void retriveCommitteeRemarksList(){
 		return evalResDTO;
 	}
 
+	// #10098 Start Vinod 21092026 suppresses the success message on autosave
+	private boolean autoSaveFlow;
+	// #10098 End Vinod 21092026
+
 	// #10098 Start Vinod 11092026
 	/**
 	 * Autosave the evaluation template checklist on the 15 minute poll.
 	 */
 	public void autoSaveTemplateChecklist() {
+		autoSaveFlow = true;
 		try {
 			saveTempleateSpecDtls();
 		} catch (Exception e) {
@@ -11011,6 +11024,8 @@ private void retriveCommitteeRemarksList(){
 					: " ";
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_EVALUATION_BACKINGBEAN,
 					qtNo, SLALogConstant.QT_AUTOSAVE_TEMPLATE_CHECKLIST, getUserIdSessionFromLoginId(), e);
+		} finally {
+			autoSaveFlow = false;
 		}
 	}
 	// #10098 End Vinod 11092026
@@ -11050,6 +11065,7 @@ private void retriveCommitteeRemarksList(){
 	 * poll.
 	 */
 	public void autoSaveComplianceChecklist() {
+		autoSaveFlow = true;
 		try {
 			saveComplianceUploadCheckList();
 		} catch (Exception e) {
@@ -11058,6 +11074,8 @@ private void retriveCommitteeRemarksList(){
 					: " ";
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_EVALUATION_BACKINGBEAN,
 					qtNo, SLALogConstant.QT_AUTOSAVE_COMPLIANCE_CHECKLIST, getUserIdSessionFromLoginId(), e);
+		} finally {
+			autoSaveFlow = false;
 		}
 	}
 	// #10098 End Vinod 21092026

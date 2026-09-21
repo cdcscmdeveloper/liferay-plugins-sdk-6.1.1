@@ -1531,16 +1531,23 @@ public class LOIDetailBackingBean extends
 	 * Autosave the LOI details on side menu change. Bound from the menu items
 	 * so the internal tabMenuListener callers stay unaffected.
 	 */
+	// #10098 Start Vinod 21092026 suppresses the success message on autosave
+	private boolean autoSaveFlow;
+	// #10098 End Vinod 21092026
+
 	public void autoSaveLoiTabChange() {
 		if (this.getManagedBean().isReadOnly()) {
 			return;
 		}
+		autoSaveFlow = true;
 		try {
 			saveAction();
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
 					SLALogConstant.QT_LOI_DETAIL_BACKINGBEAN, " ",
 					SLALogConstant.QT_AUTOSAVE_LOI_TAB_CHANGE, getUserIdSessionFromLoginId(), e);
+		} finally {
+			autoSaveFlow = false;
 		}
 	}
 	// #10098 End Vinod 21092026
@@ -2703,8 +2710,12 @@ public class LOIDetailBackingBean extends
 				reloadLOI(scLoi);
 				this.getManagedBean().setScQt(scQt);
 				isSupplierEPVStatusRejected(scLoi);//#21692
-				successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES, 
-						ParameterConst.DOCTYPE_LETTER_OF_INTENT, scLoi.getLoiNo(), Boolean.FALSE);
+				// #10098 Start Vinod 21092026
+				if (!autoSaveFlow) {
+					successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES, 
+							ParameterConst.DOCTYPE_LETTER_OF_INTENT, scLoi.getLoiNo(), Boolean.FALSE);
+				}
+				// #10098 End Vinod 21092026
 			}
 
 		} finally {

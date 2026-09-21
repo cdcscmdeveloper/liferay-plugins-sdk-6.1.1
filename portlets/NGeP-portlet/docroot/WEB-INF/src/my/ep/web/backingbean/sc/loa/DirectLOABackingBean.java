@@ -420,10 +420,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				deleteScQtCategory(deletedSmCategory);
 				insertSupplierCategoryCodeToScQtCategory(addedCategoryList);
 				//#29611 #40511 End
-				successMessage(MessageConst.INFO_700025,
-						ParameterTypeConst.DOCUMENT_TYPES,
-						ParameterConst.DOCTYPE_LETTER_OF_AWARD,
-						scLoa.getLoaNo(), Boolean.TRUE);
+				// #10098 Start Vinod 21092026
+				if (!autoSaveFlow) {
+					successMessage(MessageConst.INFO_700025,
+							ParameterTypeConst.DOCUMENT_TYPES,
+							ParameterConst.DOCTYPE_LETTER_OF_AWARD,
+							scLoa.getLoaNo(), Boolean.TRUE);
+				}
+				// #10098 End Vinod 21092026
 			} else {
 				int selectedTabIndx = this.getManagedBean()
 						.getSelectedTabIndex();
@@ -485,10 +489,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				getSmSupplierCategory(this.getManagedBean().getScLoa());
 				//#29661 #40511 End
 
-				successMessage(MessageConst.INFO_700025,
-						ParameterTypeConst.DOCUMENT_TYPES,
-						ParameterConst.DOCTYPE_LETTER_OF_AWARD,
-						scLoa.getLoaNo(), Boolean.FALSE);
+				// #10098 Start Vinod 21092026
+				if (!autoSaveFlow) {
+					successMessage(MessageConst.INFO_700025,
+							ParameterTypeConst.DOCUMENT_TYPES,
+							ParameterConst.DOCTYPE_LETTER_OF_AWARD,
+							scLoa.getLoaNo(), Boolean.FALSE);
+				}
+				// #10098 End Vinod 21092026
 			}
 			// #29007 Start Vinod
 			this.getManagedBean().setBpmVersionNo(bpmVersionNo);
@@ -13299,16 +13307,23 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	/**
 	 * Autosave the direct LOA details on side menu change.
 	 */
+	// #10098 Start Vinod 21092026 suppresses the success message on autosave
+	private boolean autoSaveFlow;
+	// #10098 End Vinod 21092026
+
 	private void autoSaveDirectLoaTabChange() {
 		if (this.getManagedBean().isReadOnly()) {
 			return;
 		}
+		autoSaveFlow = true;
 		try {
 			saveAction(false);
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
 					SLALogConstant.QT_DIRECT_LOA_DETAIL_BACKINGBEAN, " ",
 					SLALogConstant.QT_AUTOSAVE_DIRECT_LOA_TAB_CHANGE, getUserIdSessionFromLoginId(), e);
+		} finally {
+			autoSaveFlow = false;
 		}
 	}
 	// #10098 End Vinod 21092026

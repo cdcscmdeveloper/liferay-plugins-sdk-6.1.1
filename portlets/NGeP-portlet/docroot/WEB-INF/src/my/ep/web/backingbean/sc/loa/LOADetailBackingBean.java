@@ -3853,14 +3853,20 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						removeUnwantedLampiranA3Report(1); //#29006 - note 650
 						
 						//Bug #33188 start
+						// #10098 Start Vinod 21092026
 						if (isNewLoa){
 							renewSesionObject();
-							successMessage(MessageConst.INFO_7000044, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
-									scLoa.getLoaNo(), Boolean.TRUE);
+							if (!autoSaveFlow) {
+								successMessage(MessageConst.INFO_7000044, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
+										scLoa.getLoaNo(), Boolean.TRUE);
+							}
 						}else{
-							successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
-									scLoa.getLoaNo(), Boolean.FALSE);
+							if (!autoSaveFlow) {
+								successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
+										scLoa.getLoaNo(), Boolean.FALSE);
+							}
 						}
+						// #10098 End Vinod 21092026
 						//Bug #33188 end
 					}
 					// #29007 Start Vinod
@@ -7745,16 +7751,23 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	/**
 	 * Autosave the LOA supplier response on side menu change.
 	 */
+	// #10098 Start Vinod 21092026 suppresses the success message on autosave
+	private boolean autoSaveFlow;
+	// #10098 End Vinod 21092026
+
 	private void autoSaveLoaTabChange() {
 		if (this.getManagedBean().isReadOnly()) {
 			return;
 		}
+		autoSaveFlow = true;
 		try {
 			saveAction(true);
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
 					SLALogConstant.QT_LOA_DETAIL_BACKINGBEAN, " ",
 					SLALogConstant.QT_AUTOSAVE_LOA_TAB_CHANGE, getUserIdSessionFromLoginId(), e);
+		} finally {
+			autoSaveFlow = false;
 		}
 	}
 	// #10098 End Vinod 21092026

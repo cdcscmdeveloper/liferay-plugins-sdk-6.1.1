@@ -696,6 +696,10 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 
+	// #10098 Start Vinod 21092026 suppresses the success message on autosave
+	private boolean autoSaveFlow;
+	// #10098 End Vinod 21092026
+
 	// #10098 Start Vinod 21092026
 	/**
 	 * Autosave the supplier finalization details on side menu change.
@@ -704,12 +708,15 @@ public class SupplierFinalizationBackingBean extends
 		if (this.getManagedBean().isReadOnly()) {
 			return;
 		}
+		autoSaveFlow = true;
 		try {
 			saveSupplierFinalization();
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
 					SLALogConstant.QT_SUPPLIER_FINALIZATION_BACKINGBEAN, " ",
 					SLALogConstant.QT_AUTOSAVE_SUPP_FINALIZATION_TAB_CHANGE, getUserIdSessionFromLoginId(), e);
+		} finally {
+			autoSaveFlow = false;
 		}
 	}
 	// #10098 End Vinod 21092026
@@ -2140,11 +2147,15 @@ public class SupplierFinalizationBackingBean extends
 				String qtNo = getManagedBean().getScQt().getQtNo();
 				String desc = ResourceBundleUtils.getMessage("lbl.sc.sf.supplier.finalization",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-								MessageConst.INFO_700004, new String[] { desc, qtNo },
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				// #10098 Start Vinod 21092026
+				if (!autoSaveFlow) {
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+									MessageConst.INFO_700004, new String[] { desc, qtNo },
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				}
+				// #10098 End Vinod 21092026
 			}
 			// 25037 - end
 		} finally {
