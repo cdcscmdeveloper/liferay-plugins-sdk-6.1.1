@@ -27,6 +27,7 @@ import my.ep.persistence.entity.sm.SmRvDocFile;
 import my.ep.persistence.entity.sm.SmRvSuppDoc;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.web.bean.paginator.IPagingDataModel;
