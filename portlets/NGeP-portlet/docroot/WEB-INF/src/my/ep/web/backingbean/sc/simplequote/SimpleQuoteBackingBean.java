@@ -1574,30 +1574,18 @@ public class SimpleQuoteBackingBean extends
 					if (ParameterConst.PROC_TYPE_G2G.equals(quote
 							.getProcurementType().getParameterCode())) {
 						// govt sellers
-						//40234 - start
-						if ((getManagedBean().getGovtSellers() == null || getManagedBean().getGovtSellers().isEmpty())
-						        && getManagedBean().getSupplierList() != null
-						        && !getManagedBean().getSupplierList().isEmpty()) {
-						    quote.getScQuoteSuppliers().clear();
-						}
-						//40234 - end
-						if (getManagedBean().getGovtSellers() != null) {
-							suppliers.addAll(getManagedBean().getGovtSellers());
-						}
+						//#40654 - start
+						// Rebuild the persisted collection IN PLACE. Clearing it and re-adding the
+						// same instances made EclipseLink delete every row and re-insert the same
+						// primary keys in one flush, because scQuoteSuppliers is orphanRemoval=true.
+						syncQuoteSuppliers(quote, getManagedBean().getGovtSellers());
+						//#40654 - end
 					} else {
 						// by supplier
-						//40234 - start
-						if ((getManagedBean().getSupplierList() == null || getManagedBean().getSupplierList().isEmpty())
-						        && getManagedBean().getGovtSellers() != null
-						        && !getManagedBean().getGovtSellers().isEmpty()) {
-						    quote.getScQuoteSuppliers().clear();
-						    getManagedBean().getSupplierList().clear();
-						}
-						//40234 - end
-						if (getManagedBean().getSupplierList() != null) {
-							suppliers
-									.addAll(getManagedBean().getSupplierList());
-						}
+						//#40654 - start
+						// Rebuild the persisted collection in place; see the G2G leg above.
+						syncQuoteSuppliers(quote, getManagedBean().getSupplierList());
+						//#40654 - end
 					}
 				}
 
@@ -2700,24 +2688,31 @@ public class SimpleQuoteBackingBean extends
 			// Temp(#34274 - End)
 		}
 		// #28536 - start
+		//#40654 - start
+		// Changing procurement type changes which suppliers are eligible, so every
+		// switch starts from a clean slate. All THREE collections are cleared, not
+		// just the two UI lists: splitSuppliers() replaces supplierList and
+		// govtSellers with fresh ArrayLists whenever a supplier or government seller
+		// is picked, so from then on they no longer alias scQuoteSuppliers - and
+		// splitSuppliers() rebuilds them FROM scQuoteSuppliers, which would
+		// resurrect a supplier that had only been cleared from the UI lists.
+		clearSupplierSelections();
+		//#40654 - end
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
-			//40234 - start
-			if (CollectionUtils.isNotEmpty(getManagedBean().getSupplierList())) {
-				removeSupplierListFromGovtSeller(getManagedBean().getSupplierList());
-		    }
-			//40234 - end
 			getGovtSellerCriteria();
 		} else {
-			//40234 - start
-			if (CollectionUtils.isNotEmpty(getManagedBean().getSupplierList())) {
-				removeGovtSellerFromSupplierList(getManagedBean().getSupplierList());
-			} else if (CollectionUtils.isNotEmpty(getManagedBean().getGovtSellers())) {
-				removeGovtSellerFromSupplierList(getManagedBean().getGovtSellers());
-			}
-			//40234 - end
-			getSupplierListCriteria();
+		    getSupplierListCriteria();
 		}
 		// #28536 - end
+		//#40654 - start
+		// procurementTypeEvent() above has just changed locAndBusinessFlag / g2GFlag,
+		// which decide WHICH tabs of the supplier-criteria tabView are rendered. The
+		// previously active index can then point past the end of the new tab set, so
+		// the tabView comes back with no tab selected and the table looks collapsed
+		// until the user clicks a tab header. Reset to the first rendered tab, the
+		// same way byLocAndBusinessEvent() does when it changes the tab set.
+		getManagedBean().setTabActiveIndex(0);
+		//#40654 - end
 	}
 
 	/**
@@ -8172,63 +8167,104 @@ public class SimpleQuoteBackingBean extends
 	}
 	// #38916 - End
 	//40234 - start
-		/**
-		 * To remove govt seller from supplier list 
-		 * when change procurement type from G2G -> Normal
-		 * 
-		 * @param suppliers
-		 */
-		private void removeGovtSellerFromSupplierList(List<ScQuoteSupplier> suppliers) {
-		    IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-		            .getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+	/**
+	 * To identify supplier is Goverment Seller
+	 * 
+	 * @param supplier
+	 * @param orgProfileSO
+	 * @return
+	 */
+	private boolean isGovtSeller(ScQuoteSupplier supplier, IOrgProfileSO orgProfileSO) {
+	    if (supplier == null || supplier.getSmSupplier() == null) {
+	        return false;
+	    }
 
-		    List<ScQuoteSupplier> suppliersToRemove = new ArrayList<ScQuoteSupplier>();
+	    OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
+	    profileReqDTO.setOrgProfileId(supplier.getSmSupplier().getSupplierId());
 
-		    for (ScQuoteSupplier supplier : suppliers) {
-		        if (isGovtSeller(supplier, orgProfileSO)) {
-		            suppliersToRemove.add(supplier);
-		        }
-		    }
+	    OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgProfileByProfileId(profileReqDTO);
+	    //#40654 - start - an unresolvable supplier id must skip that supplier,
+	    // not NPE and abort the whole procurement-type switch
+	    if (orgProfileResDTO == null) {
+	        return false;
+	    }
+	    //#40654 - end
+	    PmOrgProfile pmOrgProfile = orgProfileResDTO.getPmOrgProfile();
 
-		    suppliers.removeAll(suppliersToRemove);
+	    return pmOrgProfile != null && pmOrgProfile.isGovtSeller();
+	}
+	//40234 - end
+
+	//#40654 - start
+	/**
+	 * Clears every supplier selection held for the quote, so that a
+	 * procurement-type change always starts from a clean slate.
+	 *
+	 * <p>All three collections are cleared deliberately. splitSuppliers() replaces
+	 * supplierList and govtSellers with fresh ArrayLists whenever a supplier or
+	 * government seller is picked, so after that they no longer alias
+	 * scQuoteSuppliers. Clearing only the two UI lists would leave the persisted
+	 * collection populated, and splitSuppliers() rebuilds the UI lists from it -
+	 * resurrecting the supplier that was supposed to be gone.
+	 */
+	private void clearSupplierSelections() {
+		if (CollectionUtils.isNotEmpty(getManagedBean().getSupplierList())) {
+			getManagedBean().getSupplierList().clear();
 		}
-		
-		/**
-		 * To identify supplier is Goverment Seller
-		 * 
-		 * @param supplier
-		 * @param orgProfileSO
-		 * @return
-		 */
-		private boolean isGovtSeller(ScQuoteSupplier supplier, IOrgProfileSO orgProfileSO) {
-		    if (supplier == null || supplier.getSmSupplier() == null) {
-		        return false;
-		    }
-
-		    OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
-		    profileReqDTO.setOrgProfileId(supplier.getSmSupplier().getSupplierId());
-
-		    OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgProfileByProfileId(profileReqDTO);
-		    PmOrgProfile pmOrgProfile = orgProfileResDTO.getPmOrgProfile();
-
-		    return pmOrgProfile != null && pmOrgProfile.isGovtSeller();
+		if (CollectionUtils.isNotEmpty(getManagedBean().getGovtSellers())) {
+			getManagedBean().getGovtSellers().clear();
 		}
-		/**
-		 * To remove non g2g supplier from govt list when change procurement type
-		 * 
-		 * 
-		 * @param suppliers
-		 */
-		private void removeSupplierListFromGovtSeller(List<ScQuoteSupplier> suppliers) {
-			List<ScQuoteSupplier> suppliersToRemove = new ArrayList<ScQuoteSupplier>();
+		ScQuote quote = getManagedBean().getScQuote();
+		if (quote != null && CollectionUtils.isNotEmpty(quote.getScQuoteSuppliers())) {
+			quote.getScQuoteSuppliers().clear();
+		}
+	}
 
-			for (ScQuoteSupplier supplier : suppliers) {
-					suppliersToRemove.add(supplier);
+	/**
+	 * Rebuilds the quote's persisted supplier collection IN PLACE.
+	 *
+	 * <p>scQuoteSuppliers is mapped @OneToMany(orphanRemoval = true), so
+	 * clear()-then-re-add is not a rebuild: EclipseLink treats every cleared
+	 * element as an orphan and issues a DELETE, then an INSERT for the very same
+	 * primary key when the same instance is added back - both inside one flush.
+	 * retainAll + add touches only what actually changed, so unchanged rows
+	 * produce no SQL at all.
+	 *
+	 * @param quote   the quote whose supplier collection is being rebuilt
+	 * @param desired the suppliers that should remain; may be null or empty
+	 */
+	private void syncQuoteSuppliers(ScQuote quote, List<ScQuoteSupplier> desired) {
+		if (quote == null) {
+			return;
+		}
+		List<ScQuoteSupplier> target = quote.getScQuoteSuppliers();
+		if (target == null) {
+			target = new ArrayList<>(); //#41211
+			quote.setScQuoteSuppliers(target);
+		}
+
+		// copy first: `desired` may BE the same List instance as `target`, in which
+		// case retainAll below would otherwise operate on itself
+		//#41212 & #41213 - start
+		List<ScQuoteSupplier> keep;
+		if (desired == null) {
+		    keep = new ArrayList<>();
+		} else {
+		    keep = new ArrayList<>(desired);
+		}
+		//#41212 & #41213 - end
+		// delete only the rows that really left; survivors are left untouched
+		target.retainAll(keep);
+
+		// insert only genuinely new rows
+		for (ScQuoteSupplier supplier : keep) {
+			if (!target.contains(supplier)) {
+				supplier.setQuote(quote);
+				target.add(supplier);
 			}
-
-			suppliers.removeAll(suppliersToRemove);
 		}
-		//40234 - end
+	}
+	//#40654 - end
 		
 	// 26284 - Start
 	/**
