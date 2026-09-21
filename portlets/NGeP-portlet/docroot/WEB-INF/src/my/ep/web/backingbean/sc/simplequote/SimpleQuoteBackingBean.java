@@ -3060,7 +3060,9 @@ public class SimpleQuoteBackingBean extends
 		Date dataCreatedDate;
 		dataCreatedDate = assignActualDate();
 		// 27868 - end
-		//#40654 - start
+		//#40654, #27868 - start
+		// As this managedBean under #27868, so this block of code will be merge with 27868.
+		// Double tab for special item still not exist in pds/prd code.
 		// These three are derived from the selected reason's supplier-account-type
 		// restrictions and are only meaningful for Special Item / PK7. Without a
 		// clean slate they leak across a procurement-type change, so the Agency tab
@@ -3070,7 +3072,7 @@ public class SimpleQuoteBackingBean extends
 		getManagedBean().setIncludeMofSupplier(Boolean.FALSE);
 		getManagedBean().setIncludeBasicSupplier(Boolean.FALSE);
 		getManagedBean().setIncludeG2gSupplier(Boolean.FALSE);
-		//#40654 - end
+		//#40654, #27868 - end
 
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)) {
 			getManagedBean().setProcTypeOption(Boolean.FALSE);
