@@ -6517,6 +6517,19 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					}
 					checkDemoPresentationByStatus();//#28784
 				}
+
+				// 41312 -start-
+				if (null != scQt.getQtStatus()
+						&& isQTStatusGreaterThanOrEquals(scQt.getQtStatus()
+								.getStatusId(),
+								QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
+						&& null == scQt.getEstimatedAmount()) {
+					BigDecimal estimatedAmount = checkEstimatedAmount(scQt);
+					scQt.setEstimatedAmount(estimatedAmount);
+
+				}
+				// 41312 -end-
+	
 			} finally {
 				QtDetailsSO = null;
 			}

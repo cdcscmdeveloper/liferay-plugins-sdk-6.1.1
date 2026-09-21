@@ -560,12 +560,22 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	/**
 	 * True while the AI Assistant dialog holds messages of its own. The page-level p:messages shows
 	 * every clientId, so it repeats them above the form unless it is switched to globalOnly.
-	 * docType is set by initContext, so it is null on Supporting Documents, where the bank messages
-	 * also carry the "ai" clientId but have no dialog to render them.
+	 * Supporting Documents has no dialog and takes a Tenancy Agreement too, so the page decides.
 	 * @return
 	 */
 	public boolean isAiMessagePending(){
-		return docType != null && FacesContext.getCurrentInstance().getMessages("ai").hasNext();
+		return docType != null && !isSupportDocPage()
+				&& FacesContext.getCurrentInstance().getMessages("ai").hasNext();
+	}
+
+	// docType is re-seeded per page but never cleared, so it cannot say where we are
+	private static boolean isSupportDocPage(){
+		FacesContext fc = FacesContext.getCurrentInstance();
+		SmApplicationBackingBean bb = fc.getApplication().evaluateExpressionGet(fc,
+				"#{backingBean}", SmApplicationBackingBean.class);
+		return bb != null && bb.getManagedBean() != null
+				&& SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS
+						.equalsIgnoreCase(bb.getManagedBean().getCurrentPageType());
 	}
 
 	private static boolean hasErrorMessage(){
@@ -1224,11 +1234,14 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * @return
 	 */
 	public String getSuppDocLabel(SmApplDocFile file){
+		return getSuppDocLabel(file, file.getSmApplSupportDoc().getSmAppl());
+	}
+	
+	public String getSuppDocLabel(SmApplDocFile file, SmAppl appl){
 		if (file == null){
 			return null;
 		}
 		SmApplSupportDoc suppDoc = file.getSmApplSupportDoc();
-		SmAppl appl = suppDoc == null ? null : suppDoc.getSmAppl();
 		if (file.getAiApiResponseId() == null || appl == null || appl.getSmSupplier() == null
 				|| suppDoc.getPmDocument() == null){
 			return file.getMappedFieldAI();
