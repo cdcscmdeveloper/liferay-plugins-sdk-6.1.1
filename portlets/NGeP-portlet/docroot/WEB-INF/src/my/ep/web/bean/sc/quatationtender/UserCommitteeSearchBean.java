@@ -247,7 +247,7 @@ public class UserCommitteeSearchBean implements Serializable {
 	/**
 	 * Sets the Finalization Committee type id.
 	 * 
-	 * @param orgName
+	 * @param finalizationCommitteeTypeId
 	 *            the new Finalization Committee type id.
 	 */
 	public void setFinalizationCommitteeTypeId(Long finalizationCommitteeTypeId) {

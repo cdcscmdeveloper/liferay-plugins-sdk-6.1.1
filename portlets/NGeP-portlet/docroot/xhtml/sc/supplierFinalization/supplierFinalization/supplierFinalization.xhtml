@@ -239,6 +239,7 @@
 						content="#{lbl['lbl.msg.confirm.delete']}" process="@this"
 						partialSubmit="true" update="@all" />
 					<ui:param name="isHASecEmpty" value="#{empty suppFinalizationBackingBean.managedBean.scQtFinalization.higherSecretary.userName}" />
+					<ui:remove>#37809 Start Vinod 21092026</ui:remove>
 					<p:commandButton id="haSecBtn"
 						value="#{lbl['lbl.sc.committee.finalization.add.secretary.name.btn']}"
 						rendered="#{isHASecEmpty}"
@@ -246,8 +247,9 @@
 										empty suppFinalizationBackingBean.managedBean.scQtFinalization.reason.reasonId 
 										or suppFinalizationBackingBean.isQTMaintenanceScreen()
 										or supplierFinalizationReadOnly}"
-						action="#{suppFinalizationBackingBean.addFinalizationSecretatyAction()}"
+						action="#{suppFinalizationBackingBean.addHigherSecretaryAction()}"
 						oncomplete="addHigherAuthority.show();" />
+					<ui:remove>#37809 End Vinod 21092026</ui:remove>
 					<p:commandLink id="haSecName"
 						rendered="#{!isHASecEmpty}"
 						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.higherSecretary.userName}"

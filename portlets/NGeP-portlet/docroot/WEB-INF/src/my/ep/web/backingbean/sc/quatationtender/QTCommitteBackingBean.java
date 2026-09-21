@@ -2987,7 +2987,8 @@ public class QTCommitteBackingBean extends
 	// 36695 - end
 
 	// #37809 Start Vinod
-	public void addFinalizationSecretatyAction(){
+	// #37809 Start Vinod 21092026
+	public void addFinalizationSecretaryAction(){
 		ScQt scQt = getManagedBean().getQt();
 		UserCommitteeSearchBean userCommitteeSearchBean = this.getManagedBean().getUserCommitteeSearchBean();
 		updateFcSecretaryDataModel(userCommitteeSearchBean);
@@ -3022,18 +3023,21 @@ public class QTCommitteBackingBean extends
 		removeSelectAllFromDD();
 
 	}
+	// #37809 End Vinod 21092026
 	// #37809 End Vinod
 
 	// #37809 Start Vinod
+	// #37809 Start Vinod 21092026
 	private void updateFcSecretaryDataModel(UserCommitteeSearchBean userCommitteeSearchBean){
-		IPagingDataModel<PmUser> userSearchCommitteeDataModel = getManagedBean().getUserSearchCommitteeDataModel();
+		IPagingDataModel<PmUser> fcSecretaryDataModel = getManagedBean().getUserSearchFcSecretaryDataModel();
 		
-		if (null == userSearchCommitteeDataModel) {
+		if (null == fcSecretaryDataModel) {
 			getManagedBean().setUserSearchFcSecretaryDataModel(
 					new UserFcSecretaryPagingDataModel(QTConstants.DATATABLE_EXISTINGCOMMITTEESEARCHID,
 							userCommitteeSearchBean));
 		}
 	}
+	// #37809 End Vinod 21092026
 	// #37809 End Vinod
 
 	// #37809 Start Vinod
@@ -3041,8 +3045,9 @@ public class QTCommitteBackingBean extends
 		ScQt scQt = getManagedBean().getQt();
 		boolean isDoSBHorSWK = checkDeskOfficerSabhaOrSarawakWithCommitteeTypes(fcCommitteeTypes);
 
-		for (SelectItem item : fcCommitteeTypes) {
-			Long commTypeId = Long.valueOf(item.getValue().toString());
+		// #37809 Start Vinod 21092026
+		for (SelectItem item : fcCommitteeTypes == null ? new SelectItem[0] : fcCommitteeTypes) {
+			Long commTypeId = item.getValue() instanceof Long ? (Long) item.getValue() : null;
 
 			if ((commTypeId != null && finalizationCommitteeTypeId != null && commTypeId.equals(finalizationCommitteeTypeId))
 					|| (commTypeId != null && finalizationCommitteeTypeId == null && !isDoSBHorSWK)) {
@@ -3052,6 +3057,7 @@ public class QTCommitteBackingBean extends
 				break;
 			}
 		}
+		// #37809 End Vinod 21092026
 
 		if (finalizationCommitteeTypeId == null) {
 			getManagedBean().setFinalizationSecratary(fcCommitteeTypes);
@@ -3067,7 +3073,9 @@ public class QTCommitteBackingBean extends
 	private boolean checkDeskOfficerSabhaOrSarawakWithCommitteeTypes(SelectItem[] fcCommitteeTypes){
 		if (fcCommitteeTypes != null && fcCommitteeTypes.length > 1) {
 			for (SelectItem item : fcCommitteeTypes) {
-				Long commTypeId = Long.valueOf(item.getValue().toString());
+				// #37809 Start Vinod 21092026
+				Long commTypeId = item.getValue() instanceof Long ? (Long) item.getValue() : null;
+				// #37809 End Vinod 21092026
 				PmParameter commTypeCode = commTypeId != null ? ParameterHelper.getInstance().getPmParameterById(
 						commTypeId) : null;
 
@@ -3329,11 +3337,13 @@ public class QTCommitteBackingBean extends
 	// #37809 End Vinod
 
 	// #37809 Start Vinod
-	public void cancleFCSecretaryAction() {
+	// #37809 Start Vinod 21092026
+	public void cancelFCSecretaryAction() {
 		ScQt scQt = getManagedBean().getQt();
 
 		getManagedBean().setSelectedFcSecretaryUser(null);
 		scQt.setFinalizationSecratery(new PmUser());
 	}
+	// #37809 End Vinod 21092026
 	// #37809 End Vinod
 }

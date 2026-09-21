@@ -2336,12 +2336,14 @@ public class SupplierFinalizationBackingBean extends
 						throw new EpException(MessageConst.ERROR_760385);
 					}
 					// #37809 Start Vinod
+					// #37809 Start Vinod 21092026
 					if(ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY
 							.equals(decisionTypeCode) && 
-							(scQtFinalization.getReason() != null || 
+							(scQtFinalization.getReason() != null && 
 								scQtFinalization.getReason().getReasonId() != null)){
 						validateHigherAuthority(scQtFinalization);
 					}
+					// #37809 End Vinod 21092026
 					// #37809 End Vinod
 						// isBpkFinalizationReq is true for Restricted Tender whose sent for  BPK Approval
 					if (!this.getManagedBean().isInitialDecisionFwdToBPK()
@@ -3579,12 +3581,14 @@ return	remarksNotFound;
 								throw new EpException(MessageConst.ERROR_760385);
 							}
 							// #37809 Start Vinod
+							// #37809 Start Vinod 21092026
 							if(ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY
 									.equals(decisionTypeCode) && 
-									(scQtFinalization.getReason() != null || 
+									(scQtFinalization.getReason() != null && 
 										scQtFinalization.getReason().getReasonId() != null)){
 								validateHigherAuthority(scQtFinalization);
 							}
+							// #37809 End Vinod 21092026
 							// #37809 End Vinod
 							
 							// isBpkFinalizationReq is true for Restricted Tender whose sent for  BPK Approval
@@ -14287,7 +14291,8 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	//#34860 End
 
 	// #37809 Start Vinod
-	public void addFinalizationSecretatyAction() {
+	// #37809 Start Vinod 21092026
+	public void addHigherSecretaryAction() {
 		ScQt scQt = getManagedBean().getScQt();
 		UserCommitteeSearchBean userCommitteeSearchBean = this.getManagedBean().getCommitteeSearchBean() != null ? this
 				.getManagedBean().getCommitteeSearchBean() : new UserCommitteeSearchBean();
@@ -14309,6 +14314,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		String tabTitle = getParameterDesc(scQt.getFinalizationCommitte());
 		getManagedBean().setTabTitle(tabTitle);
 	}
+	// #37809 End Vinod 21092026
 
 	// #37809 End Vinod
 	// #37809 Start Vinod
@@ -14329,8 +14335,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		boolean isDoSBHorSWK = checkDeskOfficerSabhaOrSarawakWithCommitteeTypes(fcCommitteeTypes);
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 
-		for (SelectItem item : fcCommitteeTypes) {
-			Long commTypeId = Long.valueOf(item.getValue().toString());
+		// #37809 Start Vinod 21092026
+		for (SelectItem item : fcCommitteeTypes == null ? new SelectItem[0] : fcCommitteeTypes) {
+			Long commTypeId = item.getValue() instanceof Long ? (Long) item.getValue() : null;
 
 			if ((commTypeId != null && finalizationCommitteeTypeId != null && commTypeId
 					.equals(finalizationCommitteeTypeId))
@@ -14341,6 +14348,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				break;
 			}
 		}
+		// #37809 End Vinod 21092026
 
 		if (finalizationCommitteeTypeId == null) {
 			getManagedBean().setFinalizationSecratary(fcCommitteeTypes);
@@ -14357,7 +14365,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		if (fcCommitteeTypes != null 
 				&& fcCommitteeTypes.length > 1) {
 			for (SelectItem item : fcCommitteeTypes) {
-				Long commTypeId = Long.valueOf(item.getValue().toString());
+				// #37809 Start Vinod 21092026
+				Long commTypeId = item.getValue() instanceof Long ? (Long) item.getValue() : null;
+				// #37809 End Vinod 21092026
 				PmParameter commTypeCode = commTypeId != null ? ParameterHelper.getInstance().getPmParameterById(
 						commTypeId) : null;
 
@@ -14595,9 +14605,11 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 
 	// #37809 End Vinod
 	// #37809 Start Vinod
-	public void cancleHigherSecretaryAction() {
+	// #37809 Start Vinod 21092026
+	public void cancelHigherSecretaryAction() {
 		getManagedBean().setSelectedHigherSecretary(null);
 	}
+	// #37809 End Vinod 21092026
 
 	// #37809 End Vinod
 	// #37809 Start Vinod

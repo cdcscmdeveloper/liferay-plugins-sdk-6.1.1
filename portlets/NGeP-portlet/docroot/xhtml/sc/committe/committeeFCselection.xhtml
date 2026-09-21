@@ -123,12 +123,6 @@
 		</p:dataTable>
 		<div class="ppRightBtn">
 		
-			<ui:remove>#37809 Start Vinod</ui:remove>
-			<p:commandButton value="#{lbl['lbl.sc.btn.update.committee']}" 
-				rendered="#{committeBackingBean.managedBean.viewCommitteePage and committeBackingBean.managedBean.updateFCChairperson}"
-				styleClass="BtnSpacing" onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
-				action="#{committeBackingBean.navigateToUpdateMember('update')}" />
-			<ui:remove>#37809 End Vinod</ui:remove>
 			<!-- #35320 - start : add condition -->
 			<p:commandButton id="quotationcommitteeadd" styleClass="BtnSpacing"
 				value="#{lbl['lbl.btn.add']}" process="@this"

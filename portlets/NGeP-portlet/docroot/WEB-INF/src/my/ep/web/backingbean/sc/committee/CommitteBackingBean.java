@@ -57,7 +57,6 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTSearchBeanConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
-import my.ep.constants.CommonConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -3648,13 +3647,15 @@ public class CommitteBackingBean extends
 			committeeType = getManagedBean().getTplCommittee().getCommitteeType().getParameterCode();
 		}
 
-		if (SourcingConstants.MEMBER_ROLE_ID_MEMBER == searchRoleId) {
+		// #37809 Start Vinod 21092026
+		if (SourcingConstants.MEMBER_ROLE_ID_MEMBER.equals(searchRoleId)) {
 			this.getManagedBean().setRoleCode(
 					getRoleCodeWithCommitteAndRoleForSearch(committeeType, SourcingConstants.MEMBER_ROLE));
 		} else {
 			this.getManagedBean().setRoleCode(
 					getRoleCodeWithCommitteAndRoleForSearch(committeeType, SourcingConstants.MEMBER_CHAIRPERSON));
 		}
+		// #37809 End Vinod 21092026
 
 		this.getManagedBean().getCommitteeSearchBean().setSearchRoleId(searchRoleId);
 	}

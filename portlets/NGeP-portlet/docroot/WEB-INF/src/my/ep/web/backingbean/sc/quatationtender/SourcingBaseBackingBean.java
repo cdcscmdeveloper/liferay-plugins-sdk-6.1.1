@@ -8782,89 +8782,45 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	
 	// #37809 Start Vinod
 	/**
-	 * This method will Sort the scCommitteeMembers based on chairPerson,
-	 * secretary and member also sort based on name.
+	 * Sorts committee members by role, then by name.
 	 * 
-	 * @param List
-	 *            <ScCommitteeMember> scCommitteeMembers
-	 * @return List<ScCommitteeMember>
+	 * @param scCommitteeMembers
+	 * @return the same list, sorted
 	 */
+	// #37809 Start Vinod 21092026
 	public List<ScCommitteeMember> sortScCommitteeMembers(List<ScCommitteeMember> scCommitteeMembers) {
-		log.info("sortScCommitteeMembers");
-		
-		/*List<ScCommitteeMember> finalCommittee = new ArrayList<>();
-		List<ScCommitteeMember> memberList = new ArrayList<>();
-		
-		if(CollectionUtils.isNotEmpty(scCommitteeMembers)){
-			for(ScCommitteeMember committeeMember : scCommitteeMembers){
-				if(committeeMember.getMemberRole().getParameterCode().equals(ParameterConst.COMMITTEE_ROLE_MEMBER)){
-					memberList.add(committeeMember);
-				} else {
-					finalCommittee.add(committeeMember);
-				}
-			}
+		if (CollectionUtils.isEmpty(scCommitteeMembers)) {
+			return scCommitteeMembers;
 		}
 
-		// Sort using Comparator
-        Collections.sort(memberList, new Comparator<ScCommitteeMember>() {
-            @Override
-            public int compare(ScCommitteeMember o1, ScCommitteeMember o2) {
-                return o1.getMemberName().compareToIgnoreCase(o2.getMemberName());
-            }
-        });
-        
-        if(CollectionUtils.isNotEmpty(memberList)){
-        	finalCommittee.addAll(memberList);
-        }
-		return finalCommittee;*/
-
-		Comparator<ScCommitteeMember> scCommitteeMembersComparator = new Comparator<ScCommitteeMember>() {
+		Collections.sort(scCommitteeMembers, new Comparator<ScCommitteeMember>() {
 			@Override
-			public int compare(ScCommitteeMember o1, ScCommitteeMember o2) {
-				String role1 = o1.getMemberRole() != null ? o1.getMemberRole().getParameterCode() : null;
-				String role2 = o2.getMemberRole() != null ? o2.getMemberRole().getParameterCode() : null;
-				log.info("role1 : "+role1);
-				log.info("role2 : "+role2);
-				int role1Priority = getRolePriority(role1);
-				int role2Priority = getRolePriority(role2);
-				log.info("role1Priority : "+role1Priority);
-				log.info("role2Priority : "+role2Priority);
-
-				// Condition 1: Performance sorting on role.
-				int roleCompare = Integer.compare(role1Priority, role2Priority);
-				log.info("roleCompare : "+roleCompare);
+			public int compare(ScCommitteeMember member1, ScCommitteeMember member2) {
+				int roleCompare = Integer.compare(getRolePriority(member1), getRolePriority(member2));
 				if (roleCompare != 0) {
 					return roleCompare;
 				}
-
-				log.info("o1.getMemberName() : "+o1.getMemberName());
-				log.info("o2.getMemberName() : "+o2.getMemberName());
-				// Condition 2: Performance sorting on name.
-				return o1.getMemberName().compareTo(o2.getMemberName());
-
+				return StringUtils.defaultString(member1.getMemberName()).compareTo(
+						StringUtils.defaultString(member2.getMemberName()));
 			}
 
-			// Helper method to map roles to priority numbers
-			private int getRolePriority(String role) {
-				log.info("getRolePriority : "+role);
-				if (role == null)
-					return 4; // Put nulls at the end
-
-				switch (role) {
-				case ParameterConst.COMMITTEE_ROLE_CHAIRPERSON:
-					return 1; // Highest priority Chairperson
-				case ParameterConst.COMMITTEE_ROLE_SECRETARY:
-					return 2; // Second priority Secretary
-				default:
-					return 3; // Member will be last
+			// chairperson, secretary, member, then unroled
+			private int getRolePriority(ScCommitteeMember member) {
+				String role = member.getMemberRole() != null ? member.getMemberRole().getParameterCode() : null;
+				if (ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equals(role)) {
+					return 1;
+				} else if (ParameterConst.COMMITTEE_ROLE_SECRETARY.equals(role)) {
+					return 2;
+				} else if (role != null) {
+					return 3;
 				}
+				return 4;
 			}
-		};
-
-		Collections.sort(scCommitteeMembers, scCommitteeMembersComparator);
+		});
 
 		return scCommitteeMembers;
 	}
+	// #37809 End Vinod 21092026
 	// #37809 End Vinod
 	
 	// #25651 - Start
