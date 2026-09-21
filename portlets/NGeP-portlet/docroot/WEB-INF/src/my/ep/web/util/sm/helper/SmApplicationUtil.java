@@ -3841,14 +3841,12 @@ public class SmApplicationUtil {
 		SmAppl appl = bean.getSmAppl(); //#40444
 		String msg = currPage == null ? MessageConst.ERROR_722654
 				: MessageConst.ERROR_722661;
-		//#40444 START
 		//#31018 START
 		if(bean.isSupplierUser()) { 
-			if (EntityHelper.isCollectionEmpty(appl.getSmCategoryOverlapDocs())) {
+			if (EntityHelper.isCollectionEmpty(bean.getOverlapDocs())) {
 				throw new EpException(msg);
 			} else {
-				for (SmCategoryOverlapDoc doc : appl.getSmCategoryOverlapDocs()) {
-					//#40444 END
+				for (SmCategoryOverlapDoc doc : bean.getOverlapDocs()) {
 					if (doc.getPmDocument() == null
 						|| StringUtils.isBlank(doc.getFileName())) {
 						throw new EpException(msg);
