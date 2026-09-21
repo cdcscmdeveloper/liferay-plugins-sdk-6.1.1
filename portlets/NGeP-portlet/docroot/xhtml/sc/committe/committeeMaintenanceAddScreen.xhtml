@@ -51,12 +51,14 @@
 								<f:selectItems value="#{committeBackingBean.getOrgCatList()}" />
 							</p:selectOneRadio></td>
 					</tr>
+					<ui:remove>#37809 Start Vinod 21092026</ui:remove>
 					<c:if
-						test="#{committeBackingBean.managedBean.committeeSearchBean.orgCat eq ParameterConst.orgCategoryPtj}">
+						test="#{committeBackingBean.managedBean.committeeSearchBean.orgCat eq ParameterConst.orgCategoryPtj
+								and !committeBackingBean.managedBean.fpbSearchProfile}">
 						<tr>
 							<td><p:outputLabel
 									value="#{lbl['lbl.sc.committee.add.member.search.ministry']}" /></td>
-							<td><p:selectOneMenu id="ministryDD"
+							<td><p:selectOneMenu id="ministryDD" disabled="true"
 									value="#{committeBackingBean.managedBean.committeeSearchBean.ministry}">
 									<p:ajax onstart="blockWidgetPopup.show()"
 										oncomplete="blockWidgetPopup.hide()" update="PtjGroupDD PtjDD"
@@ -87,6 +89,7 @@
 								</p:selectOneMenu></td>
 						</tr>
 					</c:if>
+					<ui:remove>#37809 End Vinod 21092026</ui:remove>
 					<c:if
 						test="#{committeBackingBean.managedBean.committeeSearchBean.orgCat eq ParameterConst.orgCategoryOthers}">
 						<tr>

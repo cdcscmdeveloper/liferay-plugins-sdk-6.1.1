@@ -1560,6 +1560,9 @@ public class CommitteBackingBean extends
 		}
 		this.getManagedBean().setCommitteeSearchBean(userCommitteeSearchBean);
 		resetCommitteeSearchBean(this.getManagedBean().getQt());
+		// #37809 Start Vinod 21092026
+		this.getManagedBean().setFpbSearchProfile(isFpbSearchProfile());
+		// #37809 End Vinod 21092026
 		// #37809 End Vinod
 	}
 
@@ -3288,6 +3291,9 @@ public class CommitteBackingBean extends
 		} else {
 			resetCommitteeSearchBean(this.getManagedBean().getQt());
 		}
+		// #37809 Start Vinod 21092026
+		this.getManagedBean().setFpbSearchProfile(isFpbSearchProfile());
+		// #37809 End Vinod 21092026
 		// #37809 End Vinod
 	}
 	// #35320 - END
@@ -3638,14 +3644,9 @@ public class CommitteBackingBean extends
 		if (searchRoleId == null) {
 			return;
 		}
-		String committeeType = "";
-		if (this.getManagedBean().getQtCommittee() != null
-				&& this.getManagedBean().getQtCommittee().getScCommittee() != null) {
-			ScCommittee scCommittee = this.getManagedBean().getQtCommittee().getScCommittee();
-			committeeType = scCommittee.getCommitteeType().getParameterCode();
-		} else {
-			committeeType = getManagedBean().getTplCommittee().getCommitteeType().getParameterCode();
-		}
+		// #37809 Start Vinod 21092026
+		String committeeType = resolveSearchCommitteeType();
+		// #37809 End Vinod 21092026
 
 		// #37809 Start Vinod 21092026
 		if (SourcingConstants.MEMBER_ROLE_ID_MEMBER.equals(searchRoleId)) {
@@ -3677,6 +3678,30 @@ public class CommitteBackingBean extends
 	}
 
 	// #37809 End Vinod
+
+	// #37809 Start Vinod 21092026
+	/**
+	 * @return the committee type the member search runs against
+	 */
+	private String resolveSearchCommitteeType() {
+		if (this.getManagedBean().getQtCommittee() != null
+				&& this.getManagedBean().getQtCommittee().getScCommittee() != null) {
+			return this.getManagedBean().getQtCommittee().getScCommittee().getCommitteeType().getParameterCode();
+		}
+		TplCommittee tplCommittee = getManagedBean().getTplCommittee();
+		return tplCommittee != null && tplCommittee.getCommitteeType() != null ? tplCommittee.getCommitteeType()
+				.getParameterCode() : null;
+	}
+
+	/**
+	 * @return true for Federal Procurement Board Sabah or Sarawak
+	 */
+	private boolean isFpbSearchProfile() {
+		String committeeType = resolveSearchCommitteeType();
+		return ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equalsIgnoreCase(committeeType)
+				|| ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equalsIgnoreCase(committeeType);
+	}
+	// #37809 End Vinod 21092026
 
 	// #37809 Start Vinod
 	public SelectItem[] getOrgCatList() {
