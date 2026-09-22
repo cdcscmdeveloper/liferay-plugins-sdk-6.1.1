@@ -1373,13 +1373,13 @@ public class RuleCatalogueBackingBean extends
 				}
 			}
 			reqDTO.setRuleTypeList(ruleTypeList);
-			/* 27827 - START */
+			/* 27827, #34945 - START */
 			IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
 			orgProfileReqDTO.setPmOrgProfiles(new ArrayList<PmOrgProfile>());
 			for(PmConfigRule cfRule: ruleTypeList){
-				if(cfRule.getRuleType().equals(RuleTypeConst.PTJ_CODE)){
+				if(RuleTypeConst.PTJ_CODE.equals(cfRule.getRuleType()) || RuleTypeConst.PTJ_AUTH_CC.equals(cfRule.getRuleType())){
 					for(PmConfigRuleValue cfRuleValue: cfRule.getConfigRuleValues()){
 						if(cfRuleValue.isBrandNew()){
 							orgProfileReqDTO.setOrgCode(cfRuleValue.getRuleValue());
@@ -1387,20 +1387,18 @@ public class RuleCatalogueBackingBean extends
 							orgProfileReqDTO.setOrgProfileId(orgValidity.getOrgProfileId());
 							OrgProfileResDTO orgProfId = orgProfileSO.retrieveOrgProfileDtlByProfileId(orgProfileReqDTO);
 							orgProfileReqDTO.setPmOrgProfile(orgProfId.getPmOrgProfile());
-							for(PmZone zone: getManagedBean().getZoneList()){
-								if(zone.getZoneId().equals(cfRuleValue.getZoneId())){
-									orgProfileReqDTO.getPmOrgProfile().getPmZone();
-									orgProfileReqDTO.getPmOrgProfile().setPmZone(zone);
-									//orgProfileReqDTO.getPmOrgProfile().setBpk(true); #27827
-									orgProfileReqDTO.getPmOrgProfiles().add(orgProfileReqDTO.getPmOrgProfile());
-								}
-							}
+						    if(RuleTypeConst.PTJ_AUTH_CC.equals(cfRuleValue.getRuleType().getRuleType())){
+						    	orgProfileReqDTO.getPmOrgProfile().setPtjAuthCC(true);
+						        orgProfileReqDTO.getPmOrgProfiles().add(orgProfileReqDTO.getPmOrgProfile());
+						    } else {
+						        updateOrgProfileZoneAndBpk(cfRuleValue, orgProfileReqDTO);
+						    }
 						}
 					}
 				}
 			}
 			OrgProfileResDTO orgProfResDTO = orgProfileSO.saveOrUpdatePmOrgProfileList(orgProfileReqDTO);
-			/* 27827 - END */
+			/* 27827, #34945 - END */
 
 			setupTrackingDiaryVal(reqDTO); //#35323
 
@@ -5429,26 +5427,32 @@ public class RuleCatalogueBackingBean extends
         //#36738 End
 	}
 	
-	/* 27827 - START */
+	/* 27827, #34945 - START */
 	public void addPTJCRValues(){
 		log.info("addPTJCRValues");
 		
 		PmConfigRule configRuleType = this.getManagedBean().getSelectedRuleDescType().getRuleType();
 		PmConfigRuleValue newRuleValue  = null;
 		int index = 0;
-		
-		for(PmOrgProfile orgProfile : getManagedBean().getPtjList()){
-			if(orgProfile.isSelected()){
-				newRuleValue = new PmConfigRuleValue();
-				newRuleValue.setPmOrgProfile(orgProfile);
-				newRuleValue.setRuleType(configRuleType);
-				newRuleValue.setEffDate(this.getManagedBean().getTomorrow());
-				newRuleValue.setRuleValue(newRuleValue.getPmOrgProfile().getOrgCode());
-				newRuleValue.setRuleDescription(newRuleValue.getPmOrgProfile().getOrgName());
-				newRuleValue.setZoneId(getManagedBean().getSelectedZoneId());
-				newRuleValue.setPtjId(orgProfile); //#27827
-				index = configRuleType.getConfigRuleValues().size();
-				configRuleType.getConfigRuleValues().add(index, newRuleValue);
+		boolean hasSelected = false;
+
+		if (RuleTypeConst.PTJ_AUTH_CC.equals(this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType())) {
+			setPTJCC(configRuleType, newRuleValue, hasSelected, index);
+		} else {
+			for(PmOrgProfile orgProfile : getManagedBean().getPtjList()){
+				if (orgProfile != null && orgProfile.isSelected()){
+					hasSelected = true;
+					newRuleValue = new PmConfigRuleValue();
+					newRuleValue.setPmOrgProfile(orgProfile);
+					newRuleValue.setRuleType(configRuleType);
+					newRuleValue.setEffDate(this.getManagedBean().getTomorrow());
+					newRuleValue.setRuleValue(newRuleValue.getPmOrgProfile().getOrgCode());
+					newRuleValue.setRuleDescription(newRuleValue.getPmOrgProfile().getOrgName());
+					newRuleValue.setZoneId(getManagedBean().getSelectedZoneId());
+					newRuleValue.setPtjId(orgProfile); //#27827
+					index = configRuleType.getConfigRuleValues().size();
+					configRuleType.getConfigRuleValues().add(index, newRuleValue);
+				}
 			}
 		}
 		RequestContext.getCurrentInstance().execute("ptjCRPopup.hide();");
@@ -5456,7 +5460,7 @@ public class RuleCatalogueBackingBean extends
 		log.info("end addPTJCRValues");
 	}
 	
-	//#34397, #34398, #27827
+	//#34397, #34398, #27827, #34945
 	/**
 	 * Retrieve zones
 	 */
@@ -5717,6 +5721,7 @@ public class RuleCatalogueBackingBean extends
 	 * Search rule type
 	 */
 	public void searchRuleType(){
+		this.getManagedBean().setNewPRList(false); //#35323
 		String searchRuleType = this.getManagedBean().getSearchRuleType();
 		List<PmConfigRuleDesc> configRuleDescList = this.getManagedBean().getOriginalConfigRuleDescList();
 		List<PmConfigRuleDesc> searchRuleDescList = new ArrayList<>();
@@ -5735,6 +5740,11 @@ public class RuleCatalogueBackingBean extends
 		if (CollectionUtils.isNotEmpty(searchRuleDescList)) {
 			this.getManagedBean().setConfigRuleDescList(searchRuleDescList);
 			this.getManagedBean().setSelectedRuleDescType(searchRuleDescList.get(0));
+			//#35323 - Start
+			if (RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(searchRuleDescList.get(0).getRuleType().getRuleType())){
+				loadPRValues();
+			}
+			//#35323 - End
 			this.getManagedBean().setOriginalConfigRuleValueList(searchRuleDescList.get(0).getRuleType().getConfigRuleValues());
 		}else{
 			this.getManagedBean().setConfigRuleDescList(null);
@@ -5749,6 +5759,7 @@ public class RuleCatalogueBackingBean extends
 	 * Reset search rule type
 	 */
 	public void resetRuleType(){
+		this.getManagedBean().setNewPRList(false); //#35323
 		this.getManagedBean().setSearchRuleType(new String());
 		this.getManagedBean().setConfigRuleDescList(this.getManagedBean().getOriginalConfigRuleDescList());
 		this.getManagedBean().setSelectedRuleDescType(this.getManagedBean().getOriginalConfigRuleDescList().get(0));
@@ -6902,4 +6913,107 @@ public class RuleCatalogueBackingBean extends
 		});
 	}
 	//#35323 - End
+
+	//#34945 - Start
+	/**
+	 * Retrieves the ministry associated with the specified organisation profile.
+	 *
+	 * @param orgProfileId the organisation profile ID
+	 * @return the ministry associated with the organisation profile
+	 */
+	public String retrieveMinistry(Long orgProfileId) {
+		return retrieveMinistryByOrgProfileId(orgProfileId);
+	}
+
+	/**
+	 * Checks whether the specified PTJ has already been added to the configuration rule and is still active.
+	 *
+	 * @param configRuleType the configuration rule to check
+	 * @param orgProfile the PTJ organisation profile to check
+	 * @return {@code true} if the PTJ already exists and has not expired;
+	 *         {@code false} otherwise
+	 */
+	private boolean isPTJAlreadyAdded(PmConfigRule configRuleType, PmOrgProfile orgProfile) {
+		if (configRuleType == null || configRuleType.getConfigRuleValues() == null || orgProfile == null) {
+			return false;
+		}
+
+		for (PmConfigRuleValue existingValue : configRuleType.getConfigRuleValues()) {
+			BigDecimal orgCodeDecimal = new BigDecimal(orgProfile.getOrgCode());
+
+			if (existingValue != null
+					&& existingValue.getRuleNumberValue() != null
+					&& orgProfile.getOrgCode() != null
+					&& existingValue.getRuleNumberValue().compareTo(orgCodeDecimal) == 0) {
+
+				if (existingValue.getExpDate() == null
+						|| existingValue.getExpDate().compareTo(new Date()) > 0) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Adds the selected PTJ organisations to the specified configuration rule.
+	 * Validates that at least one PTJ is selected and prevents an active PTJ
+	 * from being added more than once.
+	 *
+	 * @param configRuleType the configuration rule to which the PTJ will be added
+	 * @param newRuleValue the configuration rule value used for the selected PTJ
+	 * @param hasSelected indicates whether a PTJ has been selected
+	 * @param index the position at which the new rule value is added
+	 * @throws EpException if no PTJ is selected or the selected PTJ has already been added
+	 */
+	public void setPTJCC(PmConfigRule configRuleType, PmConfigRuleValue newRuleValue, boolean hasSelected, int index) {
+		for (PmOrgProfile orgProfile : getManagedBean().getPtjList()) {
+			if (orgProfile != null && orgProfile.isSelected()) {
+				hasSelected = true;
+
+				if (isPTJAlreadyAdded(configRuleType, orgProfile)) {
+					throw new EpException(
+							MessageConst.ERROR_760834,
+							new String[] {
+								orgProfile.getOrgName(),
+								this.getManagedBean().getSelectedRuleDescType().getRuleDesc()
+							});
+				}
+
+				newRuleValue = new PmConfigRuleValue();
+				newRuleValue.setPtjId(orgProfile);
+				newRuleValue.setRuleType(configRuleType);
+				newRuleValue.setEffDate(this.getManagedBean().getTomorrow());
+				newRuleValue.setRuleValue(orgProfile.getOrgCode());
+				newRuleValue.setRuleDescription(orgProfile.getOrgName());
+
+				index = configRuleType.getConfigRuleValues().size();
+				configRuleType.getConfigRuleValues().add(index, newRuleValue);
+			}
+		}
+
+		if (!hasSelected) {
+			throw new EpException(MessageConst.ERROR_760832);
+		}
+	}
+
+	/**
+	 * Updates the organisation profile with the zone specified in the configuration
+	 * rule value and sets the organisation profile as BPK.
+	 *
+	 * @param cfRuleValue the configuration rule value containing the zone ID
+	 * @param orgProfileReqDTO the organisation profile request DTO to be updated
+	 */
+	private void updateOrgProfileZoneAndBpk(PmConfigRuleValue cfRuleValue, OrgProfileReqDTO orgProfileReqDTO) {
+		for (PmZone zone : getManagedBean().getZoneList()) {
+			if (zone.getZoneId().equals(cfRuleValue.getZoneId())) {
+				orgProfileReqDTO.getPmOrgProfile().getPmZone();
+				orgProfileReqDTO.getPmOrgProfile().setPmZone(zone);
+				orgProfileReqDTO.getPmOrgProfile().setBpk(true);
+				orgProfileReqDTO.getPmOrgProfiles().add(orgProfileReqDTO.getPmOrgProfile());
+			}
+		}
+	}
+	//#34945 - End
 }

@@ -98,9 +98,9 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.bankDtls.addr']}"
 					style="width :50%;white-space : normal">
-					<h:outputText
-						value="#{backingBean.getFullAddress(bankBean.smAddress)}"
-						style="float : left" />
+					<!-- #36718 - Start -->
+					<h:outputText value="#{backingBean.getFullAddressWithCountry(bankBean.smAddress)}" style="float : left" />
+					<!-- #36718 - End -->
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
@@ -553,7 +553,10 @@
 									validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
 									size="35"
 									disabled="#{backingBean.managedBean.upsCannotEdit}">
-									<f:validator validatorId="postcodeValidator" />
+									<!-- #36718 - Start  -->
+									<p:ajax process="@this" partialSubmit="true" update="suppBankPostCodeMsgMy"
+										listener="#{backingBean.checkPostcode(backingBean.managedBean.selectedBank.smAddress.postcode)}" />
+									<!-- #36718 - End  -->
 								</p:inputText>
 								<ac:smFieldChangeAlert 
 									isShow="#{backingBean.managedBean.showFieldChanges

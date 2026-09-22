@@ -8,6 +8,41 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:h="http://java.sun.com/jsf/html">
 	<ui:define name="resourceSection">
+		<ui:remove>#9299 - #41341 Start</ui:remove>
+		<!-- Keep project category descriptions readable at increased browser zoom. -->
+		<style type="text/css">
+			.sm-comp-exp-categories .ui-selectonemenu {
+				height: auto;
+				min-height: 20px;
+				min-width: 0;
+			}
+			.sm-comp-exp-categories .ui-selectonemenu .ui-selectonemenu-label {
+				box-sizing: border-box;
+				padding-right: 28px !important;
+				white-space: normal;
+				height: auto !important;
+				overflow-wrap: anywhere;
+			}
+			.sm-comp-exp-categories td {
+				white-space: normal;
+				height: auto !important;
+				overflow-wrap: anywhere;
+			}
+			.ui-selectonemenu-panel.sm-comp-exp-category-panel {
+				box-sizing: border-box;
+				width: 40em !important;
+				max-width: calc(100vw - 24px);
+			}
+			.sm-comp-exp-category-panel .ui-selectonemenu-items-wrapper {
+				max-height: 50vh;
+			}
+			.sm-comp-exp-category-panel .ui-selectonemenu-list-item {
+				white-space: normal;
+				height: auto !important;
+				overflow-wrap: anywhere;
+			}
+		</style>
+		<ui:remove>#9299 - #41341 End</ui:remove>
 		<script>
 			$('#portlet_smCompExp_WAR_NGePportlet').find('.portlet-title-text')
 					.html("#{smCompExpMB.headerTitle}");
@@ -81,7 +116,6 @@
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.loa.no']}" /></td>
-					<ui:remove>#9299 - #41104</ui:remove>
 					<td style="width: 66%"><p:inputText maxlength="20" size="20"
 							value="#{smCompExpMB.selectedMaster.loaNo}" /></td>
 				</tr>
@@ -220,6 +254,7 @@
 								value="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}" /> <p:outputLabel
 								styleClass="mandatory" value="*" /></td>
 						<td style="width: 66%"><p:inputText maxlength="14"
+								style="width:auto !important;"
 								label="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}"
 								value="#{smCompExpMB.selectedMaster.consultantFee}">
 								<f:convertNumber
@@ -264,7 +299,7 @@
 			toggleable="true">
 			<p:dataTable id="smCompExpCatCodes" rows="10" rowIndexVar="index"
 				value="#{smCompExpMB.selectedMaster.compExpMasterCats}"
-				var="smCompExpCatCode" widgetVar="smCompExpCatCodesWV">
+				var="smCompExpCatCode" widgetVar="smCompExpCatCodesWV" styleClass="sm-comp-exp-categories">
 				<ac:paginator for="smCompExpCatCodes" />
 				<p:column style="width:2%">
 					<f:facet name="header">
@@ -280,12 +315,13 @@
 				</p:column>
 				<p:column style="width:34% !important;"
 					headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
-					<h:outputText
+					<h:outputText style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
 						value="#{smCompExpCatCode.categoryL1.categoryL1Code} - #{smCompExpCatCode.categoryL1Name}"
 						rendered="#{!smCompExpCatCode.brandNew}" />
 					<h:outputText styleClass="mandatory" value="*"
 						rendered="#{smCompExpCatCode.brandNew}" />
 					<p:selectOneMenu id="mainDDId" style="width:95% !important;"
+						panelStyleClass="sm-comp-exp-category-panel"
 						label="#{lbl['lbl.sm.projDtls.mainCat']}"
 						value="#{smCompExpCatCode.categoryL1.categoryL1Id}"
 						rendered="#{smCompExpCatCode.brandNew}">
@@ -302,12 +338,13 @@
 				</p:column>
 				<p:column style="width:32% !important;"
 					headerText="#{lbl['lbl.sm.projDtls.subCat']}">
-					<h:outputText
+					<h:outputText style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
 						value="#{smCompExpCatCode.categoryL2.categoryL2Code} - #{smCompExpCatCode.categoryL2Name}"
 						rendered="#{!smCompExpCatCode.brandNew}" />
 					<h:outputText styleClass="mandatory" value="*"
 						rendered="#{smCompExpCatCode.brandNew}" />
 					<p:selectOneMenu id="subDDId" style="width:95% !important;"
+						panelStyleClass="sm-comp-exp-category-panel"
 						label="#{lbl['lbl.sm.projDtls.subCat']}"
 						value="#{smCompExpCatCode.categoryL2.categoryL2Id}"
 						rendered="#{smCompExpCatCode.brandNew}">
@@ -324,12 +361,13 @@
 				</p:column>
 				<p:column style="width:32% !important;"
 					headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
-					<h:outputText
+					<h:outputText style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
 						value="#{smCompExpCatCode.categoryL3.categoryL3Code} - #{smCompExpCatCode.categoryL3Name}"
 						rendered="#{!smCompExpCatCode.brandNew}" />
 					<h:outputText styleClass="mandatory" value="*"
 						rendered="#{smCompExpCatCode.brandNew}" />
 					<p:selectOneMenu id="subDivDDId" style="width:95% !important;"
+						panelStyleClass="sm-comp-exp-category-panel"
 						label="#{lbl['lbl.sm.projDtls.subCatDiv']}"
 						value="#{smCompExpCatCode.categoryL3.categoryL3Id}"
 						rendered="#{smCompExpCatCode.brandNew}">

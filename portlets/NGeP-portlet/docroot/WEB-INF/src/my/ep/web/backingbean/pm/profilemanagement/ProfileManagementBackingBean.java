@@ -1089,7 +1089,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	public void orgUnitStatusChange() {
 		logger.info("orgUnitStatusChange");
 		if (!validateUserOrg()) {
-			logger.info("orgUnitStatusChange - validateUserOrg returned false");
 			return;
 		}
 
@@ -1098,37 +1097,28 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		Long userId = this.getManagedBean().getSelectedUser().getUserId();
 		EpException pendingDocumentException;
 
-		logger.info("Selected User Org status: " + status);
 		if (status == DbValueConst.RECORD_STATUS_SUSPENDED) {
 			// revert it to active
 			if (isAnyPendingTaskForUser(loginId)) {
-				logger.info("orgUnitStatusChange 1 - Pending task found");
 				this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 				// hit error and exit
 				throw new EpException(MessageConst.ERROR_770167);
 			} else if ((pendingDocumentException = isAnyPendingDocForUserRole(validateUserOrgandRole(), userId)) != null) {
-				logger.info("orgUnitStatusChange 2 - Pending document found");
 				this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 				// hit error and exit
 				throw pendingDocumentException;
 			} else {
 				String[] activeUserGroup = isActiveUserGroupUser();
 				if (activeUserGroup != null) {
-					logger.info("orgUnitStatusChange 3 - Active user group found");
 					this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 					throw new EpException(MessageConst.ERROR_770202, activeUserGroup);
 				}
 				boolean validGovtSeller = validateUserOrgProfileAndStatus();
-				logger.info("validateUserOrgProfileAndStatus result: " + validGovtSeller);
 				if (validGovtSeller) {
-					logger.info("orgUnitStatusChange 4 - Before checkIsActiveGovtSellerUser");
 					checkIsActiveGovtSellerUser();
-					logger.info("orgUnitStatusChange 4 - After checkIsActiveGovtSellerUser");
 				}
-				logger.info("Before inactiveUserOrgRoleAndReceivingAddress");
 				// if inactive set expire Date to SyetemDate
 				inactiveUserOrgRoleAndReceivingAddress(status);
-				logger.info("After inactiveUserOrgRoleAndReceivingAddress");
 			}
 		}
 		//#35489 - Start
@@ -2124,6 +2114,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				roleReqDTO.setOrgTypeId(currentOrgTypeId);
 				roleReqDTO.setBpk(getManagedBean().getSelectedUserOrg().getPmOrgProfile().getBpk() != null
 						? getManagedBean().getSelectedUserOrg().getPmOrgProfile().getBpk() : false);
+				roleReqDTO.setPtjAuthCC(getManagedBean().getSelectedUserOrg().getPmOrgProfile().isPtjAuthCC() != null 
+						? getManagedBean().getSelectedUserOrg().getPmOrgProfile().isPtjAuthCC() : false); // #34945
 				roleReqDTO.setAssignRole(true);
 				roleReqDTO.setSearchRoleBean(searchBeanData);
 				roleReqDTO.setRoleName(getManagedBean().getSearchRoleName());
@@ -4190,6 +4182,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			roleReqDTO.setRoleCode(getRoleCode());
 			roleReqDTO.setOrgTypeId(getManagedBean().getSelectedOrgType().getParameterId());
 			roleReqDTO.setBpk(true);
+			roleReqDTO.setPtjAuthCC(true); //#34945
 			roleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRoleSO.class);
 			RoleResDTO resDto = roleSO.retrieveRoleDecsFromRoleMatrix(roleReqDTO);
 

@@ -112,25 +112,27 @@
 			</td>
 		</tr>
 		<tr>
-			<td>
-				<p:outputLabel value="#{lbl['lbl.rpt.group']}" />
-			</td>
-			<td>
-				<p:selectOneMenu value="#{poSumForPoCancelReasonRptBB.managedBean.group}">
+			<td><p:outputLabel value="#{lbl['lbl.rpt.group']}" /></td>
+			<!-- #41069 start -->
+			<td><p:selectOneMenu
+					value="#{poSumForPoCancelReasonRptBB.managedBean.group}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
-						itemValue="#{null}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.fl.physical.treasury.circular']}"
+						itemValue="#{FlReportConst.getFlRptGroupNone()}"></f:selectItem>
+					<f:selectItem
+						itemLabel="#{lbl['lbl.fl.physical.treasury.circular']}"
 						itemValue="#{lbl['lbl.fl.physical.treasury.circular']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.fl.central.contract.panel.name']}"
+					<f:selectItem
+						itemLabel="#{lbl['lbl.fl.central.contract.panel.name']}"
 						itemValue="#{lbl['lbl.fl.central.contract.panel.name']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" 
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
 						itemDisabled="#{mcCrGenAsPoRptBB.hasSupplierRole()}"
-      					itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
-      				<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNoValue']}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptGroupSuppName()}"></f:selectItem>
+					<f:selectItem
+						itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
+						itemValue="#{FlReportConst.getFlRptPurchaseOrderNo()}"></f:selectItem>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
-				</p:selectOneMenu>
-			</td>
+				</p:selectOneMenu></td>
+			<!-- #41069 end-->
 		</tr>
 		<tr>
 			<td>

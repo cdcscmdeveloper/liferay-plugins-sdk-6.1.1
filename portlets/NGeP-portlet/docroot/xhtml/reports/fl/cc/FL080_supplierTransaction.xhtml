@@ -218,25 +218,26 @@
 			<td>
 				<p:outputLabel value="#{lbl['lbl.rpt.group']}" />
 			</td>
+			<!-- #41069 start -->
 			<td>
 				<p:selectOneMenu value="#{ccSuppTransRptBB.managedBean.group}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
-						itemValue="#{null}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptGroupNone()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.fl.physical.treasury.circular']}"
 						itemValue="#{lbl['lbl.fl.physical.treasury.circular']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.fl.central.contract.panel.name']}"
 						itemValue="#{lbl['lbl.fl.central.contract.panel.name']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptCcPhysicalContractNo()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
-						itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptCcContractNo()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.loa.no']}"
 						itemValue="#{lbl['lbl.fl.doc.maintain.loa.no']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptCcPhysicalLoaNo()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" 
 						itemDisabled="#{mcCrGenAsPoRptBB.hasSupplierRole()}"
-      					itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
+      					itemValue="#{FlReportConst.getFlRptGroupSuppName()}"></f:selectItem>
       				<f:selectItem itemLabel="#{lbl['lbl.rpt.business.registrationNo']}"
 						itemValue="#{lbl['lbl.rpt.business.registrationNo']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.mofNo']}"
@@ -248,10 +249,11 @@
 					<f:selectItem itemLabel="#{lbl['lbl.fl.purchaseorder.status']}"
 						itemValue="#{lbl['lbl.fl.purchaseorder.status']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNoValue']}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptPurchaseOrderNo()}"></f:selectItem>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu>
 			</td>
+			<!-- #41069 end-->
 			<td>
 				<p:outputLabel value="#{lbl['lbl.fl.do.poco.no']}" />
 			</td>
