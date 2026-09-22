@@ -399,7 +399,8 @@ public final class AiDocSupport {
 					// the statement prints the NRIC dashed or spaced; eP stores the 12 digits
 					emp.setNricNumber(AiDocValidator.normalizeNric(value));
 				} else if ("employee_name".equals(type)) {
-					emp.setEmployeeName(value);
+					// the OCR keeps the statement's own line breaks inside a name
+					emp.setEmployeeName(AiDocValidator.normalizePersonName(value));
 				}
 			}
 			return emp;
@@ -829,6 +830,31 @@ public final class AiDocSupport {
 				return "";
 			}
 			return nric.replaceAll("[^0-9]", "");
+		}
+
+		/**
+		 * Collapse every run of whitespace - including the line breaks the OCR keeps inside a
+		 * name - to one space, so a name reads the same however the statement printed it.
+		 * @param name
+		 * @return
+		 */
+		public static String normalizePersonName(String name) {
+			if (StringUtils.isBlank(name)) {
+				return "";
+			}
+			return name.replaceAll("\\s+", " ").trim();
+		}
+
+		/**
+		 * Same person's name, whatever the spacing and case. Both sides are sanitized first.
+		 * @param st1
+		 * @param st2
+		 * @return
+		 */
+		public static boolean personNameEquals(String st1, String st2) {
+			String c1 = normalizePersonName(st1);
+			String c2 = normalizePersonName(st2);
+			return !c1.isEmpty() && c1.equalsIgnoreCase(c2);
 		}
 
 		public static List<String> tokenize(String name) {
