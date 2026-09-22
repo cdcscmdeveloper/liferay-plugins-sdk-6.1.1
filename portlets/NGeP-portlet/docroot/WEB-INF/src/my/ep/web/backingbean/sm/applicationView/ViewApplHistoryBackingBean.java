@@ -2047,10 +2047,4 @@ public class ViewApplHistoryBackingBean extends BaseReviewApplicationBackingBean
 	}
 	// 26238 - end
 	
-	//#40444 --START
-	public boolean checkOverLappedCategoryExists(SmAppl smAppl) {
-		SmOverlapCategoryVO vo = getOverlapCategoryVO(smAppl);
-		return vo != null && vo.isOverLappedCategoryExist();
-	}//#40444 --END
-	
 }
