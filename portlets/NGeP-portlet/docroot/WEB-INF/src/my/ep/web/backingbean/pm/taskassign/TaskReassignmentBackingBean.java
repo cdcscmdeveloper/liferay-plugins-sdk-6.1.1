@@ -4784,7 +4784,7 @@ public class TaskReassignmentBackingBean extends
 	//#34945 Start
 	private void applyOrgProfileFilter(ISearchBean<PmUser> searchBean, WorklistItemVO task, Long orgProfileId) {
 		if (circularCentralPanelContract.contains(task.getDocStatus().longValue())) {
-			List<PmConfigRuleValue> ptjCcType = RuleConfigHelper.getInstance().getRuleTypeValueListByRuleType(RuleTypeConst.PTJ_AUTH_MCPC);
+			List<PmConfigRuleValue> ptjCcType = RuleConfigHelper.getInstance().getRuleTypeValueListByRuleType(RuleTypeConst.PTJ_AUTH_CC);
 			List<Long> ptjIdList = new ArrayList<>();
 
 			for (PmConfigRuleValue pmConfigRuleValue : ptjCcType) {
