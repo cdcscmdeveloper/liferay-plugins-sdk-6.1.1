@@ -316,8 +316,13 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	private Boolean downloadLOADisabled = true;
 
 	private Boolean readOnlyLOADownload = true;
-	// Bug #35078@Syazani -- 22/09/2023 -- End	
-	
+	// Bug #35078@Syazani -- 22/09/2023 -- End
+
+	// #29766 Start Vinod
+	private String alertForInactivePK7;
+	private boolean autoRevise;
+	// #29766 End Vinod
+
 	/*#29007 Start Vinod*/
 	private boolean iconForDL = false;
 	private boolean searchItemForDL = false;
@@ -1956,7 +1961,25 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 		this.readOnlyLOADownload = readOnlyLOADownload;
 	}
 	// Bug #35078@Syazani -- 22/09/2023 -- End
-	
+
+	// #29766 Start Vinod
+	public String getAlertForInactivePK7() {
+		return alertForInactivePK7;
+	}
+
+	public void setAlertForInactivePK7(String alertForInactivePK7) {
+		this.alertForInactivePK7 = alertForInactivePK7;
+	}
+
+	public boolean isAutoRevise() {
+		return autoRevise;
+	}
+
+	public void setAutoRevise(boolean autoRevise) {
+		this.autoRevise = autoRevise;
+	}
+	// #29766 End Vinod
+
 	/*#29007 Start Vinod*/
 	public boolean isSupPropSpecDisable() {
 		return supPropSpecDisable;
