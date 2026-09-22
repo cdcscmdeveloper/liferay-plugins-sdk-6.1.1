@@ -1151,17 +1151,51 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					&& StringUtils.isNotBlank(smPersonnel.getEmail()) ? smPersonnel
 					.getEmail() : "";
 					
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.INFO_721012,
-									new String[] {
-											suppAdminEmail,
-											SmRuleHelper.getInstance()
-													.getEmailActivationDays()
-													+ "" },
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
+			// 14623 - start : tukar ayat
+			if (this.getManagedBean().getApplType()
+					.equalsIgnoreCase(SupplierManagementConst.ACC_BASIC)) {
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_INFO,
+										null,
+										MessageUtils
+												.getMessage(
+														MessageConst.INFO_721012,
+														new String[] {
+																suppAdminEmail,
+																SmRuleHelper
+																		.getInstance()
+																		.getEmailActivationDays()
+																		+ "" },
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
+			} else if (this.getManagedBean().getApplType()
+					.equalsIgnoreCase(SupplierManagementConst.ACC_MOF)) {
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_INFO,
+										null,
+										MessageUtils
+												.getMessage(
+														MessageConst.INFO_722686,
+														new String[] {
+																suppAdminEmail,
+																SmRuleHelper
+																		.getInstance()
+																		.getEmailActivationDays()
+																		+ "" },
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
+			}
+			// 14623 - end
 			renewSesionObject();
 			this.getManagedBean().setSmAppl(null);
 			this.getManagedBean().setSmSupp(null);
