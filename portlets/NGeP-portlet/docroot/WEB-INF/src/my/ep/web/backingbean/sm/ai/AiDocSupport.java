@@ -47,6 +47,7 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 public final class AiDocSupport {
 
 	private static final String BR = "<br/>";
+	private static final String LBL_DOC_INVALID = "lbl.sm.ai.doc.invalid";
 	private static final String AI_ONOFF = EpPropertiesUtils.getInstance().getProperty("google.doc.ai.onoff");
 	private static final String AI_BANK_OCR = EpPropertiesUtils.getInstance().getProperty("google.doc.bank.co.name.check.onoff");
 	// this filename will always go to API
@@ -94,7 +95,7 @@ public final class AiDocSupport {
 		public static final String F_DISTRICT = "district";
 		public static final String F_CITY = "city";
 		// submitting the dialog applies the whole extracted statement, so all of these are accepted at once
-		public static final String[] F_TENANCY_ALL = { F_OWNER_NAME, F_RENTAL_RATE, F_ADDRESS1,
+		static final String[] F_TENANCY_ALL = { F_OWNER_NAME, F_RENTAL_RATE, F_ADDRESS1,
 				F_ADDRESS2, F_ADDRESS3, F_POSTCODE, F_COUNTRY, F_STATE, F_DISTRICT, F_CITY };
 
 		private static final Logger log = Logger.getLogger(AiUserEdit.class);
@@ -1032,38 +1033,49 @@ public final class AiDocSupport {
 			if (accepted.contains(AiUserEdit.F_RENTAL_RATE)) {
 				fac.setRentalRateAI(te.getMonthlyRental());
 			}
-			SmAddress addr = fac.getSmAddress();
-			if (addr != null) {
-				if (accepted.contains(AiUserEdit.F_ADDRESS1)) {
-					addr.setAddress1AI(te.getAddr1());
-				}
-				if (accepted.contains(AiUserEdit.F_ADDRESS2)) {
-					addr.setAddress2AI(te.getAddr2());
-				}
-				if (accepted.contains(AiUserEdit.F_ADDRESS3)) {
-					addr.setAddress3AI(te.getAddr3());
-				}
-				if (accepted.contains(AiUserEdit.F_POSTCODE)) {
-					addr.setPostcodeAI(te.getPostcode());
-				}
-				PmCity city = te.getPmCity();
-				if (city != null) {
-					if (accepted.contains(AiUserEdit.F_CITY)) {
-						addr.setCityIdAI(city.getCityId());
-					}
-					if (accepted.contains(AiUserEdit.F_COUNTRY)) {
-						addr.setCountryIdAI(SmCommonUtil.getMyCountryId());
-					}
-					if (city.getPmDistrict() != null) {
-						if (accepted.contains(AiUserEdit.F_DISTRICT)) {
-							addr.setDistrictIdAI(city.getPmDistrict().getDistrictId());
-						}
-						if (city.getPmDistrict().getPmState() != null
-								&& accepted.contains(AiUserEdit.F_STATE)) {
-							addr.setStateIdAI(city.getPmDistrict().getPmState().getStateId());
-						}
-					}
-				}
+			setTenancyAddressAiFields(fac.getSmAddress(), te, accepted);
+		}
+
+		private static void setTenancyAddressAiFields(SmAddress addr, AiTenancyDTO te,
+				Set<String> accepted) {
+			if (addr == null) {
+				return;
+			}
+			if (accepted.contains(AiUserEdit.F_ADDRESS1)) {
+				addr.setAddress1AI(te.getAddr1());
+			}
+			if (accepted.contains(AiUserEdit.F_ADDRESS2)) {
+				addr.setAddress2AI(te.getAddr2());
+			}
+			if (accepted.contains(AiUserEdit.F_ADDRESS3)) {
+				addr.setAddress3AI(te.getAddr3());
+			}
+			if (accepted.contains(AiUserEdit.F_POSTCODE)) {
+				addr.setPostcodeAI(te.getPostcode());
+			}
+			setTenancyCityAiFields(addr, te.getPmCity(), accepted);
+		}
+
+		private static void setTenancyCityAiFields(SmAddress addr, PmCity city,
+				Set<String> accepted) {
+			if (city == null) {
+				return;
+			}
+			if (accepted.contains(AiUserEdit.F_CITY)) {
+				addr.setCityIdAI(city.getCityId());
+			}
+			if (accepted.contains(AiUserEdit.F_COUNTRY)) {
+				addr.setCountryIdAI(SmCommonUtil.getMyCountryId());
+			}
+			if (city.getPmDistrict() == null) {
+				return;
+			}
+			if (accepted.contains(AiUserEdit.F_DISTRICT)) {
+				addr.setDistrictIdAI(city.getPmDistrict().getDistrictId());
+			}
+			if (city.getPmDistrict().getPmState() != null
+					&& accepted.contains(AiUserEdit.F_STATE)) {
+				addr.setStateIdAI(city.getPmDistrict().getPmState().getStateId());
 			}
 		}
 	}
@@ -1096,7 +1108,7 @@ public final class AiDocSupport {
 		public String getLabel() {
 			// nothing mapped out of this file, same verdict as Bank and Tenancy report
 			if (employerName == null && getEmployees().isEmpty()) {
-				return AiDocParser.label("lbl.sm.ai.doc.invalid");
+				return AiDocParser.label(LBL_DOC_INVALID);
 			}
 			StringBuilder sb = new StringBuilder();
 			if (employerName != null) {
@@ -1200,7 +1212,7 @@ public final class AiDocSupport {
 		// Field labels from the common bundle (locale-sensitive at render time).
 		public String getLabel() {
 			if (this.error) {
-				return AiDocParser.label("lbl.sm.ai.doc.invalid");
+				return AiDocParser.label(LBL_DOC_INVALID);
 			}
 			StringBuilder sb = new StringBuilder();
 			appendField(sb, "lbl.cm.company.name", tenantsName, validTenantsName);
@@ -1388,7 +1400,7 @@ public final class AiDocSupport {
 		public String getLabel() {
 			StringBuilder sb = new StringBuilder();
 			if (this.error) {
-				return AiDocParser.label("lbl.sm.ai.doc.invalid");
+				return AiDocParser.label(LBL_DOC_INVALID);
 			}
 			if (this.bankStatements.size() == 1) {
 				return bankStatements.get(0).getLabel();
