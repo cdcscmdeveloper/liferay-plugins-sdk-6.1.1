@@ -136,6 +136,7 @@
 					<td style="width: 66%"><p:inputText maxlength="14"
 							label="#{lbl['lbl.sm.comp.exp.draft.table.value']}"
 							value="#{smCompExpMB.selectedMaster.contractValue}">
+							<p:ajax event="blur" process="@this" update="@this" /><!-- #41341 format decimal on blur -->
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText></td>
@@ -257,6 +258,7 @@
 								style="width:auto !important;"
 								label="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}"
 								value="#{smCompExpMB.selectedMaster.consultantFee}">
+								<p:ajax event="blur" process="@this" update="@this" /><!-- #41341 format decimal on blur -->
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText></td>
