@@ -5449,6 +5449,7 @@ public class RuleCatalogueBackingBean extends
 					newRuleValue.setRuleValue(newRuleValue.getPmOrgProfile().getOrgCode());
 					newRuleValue.setRuleDescription(newRuleValue.getPmOrgProfile().getOrgName());
 					newRuleValue.setZoneId(getManagedBean().getSelectedZoneId());
+					newRuleValue.setPtjId(orgProfile); //#27827
 					index = configRuleType.getConfigRuleValues().size();
 					configRuleType.getConfigRuleValues().add(index, newRuleValue);
 				}
@@ -6976,7 +6977,7 @@ public class RuleCatalogueBackingBean extends
 
 				if (isPTJAlreadyAdded(configRuleType, orgProfile)) {
 					throw new EpException(
-							MessageConst.ERROR_760833,
+							MessageConst.ERROR_760834,
 							new String[] {
 								orgProfile.getOrgName(),
 								this.getManagedBean().getSelectedRuleDescType().getRuleDesc()
