@@ -1,0 +1,203 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	
+<!-- 	<Style>
+/* Container styling to force the red background */
+#biddingCountdownWrapper.countdown-container {
+    background-color: #FFDDDD !important; /* Soft Red (better readability) */
+    border: 2px solid #CC0000 !important;   /* Requirement 5 (Status display) */
+    border-radius: 8px;                  /* Requirement 4 (Border design) */
+    padding: 10px;
+    display: inline-block;                /* Shrink wrap the content */
+}
+
+/* Force BOLD label text (Requirement 5) */
+#biddingCountdownWrapper span,
+#biddingCountdownWrapper div {
+    font-weight: bold !important;
+    color: #333333 !important;
+}
+	</Style> -->
+	<h:outputScript library="primefaces" name="jquery/jquery.js" target="head" />
+	
+
+	<h:panelGroup id="remainingTimeBidViewPanel"
+		rendered="#{onlineBidSearchBB.managedBean.scBidSchedule.pmStatus.statusId eq BidStatusConst.BID_IN_PROGRESS}">
+
+		<div style="align: left">
+			<table style="width: 100%;">
+				<tr>
+					<td style="width: 9%;"><p:outputLabel
+							value="#{lbl['lbl.sc.remaining.time']}" /></td>
+
+					<td style="width: 41%; align: left">
+					<!-- <div id="biddingCountdownWrapper" class="countdown-container"> -->
+					<div id="biddingCountDownWrapper" style="width: 250px; height: 70px; display: inline-block;">
+					<script
+							type="application/javascript">
+						
+									
+									
+									
+						
+				       		
+			var myCountdownBidding = new Countdown({time:"#{onlineBidSearchBB.remainingBidTime}",
+				hideLine: true,rangeHi: "hour",rangeLo: "second",width: 250,height: 70,
+		
+		       
+				labelText : {
+	                ms     : "MS",
+	                second : "#{lbl['lbl.sc.bidding.seconds']}",
+	                minute : "#{lbl['lbl.sc.bidding.minutes']}",
+	                hour   : "#{lbl['lbl.sc.bidding.hours']}",
+	                day    : "#{lbl['lbl.sc.bidding.days']}",
+	                month  : "MONTHS",
+	                year   : "YEARS"
+	            }
+			}); 
+					
+								
+								
+								
+								
+					</script>
+					<script type="application/javascript">
+    // This function must run after the DOM is complete (Requirement 7)
+    $(document).ready(function() {
+        // --- 2. REQUIREMENT 5 6: FORCE STYLING ---
+        // Locate the elements the library created inside our wrapper
+        var $wrapper = $('#biddingCountDownWrapper');
+
+        // Locate the generated digits (span/div inside canvas-generated HTML)
+        // Adjust selectors if needed based on the generated HTML structure.
+        var $timerDigits = $wrapper.find('span, div'); 
+
+        // Set the wrapper's background to a professional soft red (Req 2  5)
+        // Soft red background, not harsh browser red.
+        $wrapper.css({
+            'background-color': '#FFCCCC', 
+            'border': '1px solid #FF0000', // Status border (Req 6)
+            'border-radius': '8px',       // Status design (Req 6)
+            'padding': '10px',
+            'font-weight': 'bold',        // Ensure whole unit is bold (Req 2)
+            'color': '#AA0000'            // Dark Red numbers/labels (Req 5)
+        });
+
+        // Set digits/labels to a darker professional red for legibility (Req 5)
+        // We iterate in case the library overwrites styles in its drawing loop.
+        $timerDigits.each(function() {
+            $(this).css({
+                'color': '#AA0000',       // Critical Status Color (Req 6)
+                'font-weight': 'bold'     // Soft colors (Req 5)
+            });
+        });
+
+    });
+</script>
+					 </div> 
+					</td>
+					<TD style="width: 50%;"></TD>
+				</tr>
+			</table>
+		 </div> 
+	</h:panelGroup>
+
+	<h:panelGroup id="pendingBiddingSearchCountDown"
+		rendered="#{onlineBidSearchBB.managedBean.scBidSchedule.pmStatus.statusId eq BidStatusConst.BID_PENDING_BIDDING}">
+
+		<div style="align: left">
+			<table style="width: 100%;">
+				<tr>
+					<td style="width: 9%;"><p:outputLabel
+							value="#{lbl['lbl.sc.opening.time']}" /></td>
+					<td style="width: 41%; align: left">
+				<!-- 	<div id="biddingCountdownWrapper" class="countdown-container"> -->
+				<div id="biddingCountDownWrapper" style="width: 250px; height: 70px; display: inline-block;">
+					<script
+							type="application/javascript">
+						
+									
+									
+									
+						
+			var myCountdownPreBidding = new Countdown({time:"#{onlineBidSearchBB.remainingBidTime}",
+				hideLine: true,rangeHi: "day",rangeLo: "second",width: 250,height: 70,
+				
+		       
+				labelText : {
+	                ms     : "MS",
+	                second : "#{lbl['lbl.sc.bidding.seconds']}",
+	                minute : "#{lbl['lbl.sc.bidding.minutes']}",
+	                hour   : "#{lbl['lbl.sc.bidding.hours']}",
+	                day    : "#{lbl['lbl.sc.bidding.days']}",
+	                month  : "MONTHS",
+	                year   : "YEARS"
+	            }
+			}); 
+						
+								
+								
+								
+								
+					</script>
+					<script type="application/javascript">
+    // This function must run after the DOM is complete (Requirement 7)
+    $(document).ready(function() {
+        // --- 2. REQUIREMENT 5  6: FORCE STYLING ---
+        // Locate the elements the library created inside our wrapper
+        var $wrapper = $('#biddingCountDownWrapper');
+
+        // Locate the generated digits (span/div inside canvas-generated HTML)
+        // Adjust selectors if needed based on the generated HTML structure.
+        var $timerDigits = $wrapper.find('span, div'); 
+
+        // Set the wrapper's background to a professional soft red (Req 2  5)
+        // Soft red background, not harsh browser red.
+        $wrapper.css({
+            'background-color': '#FFCCCC', 
+            'border': '1px solid #FF0000', // Status border (Req 6)
+            'border-radius': '8px',       // Status design (Req 6)
+            'padding': '10px',
+            'font-weight': 'bold',        // Ensure whole unit is bold (Req 2)
+            'color': '#AA0000'            // Dark Red numbers/labels (Req 5)
+        });
+
+        // Set digits/labels to a darker professional red for legibility (Req 5)
+        // We iterate in case the library overwrites styles in its drawing loop.
+        $timerDigits.each(function() {
+            $(this).css({
+                'color': '#AA0000',       // Critical Status Color (Req 6)
+                'font-weight': 'bold'     // Soft colors (Req 5)
+            });
+        });
+
+    });
+</script>
+					 </div> 
+					</td>
+					<TD></TD>
+				</tr>
+			</table>
+		</div>
+
+	</h:panelGroup>
+	<h:panelGroup id="pauseBiddingSearchViewTime"
+		rendered="#{onlineBidSearchBB.managedBean.scBidSchedule.pmStatus.statusId eq BidStatusConst.BID_PAUSED}">
+		<div style="align: left">
+				<table style="width: 100%;">
+					<tr>
+						<td style="width: 120px;"><p:outputLabel
+								value="#{lbl['lbl.sc.remaining.time']}" /></td>
+						<td><p:inputText size="20" disabled="true"
+								value="#{onlineBidSearchBB.managedBean.remainingTime}" /></td>
+						
+					</tr>
+
+				</table>
+
+			</div>
+		</h:panelGroup>
+</ui:composition>

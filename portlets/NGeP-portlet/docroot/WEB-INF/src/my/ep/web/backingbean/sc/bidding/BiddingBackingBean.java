@@ -31,8 +31,10 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.sc.BidStatusConst;
 import my.ep.constant.sc.BiddingConst;
 import my.ep.constant.sc.QTStatusConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
@@ -44,6 +46,7 @@ import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.bidding.ScBidAction;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidPrice;
@@ -52,10 +55,12 @@ import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.component.datetime.DateTimeInput;
 import my.ep.web.constant.sc.QTConstants;
+import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.managedbean.sc.bidding.BiddingManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
@@ -64,6 +69,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
@@ -88,6 +94,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 	private static Logger log = Logger.getLogger(BiddingBackingBean.class);
 	private DateTimeInput dateTimeInputUIComponent;
+	private DateTimeInput reScheduleDateTimeInputUIComponent;
 	private static final DecimalFormat nf = new DecimalFormat((new CommonUtils())			
 					.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 
@@ -149,9 +156,19 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 	public void getStatusDescList() {
 		SelectItem[] statusDescs = getManagedBean().getStatusDescs();
 		if (statusDescs == null || statusDescs.length == 0) {
-			statusDescs = getStatusDropdownValues(
+			//8755 -start-
+			SearchBean<PmStatusDesc> statusSearchBean = new SearchBean<>();
+			// Filter By - statusId
+			List<Long> statusIds = Arrays.asList(BidStatusConst.BID_HAS_BEEN_CANCELED);
+		
+			statusSearchBean.getDataFilterBeans().add(new SearchFilterBean(
+					SourcingConstants.QT_PMSTATUS_STATUS_ID,
+					SearchOperator.OPERATOR_NOT_IN.value(),
+					statusIds));
+			statusDescs = getStatusDropdownValuesBySearchBean(
 					ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(),
-					ParameterConst.DOCTYPE_BIDDING);
+					ParameterConst.DOCTYPE_BIDDING,statusSearchBean);
+			//8755 -end-
 			getManagedBean().setStatusDescs(statusDescs);
 		}
 
@@ -698,30 +715,155 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 		getManagedBean().setBidPriceLinearModel(new CartesianChartModel());
 
-		LineChartSeries chartSeries = new LineChartSeries();
+		//LineChartSeries chartSeries = new LineChartSeries();
 
-		chartSeries.setLabel(ResourceBundleUtils.getMessage("lbl.sc.bid.price",
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				new FacesScopes().getUserLocale()));
+		//chartSeries.setLabel("Supplier Code");
+    // Map<String,LineChartSeries> suppliersets=new LinkedHashMap<>();
+  // 1. Create a List to hold all unique time ticks
+    List<String> allTicks = new ArrayList<String>();
+  // --- Supplier 3 ---
+     LineChartSeries s3 = new LineChartSeries();
+     s3.setLabel("3"); // This is the Supplier Code
+     s3.set("10:01:00", 750000);
+     s3.set("10:06:00", 650000); // Becomes Point (2, 3, 631876)
+     s3.set("10:10:00", 700000);
+   
+    // allTicks.add("10:01:00");
+    // allTicks.add("10:06:00");
+     // --- Supplier 1 ---
+     // Different times and different amounts
+     LineChartSeries s1 = new LineChartSeries();
+     s1.setLabel("1"); // Supplier Code
+     s1.set(getCurrentTimeWithoutDate(new Date()), 0);
+    // s1.set("09:45:00", 300000);
+    // s1.set("09:55:00", 29000); 
+    // s1.set("10:12:00", 400000); // Becomes Point (3, 1, 25478)
+    // allTicks.add("09:55:00");
+     //allTicks.add("09:45:00");
+     //allTicks.add("10:12:00");
+  // 2. Sort the times so they appear chronologically on the axis
+     LineChartSeries s2 = new LineChartSeries();
+     s2.setLabel("2"); // This is the Supplier Code
+     s2.set("11:01:00", 850000);
+     s2.set("11:50:00", 1000000);
+     
+     LineChartSeries s4 = new LineChartSeries();
+     s4.setLabel("4"); // This is the Supplier Code
+     s4.set("11:10:00", 500000);
+     s4.set("11:15:00", 700000);
+     s4.set("11:20:00", 600000);
+     s4.set("11:22:00", 800000);
+     
+     LineChartSeries s5 = new LineChartSeries();
+     s5.setLabel("5"); // This is the Supplier Code
+     s5.set("11:13:00", 600000);
+     s5.set("11:18:00", 750000);
+     s5.set("11:25:00", 650000);
+     s5.set("11:35:00", 850000);
+     s5.set("11:45:00", 950000);
+   
+     Collections.sort(allTicks);
+     getManagedBean().getBidPriceLinearModel().addSeries(s1);
+     getManagedBean().getBidPriceLinearModel().addSeries(s2);
+     getManagedBean().getBidPriceLinearModel().addSeries(s3);
+     getManagedBean().getBidPriceLinearModel().addSeries(s4);
+    getManagedBean().getBidPriceLinearModel().addSeries(s5);
+     
+ /*	if (chartSeries.getData() == null || chartSeries.getData().isEmpty()) {
+		chartSeries.set(getCurrentTimeWithoutDate(new Date()), 0);
+	}
+	
 
-		for (BidPackageBean bidPackage : bidPackageList) {
+	if (getManagedBean().getBidPriceLinearModel() != null) {
+		getManagedBean().getBidPriceLinearModel().addSeries(chartSeries);
+	}*/
 
+    // model.addSeries(s3);
+    // model.addSeries(s1);
+	/*	for (BidPackageBean bidPackage : bidPackageList) {
+			LineChartSeries suuplierSeries=	suppliersets.get(bidPackage.getScBidSupplier().getSupplierNo());
+			 log.info("suuplierSeriesKey = " + suuplierSeries +
+                     ", suuplierSeriesValue = " + suuplierSeries);
 			if (!bidPackage.getScBidSupplier().getPackageStartPrice()
 					.equals(bidPackage.getBidPriceTotal())) {
-				chartSeries.set(
+				if(null==suuplierSeries){
+					suuplierSeries=new LineChartSeries();
+					suuplierSeries.setLabel(bidPackage.getScBidSupplier().getSupplierNo().toString());
+				}
+				suuplierSeries.set(
 						getCurrentTimeWithoutDate(bidPackage.getLastBidDate()),
 						bidPackage.getBidPriceTotal());
+				log.info("suuplierSeriesNumber= " + bidPackage.getScBidSupplier().getSupplierNo() +
+	                     ", BidpriceTotal = " + bidPackage.getBidPriceTotal());
+				//chartSeries.set(
+						//getCurrentTimeWithoutDate(bidPackage.getLastBidDate()),
+						//bidPackage.getBidPriceTotal());
+				suppliersets.put(bidPackage.getScBidSupplier().getSupplierNo().toString(), suuplierSeries);
+				
 			}
 		}
 
 		if (chartSeries.getData() == null || chartSeries.getData().isEmpty()) {
 			chartSeries.set(getCurrentTimeWithoutDate(new Date()), 0);
 		}
+		
 
 		if (getManagedBean().getBidPriceLinearModel() != null) {
 			getManagedBean().getBidPriceLinearModel().addSeries(chartSeries);
 		}
+		getManagedBean().getBidPriceLinearModel().addSeries(s3);
+		getManagedBean().getBidPriceLinearModel().addSeries(s1);
+		if(!suppliersets.isEmpty()){
+			for (Map.Entry<String,LineChartSeries> i : suppliersets.entrySet()) {
+	           log.info("Key = " + i.getKey() +
+	                             ", Value = " + i.getValue());
+	           getManagedBean().getBidPriceLinearModel().addSeries(i.getValue());
+			}
+		}
+		// Explicitly define the ticks in order
+	    // In a real app, collect these from your data list and sort them
+	    xTicks = "['09:45:00', '09:55:00', '10:01:00', '10:06:00', '10:12:00']";*/
+		// Grouping by Supplier ensures each supplier gets their own line
+	    // and their own Supplier Number in the label
+	   /* Map<String, LineChartSeries> seriesMap = new HashMap<String, LineChartSeries>();
 
+	    for (BidPackageBean bidPackage : bidPackageList) {
+	        String supplierNo = bidPackage.getScBidSupplier().getSupplierNo().toString();
+	        
+	        // 1. Create series for this supplier if it doesn't exist
+	        if (!seriesMap.containsKey(supplierNo)) {
+	            LineChartSeries s = new LineChartSeries();
+	            // RULE: Store the Supplier Number directly in the Label
+	            s.setLabel(supplierNo); 
+	            seriesMap.put(supplierNo, s);
+	        }
+
+	        LineChartSeries currentSeries = seriesMap.get(supplierNo);
+	        String datePrefix = "2026-01-13";
+	        // 2. Existing price logic
+	        if (!bidPackage.getScBidSupplier().getPackageStartPrice()
+	                .equals(bidPackage.getBidPriceTotal())) {
+	            String fullDate= getCurrentTimeWithoutDate(bidPackage.getLastBidDate());
+	            log.info("===displayfulldate===="+fullDate);
+	            if(supplierNo.equals("3")){
+	            	  fullDate="10:00:00"	;
+	            }
+	            else if(supplierNo.equals("4")){
+	            	  fullDate="12:00:00"	;
+	            }
+	            log.info("===displayfulldate===="+fullDate);
+	            currentSeries.set(
+	            		fullDate,
+	                    bidPackage.getBidPriceTotal());
+	        }
+	    }
+
+	    // 3. Add all created series to the model
+	    for (LineChartSeries s : seriesMap.values()) {
+	        if (s.getData() != null && !s.getData().isEmpty()) {
+	            getManagedBean().getBidPriceLinearModel().addSeries(s);
+	        }
+	    }*/
 	}
 
 	private void createViewByItemLineChart() {
@@ -1396,4 +1538,257 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 	}
 	// #28777 & #29729 - End
 	
+	
+	/**
+	 * Action method for bid reschedule or re-bid event
+	 * 
+	 * @param bid
+	 */
+	public void pendingReScheduleBidPopUpAction(ScBidSchedule bidSchedule) {
+		//resetReScheduleDateTimeComponent();
+		this.getManagedBean().setAutoUpdate(false);
+		this.getManagedBean().setBidAction(null);
+		IBiddingSO biddingSO = null;
+		Long bidScheduleId = bidSchedule.getBidScheduleId();
+		try {
+			biddingSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
+
+			BiddingReqDTO reqDto = new BiddingReqDTO();
+			this.getManagedBean().setScheduledBid(bidSchedule);
+			reqDto.setBidScheduleId(bidScheduleId);
+
+			BiddingResDTO resDto = biddingSO
+					.retrieveLastBidActionByScheduleId(reqDto);
+			if (resDto.isSuccessful()) {
+				this.getManagedBean().setAutoUpdate(false);
+				ScBidAction lastBidAction = resDto.getScBidAction();
+				this.getManagedBean().setLastBidAction(lastBidAction);
+				this.getManagedBean().setBidAction(new ScBidAction());
+				this.getManagedBean().getBidAction()
+						.setScBidSchedule(bidSchedule);
+				this.getManagedBean().getBidAction()
+						.setActionType(BiddingConst.BID_ACTION_TYPE_RESCHEDULE);
+				Calendar minDate = Calendar.getInstance();
+				minDate.setTime(bidSchedule.getEndDate());
+				getManagedBean().setMindate(minDate.getTime());
+				if(bidSchedule.getEndDate().before(DateUtils.getCurrentDate())){
+					//// minDate = Calendar.getInstance();
+					//minDate.setTime(DateUtils.getCurrentDate());
+					//minDate.add(Calendar.MINUTE, 15);
+					getManagedBean().setMindate(getNextDate());	
+				}
+				if(null==lastBidAction){
+					
+					
+					getManagedBean().setNewBidDuration(
+							durationCalculator(bidSchedule.getStartDate(),
+									bidSchedule.getEndDate()));
+				}else{
+				//Calendar minDate = Calendar.getInstance();
+				//minDate.setTime(bidSchedule.getEndDate());
+			//	minDate.add(Calendar.MINUTE, 15);
+				//Calendar endDate = Calendar.getInstance();
+				//endDate.setTime(bidAction.getNewStartDate());
+				//getManagedBean().setMindate(minDate.getTime());
+				getManagedBean().setNewBidDuration(
+						durationCalculator(lastBidAction.getCreatedDate(),
+								bidSchedule.getEndDate()));
+				}
+
+			}
+
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+					"BiddingBackingBean", String.valueOf(bidScheduleId),
+					"pendingReScheduleBidPopUpAction",
+					getUserIdSessionFromLoginId(), e);
+
+		}
+	}
+	
+	/**
+	 * Listener Method for date selection events for resume bid
+	 */
+	public void rescheduleNewStartDateListener() {
+		ScBidAction bidAction = this.getManagedBean().getBidAction();
+		if (bidAction.getNewStartDate() != null) {
+			if (bidAction.getActionType().equalsIgnoreCase(
+					ParameterConst.BID_ACTION_TYPES_RESUME_BIDDING)) {
+
+				final long ONE_MINUTE_IN_MILLIS = 60000;
+
+				long curTimeInMs = getManagedBean().getBidAction()
+						.getNewStartDate().getTime();
+
+				Date newEndDate = new Date(curTimeInMs
+						+ (getManagedBean().getRemainingTime())
+						* ONE_MINUTE_IN_MILLIS);
+				bidAction.setNewEndDate(newEndDate);
+				getManagedBean().setBidAction(bidAction);
+				getManagedBean().setNewBidDuration(
+						getManagedBean().getDuration());
+
+			} else {
+				if (getManagedBean().getBidAction().getRebidDuration() != null) {
+					Calendar endDate = Calendar.getInstance();
+					endDate.setTime(bidAction
+							.getNewStartDate());
+					endDate.add(Calendar.HOUR, getManagedBean().getBidAction()
+							.getRebidDuration().intValue());
+					bidAction.setNewEndDate(endDate.getTime());
+					getManagedBean().setBidAction(bidAction);
+					getManagedBean().getBidAction().getScBidSchedule().setStartDate(getManagedBean().getBidAction()
+							.getNewStartDate());
+					getManagedBean().getBidAction().getScBidSchedule().setEndDate(getManagedBean().getBidAction()
+							.getNewEndDate());
+				} else {
+					bidAction.setNewEndDate(null);
+					getManagedBean().setBidAction(bidAction);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Action method for re schedule or re-bid
+	 */
+	public void pendingReScheduleBidAction()  {
+
+		//IBiddingSO biddingSO = null;
+		//ScBidAction bidAction=this.getManagedBean().getBidAction();
+
+		//try {
+		IBiddingSO	biddingSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
+		   // Date newStartDate=	bidAction.getNewStartDate();
+		    //Date newEndDate=	bidAction.getNewEndDate();
+		   // String justification=	bidAction.getRemark();
+		/*	if (null!=getManagedBean().getBidAction().getNewStartDate()) {
+				getManagedBean().getBidAction().
+						getScBidSchedule()
+						.setStartDate(
+								getManagedBean().getBidAction().getNewStartDate());
+			}
+			if (null!=getManagedBean().getBidAction().getNewEndDate()) {
+				getManagedBean().getBidAction()
+						.getScBidSchedule()
+						.setEndDate(
+								getManagedBean().getBidAction().getNewEndDate());
+			}*/
+			/*if (StringUtils.isBlank(getManagedBean().getBidAction().getRemark())
+					|| StringUtils.isEmpty(getManagedBean().getBidAction().getRemark())) {
+				String justificationLbl = ResourceBundleUtils.getMessage(
+						SourcingConstants.justification,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale());
+
+				throw new EpException(MessageConst.ERROR_775185,
+						new String[] { justificationLbl });
+			}*/
+			
+			validateBidScheduleDetails(getManagedBean().getBidAction());
+
+			BiddingReqDTO reqDTO = new BiddingReqDTO();
+			reqDTO.setScBidAction(this.getManagedBean().getBidAction());
+			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			BiddingResDTO resDTO = biddingSO.updateBidAction(reqDTO);
+			if (resDTO.isSuccessful()) {
+				this.getManagedBean().setAutoUpdate(true);
+				RequestContext.getCurrentInstance().execute(
+					QTConstants.PENDING_ONLINE_BIDDING_POPUP	);
+				
+					resetReScheduleDateTimeComponent();
+					getManagedBean().setBidAction(null);
+					getManagedBean().getSearchDataModel().reloadData();
+					this.getManagedBean().setAutoUpdate(true);
+					//RequestContext.getCurrentInstance().update("@form");
+					successMessage(MessageConst.INFO_700004, getMessageCommon(SourcingConstants.ONLINE_BID_SUCCESS_MESSAGE), "", Boolean.FALSE);
+				
+			}
+		//}finally{
+			//biddingSO=null;
+		//}
+
+		/*catch (Exception e) {
+			Long bidScheduleId= bidAction
+			.getScBidSchedule().getBidScheduleId();
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+					"BiddingBackingBean", String.valueOf(bidScheduleId),
+					"pendingReScheduleBidAction",
+					getUserIdSessionFromLoginId(), e);
+
+		}*/
+
+	}
+	
+	//8755 -start-
+	/**
+	 * validate bidSchedule details during pending online bidding time.
+	 * @param bidAction
+	 */
+	private void validateBidScheduleDetails(ScBidAction bidAction) {
+		String remark = bidAction.getRemark();
+		String justification = bidAction.getRemark();
+		Long bidDuration = bidAction.getRebidDuration();
+		Date biddingStartDate = bidAction.getNewStartDate();
+		if (null == biddingStartDate) {
+			throw new EpException(MessageConst.ERROR_100022,
+					new String[] {getMessageCommon(SourcingConstants.BIDDING_START_DATE)});
+		}
+		if (null == bidDuration) {
+
+			throw new EpException(MessageConst.ERROR_760805);
+		}
+		if (StringUtils.isBlank(remark) || StringUtils.isEmpty(remark)) {
+
+			throw new EpException(MessageConst.ERROR_760806);
+		}
+		if (StringUtils.isBlank(justification)
+				|| StringUtils.isEmpty(justification)) {
+
+			throw new EpException(MessageConst.ERROR_760807);
+		}
+
+	}
+	//8755 -end-
+
+	/**
+	 * @return the reScheduleDateTimeInputUIComponent
+	 */
+	public DateTimeInput getReScheduleDateTimeInputUIComponent() {
+		return reScheduleDateTimeInputUIComponent;
+	}
+
+	/**
+	 * @param reScheduleDateTimeInputUIComponent the reScheduleDateTimeInputUIComponent to set
+	 */
+	public void setReScheduleDateTimeInputUIComponent(
+			DateTimeInput reScheduleDateTimeInputUIComponent) {
+		this.reScheduleDateTimeInputUIComponent = reScheduleDateTimeInputUIComponent;
+	}
+	
+	/**
+	 * Listener method to reset custom date component memory value.
+	 */
+	public void resetReScheduleDateTimeComponent() {
+		this.getManagedBean().setAutoUpdate(true);
+		if (this.getReScheduleDateTimeInputUIComponent() != null) {
+			this.getReScheduleDateTimeInputUIComponent().resetDateTime();
+		}
+	}
+
+	/**
+	 * To get message common
+	 * 
+	 * @param name
+	 * @return String instance
+	 */
+	public static String getMessageCommon(String name) {
+		return ResourceBundleUtils.getMessage(name,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale());
+	}
+
 }

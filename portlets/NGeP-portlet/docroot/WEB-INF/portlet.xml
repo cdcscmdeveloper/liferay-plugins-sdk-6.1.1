@@ -11607,4 +11607,40 @@
 		</security-role-ref>
 	</portlet>
 	<!--#28188-start-->
+	
+	
+	<!--#8755-start-->
+	<portlet>
+		<portlet-name>scOnlineBiddingSearch</portlet-name>
+		<display-name>Online Bidding Schedule</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/sc/bidding/onlineBidding/onlineBidSearchPreRenderView.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Online Bidding Schedule</title>
+			<short-title>Online Bidding Schedule</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<!--#8755-end-->
+	
 </portlet-app>

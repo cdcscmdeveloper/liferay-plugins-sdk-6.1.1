@@ -1,0 +1,358 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="resourceSection">
+		<script src="#{resource['js/countdown.js']}" />
+	</ui:define>
+	
+	
+	<ui:define name="contentSection">
+		<p:messages id="onlineBidSearchViewMessage" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false" severity="error, info" />
+		
+		
+		<ui:remove> #28777#29729 - Start </ui:remove>
+		<ui:param name="isDisqualified"
+			value="#{onlineBidSearchBB.managedBean.scBidSchedule.tplSpecZoneDtl ne null ? onlineBidSearchBB.checkZonesDisqualifiedSupplierBranchDeleted(onlineBidSearchBB.managedBean.scBidSchedule.scBid.docId, onlineBidSearchBB.managedBean.smSupplier.supplierId, onlineBidSearchBB.managedBean.scBidSchedule.tplSpecZoneDtl.specZoneId) : onlineBidSearchBB.checkDisqualifiedSupplierBranchDeleted(onlineBidSearchBB.managedBean.scBidSchedule.scBid.docId,onlineBidSearchBB.managedBean.smSupplier.supplierId)}" />
+		<ui:remove> #28777#29729 - End </ui:remove>
+			
+			 <h:panelGroup id="pollPanelViewGroup"
+			rendered="#{(onlineBidSearchBB.managedBean.scBidSchedule.pmStatus.statusId eq BidStatusConst.BID_PENDING_BIDDING) or (onlineBidSearchBB.managedBean.scBidSchedule.pmStatus.statusId eq BidStatusConst.BID_IN_PROGRESS)}">
+		 	<p:poll id="pollCOmponentView" interval="#{onlineBidSearchBB.interval}"
+				listener="#{onlineBidSearchBB.pollListener}"
+				update="itemWiseBidListSearchView,packageRankingPanelOBView,onlineBiddingNotificationView" /> 
+		</h:panelGroup> 
+			
+		<p:commandButton
+						id="backButton" styleClass="BtnSpacing"
+						value="#{lbl['lbl.btn.back']}" style="float:left;"
+						partialSubmit="true" process="@this" immediate="true"
+						action="#{onlineBidSearchBB.backToPreviousSearchDtls}" /> <!-- just for testing purpose no need to release back button -->	
+	<ui:include
+			src="/xhtml/sc/bidding/onlineBidding/viewOnlineBidSearchHeader.xhtml" />
+			
+			<p:panel id="onLineBidSViewPanel"
+			header="#{lbl['lbl.sc.bidding.bid.price.details']}" toggleable="true">
+
+			<ui:include
+				src="/xhtml/sc/bidding/onlineBidding/viewOnlineBidSearchTimers.xhtml" />
+			<h:panelGrid rendered="#{onlineBidSearchBB.managedBean.scBidSchedule eq null}">
+				<h:outputText style="font-size : 25px;" styleClass="lastUpdated"
+					value="#{lbl['lbl.sc.bid.bidding.notification']}" />
+
+			</h:panelGrid>
+			<p:dataTable id="itemWiseBidListSearchView"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				style="word-wrap: break-word ; table-layout: fixed " rows="10"
+				value="#{onlineBidSearchBB.managedBean.bidPrices}" var="bidPriceItem">
+                  <ac:paginator for="itemWiseBidListSearchView"></ac:paginator>     
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column rowspan="2" width="20%">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.sc.item.name']}" />
+								<ac:iconTooltip
+									value="#{lbl['lbl.sc.bidding.item.name.supplier.tooltip']}" />
+							</f:facet>
+						</p:column>
+
+						<p:column rowspan="2" headerText="#{lbl['lbl.sc.quantity']}"
+							width="6%" />
+
+						<p:column rowspan="2" style="white-space : normal" width="4%">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.sc.min.decrement.block']}" />
+								<ac:iconTooltip
+									value="#{lbl['lbl.sc.min.decrement.block.supplier.tooltip']}" />
+							</f:facet>
+						</p:column>
+
+						<p:column colspan="2" headerText="#{lbl['lbl.sc.starting']}"
+							width="18%" style="text-align:center" />
+
+						<p:column colspan="2" headerText="#{lbl['lbl.sc.last.bid']}"
+							rendered="#{onlineBidSearchBB.managedBean.scBidSchedule.pmStatus.statusId ne BidStatusConst.BID_PENDING_BIDDING}"
+							width="18%" style=" text-align:center" />
+
+						<p:column colspan="3" headerText="#{lbl['lbl.sc.new.bid']}"
+							rendered="#{onlineBidSearchBB.managedBean.scBidSchedule.pmStatus.statusId eq BidStatusConst.BID_IN_PROGRESS}"
+							width="30%" style=" text-align:center" />
+
+						<p:column rowspan="2"
+							rendered="#{(onlineBidSearchBB.managedBean.scBidSchedule.pmStatus.statusId ne BidStatusConst.BID_PENDING_BIDDING) and (onlineBidSearchBB.managedBean.scBidSchedule.scBid.recommendedTypeId.parameterCode eq onlineBidSearchBB.recommendTypeItem) and !isDisqualified}"
+							headerText="#{lbl['lbl.sc.current.ranking']}"
+							style="white-space : normal" width="4%" />
+						<ui:remove> #28777#29729 </ui:remove>
+						
+					</p:row>
+					<p:row>
+						<p:column headerText="#{lbl['lbl.sc.unit.price']}" width="8%" />
+
+						<p:column headerText="#{lbl['lbl.sc.sub.total']}" width="10%" />
+
+						<p:column headerText="#{lbl['lbl.sc.unit.price']}" width="8%"
+							rendered="#{onlineBidSearchBB.managedBean.scBidSchedule.pmStatus.statusId ne BidStatusConst.BID_PENDING_BIDDING}" />
+
+						<p:column headerText="#{lbl['lbl.sc.sub.total']}" width="10%"
+							rendered="#{onlineBidSearchBB.managedBean.scBidSchedule.pmStatus.statusId ne BidStatusConst.BID_PENDING_BIDDING}" />
+
+						<p:column width="14%"
+							rendered="#{onlineBidSearchBB.managedBean.scBidSchedule.pmStatus.statusId eq BidStatusConst.BID_IN_PROGRESS}">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.sc.decrement']}" />
+								<ac:iconTooltip value="#{lbl['lbl.sc.decrement.tooltip']}" />
+							</f:facet>
+						</p:column>
+
+						<p:column headerText="#{lbl['lbl.sc.unit.price']}" width="7%"
+							rendered="#{onlineBidSearchBB.managedBean.scBidSchedule.pmStatus.statusId eq BidStatusConst.BID_IN_PROGRESS}" />
+
+						<p:column headerText="#{lbl['lbl.sc.sub.total']}" width="9%"
+							rendered="#{onlineBidSearchBB.managedBean.scBidSchedule.pmStatus.statusId eq BidStatusConst.BID_IN_PROGRESS}" />
+					</p:row>
+				</p:columnGroup>
+				<p:column>
+					<p:commandLink id="itemNameOBView" style="white-space : normal;"
+						value="#{bidPriceItem.scBidSupplierItem.scBidItem.scRequestItem.itemName}"
+						action="#{onlineBidSearchBB.itemDetialsPopupAction(bidPriceItem)}"
+						update="@([id$=onlineBidViewItemDetails])" process="@this" partialSubmit="true"
+						oncomplete="onlineBidItemDetailsView.show()" />
+				</p:column>
+				<p:column>
+					<h:outputText id="qtyOBView" style="float : right"
+						value="#{bidPriceItem.scBidSupplierItem.scBidItem.qty}">
+						<f:converter converterId="dynamicNumberConverter" />
+						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, bidPriceItem.scBidSupplierItem.scBidItem.scRequestItem.uom.uomCode)}" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<h:outputText id="decrementAmtOBView" style="float : right"
+						value="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<h:outputText id="itemStartPriceOBView" style="float : right"
+						value="#{bidPriceItem.scBidSupplierItem.itemStartPrice}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<p:outputLabel id="startPriceTotalOBView" style="float : right"
+						value="#{onlineBidSearchBB.startPriceTotal(bidPriceItem)}">
+					</p:outputLabel>
+				</p:column>
+				<p:column
+					rendered="#{onlineBidSearchBB.managedBean.scBidSchedule.pmStatus.statusId ne BidStatusConst.BID_PENDING_BIDDING}">
+					<h:outputText style="float : right" id="lastBidPriceView"
+						value="#{bidPriceItem.bidPrice}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+				</p:column>
+				<p:column
+					rendered="#{onlineBidSearchBB.managedBean.scBidSchedule.pmStatus.statusId ne BidStatusConst.BID_PENDING_BIDDING}">
+					<h:panelGroup id="lastBidPriceSubTotalView">
+						<p:outputLabel id="lastBidPriceTotalOB" style="float : right"
+							value="#{onlineBidSearchBB.lastBidPriceTotal(bidPriceItem)}">
+						</p:outputLabel>
+					</h:panelGroup>
+				</p:column>
+				<p:column
+					rendered="#{onlineBidSearchBB.managedBean.scBidSchedule.pmStatus.statusId eq BidStatusConst.BID_IN_PROGRESS}">
+					<h:panelGroup id="spinnerPGView">
+						<ac:spinner style="width : 65%" maxlength="10"
+							value="#{bidPriceItem.newPrice}" id="spinner"
+							min="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}"
+							max="#{bidPriceItem.bidPrice + bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}"
+							label="#{lbl['lbl.sc.new.bid']}"
+							stepFactor="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}"
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
+							update="@([id$=temWiseBidListSearchView])"
+							postUpdateListener="onlineBidSearchBB.decrementAmountValueChangeListener"
+							disabled="#{isDisqualified}">
+							<ui:remove> #28777#29729 </ui:remove>
+							<f:attribute name="scBidPrice" value="#{bidPriceItem}" />
+						</ac:spinner>
+					</h:panelGroup>
+					<p:spacer width="3"></p:spacer>
+					<h:panelGroup id="submitButtonView" style="width : 35%">
+						<p:commandLink id="submitBidOBView"
+							disabled="#{(bidPriceItem.newPrice == null) or (bidPriceItem.newPrice lt bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt)}"
+							action="#{onlineBidSearchBB.confirmAndSubmitBidPrice(bidPriceItem)}"
+							process="@this"
+							update="@this,spinnerPGView,lastBidPriceView,lastBidPriceSubTotalView,newPriceView,newPriceSubTotalView,newRankingView,:form:packageRankingPanelOBView,:form:onlineBidSearchViewMessage">
+							<p:graphicImage
+								value="#{CommonUIConstant.imagePathUptoDesign}/ico-submit.png" />
+						</p:commandLink>
+					</h:panelGroup>
+				</p:column>
+
+				<p:column
+					rendered="#{onlineBidSearchBB.managedBean.scBidSchedule.pmStatus.statusId eq BidStatusConst.BID_IN_PROGRESS}">
+					<h:panelGroup id="newPriceView">
+						<h:outputText id="newBidPriceOBView" style="float : right"
+							rendered="#{(bidPriceItem.newPrice != null) and (bidPriceItem.newPrice ne 0) and !(bidPriceItem.newPrice lt 0)}"
+							value="#{bidPriceItem.newBidPrice.bidPrice}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</h:outputText>
+					</h:panelGroup>
+				</p:column>
+				<p:column
+					rendered="#{onlineBidSearchBB.managedBean.scBidSchedule.pmStatus.statusId eq BidStatusConst.BID_IN_PROGRESS}">
+
+					<h:panelGroup id="newPriceSubTotalView">
+						<p:outputLabel id="newBidPriceTotalOB" style="float : right"
+							rendered="#{(bidPriceItem.newPrice != null) and (bidPriceItem.newPrice ne 0) and !(bidPriceItem.newPrice lt 0)}"
+							value="#{onlineBidSearchBB.itemNewPriceTotal(bidPriceItem)}">
+						</p:outputLabel>
+					</h:panelGroup>
+				</p:column>
+				<p:column
+					rendered="#{(onlineBidSearchBB.managedBean.scBidSchedule.scBid.recommendedTypeId.parameterCode eq onlineBidSearchBB.recommendTypeItem) and (onlineBidSearchBB.managedBean.scBidSchedule.pmStatus.statusId ne BidStatusConst.BID_PENDING_BIDDING) and !isDisqualified}">
+					<ui:remove> #28777#29729 </ui:remove>
+					<h:panelGroup id="newRankingView">
+						<h:outputText value="#{bidPriceItem.ranking}" />
+					</h:panelGroup>
+				</p:column>
+				<p:columnGroup type="footer">
+					<p:row>
+						<p:column colspan="4">
+							<f:facet name="footer">
+								<h:outputText id="totalLblOBView" style="float : right"
+									value="#{lbl['lbl.sc.total']}" />
+							</f:facet>
+						</p:column>
+						<p:column>
+							<f:facet name="footer">
+								<h:outputText id="footerStartPriceTotalOBView" style="float : right"
+									value="#{onlineBidSearchBB.itemStartPriceTotal()}">
+									<f:convertNumber
+										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								</h:outputText>
+							</f:facet>
+						</p:column>
+						<p:column
+							rendered="#{onlineBidSearchBB.managedBean.scBidSchedule.pmStatus.statusId ne BidStatusConst.BID_PENDING_BIDDING}">
+							<f:facet name="footer">
+								<h:outputText id="lastBidPriceTotalLblOBView"
+									value="#{lbl['lbl.sc.total']}" style="float : right" />
+							</f:facet>
+						</p:column>
+						<p:column
+							rendered="#{onlineBidSearchBB.managedBean.scBidSchedule.pmStatus.statusId ne BidStatusConst.BID_PENDING_BIDDING}">
+							<f:facet name="footer">
+								<h:outputText style="float : right" styleClass="calcTotal"
+									value="#{onlineBidSearchBB.itemLastBidPriceTotal}">
+									<f:convertNumber
+										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								</h:outputText>
+							</f:facet>
+						</p:column>
+						<p:column colspan="2"
+							rendered="#{onlineBidSearchBB.managedBean.scBidSchedule.pmStatus.statusId eq BidStatusConst.BID_IN_PROGRESS}">
+							<f:facet name="footer">
+								<h:outputText id="newBidPriceTotalLblOBView"
+									value="#{lbl['lbl.sc.total']}" style="float : right" />
+							</f:facet>
+						</p:column>
+						<p:column
+							rendered="#{onlineBidSearchBB.managedBean.scBidSchedule.pmStatus.statusId eq BidStatusConst.BID_IN_PROGRESS}">
+							<f:facet name="footer">
+								<h:outputText style="float : right" styleClass="calcTotal"
+									value="#{onlineBidSearchBB.itemNewBidPriceTotal}">
+									<f:convertNumber
+										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								</h:outputText>
+							</f:facet>
+						</p:column>
+						<p:column
+							rendered="#{(onlineBidSearchBB.managedBean.scBidSchedule.scBid.recommendedTypeId.parameterCode eq onlineBidSearchBB.recommendTypeItem) and (onlineBidSearchBB.managedBean.scBidSchedule.pmStatus.statusId ne BidStatusConst.BID_PENDING_BIDDING) and !isDisqualified}" />
+						<ui:remove> #28777#29729 </ui:remove>
+					</p:row>
+				</p:columnGroup>
+			</p:dataTable>
+			<p:remoteCommand name="rc" update="itemWiseBidListSearchView" />
+
+		</p:panel>
+		
+			<p:confirmDialog id="newBidPriceConfirmView" width="300px"
+			message="#{onlineBidSearchBB.managedBean.decrementBlockPopupMessage}"
+			widgetVar="newBidPriceViewConfirm">
+			<div align="right">
+				<p:commandButton id="confViewSubmit" value="#{lbl['lbl.btn.yes']}"
+					action="#{onlineBidSearchBB.updateBidPriceAndCalculateRank}"
+					process="@this" oncomplete="newBidPriceViewConfirm.hide()"
+					update="@([id$=itemWiseBidListSearchView])" />
+				<p:commandButton id="confViewNotSubmit" value="#{lbl['lbl.btn.no']}"
+					process="@this" onclick="newBidPriceViewConfirm.hide()"
+					oncomplete="rc();" />
+			</div>
+		</p:confirmDialog>
+		
+		
+		<h:panelGroup id="packageRankingPanelOBView" style="width : 100%">
+
+			<h:panelGroup style="width : 100% ; align: right;"
+				rendered="#{(onlineBidSearchBB.managedBean.scBidSchedule.scBid.recommendedTypeId.parameterCode eq onlineBidSearchBB.recommendTypePackage) and (onlineBidSearchBB.managedBean.scBidSchedule.pmStatus.statusId ne BidStatusConst.BID_PENDING_BIDDING) and !isDisqualified}">
+				<ui:remove> #28777#29729 </ui:remove>
+
+				<div style="align: right">
+					<TABLE style="width: 100%">
+						<TR>
+							<TD style="width: 88%" />
+							<TD style="width: 9%"><h:outputText
+									value="#{lbl['lbl.sc.package.ranking']}" /></TD>
+							<TD style="width: 3%"><p:inputText id="packageRankId"
+									disabled="true" size="3"
+									value="#{onlineBidSearchBB.managedBean.packageRanking}" /></TD>
+						</TR>
+					</TABLE>
+				</div>
+			</h:panelGroup>
+		</h:panelGroup>
+		
+		<p:panel header="#{lbl['lbl.sc.contact.person.details']}"
+			toggleable="true">
+			<p:dataTable id="contactPersonViewDtls"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{onlineBidSearchBB.managedBean.bidContactPersons}" var="contact">
+
+				<p:column headerText="#{lbl['lbl.sc.name']}" style="width : 70%">
+					<h:outputText value="#{contact.contactName}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.tel.no']}" style="width : 30%">
+					<h:outputText value="#{contact.phoneNo}" />
+				</p:column>
+			</p:dataTable>
+
+		</p:panel>
+		
+		
+		<p:dialog header="#{lbl['lbl.sc.item.details']}"
+			widgetVar="onlineBidItemDetailsView" modal="true"
+			id="onlineBidViewItemDetails">
+			 <ui:include
+				src="/xhtml/sc/bidding/onlineBidding/viewOnlineBidSearchItemPopupDtls.xhtml"></ui:include> 
+		</p:dialog>
+		
+		<p:dialog header="#{lbl['lbl.sc.notification']}"
+			widgetVar="onlineBiddingNotificationView" showEffect="fade"
+			hideEffect="fade" modal="true" id="onlineBiddingNotificationView">
+			<ui:include
+				src="/xhtml/sc/bidding/onlineBidding/viewOnlineBidSearchNotificationPopup.xhtml"></ui:include>
+		</p:dialog>
+	
+			
+	</ui:define>
+	</ui:composition>
+	

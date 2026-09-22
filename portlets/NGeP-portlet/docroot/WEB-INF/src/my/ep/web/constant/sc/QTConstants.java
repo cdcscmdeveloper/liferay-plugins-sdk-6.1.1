@@ -590,6 +590,19 @@ public interface QTConstants {
 	public static final String EVALUATION_FINANCIAL_OTHER_CHECKLIST = "/xhtml/sc/evaluation/evaluationStage/financial/financialotherchecklists.xhtml";
 
 	// 29661- end-
+	
+	// 8755 -start-
+	public static final String PENDING_ONLINE_BIDDING_POPUP = "pendingOnlineBidReschedule.hide();";
+	public static final String ONLINE_BIDDING_SEARCH_DETAILS = "/xhtml/sc/bidding/onlineBidding/onlineBidSearch.xhtml";
+	public static final String ONLINE_BIDDING_SEARCH_LIST = "onlineBidSeachList";
+	public static final String PORTLET_NAME_ONLINE_BIDDING_SEARCH = "scOnlineBiddingSearch_WAR_NGePportlet";
+	public static final String ONLINE_BIDDING_SEARCH_VIEW_DETAILS = "/xhtml/sc/bidding/onlineBidding/viewOnlineBidSearchDtlsMain.xhtml?faces-redirect=true";
+	public static final String ONLINE_BIDDING_POPUP_VIEW = "onlineBiddingNotificationView.show();";
+	public static final String ONLINE_BIDDING_PRICE_POPUP_VIEW = "newBidPriceViewConfirm.show();";
+	public static final String VIEW_ONLINE_BIDDING_UPDATE_PRICE = "OnlineBiddingSearchBackingBean.updateBidPriceAndCalculateRank";
+	public static final String CONFIRM_BIDDING_MESSAGE = "lbl.sc.bidding.confirm.message";
+
+	// 8755 -end-
 
 	// #39113 Start Vinod 25/09/2025
 	public static final String LBL_SC_REMARK = "lbl.sc.remark";

@@ -10,6 +10,41 @@
 
 	<ui:define name="resourceSection">
 		<script src="#{resource['js/countdown.js']}" />
+		<script type="text/javascript">
+			function biddingExtender() {
+				this.cfg.highlighter = {
+					show : true,
+					tooltipAxes : 'xy',
+					useAxesFormatters : false,
+					tooltipContentEditor : function(str, seriesIndex,
+							pointIndex, plot) {
+						// Accessing the data point [Time, Price]
+						var data = plot.series[seriesIndex].data[pointIndex];
+
+						// Running Number (1, 2, 3...)
+						var runningNo = pointIndex + 1;
+
+						// Supplier Number (Pulled from the Label we set in Java)
+						var supplierNo = plot.series[seriesIndex].label;
+
+						// Total Price
+						var bidPrice = data[1];
+						var bidTime = data[0];
+
+						// Returns the format: (Running No, Supplier No, Price)
+						return "(" + runningNo + ", " + supplierNo + ", "
+								+ bidPrice + ")";
+					}
+				};
+
+				this.cfg.axes.xaxis = {
+					renderer : $.jqplot.CategoryAxisRenderer,
+					tickOptions : {
+						angle : -45
+					}
+				};
+			}
+		</script>
 	</ui:define>
 
 	<ui:define name="contentSection">

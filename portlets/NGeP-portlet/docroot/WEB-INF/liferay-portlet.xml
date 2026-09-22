@@ -3681,6 +3681,18 @@
 		<css-class-wrapper>QTApproval-portlet</css-class-wrapper>
 	</portlet>
 	<!-- #28188 End -->
+	
+	
+	<!-- #8755 Start -->
+	<portlet>
+		<portlet-name>scOnlineBiddingSearch</portlet-name>
+		<icon>/icon.png</icon>
+		<requires-namespaced-parameters>false</requires-namespaced-parameters>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>BiddingSearch-portlet</css-class-wrapper>
+	</portlet>
+	<!-- #8755 End -->
 		
 	<role-mapper>
 		<role-name>administrator</role-name>

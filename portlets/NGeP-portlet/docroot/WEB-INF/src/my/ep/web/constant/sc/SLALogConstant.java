@@ -129,6 +129,23 @@ public class SLALogConstant {
 
 	// 29661 -end-
 	
+	// 8755 -start-
+	public static final String VIEW_ONLINE_BIDDING_SEARCH_BACKING_BEAN = "OnlineBiddingSearchBackingBean";
+	public static final String VIEW_ONLINE_BIDDING_SEARCH_DETAILS = "prerendeOnlineBidSearch";
+	public static final String VIEW_ONLINE_BIDDING_PAGE_LISTNER = "OnlineBiddingPagingDataModel.pageChangeListener";
+	public static final String VIEW_ONLINE_BIDDING_SUPPLIER_DETAILS = "viewOnlineBiddingDtls";
+	public static final String RETRIEVE_ONLINE_BIDDING_DETAILS = "retrieveOnlineBiddingDtls";
+	public static final String FETCH_BID_QT_DETAILS = "fetchBidQtDetails";
+	public static final String UPDATE_BID_PRICE_RANK = "updateBidPriceAndCalculateRank";
+	public static final String FETCH_TOLERENCE_PRICE = "fetchTolerancePrice";
+	public static final String FETCH_DECREMENT_BLOCK_RULE_VALUE = "fetchDecBlkMaxPercentageRuleValue";
+	public static final String POLL_LISTENER = "pollListener";
+	public static final String BID_STATUS_NOTIFICATION_ACTION = "bidStatusNotificationAction";
+	public static final String GET_ONLINE_BID_DETAILS = "getOnlineBidScheduleDetails";
+
+	// 8755 -end-
+	
+	
 	// #27868 - start
 	public static final String DP_GET_RADIOBUTTON_CODEVALUES_COMBINE_WIP_PARAM  = "getDropDownValuesCombineWIPParameter";
 	public static final String DP_GET_RADIOBUTTON_CODEVALUES = "getReasonCodeDropdownValues";

@@ -9,6 +9,12 @@
 
 	<p:messages id="bidSearchMessages" autoUpdate="#{biddingBB.managedBean.autoUpdate}" showDetail="true"
 		showSummary="false" closable="true" severity="error, info" />
+		
+		<ui:remove>#8755 -start-</ui:remove>
+		<p:messages id="bidUpdateMsg" autoUpdate="#{biddingBB.managedBean.autoUpdate}" showDetail="true"
+		showSummary="false" closable="true" severity="info" />
+		<ui:remove>#8755 -end-</ui:remove>
+		
 	<p:panel header="#{lbl['lbl.sc.search']}" id="bidSearchPanel"
 		toggleable="true">
 
@@ -218,6 +224,22 @@
 						value="#{CommonUIConstant.imagePathUptoDesign}/ico-action.png"
 						title="#{lbl['lbl.sc.reschedule.bid']}" />
 				</p:commandLink>
+				
+				<ui:remove>#8755 -start-</ui:remove>
+				<p:commandLink id="pendingBidRescheduleButton"
+					rendered="#{bid.pmStatus.statusId eq BidStatusConst.BID_PENDING_BIDDING }"
+					process="@this" partialSubmit="true"
+					actionListener="#{biddingBB.pendingReScheduleBidPopUpAction(bid)}"
+					update="@([id$=pendingOnlineBidReschedulePopUp])"
+					oncomplete="pendingOnlineBidReschedule.show();" size="5">
+					<p:graphicImage id="pendingOnlineRescheduleBtnImage" style="height: 20px;"
+						value="#{CommonUIConstant.imagePathUptoDesign}/icon-reschedule.png"
+						title="#{lbl['lbl.sc.pending.online.reschedule.bidding.popup.header']}" />
+						</p:commandLink>
+				<ui:remove>#8755 -end-</ui:remove>
+				
+			
+				
 
 			</p:column>
 
@@ -247,5 +269,18 @@
 				src="/xhtml/sc/bidding/bidManagement/bsReScheduleOrResumeBidPopup.xhtml"></ui:include>
 		</p:dialog>
 	</h:panelGrid>
+	
+ 	<ui:remove>#8755 -start-</ui:remove>
+	<h:panelGrid id="pendingOnlineBidReschedulePopUp">
+		<p:dialog header="#{lbl['lbl.sc.pending.online.reschedule.bidding.popup.header']}" width="750px"
+			height="340px" draggable="false" resizable="false" closable="false" closeOnEscape="flase"
+			styleClass="pop_up_top" widgetVar="pendingOnlineBidReschedule"
+			showEffect="fade" hideEffect="fade" modal="false"
+			id="pendingOnlineRescheduleBid">
+			 <ui:include
+				src="/xhtml/sc/bidding/bidManagement/pendingOnlineRescheduleBidPopUp.xhtml"></ui:include> 
+		</p:dialog>
+	</h:panelGrid>
+	<ui:remove>#8755 -end-</ui:remove> 
 	
 </ui:composition>

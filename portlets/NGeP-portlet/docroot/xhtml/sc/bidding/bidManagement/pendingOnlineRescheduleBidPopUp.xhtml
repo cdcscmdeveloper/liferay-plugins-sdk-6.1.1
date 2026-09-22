@@ -1,0 +1,128 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<p:messages id="pendingBidRescheduleMessages"
+		autoUpdate="#{!(biddingBB.managedBean.autoUpdate)}" showDetail="true"
+		closable="true" showSummary="false" severity="error, info" />
+
+
+	<p:panel id="pendingReScheduleOrRebid">
+		<table style="width: 100%">
+
+
+			<tr>
+				<TD style="width: 20%"><h:outputLabel
+						id="pendingBidStartLblBRS"
+						value="#{lbl['lbl.sc.original.bid.start']}" /></TD>
+				<TD style="width: 40%"><p:inputText id="pendingBidStartTime"
+						value="#{biddingBB.managedBean.bidAction.scBidSchedule.startDate}"
+						size="14" disabled="true">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+					</p:inputText></TD>
+				<TD style="width: 20%"><h:outputLabel id="pendingBidEndLblBRS"
+						value="#{lbl['lbl.sc.original.bid.end']}" /></TD>
+				<TD style="width: 20%"><p:inputText id="pendingBidEndTime"
+						value="#{biddingBB.managedBean.bidAction.scBidSchedule.endDate}"
+						size="14" disabled="true">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+					</p:inputText></TD>
+			</tr>
+
+			<tr>
+				<TD style="width: 20%; text-align: right;"><h:outputText
+						value="* " styleClass="mandatory" /> <h:outputLabel
+						id="pendingNewBidStartDateLbl"
+						value="#{lbl['lbl.sc.new.bidding.start']}" /></TD>
+				<TD style="width: 40%"><ac:dateTime id="pendingNewBidStart"
+						style="width:92%" mindate="#{biddingBB.managedBean.mindate}"
+						postUpdateListener="#{biddingBB.rescheduleNewStartDateListener()}"
+						label="#{lbl['lbl.sc.bidding.start']}" modVal="1"
+						binding="#{biddingBB.reScheduleDateTimeInputUIComponent}"
+						update="@([id$=pendingNewReBidEndDate],[id$=pendingBidRescheduleMessages])"
+						value="#{biddingBB.managedBean.bidAction.newStartDate}">
+					</ac:dateTime></TD>
+				<TD style="width: 20%; text-align: right;"><h:outputLabel
+						id="pendingNewBidEndDateLbl"
+						value="#{lbl['lbl.sc.new.bidding.end']}" /></TD>
+				<TD style="width: 20%"><p:inputText id="pendingNewReBidEndDate"
+						disabled="true" size="14"
+						value="#{biddingBB.managedBean.bidAction.newEndDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+					</p:inputText></TD>
+			</tr>
+           <p:spacer height="10"></p:spacer>
+			<tr>
+				<TD style="width: 20%; text-align: right;"><h:outputText
+						value="* " styleClass="mandatory" /> <h:outputLabel
+						id="pendingNewBidDurationLbl"
+						value="#{lbl['lbl.sc.new.bid.duration']}" /></TD>
+				<TD style="width: 40%"><p:selectOneMenu
+						id="pendingBidDurationByItem" style="width : 120px;"
+						value="#{biddingBB.managedBean.bidAction.rebidDuration}">
+						<f:selectItems value="#{biddingBB.managedBean.selectItems}"
+							var="selectItem" itemLabel="#{selectItem.label}"
+							itemValue="#{selectItem.value}" />
+						<p:ajax event="change" process="@this" partialSubmit="true"
+							update="@([id$=pendingNewReBidEndDate],[id$=pendingBidRescheduleMessages])"
+							listener="#{biddingBB.reBidDurationSelectListener(biddingBB.managedBean.bidAction)}" />
+					</p:selectOneMenu></TD>
+				<TD style="width: 20%"></TD>
+				<TD style="width: 20%"></TD>
+			</tr>
+                   <p:spacer height="10"></p:spacer>
+			<tr>
+				<TD style="width: 20%; text-align: right;"><h:outputText
+						value="* " styleClass="mandatory" /> <h:outputLabel
+						id="PendingReSuppNotesLbl"
+						value="#{lbl['lbl.sc.notes.to.supplier']}" /></TD>
+				<TD style="width: 80%" colspan="3"><p:inputTextarea
+						id="pendingRescheduleSupplierNotes"
+						value="#{biddingBB.managedBean.bidAction.remark}" rows="5"
+						label="#{lbl['lbl.sc.notes.to.supplier']}" cols="80"
+						onkeyup="limitTextArea(this,200);"
+						onkeydown="limitTextArea(this,200);"
+						onmouseout="limitTextArea(this,200);" maxLength="200">
+						<p:ajax event="change" process="@this" partialSubmit="true"
+							update="@this,pendingBidRescheduleMessages" />
+					</p:inputTextarea></TD>
+
+			</tr>
+			<p:spacer height="10"></p:spacer>
+				<tr>
+				<TD style="width: 20%; text-align: right;"><h:outputText
+						value="* " styleClass="mandatory" /> <h:outputLabel
+						id="PendingReSuppJustificationLbl"
+						value="#{lbl['lbl.sc.pending.online.reschedule.bidding.justification']}" /></TD>
+				<TD style="width: 80%" colspan="3"><p:inputTextarea
+						id="pendingRescheduleSupplierJustification"
+						value="#{biddingBB.managedBean.bidAction.justification}" rows="5"
+						label="#{lbl['lbl.sc.pending.online.reschedule.bidding.justification']}" cols="80"
+						onkeyup="limitTextArea(this,200);"
+						onkeydown="limitTextArea(this,200);"
+						onmouseout="limitTextArea(this,200);" maxLength="200">
+						<p:ajax event="change" process="@this" partialSubmit="true"
+							update="@this,pendingBidRescheduleMessages" />
+					</p:inputTextarea></TD>
+
+			</tr>
+
+		</table>
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.ok']}" styleClass="BtnSpacing"
+				action="#{biddingBB.pendingReScheduleBidAction}"
+				process="@this,pendingReScheduleOrRebid" partialSubmit="true"
+				update="@([id$=biddingListPanel],[id$=biddingList],[id$=bidUpdateMsg])" />
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+				action="#{biddingBB.resetReScheduleDateTimeComponent}"
+				styleClass="BtnSpacing" update="@([id$=pendingNewBidStart])"
+				oncomplete="pendingOnlineBidReschedule.hide();" immediate="true" />
+		</div>
+	</p:panel>
+</ui:composition>

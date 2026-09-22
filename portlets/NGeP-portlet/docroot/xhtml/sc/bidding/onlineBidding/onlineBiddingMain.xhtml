@@ -22,9 +22,9 @@
 
 		<h:panelGroup id="pollPanelGroup"
 			rendered="#{(onlineBiddingBB.scBidSchedule.pmStatus.statusId eq BidStatusConst.BID_PENDING_BIDDING) or (onlineBiddingBB.scBidSchedule.pmStatus.statusId eq BidStatusConst.BID_IN_PROGRESS)}">
-			<p:poll id="pollCOmponent" interval="#{onlineBiddingBB.interval}"
+		<!-- 	<p:poll id="pollCOmponent" interval="#{onlineBiddingBB.interval}"
 				listener="#{onlineBiddingBB.pollListener}"
-				update="itemWiseBidListOB,packageRankingPanelOB,onlineBiddingNotification" />
+				update="itemWiseBidListOB,packageRankingPanelOB,onlineBiddingNotification" /> -->
 		</h:panelGroup>
 		
 		<p:commandButton value="#{lbl['lbl.btn.back']}"
