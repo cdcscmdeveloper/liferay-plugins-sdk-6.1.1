@@ -15329,8 +15329,8 @@ public class SmApplicationBackingBean extends
 				//#40112 - start
 				doc.setSmAppl(getManagedBean().getSmAppl());
 				if (!EntityHelper.isCollectionEmpty(doc.getSmApplDocFiles())) {
-					for (SmApplDocFile file : doc.getSmApplDocFiles()) {
-						file.setSmApplSupportDoc(doc);
+					for (SmApplDocFile docFile : doc.getSmApplDocFiles()) {
+						docFile.setSmApplSupportDoc(doc);
 					}
 				}
 				//#40112 - end
