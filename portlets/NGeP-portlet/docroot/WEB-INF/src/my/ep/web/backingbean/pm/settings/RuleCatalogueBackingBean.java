@@ -6926,8 +6926,7 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	/**
-	 * Checks whether the specified PTJ has already been added to the configuration rule
-	 * and is still active.
+	 * Checks whether the specified PTJ has already been added to the configuration rule and is still active.
 	 *
 	 * @param configRuleType the configuration rule to check
 	 * @param orgProfile the PTJ organisation profile to check
@@ -6968,9 +6967,7 @@ public class RuleCatalogueBackingBean extends
 	 * @param index the position at which the new rule value is added
 	 * @throws EpException if no PTJ is selected or the selected PTJ has already been added
 	 */
-	public void setPTJCC(PmConfigRule configRuleType, PmConfigRuleValue newRuleValue,
-			boolean hasSelected, int index) {
-
+	public void setPTJCC(PmConfigRule configRuleType, PmConfigRuleValue newRuleValue, boolean hasSelected, int index) {
 		for (PmOrgProfile orgProfile : getManagedBean().getPtjList()) {
 			if (orgProfile != null && orgProfile.isSelected()) {
 				hasSelected = true;
@@ -7008,9 +7005,7 @@ public class RuleCatalogueBackingBean extends
 	 * @param cfRuleValue the configuration rule value containing the zone ID
 	 * @param orgProfileReqDTO the organisation profile request DTO to be updated
 	 */
-	private void updateOrgProfileZoneAndBpk(PmConfigRuleValue cfRuleValue,
-			OrgProfileReqDTO orgProfileReqDTO) {
-
+	private void updateOrgProfileZoneAndBpk(PmConfigRuleValue cfRuleValue, OrgProfileReqDTO orgProfileReqDTO) {
 		for (PmZone zone : getManagedBean().getZoneList()) {
 			if (zone.getZoneId().equals(cfRuleValue.getZoneId())) {
 				orgProfileReqDTO.getPmOrgProfile().getPmZone();
