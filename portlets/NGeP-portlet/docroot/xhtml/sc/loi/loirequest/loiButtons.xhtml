@@ -64,7 +64,8 @@
 					process="@form" update="@form" /><ui:remove>21692</ui:remove>
 
 				<ui:remove>#34444 Start Ann</ui:remove>
-				<ui:param name="bpmBtnAction" value="SUBMISSIONLOI" />				
+				<ui:param name="bpmBtnAction" value="SUBMISSIONLOI" />
+				
 				<ui:param name="popupMsgActionBtn" value="#{lOIDetailBackingBean.submitAction()}" />
 				<p:commandButton value="#{lbl['lbl.btn.submit']} ++LOI sumit"
 					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt and lOIDetailBackingBean.managedBean.ableToSubmitLOI}"
@@ -99,7 +100,6 @@
 							<ui:param name="buttonLabel"
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 							<ui:param name="isReject" value="#{bpmAction == 'REJECT'}" />
-
 							<ui:remove>#30008 - Change Submit button to validate nego decision - Start</ui:remove>							
 								<p:commandButton value="#{lbl[buttonLabel]} +33977"
 									rendered="#{validityDaysExpiredQt and bpmAction != 'APPROVE' and bpmAction != 'SUBMIT'}"
@@ -111,14 +111,11 @@
 							<ui:remove>#30008 - End</ui:remove>
 							<ui:remove>#21692, 30008 - Start</ui:remove>							
 							
-							<ui:remove>#34444 Start Ann</ui:remove>							
-								<ui:param name="bpmBtnAction" value="#{bpmAction eq 'SUBMIT' ? 'SUBMISSIONLOI' : (bpmAction eq 'APPROVE' ? 'APPROVELOI' : null)}"/>
-								<ui:param name="popupMsgActionBtn" value="#{lOIDetailBackingBean.validateNegoDecisionAction(bpmAction)}" />						
+							<ui:remove>#34444 Start Ann</ui:remove>	
+							<ui:param name="bpmBtnAction" value="#{bpmAction eq 'SUBMIT' ? 'SUBMISSIONLOI' : (bpmAction eq 'APPROVE' ? 'APPROVELOI' : null)}"/>
+							<ui:param name="popupMsgActionBtn" value="#{lOIDetailBackingBean.validateNegoDecisionAction(empty bpmAction ? 'SUBMIT' : bpmAction)}" />						
 							
-							<h:outputText value="Action1=#{bpmAction}" />
-							<h:outputText value="BtnAction1=#{bpmBtnAction}" />
-							
-							<p:commandButton value="#{lbl[buttonLabel]} +3235 + #{bpmAction}"
+							<p:commandButton value="#{lbl[buttonLabel]} +3235 + #{empty bpmAction ? 'SUBMIT' : bpmAction}"
 								rendered="#{validityDaysExpiredQt and (bpmAction == 'APPROVE' or bpmAction == 'SUBMIT') and lOIDetailBackingBean.managedBean.ableToSubmitLOI}"
 								onstart="blockWidget.show();"
 								styleClass="ui-button"
@@ -203,7 +200,7 @@
 					widget="popupConfirmInfoDlg"					
 					title="#{lOIDetailBackingBean.managedBean.confirmTitle}"
 					content="#{lOIDetailBackingBean.managedBean.confirmContent}"
-					update="@form" okProcess="@form" okAction= "#{popupMsgActionBtn}"/>
+					okAction= "#{popupMsgActionBtn}" update="@all" okProcess="@all" />
 				<ui:remove>#34444 End Ann</ui:remove>
 
 			</ui:define>

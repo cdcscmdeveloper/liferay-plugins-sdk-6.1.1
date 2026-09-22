@@ -7899,6 +7899,12 @@ public class LOIDetailBackingBean extends
 	 */
 	public void validateNegoDecisionAction(String outcome) {
 		try {
+			System.out.println("Received = " + outcome);
+			if (outcome == null) {
+				throw new EpException("TEST TEST TEST ::::: ");
+			}
+			
+			log.info("validateNegoDecisionAction(String outcome ::>:: " + outcome);
 			ScLoi scLoi = getManagedBean().getScLoi();
 			Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId();
 			String bpmAction = outcome;

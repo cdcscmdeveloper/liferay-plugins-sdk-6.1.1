@@ -211,13 +211,7 @@ public abstract class BaseManagedBean implements Serializable {
 	List<ScQtFinalizationReportDetail> scQtFinalizationReportDetail; 
 	private List<ScQtFinalizationReportDetail> removeFinalizationReportDetails;
 	private ScQtFinalizationReportDetail selectedBriefingReportDetail;
-	
-	// #34444 START
-	private String btnAction;
-	
-	@javax.faces.bean.ManagedProperty("#{lbl}")
-	private ResourceBundle lbl;
-	// #34444 END
+	private List<ScQtFinalizationReportDetail> evaluationReportDetailList;
 	
 	private List<Map.Entry<String, String>> reportDetail = new ArrayList<>();
 	
@@ -238,6 +232,13 @@ public abstract class BaseManagedBean implements Serializable {
 	    return reportDetail;
 	}
 	// #25651 - End
+	
+	// #34444 START
+		private String btnAction;
+		
+		@javax.faces.bean.ManagedProperty("#{lbl}")
+		private ResourceBundle lbl;
+		// #34444 END
 	
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
@@ -1317,6 +1318,14 @@ public abstract class BaseManagedBean implements Serializable {
 
 	public void setSelectedBriefingReportDetail(ScQtFinalizationReportDetail selectedBriefingReportDetail) {
 		this.selectedBriefingReportDetail = selectedBriefingReportDetail;
+	}
+	
+	public List<ScQtFinalizationReportDetail> getEvaluationReportDetailList() {
+		return evaluationReportDetailList;
+	}
+
+	public void setEvaluationReportDetailList(List<ScQtFinalizationReportDetail> evaluationReportDetailList) {
+		this.evaluationReportDetailList = evaluationReportDetailList;
 	}
 	// #25651 - End
 	
