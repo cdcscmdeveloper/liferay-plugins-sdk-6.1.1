@@ -9,6 +9,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 		<p:messages id="loaMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		<ui:include src="dploaListButtons.xhtml" />
 		<ui:include src="dpLoaListHeader.xhtml" />
