@@ -2114,6 +2114,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				roleReqDTO.setOrgTypeId(currentOrgTypeId);
 				roleReqDTO.setBpk(getManagedBean().getSelectedUserOrg().getPmOrgProfile().getBpk() != null
 						? getManagedBean().getSelectedUserOrg().getPmOrgProfile().getBpk() : false);
+				roleReqDTO.setPtjAuthCC(getManagedBean().getSelectedUserOrg().getPmOrgProfile().isPtjAuthCC() != null 
+						? getManagedBean().getSelectedUserOrg().getPmOrgProfile().isPtjAuthCC() : false); // #34945
 				roleReqDTO.setAssignRole(true);
 				roleReqDTO.setSearchRoleBean(searchBeanData);
 				roleReqDTO.setRoleName(getManagedBean().getSearchRoleName());
@@ -4180,6 +4182,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			roleReqDTO.setRoleCode(getRoleCode());
 			roleReqDTO.setOrgTypeId(getManagedBean().getSelectedOrgType().getParameterId());
 			roleReqDTO.setBpk(true);
+			roleReqDTO.setPtjAuthCC(true); //#34945
 			roleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRoleSO.class);
 			RoleResDTO resDto = roleSO.retrieveRoleDecsFromRoleMatrix(roleReqDTO);
 
