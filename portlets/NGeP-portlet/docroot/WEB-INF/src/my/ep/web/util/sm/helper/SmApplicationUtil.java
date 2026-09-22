@@ -3838,6 +3838,7 @@ public class SmApplicationUtil {
 
 	private static void validateOverlapCategory(SmApplicationManagedBean bean,
 			String currPage) {
+		SmAppl appl = bean.getSmAppl(); //#40444
 		String msg = currPage == null ? MessageConst.ERROR_722654
 				: MessageConst.ERROR_722661;
 		//#31018 START
