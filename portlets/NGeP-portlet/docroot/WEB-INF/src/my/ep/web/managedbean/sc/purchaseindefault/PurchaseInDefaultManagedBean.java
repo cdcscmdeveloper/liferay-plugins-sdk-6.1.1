@@ -166,6 +166,12 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
 	private Long suppRemarkId = null;//#28865
 
 	private Object payLoad; //#9133
+	
+	//#34449 - start
+	private String confirmationMessageTitle; 
+	private String confirmationMessageContent; 
+	private String selectedAction;
+	//#34449 - end
 	/**
 	 * Instantiates a new purchase in default managed bean.
 	 */
@@ -903,5 +909,52 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
 		this.payLoad = payLoad;
 	}
 	//#9133 - end
-	
+
+	// 34449 - start
+	/**
+	 * @return the confirmationMessageTitle
+	 */
+	public String getConfirmationMessageTitle() {
+		return confirmationMessageTitle;
+	}
+
+	/**
+	 * @param confirmationMessageTitle
+	 *            the confirmationMessageTitle to set
+	 */
+	public void setConfirmationMessageTitle(String confirmationMessageTitle) {
+		this.confirmationMessageTitle = confirmationMessageTitle;
+	}
+
+	/**
+	 * @return the confirmationMessageContent
+	 */
+	public String getConfirmationMessageContent() {
+		return confirmationMessageContent;
+	}
+
+	/**
+	 * @param confirmationMessageContent
+	 *            the confirmationMessageContent to set
+	 */
+	public void setConfirmationMessageContent(String confirmationMessageContent) {
+		this.confirmationMessageContent = confirmationMessageContent;
+	}
+
+	/**
+	 * @return the selectedAction
+	 */
+	public String getSelectedAction() {
+		return selectedAction;
+	}
+
+	/**
+	 * @param selectedAction
+	 *            the selectedAction to set
+	 */
+	public void setSelectedAction(String selectedAction) {
+		this.selectedAction = selectedAction;
+	}
+
+	// 34449 - end
 }
