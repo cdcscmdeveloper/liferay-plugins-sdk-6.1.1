@@ -28,6 +28,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportDetail;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
@@ -180,6 +181,8 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	// #28777 & #29729 - End
 	
 	//#25651 - Start
+	private List<ScQtFinalizationReportDetail> documentDetailList;
+	
 	private static final List<String> directDownloadDocDefKeys = setDirectDownloadDocDefKeys(); 
 	private static List<String> setDirectDownloadDocDefKeys(){
 		List<String> list = new ArrayList<>();
@@ -1422,5 +1425,16 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 		this.flagBranchDeleted = flagBranchDeleted;
 	}
 	// #28777 & #29729 - End
+	
+	//#25651 - Start
+	public List<ScQtFinalizationReportDetail> getDocumentDetailList() {
+		return documentDetailList;
+	}
+
+	public void setDocumentDetailList(List<ScQtFinalizationReportDetail> documentDetailList) {
+		this.documentDetailList = documentDetailList;
+	}
+	//#25651 - End
+	
 
 }

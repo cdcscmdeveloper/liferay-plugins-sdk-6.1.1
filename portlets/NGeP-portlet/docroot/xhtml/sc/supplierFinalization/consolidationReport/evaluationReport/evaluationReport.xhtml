@@ -19,14 +19,14 @@
 
 			<p:column headerText="#{lbl['lbl.sc.content']}" style="width:70%;">
                   <h:outputText
-		            value="#{consolidationReportBackingBean.getParameterDesc(
-		                consolidationReportBackingBean.getReportDefinationType(report))}" /> <ui:remove> 25651 </ui:remove>
+		            value="#{consolidationReportBackingBean.getReportTitle(report)}" /> <ui:remove> 25651 </ui:remove>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.type']}"
 				style="width:15%; white-space:normal;">
-				<h:outputText
-					value="#{consolidationReportBackingBean.getParameterDesc(report.definationType)}" />
+                  <h:outputText
+		            value="#{consolidationReportBackingBean.getParameterDesc(
+		                consolidationReportBackingBean.getReportDefinationType(report))}" /> <ui:remove> 25651 </ui:remove>
 			</p:column>
 			<!-- #28784 -->
 			<p:column headerText="#{lbl['lbl.sc.action']}"
