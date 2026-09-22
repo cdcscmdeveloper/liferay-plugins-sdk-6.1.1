@@ -171,9 +171,11 @@
 				value="#{question.clQuantity}" required="#{isValidationReq}"
 				maxlength="14" label="#{lbl['lbl.tpl.spec.content.quantity']}"
 				rendered="#{empty templateSpecBean.specMaster.tplSpecZone or !templateSpecBean.specMaster.qtyByZone}"
-				onkeypress="if (event.keyCode == 13) { return false; }"> <!-- #32362 -->
-				<p:ajax partialSubmit="true" process="@this"
-					update="@this, qtyMsg, @(.calcAmount)" />
+				onchange="if (this.value.endsWith('.')) { this.value = this.value.slice(0, -1); }"
+				onkeypress="if (event.keyCode == 13) { return false; }"> <!-- #32362 --> <ui:remove>39230</ui:remove>
+				<p:ajax event="change"
+					partialSubmit="true" process="@this"
+					update="@this, qtyMsg, @(.calcAmount)" /> <ui:remove>39230</ui:remove>
 				<ac:validateNumber maxIntegerDigits="10" />
 				<f:attribute name="pattern"
 					value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}" />

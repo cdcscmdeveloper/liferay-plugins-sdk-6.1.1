@@ -371,6 +371,14 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				validateContractRequest(action);
 			}
 			
+			//29728 - start
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+				if(flRequest.getFlSupplierDtl().getBranchCode()==null && getManagedBean().getBranchCode()!=null){
+					flRequest.getFlSupplierDtl().setBranchCode(getManagedBean().getBranchCode());
+				}
+			}
+			//29728 - end
+			
 			//#21489-start
 			if(!(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL))) {
 				validateUnitPrice(flRequest); 
@@ -1470,6 +1478,22 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				//#14650 Ending
 			}
 			//35024-end
+			//29728 - start
+			if(getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_SUBMISSION) 
+					|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_APPROVAL) 
+					|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION) 
+					|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_REVISION_APPROVAL) 
+					|| getManagedBean().getFlRequest().getStatus().getStatusId().equals(FulfilmentStatusConst.CR_PENDING_QUERY_VERIFICATION)) {
+				
+				getManagedBean().setBranchCode(getManagedBean().getFlRequest().getFlSupplierDtl().getBranchCode());
+				
+				if(getManagedBean().getFlRequest().getFlSupplierDtl().getBranchCode() != null 
+						&& isSelectedBranchDeleted(getManagedBean().getFlRequest().getFlSupplierDtl().getBranchCode(), 
+								getManagedBean().getFlRequest().getSmSupplier().getSupplierId())) {
+					getManagedBean().setBranchNeedToBeChanged(true);
+				}
+			}
+		    //29728 - end	
 		}else if(contractId != null){
 			/*Start- 13984 - CrList - Back Button*/
 			if(getManagedBean().getBackFlag()!= 1){
@@ -1706,6 +1730,13 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		getEspkbCommitmentNo();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "crBasePage.xhtml");
+		
+		// 24956 - start
+		if (getManagedBean().getFlRequest().getCtContract().getContractType().getParameterCode()
+				.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+			getManagedBean().setCtTypeMinistry(true);
+		}
+		// 24956 - end
 	}
 	
 	// 26279 - start
@@ -4029,6 +4060,16 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			supplierBranches.add(new SelectItem(supplierBranch.getBranchCode(),supplierBranch.getBranchName()));
 		}
 		getManagedBean().setSupplierBranchesList(supplierBranches);
+		
+		//29728 -Start
+		if((getManagedBean().getSupplierBranchesList().isEmpty() || getManagedBean().getSupplierBranchesList()==null)
+				&& getManagedBean().getFlRequest().getFlSupplierDtl()!=null){			
+			if(getManagedBean().getFlRequest().getFlSupplierDtl().getBranchCode() != null) {
+				isSelectedBranchDeleted(getManagedBean().getFlRequest().getFlSupplierDtl().getBranchCode(),getManagedBean().getFlRequest().getSmSupplier().getSupplierId());
+			}
+			resetSupplierInfo();
+		}
+		//29728 - End
 	}
 	
 	/**
@@ -4040,27 +4081,25 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	public void getSelectedSupplierBranchDtl(AjaxBehaviorEvent e){
 		Long supplierBranchCode = (Long) e.getComponent().getAttributes().get("value");
 		if(supplierBranchCode!=null) {
-			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,	IFulfilmentRequestSO.class);
-			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-			reqDTO.setSupplierBranchCode(supplierBranchCode);
-			reqDTO.setLatestApplId(getManagedBean().getFlRequest().getSmSupplier().getSmAppl().getApplId());
-			FulfilmentResDTO resDTO = requestSO.retrieveSupplierBranchDtlByBranchCode(reqDTO);
-			
-			SmSupplierBranch supplierBranch = resDTO.getSmSupplierBranch();//all this should reset into our Flrequest.FlSupplierDtl
-			FlSupplierDtl supplierDtl = getManagedBean().getFlRequest().getFlSupplierDtl();
-			updateSupplierBranchAddress(supplierBranch,supplierDtl);
+			//29728 - start
+			if(!isSelectedBranchDeleted(supplierBranchCode, getManagedBean().getFlRequest().getSmSupplier().getSupplierId())) {
+				IFulfilmentRequestSO requestSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,	IFulfilmentRequestSO.class);
+				FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+				reqDTO.setSupplierBranchCode(supplierBranchCode);
+				reqDTO.setLatestApplId(getManagedBean().getFlRequest().getSmSupplier().getSmAppl().getApplId());
+				FulfilmentResDTO resDTO = requestSO.retrieveSupplierBranchDtlByBranchCode(reqDTO);
+				
+				SmSupplierBranch supplierBranch = resDTO.getSmSupplierBranch();//all this should reset into our Flrequest.FlSupplierDtl
+				FlSupplierDtl supplierDtl = getManagedBean().getFlRequest().getFlSupplierDtl();
+				updateSupplierBranchAddress(supplierBranch,supplierDtl);
+			}//29728 - end
 		} else { // reset to HQ info
-			IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,IMofRegistrationSO.class);
-			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-			reqDTO.setSupplierId(getManagedBean().getFlRequest().getSmSupplier().getSupplierId());
-			MofRegistrationResDTO resDTO = mofRegistrationSO.retrieveSupplierProfile(reqDTO);
-			SmSupplier supplier = resDTO.getSmSupplier();
-			
-			FlSupplierDtl supplierDtl = getManagedBean().getFlRequest().getFlSupplierDtl();
-			supplierDtl.setSupplierName(supplier.getCompanyName());		
-			updateSupplierHqAddress(supplierDtl,supplier);
+			resetSupplierInfo(); //29728 
 		}
 		getSupplierGst(getManagedBean().getFlRequest(), false);
+		//29728 - start
+		getManagedBean().setBranchNeedToBeChanged(false);
+		//29728 - end
 	}
 	
 	/**
@@ -4886,6 +4925,24 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * @throws Exception the exception
 	 */
 	public String gpkiSignAction(String outcome) throws Exception{
+		//29728 - start
+		if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome) || BpmOutcomeConst.BPM_SAVE.equals(outcome) 
+				|| BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
+			if(getManagedBean().getFlRequest().getFlSupplierDtl().getBranchCode() != null 
+					&& isSelectedBranchDeleted(getManagedBean().getFlRequest().getFlSupplierDtl().getBranchCode(), 
+							getManagedBean().getFlRequest().getSmSupplier().getSupplierId())) {
+				getManagedBean().setSelectedTabIndex(0);
+				return null;
+			}
+			if(getManagedBean().isBranchNeedToBeChanged()){
+				FacesContext.getCurrentInstance().addMessage("delBranchMsg", new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+						MessageUtils.getMessage(MessageConst.INFO_745087, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				getManagedBean().setSelectedTabIndex(0);
+				return null;
+			}
+		}
+		//29728 - end
 		if (!isFlFulfilmentRequisitioner() &&  (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome))
 				|| (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome))) {
 			validateContractRequest(outcome);
@@ -7106,14 +7163,17 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 */
 	private void checkAP59() {
 		
-		IFulfilmentRequestSO fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+		IFulfilmentRequestSO fulfilmentRequestSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class); //28719
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		FulfilmentResDTO resDTO; //28719
 		
-		if(getManagedBean().getFlRequest().getCtContract().getContractId() != null){
+		if (getManagedBean().getFlRequest().getCtContract() != null
+				&& getManagedBean().getFlRequest().getCtContract().getContractId() != null
+				&& getManagedBean().getFlRequest().getCtContract().getContractType().getParameterCode()
+						.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {// 24956  blocking rules for CC
 			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());		
 			
-			BigDecimal sumOrderedAmt = BigDecimal.ZERO;
+			BigDecimal sumOrderedAmt; //28719
 			sumOrderedAmt = calculatesTotalOrderedAmt();
 			reqDTO.setAmount(sumOrderedAmt);
 			resDTO=fulfilmentRequestSO.validateAP59(reqDTO);
@@ -7123,9 +7183,15 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(MessageConst.INFO_745091, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 				
-			}
-			else //35024-End
-			if(!resDTO.isCrComplete()) {
+			}//35024-End
+			else if (!resDTO.isSupplementContractComplete() && !resDTO.isCrComplete()) { // 28719-start
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+								MessageConst.INFO_745090, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes()
+										.getUserLocale())));
+
+			} else if (!resDTO.isCrComplete()) { // 28719-end
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 				
@@ -7157,6 +7223,20 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	}
 	//29401-end
 
+	//29728 - Start
+	private void resetSupplierInfo() {
+		FlSupplierDtl supplierDtl = getManagedBean().getFlRequest().getFlSupplierDtl();
+		supplierDtl.setSupplierName(getManagedBean().getFlRequest().getSmSupplier().getCompanyName());		
+//		updateSupplierHqAddress(supplierDtl,supplier);
+		
+		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+		CtContractValue ctSupplierDtl  = contractSO.getCtValueSupplierAddressByContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
+		supplierDtl.setMofNo(ctSupplierDtl.getSupplierMofNo());
+		supplierDtl.setSupplierName(ctSupplierDtl.getSupplierName());
+		convertCtAddressToFlAddress(ctSupplierDtl,supplierDtl);
+	}
+	//29728 - End
+	
 	//35024-Start
 	//25296-format this method
 	/**

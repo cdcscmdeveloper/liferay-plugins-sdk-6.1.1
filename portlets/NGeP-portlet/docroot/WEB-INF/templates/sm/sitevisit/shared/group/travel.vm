@@ -1,0 +1,29 @@
+<u class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.travelling.system')</u>
+<br /><br />
+
+
+<table class="descTable" width="50%">
+		<tr style="background-color:#99ccff;" align="center">
+			<th width="5%" class="txtBold">No</th>
+			<th class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.travelling.system.name')</th>
+		</tr>
+		#if($travelSystems.size() > 0)
+			#foreach($travel in $travelSystems)
+			<tr>
+				<td>$velocityCount</td>
+				<td>
+				#if($!travel.systemName)
+					$!travel.systemName
+				#else
+					$!travel.system.machineDesc
+				#end				
+				</td>
+			</tr>
+			#end
+		#else
+			<tr>
+				<td colspan="2" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
+			</tr>
+		#end
+
+</table>

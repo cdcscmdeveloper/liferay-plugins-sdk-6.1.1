@@ -106,6 +106,7 @@ import my.ep.type.pm.PTJLocalityCode;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.specification.SpecificationBackingBean;
@@ -3798,7 +3799,8 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			SLAUtils.getInstance().logSLAError("QT", "yesDeleteExistingDemoTechChecklist", this.getManagedBean().getQt().getQtNo(),
+					"yesDeleteExistingDemoTechChecklist", getUserIdSessionFromLoginId(), e);
 		}
 	}
 	// #28784 -end-

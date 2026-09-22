@@ -30,6 +30,7 @@ import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.sm.businessnature.ISupplierBusinessNatureSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
+import my.ep.biz.service.sm.revisit.ISmRevisitSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.sme.ISupplierSmeSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
@@ -49,8 +50,6 @@ import my.ep.dto.pm.authorization.role.RoleResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.zone.ZoneReqDTO;
-import my.ep.dto.sm.blacklistDirector.BlacklistDirectorReqDTO;
-import my.ep.dto.sm.blacklistDirector.BlacklistDirectorResDTO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
 import my.ep.dto.sm.businessnature.SupplierBusinessNatureReqDTO;
@@ -62,6 +61,7 @@ import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionResDTO;
+import my.ep.dto.sm.revisit.SmRevisitReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
@@ -113,9 +113,11 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmRelatedCompany;
 import my.ep.persistence.entity.sm.SmRemark;
+import my.ep.persistence.entity.sm.SmRevisit;
+import my.ep.persistence.entity.sm.SmRvCatCode;
+//#34031 End
 import my.ep.persistence.entity.sm.SmSapVendorCode;
 import my.ep.persistence.entity.sm.SmSmeSupplier;
-import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.persistence.entity.sm.SmSoftcertRequest;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffExperience;
@@ -129,24 +131,29 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCategoryFacility;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSupplierOwner;
+import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+//#28895_35501 - AUDIT TRAIL SM
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementViewBackingBean;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.applicationView.BaseReviewApplicationManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmFieldChangeUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.SmSideMenuIconUtil;
-import my.ep.web.vo.BlacklistOwnerDirectorVO;
 import my.ep.web.vo.DisciplinaryActionCategoryVO;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.SmOverlapCategoryVO;
@@ -161,17 +168,6 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
 
 import com.liferay.compat.portal.util.PortalUtil;
-//#28895_35501 - AUDIT TRAIL SM
-import my.ep.web.backingbean.sm.audit.AuditSupplierManagementViewBackingBean;
-//#34031 Start
-import my.ep.biz.service.sm.revisit.ISmRevisitSO;
-import my.ep.dto.sm.revisit.SmRevisitReqDTO;
-import my.ep.persistence.entity.sm.SmRevisit;
-import my.ep.util.SLAUtils;
-import my.ep.web.constant.report.SmReportConst;
-import my.ep.web.util.pm.helper.PmCommonUtil;
-import my.ep.persistence.entity.sm.SmRvCatCode;
-//#34031 End
 
 public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewApplicationManagedBean>
 		extends BaseBackingBean<T> {
@@ -505,6 +501,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 * @param SmAppl
 	 *            smAppl
 	 */
+	@SuppressWarnings("deprecation")
 	public void initApplication(SmAppl smAppl) {
 
 		try {
@@ -595,7 +592,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		try {
 			commonDownload(finalFilePath, fileName);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		finalFilePath = null;
@@ -1389,11 +1385,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setStoreFacilitiesVOList(
 				getCategoryFacilityVO(getManagedBean().getSmAppl(),
 						SupplierManagementConst.SM_FACILITY_TYPE_STORE));
-		// 34303 - Start
+		//34303 - Start, 28775 - Site Visit Grouping Enhancement - 28775
 		getManagedBean().getStoreFacilitiesVOList()
 				.addAll(getCategoryFacilityVO(getManagedBean().getSmAppl(),
 						SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE));
-		// 34303 - End
+		//34303 - End, 28775 - Site Visit Grouping Enhancement - 28775
 		getManagedBean().setFactoryFacilitiesVOList(
 				getCategoryFacilityVO(getManagedBean().getSmAppl(),
 						SupplierManagementConst.SM_FACILITY_TYPE_FACTORY));
@@ -1857,8 +1853,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if (getManagedBean().getSmAppl().getSmPersonnels()
 				.contains(getManagedBean().getSelectedShareHolder())) {
 
-			// TODO reset few values that could have been already submit by
-			// partial submit on ajax functions
+			//reset few values that could have been already submit by partial submit on ajax functions
 			SmPersonnel per = getManagedBean().getSelectedPersonnel();
 			getManagedBean().getSelectedShareHolder().setIdentificationTypeId(
 					per.getIdentificationTypeId());
@@ -2059,7 +2054,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					new PmParameter());
 		}
 		getManagedBean().setRedirectToPersonPage(true);
-		// TODO use this object to reset some values on back button click
+		//use this object to reset some values on back button click
 		SmPersonnel per = new SmPersonnel();
 		per.setIdentificationTypeId(shareHolderBean.getIdentificationTypeId());
 		per.setIdentificationType(shareHolderBean.getIdentificationType());
@@ -2464,12 +2459,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if (supplier == null){
 			return "";
 		}
-		// #38962 - START
+		// #38962, #40110 - START
+		SmAppl appl = getManagedBean().getSmAppl() != null ? getManagedBean().getSmAppl() : supplier.getSmAppl();
 		String pending = checkNonActiveDAWithPending(supplier);
-		if (StringUtils.isNotBlank(pending)) {
+		if (StringUtils.isNotBlank(pending) && appl != null
+				&& !SupplierManagementConst.SUPP_TYPE_BASIC.equalsIgnoreCase(appl.getSupplierType())) {
 			return pending;
 		}
-		// #38962 - END
+		// #38962, #40110 - END
 		if (!supplier.isFutureImposed() && !StringUtils.isEmpty(supplier.getTypeDisciplinaryAction())){
 			return getSupplierAccountStatusDA(supplier);
 		}
@@ -2477,7 +2474,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			return getSupplierAccountStatusMOF(supplier);
 		}
 		//#34319
-		SmAppl appl = getManagedBean().getSmAppl() != null ? getManagedBean().getSmAppl() : supplier.getSmAppl();
 		if (supplier.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_CANCELLED) 
 				&& appl.getPmStatus().getStatusId().equals(
 						my.ep.constant.sm.SupplierManagementConst.PM_STATUS_CANCELLED_PREREGISTRATION_ACCOUNT)){
@@ -4661,6 +4657,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			boolean isAdd = false;
 			boolean isSubAdd = false;
 			for (Object[] arr : resultList) {
+				applStatus = StringUtils.EMPTY; //#40444
 				catCode = arr[0] + "" + arr[1] + arr[2] + "";
 				isActiveAppl = arr[20] + "";
 				voTmp = (SmBulkApplOverlapCatVO) EntityHelper
@@ -4995,6 +4992,20 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		return retVal;
 	}
 	//#32008 - end	
+	//29380 - Site Visit Grouping Enhancement -28775 - start
+	/**
+	 * @param catL3
+	 * @return other description for category code
+	 */
+	public String getCategoryCodeOtherDesc(PmCategoryL3 catL3){
+		SmAppl appl = getManagedBean().getSmAppl();
+		if (appl != null && !appl.isSiteVisitGroup()) {
+			return null;
+		}
+		return SmApplicationUtil.getCategoryCodeOtherDesc(
+				getManagedBean().getSuppProfileOrHistoryCategoryList(), catL3);
+	}
+	//29380 - Site Visit Grouping Enhancement -28775 - end
 	// #28895_35501 Start - AUDIT TRAIL SM
 	/**
 	 * Check if user have access to Audit Trail page

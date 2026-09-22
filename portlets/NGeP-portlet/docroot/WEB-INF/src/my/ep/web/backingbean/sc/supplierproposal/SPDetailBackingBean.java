@@ -91,6 +91,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
+import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPAssetLiability;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPBankStmt;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPCashOnHand;
@@ -1277,7 +1278,7 @@ public class SPDetailBackingBean extends
 							getManagedBean().getSelectedZone().getSpecZoneId(),
 							getManagedBean().getTemplateSpecBean());
 				}
-				
+
 				// #21695 - #33391 - #33949 - Start.
 				if (null != getManagedBean().getQt().getQtStatus()
 						&& null != getManagedBean().getQt().getQtStatus().getStatusId()
@@ -1294,12 +1295,22 @@ public class SPDetailBackingBean extends
 							getManagedBean().getZoneTplSpecBeanMap().get(entry.getKey()).getSpecAnswerList()
 									.addAll(entry.getValue());
 						}
-						
+
 						getManagedBean().getZoneTplSpecAnsMap().clear();
 					}
 				}
 				// #21695 - #33391 - #33949 - End.
-				
+
+				// #28777 & #29729, 35592 - Start
+				List<Long> deactivatedZones = new ArrayList<>();
+				if (CollectionUtils.isNotEmpty(this.getManagedBean().getZones())) {
+					for (TplSpecZoneDtl zoneDtl : this.getManagedBean().getZones()) {
+						if (zoneDtl.isBranchDeactivated())
+							deactivatedZones.add(zoneDtl.getSpecZoneId());
+					}
+				}
+				// #28777 & #29729, 35592 - End
+
 				List<TemplateSpecBean> templateSpecBeans = new ArrayList<TemplateSpecBean>();
 				List<TplSpecAnswer> tobeDeletedAnswers = new ArrayList<TplSpecAnswer>();
 				List<TplSpecSuppAnswer> tobeDeletedSuppAnswers = new ArrayList<TplSpecSuppAnswer>();
@@ -1318,6 +1329,10 @@ public class SPDetailBackingBean extends
 					for (TemplateSpecBean templateSpecBean : templateSpecBeans) {
 						TplSpecZoneDtl specZoneDtl = getKeysByValue(getManagedBean().getZoneTplSpecBeanMap(),
 								templateSpecBean);// #28785
+						// #28777 & #29729, 35592 - Start
+						if (deactivatedZones.contains(specZoneDtl.getSpecZoneId()))
+							continue;
+						// #28777 & #29729, 35592 - End
 						// #21695,#40261,40215 - Start
 						if (templateSpecBean.getSpecAnswerList() != null
 								&& !templateSpecBean.getSpecAnswerList().isEmpty()) {
@@ -4688,6 +4703,18 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 			}//#28792-End
 			evaluateWIP(this.getManagedBean().getQt()); //#21695
 
+			// #28777 & #29729 - Start
+			boolean branchDeleted = checkValidationSupplierBranchDeleted();
+			if (branchDeleted) {
+				this.getManagedBean().setReadOnly(branchDeleted);
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+								MessageConst.INFO_760522, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+			}
+			// #28777 & #29729 - End
+
 		} catch (EpException e) {
 			String message = e.getMessage();
 
@@ -5678,7 +5705,26 @@ debugLogger("retrieveTecCompanyExpDtls supplierId:::"+this.getManagedBean().getS
 	}
 	
 
-	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to return true, if branch in supplier has been deleted
+	 *
+	 * @param supplier
+	 *            id
+	 * @return true or false
+	 **/
+	public boolean checkValidationSupplierBranchDeleted() {
+		boolean isSupplierBranchDeleted = false;
+		ScQtSupplier scQtSupplier = this.getManagedBean().getQtProposal().getScQtSupplier();
+		if (scQtSupplier.getRecordStatusFlg().intValue() == SourcingConstants.RECORD_STATUS_DISQUALIFIED) {
+			isSupplierBranchDeleted = true;
+			this.getManagedBean().setSupplierBranchDeleted(isSupplierBranchDeleted);
+		}
+		return isSupplierBranchDeleted;
+	}
+
+	// #28777 & #29729 - End
+
 	//Bug #30073 Start
 	public void checkDuplicateSupplierAnswerItemSpec(ScQtProposalChecklist currProposalChecklist, ScQtProposalChecklist newProposalChecklist){
 		IQTProposalSO proposalSO = null;

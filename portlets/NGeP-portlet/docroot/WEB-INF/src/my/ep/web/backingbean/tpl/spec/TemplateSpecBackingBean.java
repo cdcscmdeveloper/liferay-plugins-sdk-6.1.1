@@ -4,7 +4,7 @@
  * 
  * Release 1.00    
  *    
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
  */
@@ -46,11 +46,8 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-<<<<<<< HEAD
-import my.ep.constant.sc.SourcingConstants;//#21695
-=======
 import my.ep.constant.sc.QTStatusConst;
->>>>>>> refs/remotes/origin/release-pre-prd
+import my.ep.constant.sc.SourcingConstants;//#21695
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;

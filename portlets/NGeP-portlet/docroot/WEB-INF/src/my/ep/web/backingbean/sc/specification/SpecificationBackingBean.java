@@ -4,7 +4,7 @@
  *                ePerolehan 
  * Release 1.00    
  *    
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
  */
@@ -2399,6 +2399,7 @@ public class SpecificationBackingBean extends
 
 			}
 			settinglist=null;
+			List<ScQtCheckList> oriFinancialScoring = this.getManagedBean().getFinancialScoring();//#28784, #33525 - Get User key in weightageScore if avail
 			this.getManagedBean().setFinancialScoring(
 					null);
 			this.getManagedBean().setFinancialScoring(
@@ -2836,14 +2837,29 @@ public class SpecificationBackingBean extends
 
 				this.getManagedBean().getFinancialScoring()
 						.addAll(localChecklist);
-				
+
+				//#28784, #33525 - enter back the user weightage value if avail
+				List<ScQtCheckList> newFinancialScoring = this.getManagedBean().getFinancialScoring();
+				if (oriFinancialScoring != null) {
+					for (ScQtCheckList o : oriFinancialScoring) {
+						for (ScQtCheckList l : newFinancialScoring)
+							if (null != l.getQtScoreWeightage().getQtScoreWeightageId()
+									&& l.getQtScoreWeightage().getQtScoreWeightageId()
+											.equals(o.getQtScoreWeightage().getQtScoreWeightageId())) {
+								l.getQtScoreWeightage().setWeightage(o.getQtScoreWeightage().getWeightage());
+							}
+					}
+					this.getManagedBean().setFinancialScoring(newFinancialScoring);
+				}
+				//#28784, #33525 - End
+
 				// #25138 -start
 				if (reqDTO.getScQt() != null) {
 					specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTSpecSO.class);
 					this.getManagedBean().setWipStatusMax(specSo.checkWipScoreSettingMax(reqDTO));
 				}
-				
+
 				if (this.getManagedBean().getQt().isZonal()) {
 
 					finScoreSum();
@@ -19400,7 +19416,7 @@ public class SpecificationBackingBean extends
 							.getEvaluationType()) && this.getManagedBean().getQt().isDemoRequired()) {
 
 				if (!demoList) {
-					ScQtCheckList st2technicalproposalList1 = createSpecList("2");
+					ScQtCheckList st2technicalproposalList1 = new ScQtCheckList();// code inspection 28784
 					st2technicalproposalList1.setDefinationType(new PmParameter());
 					st2technicalproposalList1.setDocCategory(QTConstants.TECHNICAL_DOC_TYPE);
 					st2technicalproposalList1.setScoringReq(true); // change from false to true(31032021) - Azmi
@@ -20040,20 +20056,13 @@ public class SpecificationBackingBean extends
 	//#28784 - End
 
 	//#28784 - Start
-	public void checkFinancialparentSpecQuestion(
-			ScQtCheckList financialSpecChecklist) {
-		log.info("====checkFinancialparentSpecQuestionExecuted=======");
-		if (CollectionUtils.isNotEmpty(financialSpecChecklist.getScQtDoc()
-				.getTplSpecMaster().getTplSpecQuestions())) {
-			for (TplSpecQuestion financialQuestion : financialSpecChecklist
-					.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()) {
-				log.info("=====financialQuestion.getParentSpecQuestion()===="
-						+ financialQuestion.getParentSpecQuestion());
+	public void checkFinancialparentSpecQuestion(ScQtCheckList financialSpecChecklist) {
+		if (CollectionUtils.isNotEmpty(financialSpecChecklist.getScQtDoc().getTplSpecMaster().getTplSpecQuestions())) {
+			for (TplSpecQuestion financialQuestion : financialSpecChecklist.getScQtDoc().getTplSpecMaster()
+					.getTplSpecQuestions()) {
 				if (null == financialQuestion.getParentSpecQuestion()
-						|| null == financialQuestion.getParentSpecQuestion()
-								.getSpecQuestionId()) {
-					throw new EpException(MessageConst.ERROR_760483,
-							new String[] { financialSpecChecklist.getTitle() });
+						|| null == financialQuestion.getParentSpecQuestion().getSpecQuestionId()) {
+					throw new EpException(MessageConst.ERROR_760483, new String[] { financialSpecChecklist.getTitle() });
 				}
 
 			}
@@ -20416,8 +20425,8 @@ public class SpecificationBackingBean extends
 
 				//debugLogger("put into list: " + statusDesc);
 			} catch (Exception e) {
-				e.printStackTrace();
-				throw new EpException(e.getMessage());
+				SLAUtils.getInstance().logSLAError("QT", "getDemoStatusDescById", getManagedBean().getQt().getQtNo(),
+						"getDemoStatusDescById", getUserIdSessionFromLoginId(), e);
 			} finally {
 			}
 		}
@@ -20911,4 +20920,20 @@ public class SpecificationBackingBean extends
 		}
 	}
 	// #21695 END FARID
+
+	// #40245 - start
+	public boolean isCreateSpecificationVisible() {
+		return !getManagedBean().getQt().isPanel()
+				&& (getManagedBean().isChecklist() || ((!getManagedBean().isReadOnly() || isQTStatusChecklistScoring() || isQTStatusChecklistScoringRevision()) && getManagedBean()
+						.getSpecMaintenanceScreen() != getSpecMaintenance()));
+	}
+	// #40245 -end-
+
+	// #40245 -start-
+	public boolean isAddPanelItemVisible() {
+		return getManagedBean().getQt().isPanel()
+				&& (getManagedBean().isChecklist() || ((!getManagedBean().isReadOnly() || isQTStatusChecklistScoring() || isQTStatusChecklistScoringRevision()) && getManagedBean()
+						.getSpecMaintenanceScreen() != getSpecMaintenance()));
+	}
+	// #40245 - end
 }

@@ -1420,7 +1420,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 			
 			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
 						MessageUtils.getMessage(MessageConst.INFO_700004, new String[]{getManagedBean().getScQt().getQtNo(), variable2}, 
-						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 	
+						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));  
 			//#35320 - Start 					  
 		} finally {
 			qtMeetingSO = null;

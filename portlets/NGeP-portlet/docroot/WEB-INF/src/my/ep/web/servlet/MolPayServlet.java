@@ -57,7 +57,6 @@ public class MolPayServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		log.info("******Servlet Testing doGet*********");
 		PrintWriter out = res.getWriter();
 		try{
@@ -295,7 +294,7 @@ public class MolPayServlet extends HttpServlet {
 						log.info("SET TRANSACTION ID--------------------33137"+tranID);
 					}else{
 						//#38377
-						smPaymentRes.setTransactionId("Y".equals(paymentGateway)?tranID:molpayTransId);
+						smPaymentRes.setTransactionId("Y".equals(paymentGateway)?orderId:molpayTransId);
 						log.info("SET MOLPAY TRANS ID--------------------33137"+molpayTransId);
 					}
 					//#38377
@@ -410,7 +409,6 @@ public class MolPayServlet extends HttpServlet {
 							try {
 								SmCommonUtil.paymentCurlIPN(req, true, merchantId, molIpnUrl);
 							} catch (Exception e) {
-								// TODO Auto-generated catch block
 								log.info("paymentCurlIPN error>>>>>>>>>" + e.getMessage());
 							}
 						}
@@ -418,19 +416,8 @@ public class MolPayServlet extends HttpServlet {
 				}else{
 					log.info("No SmPayment Object is found");
 				}
-
-				//			}else{
-				//				log.info("*******SKey Unmatch***********");
-				//			}
 			}
 		}
-
-		/*	private void updateRecordStatus(BaseEntity entity) {
-		entity.setCreatedBy(1L);
-		entity.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		entity.setChangedBy(1L);
-	}*/
-
 	}
 	
 	private Map<String,String> getHttpReqMap(HttpServletRequest httpReq){
@@ -492,7 +479,7 @@ public class MolPayServlet extends HttpServlet {
 		String bankName = "";
 		String providerTransId = "";
 		String customerEmail = "";
-		String cardMaskedNum = "";
+		//String cardMaskedNum = "";
 		String customerContactNo = "";
 		JSONObject jsonObject = PaymentUtil.getPaymentGatewayJson(payload);
 		if (jsonObject != null) {

@@ -49,9 +49,13 @@
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.agOfficeName}" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.acc.office']}"/></td>
 			</tr>
 			<tr>
+				<!-- 24956 - start -->
 				<td><p:outputLabel value="#{lbl['lbl.fl.fulfilment.type']}" rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.docType eq 'CR'}" /></td>
-				<td><p:inputText disabled="true" size="51" value="#{paymentMatchBackingBean.getParameterDesc(paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.ctContract.fulfillmentType)}" 
-				rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.docType eq 'CR'}"/></td>
+				<td><p:inputText disabled="true" size="66" value="#{paymentMatchBackingBean.getParameterDesc(paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.ctContract.fulfillmentType)}" 
+				rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.docType eq 'CR'}"/>
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.fulfilment.type']}" rendered="#{paymentMatchBackingBean.managedBean.ctTypeMinistry}"/>
+				<!-- 24956 - end -->
+				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.procur.type.category']}" /></td>
@@ -61,7 +65,7 @@
 		</table>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.fl.support.info.doc']}" toggleable="true">
-		<table>
+		<!--#24956--><table style="width: 100%">
 			<tr>
 				<td style="width:150px;"><p:outputLabel value="#{lbl['lbl.fl.dan.no']}" /></td>
 				<td><p:commandLink value="#{paymentMatchBackingBean.managedBean.adjustmentDanDocNo}" immediate="true"

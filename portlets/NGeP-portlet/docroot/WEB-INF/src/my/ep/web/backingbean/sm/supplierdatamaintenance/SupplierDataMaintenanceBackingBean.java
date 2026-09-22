@@ -19,13 +19,10 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
-
-import my.ep.biz.service.IAuditTrailSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.sm.AuditSupplierManagementConst;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
@@ -82,11 +79,6 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.sm.applicationView.BaseReviewApplicationBackingBean;
-import my.ep.web.backingbean.sm.audit.AuditSupplierManagementApprovedCategoryCodesBackingBean;
-import my.ep.web.backingbean.sm.audit.AuditSupplierManagementApproverRemarksBackingBean;
-import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
-import my.ep.web.backingbean.sm.audit.AuditSupplierManagementOverlappingCategoryBackingBean;
-import my.ep.web.backingbean.sm.audit.AuditSupplierManagementSupplierInformationBackingBean;
 import my.ep.web.backingbean.sm.registration.RegistrationBackingBean;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -104,6 +96,19 @@ import my.ep.web.vo.DisciplinaryActionVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.context.RequestContext;
+//#28895_35501 Start - AUDIT TRAIL SM
+import my.ep.biz.service.IAuditTrailSO;
+import my.ep.biz.service.pm.authorization.role.IRoleSO;
+import my.ep.constant.sm.AuditSupplierManagementConst;
+import my.ep.util.CustomUtils;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementApprovedCategoryCodesBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementApproverRemarksBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementOverlappingCategoryBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementSupplierInformationBackingBean;
+//#28895_35501 End
+//#28895_35501_DA - AUDIT TRAIL SM DA
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementDisciplinaryActionBackingBean;
 //#34031 Start
 import java.util.Calendar;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
@@ -369,6 +374,9 @@ public class SupplierDataMaintenanceBackingBean extends
 		this.getManagedBean().setOldPoApprOverlappedRemark(this.getManagedBean().getPoApprOverlappedRemark());
 		this.getManagedBean().setOldApproverRemark(this.getManagedBean().getApproverRemark());
 		// #28895_35501 End
+		// #28895_35501_DA - AUDIT TRAIL SM DA
+		this.getManagedBean().setOldSmDisciplinaryAction((SmDisciplinaryAction) CustomUtils.getInstance().deepCopy(getActiveDisciplinaryAction()));
+		
 		//#30766 & #34209 - START
 		getManagedBean().setTempCategoryLs(new HashMap<Long, String>());
 		for(SmSupplierCategory supCat : this.getManagedBean().getSmAppl().getSmSupplierCategories()){
@@ -493,6 +501,13 @@ public class SupplierDataMaintenanceBackingBean extends
 			SLAUtils.getInstance().logSLAError("SM", "basic", getManagedBean().getSmAppl().getApplNo(),
 					"SupplierDataMaintenanceBackingBean", (new LogKey()).getUserId(), e);
 		}
+		// #28895_35501_DA Start - AUDIT TRAIL SM DA
+		IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
+		if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
+			AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementDisciplinaryActionBackingBean();
+			auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
+					}
+		// #28895_35501_DA End
 		getManagedBean().setDisplaySearchPage(true);
 		getManagedBean().setEditDisciplinaryActionCheckBox(false);
 		//27437 : Disciplinary Action
@@ -774,6 +789,10 @@ public class SupplierDataMaintenanceBackingBean extends
 					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
 					auditSmBackingBean = new AuditSupplierManagementApproverRemarksBackingBean();
 					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
+					// #28895_35501_DA Start - AUDIT TRAIL SM DA
+					auditSmBackingBean = new AuditSupplierManagementDisciplinaryActionBackingBean();
+					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
+					// #28895_35501_DA End
 				}
 				// #28895_35501 End				
 			}
