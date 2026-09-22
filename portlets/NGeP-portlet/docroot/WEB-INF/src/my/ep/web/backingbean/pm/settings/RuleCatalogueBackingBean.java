@@ -1388,7 +1388,7 @@ public class RuleCatalogueBackingBean extends
 							OrgProfileResDTO orgProfId = orgProfileSO.retrieveOrgProfileDtlByProfileId(orgProfileReqDTO);
 							orgProfileReqDTO.setPmOrgProfile(orgProfId.getPmOrgProfile());
 						    if(RuleTypeConst.PTJ_AUTH_CC.equals(cfRuleValue.getRuleType().getRuleType())){
-						    	orgProfileReqDTO.getPmOrgProfile().setPtjAuthCC(true);
+						    	orgProfileReqDTO.getPmOrgProfile().setPtjAuthCC(false);
 						        orgProfileReqDTO.getPmOrgProfiles().add(orgProfileReqDTO.getPmOrgProfile());
 						    } else {
 						        updateOrgProfileZoneAndBpk(cfRuleValue, orgProfileReqDTO);
@@ -7010,7 +7010,7 @@ public class RuleCatalogueBackingBean extends
 			if (zone.getZoneId().equals(cfRuleValue.getZoneId())) {
 				orgProfileReqDTO.getPmOrgProfile().getPmZone();
 				orgProfileReqDTO.getPmOrgProfile().setPmZone(zone);
-				orgProfileReqDTO.getPmOrgProfile().setBpk(true);
+				orgProfileReqDTO.getPmOrgProfile().setBpk(false);
 				orgProfileReqDTO.getPmOrgProfiles().add(orgProfileReqDTO.getPmOrgProfile());
 			}
 		}
