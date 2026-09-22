@@ -643,6 +643,9 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				// tenancy accepts every extracted field on submit the same way
 				acceptEpfUserEdit(appl, employee.getNricNumber(),
 						AiUserEdit.F_EPF_NO, AiUserEdit.F_NAME, AiUserEdit.F_IC);
+				// applying the statement overwrites the eP name as well as the EPF No.
+				per.setName(employee.getEmployeeName());
+				per.setNameAI(employee.getEmployeeName());
 				per.setEpfNo(employee.getKwspNumber());
 				per.setEpfNoAI(employee.getKwspNumber());
 				continue;
@@ -948,9 +951,9 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			}
 
 			String aiName = emp.getEmployeeName();
-			// the OCR keeps the statement's own line breaks inside a name, so compare canonically
+			// both sides are whitespace-collapsed before the ignore-case compare
 			if (accepted.contains(AiUserEdit.F_NAME) && !edited.contains(AiUserEdit.F_NAME)
-					&& AiDocValidator.normalizedEquals(per.getName(), aiName)){
+					&& AiDocValidator.personNameEquals(per.getName(), aiName)){
 				per.setNameAI(per.getName());
 			}
 		}
