@@ -639,8 +639,10 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		for (AiEpfResultDTO.AiEmployeeDTO employee : selectedEmployees) {
 			SmPersonnel per = personnels.get(employee.getNricNumber());
 			if (per != null){
-				// existing (SSM/eP) personnel: only EPF No. is AI-populated -> only it gets the icon.
-				acceptEpfUserEdit(appl, employee.getNricNumber(), AiUserEdit.F_EPF_NO);
+				// the applicant applied all three fields from the dialog, so all three get the icon;
+				// tenancy accepts every extracted field on submit the same way
+				acceptEpfUserEdit(appl, employee.getNricNumber(),
+						AiUserEdit.F_EPF_NO, AiUserEdit.F_NAME, AiUserEdit.F_IC);
 				per.setEpfNo(employee.getKwspNumber());
 				per.setEpfNoAI(employee.getKwspNumber());
 				continue;
