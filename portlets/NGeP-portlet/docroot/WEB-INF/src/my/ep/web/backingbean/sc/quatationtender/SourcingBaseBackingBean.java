@@ -32,6 +32,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;//#28188
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -174,6 +175,8 @@ import my.ep.persistence.entity.sc.quationtender.ScFinancialEvaluationReportAtta
 import my.ep.persistence.entity.sc.quationtender.ScOpenCommitteeReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
+import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;//#28188
+import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;//#28188
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
@@ -187,6 +190,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportDetail;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportDetailAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
@@ -965,6 +970,20 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	// 38523, #35320 - end
+	
+	
+	// 29661 - start
+	protected IQTSpecSO getQTSpecSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+	}
+	// 29661 - end
+	
+	// 29661 - start
+	protected ICategoryCodeSO getCategoryCodeSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				ICategoryCodeSO.class);
+	}
+	// 29661 - end
 	
 	// 12471 - start
 	protected IScWorkFlowStatusSO getScWorkflowStatusSO() {
@@ -1847,6 +1866,31 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				ParameterTypeConst.COMMITTEE_ROLE, searchBean);
 
 	}
+	
+	// #30447 - start
+	/**
+	 * To retrieve salutation + name with salutation duplication checking
+	 * 
+	 * @param salutation, name
+	 * @return String salutation+name | name
+	 */
+	public String getFormattedSalutationName(String salutation, String name ) {
+		name = StringUtils.trimToEmpty(name);
+
+		salutation = StringUtils.trimToEmpty(salutation);
+		
+        if (name.isEmpty() || salutation.isEmpty()) {
+            return name;
+        }
+        if (StringUtils.startsWithIgnoreCase(name, salutation)) {
+            return name;
+        }
+        if (name.equals(name.toUpperCase())) {
+            salutation = salutation.toUpperCase();
+        }
+        return salutation + " " + name;
+	}
+	// #30447 - end
 
 	/**
 	 * Retrive mof account by supplier.
@@ -5319,6 +5363,32 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	}
 	
+	//#25651 - Start
+	
+	/**
+	 * Delete reports upload file.Event handle to delete upload file in
+	 * reports tab.
+	 * @param delEntity
+	 *               (BaseEntity delEntity).
+	 */
+	public void deleteReportDetailsUploadFile(BaseEntity delEntity) {
+		log.debug("deleteUploadFile");
+		
+		try{
+		log.debug("deleteReportsUploadFile");
+		ScQtFinalizationReportDetail selectedEvaluationReport = getManagedBean()
+				.getSelectedBriefingReportDetail();
+		selectedEvaluationReport.setScQtFinalizationReportDetailAttachment(null);
+		 getManagedBean()
+			.setSelectedBriefingReportDetail(selectedEvaluationReport);
+		}finally{
+		
+		}
+
+	}
+	
+	//#25651 - End
+	
 	/**
 	 * @param finalizationReports
 	 * @param scQt 
@@ -5364,6 +5434,84 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 		}
 	}
+	
+	// #25651 - Start
+	/**
+	 * Populate evaluation report detail
+	 * 
+	 * @param finalizationReportDetails
+	 * @param scQt
+	 */
+	public void populateEvaluationReportDetails(List<ScQtFinalizationReportDetail> finalizationReportDetails, ScQt scQt) {
+		if (null != scQt) {
+			String evaluationType = scQt.getEvaluationType();
+			if (StringUtils.isNotEmpty(evaluationType)) {
+				Iterator<ScQtFinalizationReportDetail> iterator = finalizationReportDetails.iterator();
+				while (iterator.hasNext()) {
+					ScQtFinalizationReportDetail reportDetail = iterator.next();
+					if (null != reportDetail) {
+
+						if (getManagedBean().getEvaluationReportDetailList() == null) {
+							List<ScQtFinalizationReportDetail> erList = new ArrayList<>();
+							getManagedBean().setEvaluationReportDetailList(erList);
+						}
+						boolean isDemoRequired = reportDetail.getTitle().equalsIgnoreCase(
+								SourcingConstants.DEMO_EVALUATION_REPORT)
+								&& !checkDemoWIP(scQt);
+
+						if (null != reportDetail.getPmDocument() || isDemoRequired) {
+							if (SourcingConstants.EVALUATION_TYPE_TIER1.equals(evaluationType)) {
+								if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(reportDetail.getPmDocument()
+										.getDocDefinitionKey())) {
+									getManagedBean().getEvaluationReportDetailList().add(reportDetail);
+
+								}
+							} else if (SourcingConstants.EVALUATION_TYPE_TIER2.equals(evaluationType)) {
+								if (SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT.equals(reportDetail.getPmDocument()
+										.getDocDefinitionKey())
+										|| SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT
+												.equals(reportDetail.getPmDocument().getDocDefinitionKey())
+										|| SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT
+												.equals(reportDetail.getPmDocument().getDocDefinitionKey())
+										|| SourcingConstants.DEMO_EVALUATION_REPORT.equalsIgnoreCase(reportDetail
+												.getTitle())) {
+									getManagedBean().getEvaluationReportDetailList().add(reportDetail);
+								}
+							}
+
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// #25651 - End
+
+	// #25651 - Start
+	/**
+	 * Populate briefing report detail
+	 * 
+	 * @param finalizationReportDetails
+	 */
+	public void populateBriefingReportDetails(List<ScQtFinalizationReportDetail> finalizationReportDetails) {
+		List<ScQtFinalizationReportDetail> finalizationReportDetail = new ArrayList<>();
+		Iterator<ScQtFinalizationReportDetail> iterator = finalizationReportDetails.iterator();
+		while (iterator.hasNext()) {
+			ScQtFinalizationReportDetail reportDetail = iterator.next();
+			if (null != reportDetail) {
+				if (null != reportDetail && reportDetail.getPmDocument() != null) {
+					String docDefinitionKey = reportDetail.getPmDocument().getDocDefinitionKey();
+					if (!documentBriefingPaperOnly(docDefinitionKey)) {
+						finalizationReportDetail.add(reportDetail);
+					}
+				}
+			}
+		}
+		this.getManagedBean().setScQtFinalizationReportDetail(finalizationReportDetail);
+	}
+
+	// #25651 - End
 	
 	/**
 	 * @param taskType 
@@ -5576,6 +5724,62 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 	
+	//#25651 - Start
+	/**
+	 *reports file upload.to upload files for manual added reports.
+	 * 
+	 * @param event
+	 *            (Mandatory)
+	 * @throws FileNotFoundException
+	 *             the file not found exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public void reportDetailsUploadAttachment(FileUploadEvent event)
+			throws FileNotFoundException, IOException {
+		if (event.getFile() != null) {
+			ScAttachment scAttachment = null;
+			ScQtFinalizationReportDetail briefingReport = getManagedBean()
+					.getSelectedBriefingReportDetail();
+			ScQtFinalizationReportDetailAttachment reportAttachment = briefingReport
+					.getScQtFinalizationReportDetailAttachment();
+			if (null == reportAttachment) {
+				reportAttachment = new ScQtFinalizationReportDetailAttachment();
+				reportAttachment.setScQtFinalizationReportDetail(briefingReport);
+				briefingReport
+						.setScQtFinalizationReportDetailAttachment(reportAttachment);
+			} else {
+				reportAttachment.setScQtFinalizationReportDetail(briefingReport);
+				briefingReport
+						.setScQtFinalizationReportDetailAttachment(reportAttachment);
+			}
+			
+			int index = 0;
+			
+			if (CollectionUtils.isNotEmpty(getManagedBean().getScQtFinalizationReportDetail())
+			    && this.getManagedBean().getScQtFinalizationReportDetail().size() > 0) {
+			  for (ScQtFinalizationReportDetail finalizationReport : getManagedBean().getScQtFinalizationReportDetail()) {
+			    if (finalizationReport.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)) {
+			      index++;
+			    }
+			  }
+			}
+			reportAttachment.setDocNo(getManagedBean().getDocNo());
+			scAttachment = reportAttachment;
+			uploadAttachment(event.getFile(), scAttachment);
+			String fileName = scAttachment.getFileName();
+			
+			if (index >= 0 && fileName != null) {
+              reportAttachment.setFileName(index + UNDER_SCORE
+                      + fileName);
+			}
+			
+			briefingReport.setScQtFinalizationReportDetailAttachment(reportAttachment);
+		
+		}
+	}
+	//#25651 - End
+	
 	// 18685 - START.
 	/**
 	 * @param reportTitle
@@ -5644,6 +5848,29 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 
 	}
+	
+	//#25651 - Start
+	/**
+	 * delete existing report details records from database.
+	 *  
+	 */
+	public void deleteReportDetailsTabDtls() {
+		List<ScQtFinalizationReportDetail> removeFinalizationReports = getManagedBean()
+				.getRemoveFinalizationReportDetails();
+		if (null == removeFinalizationReports) {
+			removeFinalizationReports = new ArrayList<ScQtFinalizationReportDetail>();
+			getManagedBean()
+			.setRemoveFinalizationReportDetails(removeFinalizationReports);
+		}
+		markDeleteSelectedRowsAction(getManagedBean()
+				.getScQtFinalizationReportDetail(), removeFinalizationReports);
+		if(CollectionUtils.isNotEmpty(removeFinalizationReports)){
+			getManagedBean()
+			.setRemoveFinalizationReportDetails(removeFinalizationReports);
+		}
+
+	}
+	//#25651 - End
 	
 	// 18685 - START.
 	/**
@@ -7893,6 +8120,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		if (null == ctContractver) {
 			newCtContractver.setCtTermination(new CtTermination());
 		} else {
+			//41079 && 29661 -start-
+			if(null==ctContractver.getCtTermination()){
+				ctContractver.setCtTermination(new CtTermination());
+			}
+			//41079 && 29661 -end-
 			return ctContractver;
 		}
 
@@ -8198,7 +8430,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			for (SmCompExpMasterDoc compExpDocs : supportingDocuments) {
 				ScLoaReportAttachment attachemnt = new ScLoaReportAttachment();
 				attachemnt.setFileName(compExpDocs.getFileName());
-				attachemnt.setFilePath(compExpDocs.getFilePath());
+				attachemnt.setFilePath(compExpDocs.getFilePath() + compExpDocs.getFileName()); //#41093
 				attachmentList.add(attachemnt);
 
 			}
@@ -8282,6 +8514,23 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	// 29661 -end-
 	
+	// 41312 -start-
+	/**
+	 * check estimated amount is null fetched amount from templatespec.
+	 * 
+	 * @param scQt
+	 * @return BigDecimal
+	 */
+	protected BigDecimal checkEstimatedAmount(ScQt scQt) {
+		SpecificationReqDTO estimatedReqDTo = new SpecificationReqDTO();
+		estimatedReqDTo.setQtId(scQt.getQtId());
+		return getQTSpecSO().calCulateTemplateSpecEstimations(estimatedReqDTo)
+				.getTotalSpecEstimatedAmount();
+
+	}
+
+	// 41312 -end-
+
 	//#28784 - Start
 	private boolean checkDemoWIP(ScQt scQt) {
 		try {
@@ -8792,4 +9041,628 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	// #25651 - End
 	
+	// #25651 - Start
+	public void saveFinalizationReportDetails() {
+		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+
+		List<ScQtFinalizationReportDetail> finalizationReportList = this.getManagedBean()
+				.getScQtFinalizationReportDetail();
+
+		SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+		reqDTO.setFinalizationReportDetailList(finalizationReportList);
+		reqDTO.setReportType(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
+		if (CollectionUtils.isNotEmpty(getManagedBean().getRemoveFinalizationReportDetails())) {
+			List<ScQtFinalizationReportDetail> localReports = new ArrayList<>();
+			for (ScQtFinalizationReportDetail finalizationReport : getManagedBean().getRemoveFinalizationReportDetails()) {
+				if (null != finalizationReport.getQtReportId() && !finalizationReport.isBrandNew()) {
+					finalizationReport.setDeleted(true);
+					localReports.add(finalizationReport);
+				}
+
+			}
+			reqDTO.setToBeRemovedReportDetailList(localReports);
+		}
+		qtSuppFinalizationSO.saveReportDetails(reqDTO);
+	    getManagedBean().setRemoveFinalizationReportDetails(null);
+
+	}
+	// #25651 - End
+	
+	// #25651 - Start
+	public void addDocumentDetailList(ScQt scqt) {
+	
+		List<ScQtFinalizationReportDetail> newBPReportDetailList = this.getManagedBean()
+				.getScQtFinalizationReportDetail();
+		if (newBPReportDetailList == null) {
+			newBPReportDetailList = new ArrayList<>();
+		}
+		ScQtFinalizationReportDetail report = new ScQtFinalizationReportDetail();
+		report.setDocCategory(SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT);
+		ScQtFinalization scQtFinalization = scqt.getFinalization();
+		if (scQtFinalization == null) {
+			scQtFinalization = new ScQtFinalization();
+		}
+		report.setScQtFinalization(scQtFinalization);
+		IParameterSO parameterSO = null;
+		try {
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
+			reqDTO.setParameterCode(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
+			ParameterResDTO resDTO = parameterSO
+					.retrieveParameterByTypeAndCode(reqDTO);
+			report.setDefinationType(resDTO.getPmParameter());
+		} finally {
+			parameterSO = null;
+		}
+		newBPReportDetailList.add(report);
+	}
+	// #25651 - End
+	
+	// #25651 - Start
+	/**
+	 * To get report title detail for object ScQtFinalizationReport and
+	 * ScQtFinalizationReportDetail
+	 * 
+	 * @param report
+	 */
+	public String getReportTitle(Object report) {
+
+		if (report instanceof ScQtFinalizationReport) {
+			return ((ScQtFinalizationReport) report).getTitle();
+
+		} else if (report instanceof ScQtFinalizationReportDetail) {
+			return ((ScQtFinalizationReportDetail) report).getTitle();
+		}
+
+		return null;
+	}
+
+	// #25651 - End
+
+	// #25651 - Start
+	/**
+	 * To get report defination type detail for object ScQtFinalizationReport
+	 * and ScQtFinalizationReportDetail
+	 * 
+	 * @param report
+	 */
+	public PmParameter getReportDefinationType(Object report) {
+
+		if (report instanceof ScQtFinalizationReport) {
+			return ((ScQtFinalizationReport) report).getDefinationType();
+
+		} else if (report instanceof ScQtFinalizationReportDetail) {
+			return ((ScQtFinalizationReportDetail) report).getDefinationType();
+		}
+
+		return null;
+	}
+
+	// #25651 - End
+
+	// #25651 - Start
+	/**
+	 * To get report document detail for object ScQtFinalizationReport and
+	 * ScQtFinalizationReportDetail
+	 * 
+	 * @param report
+	 */
+	public PmDocument getReportPmDocument(Object report) {
+
+		if (report instanceof ScQtFinalizationReport) {
+			return ((ScQtFinalizationReport) report).getPmDocument();
+
+		} else if (report instanceof ScQtFinalizationReportDetail) {
+			return ((ScQtFinalizationReportDetail) report).getPmDocument();
+		}
+
+		return null;
+	}
+
+	// #25651 - End
+
+	// #25651 - Start
+	/**
+	 * To check whether evaluation report existing or new
+	 * 
+	 * @param docDefinitionKey
+	 * @param qtId
+	 */
+	public boolean isWipEvaluationReportExisting(String docDefinitionKey, Long qtId) {
+
+		if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(docDefinitionKey)) {
+			return checkWipExistingECReports(qtId);
+		}
+
+		if (SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT.equals(docDefinitionKey)) {
+			return checkWipExistingOCReports(qtId);
+		}
+
+		if (SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT.equals(docDefinitionKey)) {
+			return checkWipExistingTECReports(qtId);
+		}
+
+		if (SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT.equals(docDefinitionKey)) {
+			return checkWipExistingFECReports(qtId);
+		}
+
+		return false;
+	}
+
+	// #25651 - End
+	
+	// #25651 - Start
+	/**
+	 * To check wip existing for evaluation report.
+	 * 
+	 * @param qtId
+	 * @return true or false
+	 */
+	public Boolean checkWipExistingECReports(Long qtId) {
+		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+		return qtSuppFinalizationSO.checkWipExistingECReports(qtId);
+	}
+
+	// #25651 - End
+
+	// #25651 - Start
+	/**
+	 * To check wip existing for opening report.
+	 * 
+	 * @param qtId
+	 * @return true or false
+	 */
+	public Boolean checkWipExistingOCReports(Long qtId) {
+		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+		return qtSuppFinalizationSO.checkWipExistingTECReports(qtId);
+	}
+
+	// #25651 - End
+
+	// #25651 - Start
+	/**
+	 * To check wip existing for techniqal report.
+	 * 
+	 * @param qtId
+	 * @return true or false
+	 */
+	public Boolean checkWipExistingTECReports(Long qtId) {
+		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+		return qtSuppFinalizationSO.checkWipExistingTECReports(qtId);
+	}
+
+	// #25651 - End
+
+	// #25651 - Start
+	/**
+	 * To check wip existing for financial report.
+	 * 
+	 * @param qtId
+	 * @return true or false
+	 */
+	public Boolean checkWipExistingFECReports(Long qtId) {
+		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+		return qtSuppFinalizationSO.checkWipExistingFECReports(qtId);
+	}
+
+	// #25651 - End
+
+	// #25651 - Start
+	/**
+	 * To filter except others document briefing paper report detail.
+	 * 
+	 * @param docDefinitionKey
+	 * @return true or false
+	 */
+	public Boolean documentBriefingPaperOnly(String docDefinitionKey) {
+
+		if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(docDefinitionKey)) {
+			return true;
+		}
+
+		if (SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT.equals(docDefinitionKey)) {
+			return true;
+		}
+
+		if (SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT.equals(docDefinitionKey)) {
+			return true;
+		}
+
+		if (SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT.equals(docDefinitionKey)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	// #25651 - End
+	
+	// #28188 - Start
+	/**
+	 * Group and sort briefingsitevist details.
+	 * 
+	 * @param inputList
+	 * @return List<ScQtBsvDtl>
+	 */
+	protected List<ScQtBsvDtl> groupAndSortBriefingSiteVisitDtls(List<ScQtBsvDtl> inputList) {
+
+		if (CollectionUtils.isEmpty(inputList)) {
+			return new ArrayList<>();
+		}
+
+		// STEP 1: Build id -> dtl map for lookup
+		List<Long> parentIdList = new ArrayList<>();
+		Map<Long, ScQtBsvDtl> idMap = new LinkedHashMap<>();
+		for (ScQtBsvDtl dtl : inputList) {
+			if (dtl.getQtBsvDtlId() != null) {
+				idMap.put(dtl.getQtBsvDtlId(), dtl);
+			}
+			if (dtl.getParentPostponeId() != null
+					&& !parentIdList.contains(dtl.getParentPostponeId())) {
+				parentIdList.add(dtl.getParentPostponeId());
+			}
+		}
+
+		// Group by root ancestor key
+		// getRootParentBsvId walks all the way up the chain to find the true
+		// root
+		Map<Long, List<ScQtBsvDtl>> parentGrouped = new LinkedHashMap<>();
+		long phantomKey = Long.MIN_VALUE;
+		parentGrouped(parentGrouped, idMap, inputList, phantomKey);
+
+		// active leaf (open status, no live child) pushed to bottom
+		Map<Long, List<ScQtBsvDtl>> childGrouped = new LinkedHashMap<>();
+		childGrouped(childGrouped, parentGrouped, parentIdList, phantomKey);
+
+		// sort grouped list based on status
+		Map<Long, List<ScQtBsvDtl>> sortedGroups = new LinkedHashMap<>();
+		sortedByGroups(sortedGroups, childGrouped);
+
+		// Flatten
+		List<ScQtBsvDtl> finalList = new ArrayList<>();
+		for (List<ScQtBsvDtl> bsvList : sortedGroups.values()) {
+			finalList.addAll(bsvList);
+		}
+
+		return finalList;
+	}
+
+	// 28188 -end-
+
+	// 28188 -start-
+	/**
+	 * Group By parentId.
+	 * 
+	 * @param parentGrouped
+	 * @param idMap
+	 * @param inputList
+	 * @param phantomKey
+	 * @return Map<Long, List<ScQtBsvDtl>>
+	 */
+
+	private Map<Long, List<ScQtBsvDtl>> parentGrouped(
+			Map<Long, List<ScQtBsvDtl>> parentGrouped,
+			Map<Long, ScQtBsvDtl> idMap, List<ScQtBsvDtl> inputList,
+			long phantomKey) {
+		for (ScQtBsvDtl dtl : inputList) {
+			Long rootKey = getRootParentBsvId(dtl, idMap);
+
+			if (rootKey == null) {
+				rootKey = phantomKey--;
+			}
+
+			List<ScQtBsvDtl> parentList = parentGrouped.get(rootKey);
+			if (parentList == null) {
+
+				parentList = new ArrayList<>();
+				parentGrouped.put(rootKey, parentList);
+			}
+
+			parentList.add(dtl);
+		}
+		return parentGrouped;
+	}
+
+	// 28188 -end-
+
+	// 28188 -start-
+	/**
+	 * Group by each child.
+	 * 
+	 * @param childGrouped
+	 * @param parentGrouped
+	 * @param parentIdList
+	 * @param phantomKey
+	 * @return Map<Long, List<ScQtBsvDtl>>
+	 */
+	private Map<Long, List<ScQtBsvDtl>> childGrouped(
+			Map<Long, List<ScQtBsvDtl>> childGrouped,
+			Map<Long, List<ScQtBsvDtl>> parentGrouped, List<Long> parentIdList,
+			long phantomKey) {
+		for (Map.Entry<Long, List<ScQtBsvDtl>> entry : parentGrouped.entrySet()) {
+			List<ScQtBsvDtl> childGroupList = entry.getValue();
+			bsvSorting(childGroupList);
+
+			for (ScQtBsvDtl child : childGroupList) {
+
+				Long rootKey = getRootParentBsvId(child, parentIdList);
+
+				if (rootKey == null) {
+					rootKey = phantomKey--;
+				}
+
+				if (!childGrouped.containsKey(rootKey)) {
+					childGrouped.put(rootKey, new ArrayList<ScQtBsvDtl>());
+
+				}
+				List<ScQtBsvDtl> childList = childGrouped.get(rootKey);
+				if (CollectionUtils.isNotEmpty(childList)) {
+					childList.add(child);
+					childGrouped.put(rootKey, childList);
+
+				} else {
+
+					childGrouped.get(rootKey).add(child);
+				}
+
+				if (null != child
+						&& null != child.getQtBsvDtlId()
+						&& child.getRecordStatusFlg().equals(
+								DbValueConst.RECORD_STATUS_PENDING_ACTIVATION)) {
+					child.setBsvStatus(getPmStatusByStatusId(QTStatusConst.BSV_PENDING));
+				}
+
+			}
+		}
+		return childGrouped;
+	}
+
+	// 28188 -end-
+
+	// 28188 -start-
+	/**
+	 * sorting bsvDetails based on StatusId.
+	 * 
+	 * @param sortedGroups
+	 * @param childGrouped
+	 * @return Map<Long, List<ScQtBsvDtl>>
+	 */
+	private Map<Long, List<ScQtBsvDtl>> sortedByGroups(
+			Map<Long, List<ScQtBsvDtl>> sortedGroups,
+			Map<Long, List<ScQtBsvDtl>> childGrouped) {
+		for (Map.Entry<Long, List<ScQtBsvDtl>> entry : childGrouped.entrySet()) {
+			Long key = entry.getKey();
+			List<ScQtBsvDtl> list = entry.getValue();
+
+			List<ScQtBsvDtl> sortedList = new ArrayList<>();
+			List<ScQtBsvDtl> postponeList = new ArrayList<>();
+			List<ScQtBsvDtl> rejectList = new ArrayList<>();
+			List<ScQtBsvDtl> pendingList = new ArrayList<>();
+			List<ScQtBsvDtl> completedList = new ArrayList<>();
+			List<ScQtBsvDtl> cancelledList = new ArrayList<>();
+			List<ScQtBsvDtl> pendingUpdateApprList = new ArrayList<>();
+			for (ScQtBsvDtl scQtBsvDtl : list) {
+				if (scQtBsvDtl.getBsvStatus() != null
+						&& scQtBsvDtl.getBsvStatus().getStatusId()
+								.equals(QTStatusConst.BSV_POSTPONE)) {
+					postponeList.add(scQtBsvDtl);
+				} else if (scQtBsvDtl.getBsvStatus() != null
+						&& scQtBsvDtl.getBsvStatus().getStatusId()
+								.equals(QTStatusConst.BSV_REQUEST_REJECT)) {
+					rejectList.add(scQtBsvDtl);
+				} else if (scQtBsvDtl.getBsvStatus() != null
+						&& scQtBsvDtl.getBsvStatus().getStatusId()
+								.equals(QTStatusConst.BSV_PENDING)) {
+					pendingList.add(scQtBsvDtl);
+				} else if (scQtBsvDtl.getBsvStatus() != null
+						&& scQtBsvDtl.getBsvStatus().getStatusId()
+								.equals(QTStatusConst.BSV_COMPLETED)) {
+					completedList.add(scQtBsvDtl);
+				} else if (scQtBsvDtl.getBsvStatus() != null
+						&& scQtBsvDtl.getBsvStatus().getStatusId()
+								.equals(QTStatusConst.BSV_CANCELLED)) {
+					cancelledList.add(scQtBsvDtl);	
+				} else if (scQtBsvDtl.getBsvStatus() != null
+						&& scQtBsvDtl
+								.getBsvStatus()
+								.getStatusId()
+								.equals(QTStatusConst.BSV_PENDING_UPDATE_APPROVAL)) {
+					pendingUpdateApprList.add(scQtBsvDtl);
+				}
+			}
+
+			if (CollectionUtils.isNotEmpty(rejectList)) {
+				sortedList.addAll(rejectList);
+			}
+			if (CollectionUtils.isNotEmpty(postponeList)) {
+				sortedList.addAll(postponeList);
+			}
+
+			if (CollectionUtils.isNotEmpty(pendingList)) {
+				sortedList.addAll(pendingList);
+			}
+			if (CollectionUtils.isNotEmpty(completedList)) {
+				sortedList.addAll(completedList);
+			}
+			if (CollectionUtils.isNotEmpty(cancelledList)) {
+				sortedList.addAll(cancelledList);
+			}
+			if (CollectionUtils.isNotEmpty(pendingUpdateApprList)) {
+				sortedList.addAll(pendingUpdateApprList);
+			}
+
+			if (CollectionUtils.isNotEmpty(sortedList)) {
+				sortedGroups.put(key, sortedList);
+			}
+		}
+		return sortedGroups;
+	}
+
+	// 28188 -end-
+
+	// 28188 -start-
+	/**
+	 * Walks up parentPostponeId chain to find the true root ID. Includes cycle
+	 * guard to prevent infinite loop on bad data.
+	 * 
+	 * @param dtl
+	 * @param idMap
+	 * @retrun Long bsvDtlId.
+	 */
+	private Long getRootParentBsvId(ScQtBsvDtl dtl, Map<Long, ScQtBsvDtl> idMap) {
+		if (dtl == null) {
+			return null;
+		}
+
+		if (dtl.getParentPostponeId() == null) {
+			return dtl.getQtBsvDtlId(); // already the root
+		}
+
+		Long parentId = dtl.getParentPostponeId();
+		ScQtBsvDtl parent = idMap.get(parentId);
+
+		Set<Long> visited = new HashSet<>();
+		if (dtl.getQtBsvDtlId() != null) {
+			visited.add(dtl.getQtBsvDtlId());
+		}
+
+		while (parent != null && parent.getParentPostponeId() != null) {
+			if (!visited.add(parentId)) {
+				break;
+			}
+			parentId = parent.getParentPostponeId();
+			parent = idMap.get(parentId);
+		}
+
+		return parentId;
+	}
+
+	// #28188 - end-
+
+	// #28188 - Start
+	/**
+	 * find the bsvDtlId as a parentId for other details.
+	 * 
+	 * @param dtl
+	 * @param parentIdList
+	 * @return Long bsvDtlId.
+	 */
+	private Long getRootParentBsvId(ScQtBsvDtl dtl, List<Long> parentIdList) {
+		if (dtl == null) {
+			return null;
+		}
+
+		if (dtl.getParentPostponeId() == null) {
+			return dtl.getQtBsvDtlId(); // may be null for brand-new roots
+		}
+		Long parentId = dtl.getQtBsvDtlId();
+
+		if (CollectionUtils.isNotEmpty(parentIdList)) {
+
+			if (null != parentId && parentIdList.contains(parentId)) {
+
+				return parentId;
+			} else if (null != parentId && !parentIdList.contains(parentId)) {
+
+				return dtl.getParentPostponeId();
+			} else if (null == parentId) {
+
+				return dtl.getParentPostponeId();
+			}
+		}
+
+		return parentId;
+	}
+	
+	//28188 -start-
+	/**
+	 * 
+	 * @param bsvRegistrationList
+	 * @param qtBsvDtls
+	 */
+	@SuppressWarnings("unchecked")
+	protected void putBsvRegisterDetailsIntoMap(
+			List<ScQtBsvRegistration> bsvRegistrationList, ScQtBsvDtl qtBsvDtls) {
+		
+		if(CollectionUtils.isNotEmpty(bsvRegistrationList) && null!=qtBsvDtls && null!=qtBsvDtls.getQtBsvDtlId()){
+		Map<String, Object> sessionMap = FacesContext.getCurrentInstance()
+				.getExternalContext().getSessionMap();
+		Long bsvDtlId = qtBsvDtls.getQtBsvDtlId();
+		Map<Long, List<ScQtBsvRegistration>> briefingMap = (Map<Long, List<ScQtBsvRegistration>>) FacesContext
+				.getCurrentInstance().getExternalContext().getSessionMap()
+				.get(QTConstants.BSV_REGISTER_DETAILS_SESSION_MAP);
+
+		if (briefingMap == null) {
+			briefingMap = new HashMap<>();
+
+			briefingMap.put(bsvDtlId, bsvRegistrationList);
+
+		} else {
+
+			briefingMap.put(bsvDtlId, bsvRegistrationList);
+
+		}
+		sessionMap.put("briefingRegistrationMap", briefingMap);
+		}
+		
+	}
+
+	// #28188 -end-
+	
+	//28188 -start-
+	/**
+	 * fetch BsvRegister Details from Session.
+	 * @return Map<Long, List<ScQtBsvRegistration>>.
+	 */
+	@SuppressWarnings("unchecked")
+	protected Map<Long, List<ScQtBsvRegistration>> getBsvRegisterDetailsIntoMap(){
+		 Object obj = FacesContext.getCurrentInstance()
+		            .getExternalContext()
+		            .getSessionMap()
+		            .get(QTConstants.BSV_REGISTER_DETAILS_SESSION_MAP);
+		  if (obj instanceof Map<?,?>) {
+			 return (Map<Long, List<ScQtBsvRegistration>>) obj;
+		  }
+		  return new HashMap<>();
+	}
+	//28188 -end-
+	
+	//28188 -start-
+	/**
+	 * remove BsvRegisterDetails from Session.
+	 */
+	protected void removeBsvRegisterDetailsIntoMap(){
+	    FacesContext.getCurrentInstance()
+	            .getExternalContext()
+	            .getSessionMap()
+	            .remove(QTConstants.BSV_REGISTER_DETAILS_SESSION_MAP);	
+	}
+	//28188 -end-
+
+	// 28188 -start-
+	/**
+	 * sort bsvDetails by cretaedDate.
+	 * 
+	 * @param bsvDtls
+	 */
+	private void bsvSorting(List<ScQtBsvDtl> bsvDtls) {
+		Collections.sort(bsvDtls, new Comparator<ScQtBsvDtl>() {
+			public int compare(ScQtBsvDtl bsvDtls1, ScQtBsvDtl bsvDtls2) {
+
+				return new CompareToBuilder()
+
+				.append(bsvDtls1.getCreatedDate(), bsvDtls2.getCreatedDate())
+						.toComparison();
+			}
+		});
+	}
+	// 28188 -end-
+
 }

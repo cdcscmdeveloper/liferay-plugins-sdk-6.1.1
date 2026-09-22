@@ -748,6 +748,55 @@ public class LOIDetailBackingBean extends
 		return null;
 	}
 	
+	// #30447 - upperCase salutation check start
+	public String getFormattedContactPerson() {
+	    // check object null
+	    if (this.getManagedBean() == null 
+	        || this.getManagedBean().getScLoi() == null 
+	        || this.getManagedBean().getScLoi().getScSupplierAddress() == null) {
+	        return "";
+	    }
+	    
+	    String name = StringUtils.trimToEmpty(this.getManagedBean().getScLoi().getScSupplierAddress().getContactPerson());
+	    
+	    String salutation = "";
+	    if (this.getManagedBean().getScLoi().getScSupplierAddress().getPmContactUserID() != null 
+	        && this.getManagedBean().getScLoi().getScSupplierAddress().getPmContactUserID().getSalutationCode() != null) {
+	        salutation = StringUtils.trimToEmpty(this.getManagedBean().getScLoi().getScSupplierAddress().getPmContactUserID().getSalutationCode().getSalutationName());
+	    }
+
+        return getFormattedSalutationName(salutation, name);
+	}
+	
+	// # 30447 - start
+	public void setFormattedContactPerson(String value) {
+	}
+	// # 30447 - end
+	
+	// # 30447 - start
+	public String getFormattedContractSignerUserName() {
+		//check null
+        if (this.getManagedBean() == null 
+            || this.getManagedBean().getContractSignerUser() == null) {
+            return "";
+        }
+        
+        String name = StringUtils.trimToEmpty(this.getManagedBean().getContractSignerUser().getUserName());
+        
+        String salutation = "";
+        if (this.getManagedBean().getContractSignerUser().getSalutationCode() != null) {
+            salutation = StringUtils.trimToEmpty(this.getManagedBean().getContractSignerUser().getSalutationCode().getSalutationName());
+        }
+        
+        return getFormattedSalutationName(salutation, name);
+	}
+	// # 30447 - end
+	
+	// # 30447 - start
+	public void setFormattedContractSignerUserName(String value) {
+	}
+	// # 30447 - end
+	
 	/**
 	 * Pre render page navigation to multiple loi page based on task id
 	 * 
@@ -4237,6 +4286,9 @@ public class LOIDetailBackingBean extends
 					getManagedBean().getContractSignerUser().getSalutationCode() : null;
 			if (getManagedBean().getContractSignerUser() != null && salutationCode != null) {
 				salutation = getManagedBean().getContractSignerUser().getSalutationCode().getSalutationName();
+				if (!loiSigner.isEmpty() && loiSigner.equals(loiSigner.toUpperCase())) {
+				    salutation = salutation.toUpperCase();
+				}
 			}
 			context.put("salutation", salutation);
 			// #30447 end
@@ -8161,6 +8213,7 @@ public class LOIDetailBackingBean extends
 		if (currentEvalStage.equalsIgnoreCase(SourcingConstants.EVAL_STAGE_RECOMMENDATION_PKG)) {
 			evalstageT = SourcingConstants.EVAL_STAGE_TECHNICAL;
 			evalstageF = SourcingConstants.EVAL_STAGE_FINANCIAL_PKG;
+			requestItemID = null;
 		} else if (currentEvalStage.equalsIgnoreCase(SourcingConstants.EVAL_STAGE_RECOMMENDATION_ITM)) {
 			//if WIP cannot use Evalstage TI have to change T, 4serangkai deployment only can use TI
 			//evalstageT = SourcingConstants.EVAL_STAGE_TECHNICAL;

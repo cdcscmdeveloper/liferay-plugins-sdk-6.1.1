@@ -36,12 +36,25 @@
 				rendered="#{unspscCodeBackingBean.catalogueAdmin and catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus!='U'}">
 				<p:commandButton value="#{lbl['lbl.btn.approve']}"
 					action="#{reviewCatBackingBean.approveCatalogueItem}"></p:commandButton>
+				<!-- 34447 Start -->
 				<p:commandButton value="#{lbl['lbl.btn.reject']}"
-					update=":form:catalogDetMsgId :form:pricingTabID"
-					action="#{reviewCatBackingBean.rejectCatalogueItem}"></p:commandButton>
-
+					actionListener="#{reviewCatBackingBean.validateRejectBeforePopup}" update="@form" />
+				<!-- 34447 End -->
 			</h:panelGroup>
 
+			<!-- 34447 Start -->
+			<p:blockUI block="addCatDet" widgetVar="pageBlockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif" />
+			</p:blockUI>
+
+			<ac:confirmationPopupCM
+				id="rejectCatConfirmPopup" widget="rejectCatConfirmPopup"
+				loadingWidget="pageBlockWidget"
+				okParam="#{reviewCatBackingBean.rejectCatalogueItem()}" hasParam="true"
+				content="#{lbl['lbl.cm.dialog.message.reject.catalogue']}"
+				update="@form">
+			</ac:confirmationPopupCM>
+			<!-- 34447 End -->
 
 			<h:panelGroup
 				rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier}">
