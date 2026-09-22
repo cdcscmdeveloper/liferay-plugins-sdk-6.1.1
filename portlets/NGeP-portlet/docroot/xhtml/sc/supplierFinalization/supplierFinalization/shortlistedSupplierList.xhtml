@@ -134,7 +134,7 @@
 
 						<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 						<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;" />
-						<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;" />
+						<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.overall.score']}" style="width:5%; text-align:right;" /> <!-- #38151 update label-->
 						<ui:remove>#29021 - start </ui:remove>
 		               	<p:column rowspan="2" style="width:5%; text-align:center;" rendered="#{!suppFinalizationBackingBean.evaluateWIP(suppFinalizationBackingBean.managedBean.scQt)}">
 		               		<f:facet name="header">
@@ -290,9 +290,24 @@
 													CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 				</p:column>
-
+				<ui:remove>
+					<!-- #38151 add action link popup-->
+				</ui:remove>
 				<p:column style="text-align:right;">
+				<p:commandLink
+					action="#{suppFinalizationBackingBean.qualifiedSupplierListPopupScore(shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}"
+					process="@this"
+					update="@([id$=SuppDetailatestPopupId])"
+					rendered="#{!suppFinalizationBackingBean.managedBean.weightage35384WIP}"
+					styleClass="commandLink">			
 					<h:outputText value="#{shortlistedSupp.totalScore}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(
+													CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+						</h:outputText>
+						<ui:include src="supplierOverallScoreListPopup.xhtml" />
+				</p:commandLink>
+					<h:outputText value="#{shortlistedSupp.totalScore}" rendered="#{suppFinalizationBackingBean.managedBean.weightage35384WIP}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(
 													CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
@@ -585,13 +600,31 @@
 					</h:outputText>
 				</p:column>
 
+				<ui:remove><!--  #38151 --></ui:remove>
 				<p:column style="text-align:right;">
+					<p:column style="text-align:right;">
+						<p:commandLink
+							action="#{suppFinalizationBackingBean.qualifiedSupplierListPopupScore(shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}"
+							process="@this" update="@([id$=SuppDetailatestPopupId])"
+							rendered="#{!suppFinalizationBackingBean.managedBean.weightage35384WIP}"
+							styleClass="commandLink" >
+
 					<h:outputText value="#{shortlistedSupp.totalScore}">
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(
+													CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+							</h:outputText>
+
+						<ui:include src="supplierOverallScoreListPopup.xhtml" />
+
+						</p:commandLink>
+						<h:outputText value="#{shortlistedSupp.totalScore}" rendered="#{suppFinalizationBackingBean.managedBean.weightage35384WIP}">
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(
 													CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 					</h:outputText>
 				</p:column>
+				<ui:remove><!--  #38151 --></ui:remove>
 				<ui:remove>#29021 - start </ui:remove>
 				<p:column style="text-align:center;" rendered="#{!suppFinalizationBackingBean.evaluateWIP(suppFinalizationBackingBean.managedBean.scQt)}">
 					<h:outputText value="#{empty shortlistedSupp.totalRating? 0: shortlistedSupp.totalRating}"/>

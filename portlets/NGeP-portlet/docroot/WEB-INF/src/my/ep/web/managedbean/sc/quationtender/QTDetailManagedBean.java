@@ -4,7 +4,7 @@
  * 
  * Release 1.00    
  *    
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
  */
@@ -1619,6 +1619,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.panelSuppliers = panelSuppliers;
 	}
 
+	private boolean weightage35384WIP; //#38151
+	
 	private ScQtApprovalRequest scQtApprovalDtls;
 
 	// #19336, #25201, #17376, #19287 -start-
@@ -1787,7 +1789,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Map<Long, VCtContract> checkLOAContract;
 	private IPagingDataModel<ScBidScheduleForQT> searchBidScheduleDataModel;
 	// 25791-End
-	
+
 	//#21692 - Start
 	private boolean proposalValidityChangeValue;
 	private String epvAttachmentValue;
@@ -1813,7 +1815,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean isCheckUserCanRevise;
 	private boolean resetHistoryCatCode;
 	// #29732 End
-	
+
+	private boolean zoneQtyHasZeroVal;//#38679
+
 	// #35320 - Start
 	private boolean afterSF;
 	// #35320 - End
@@ -11609,6 +11613,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	/** #21695 FARID END*/
 	
+	//#38679
+	public boolean isZoneQtyHasZeroVal() {
+		return zoneQtyHasZeroVal;
+	}
+	
+	public void setZoneQtyHasZeroVal(boolean zoneQtyHasZeroVal) {
+		this.zoneQtyHasZeroVal = zoneQtyHasZeroVal;
+	}
+	//#38679
+	
 	// #35320 - Start
 	public boolean isAfterSF() {
 		return afterSF;
@@ -11617,4 +11631,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setAfterSF(boolean afterSF) {
 		this.afterSF = afterSF;
 	}// #35320 - End
+	
+	//#38151
+	public boolean isWeightage35384WIP() {
+		return weightage35384WIP;
+	}
+
+	public void setWeightage35384WIP(boolean weightage35384WIP) {
+		this.weightage35384WIP = weightage35384WIP;
+	}
+	//#38151
 }

@@ -4,7 +4,7 @@
  * 
  * Release 1.00    
  *    
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
  */
@@ -164,7 +164,11 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	private List<TplSpecZoneQty> zoneQtyForItemHlink;
 	private boolean isComplianceOldNull;
 	// #29187 End Vinod
-	
+
+	// #38151 Start
+	private boolean weightage35384WIP;
+	// #38151 End
+
 	/**
 	 * @return the beans
 	 */
@@ -1029,4 +1033,14 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	}
 	
 	//#29187 End Vinod
+
+	//#38151
+	public boolean isWeightage35384WIP() {
+		return weightage35384WIP;
+	}
+
+	public void setWeightage35384WIP(boolean weightage35384WIP) {
+		this.weightage35384WIP = weightage35384WIP;
+	}
+	//#38151
 }

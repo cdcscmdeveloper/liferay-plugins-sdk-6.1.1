@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.constant.sc;
 
@@ -344,7 +344,10 @@ public interface QTConstants {
 	// #11104 -end-
 
 	public static final String SERVICE_OBJECT_CC = "cc";//#28784
-	
+	//#38151
+	public static final Long APP_VERSION_REDMINE_NO_38151 = 35384L;
+	public static final Integer APP_VERSION_REDMINE_NO_38151_PHASE = 2;
+
 	// 6906 - start
 	public static final String SELECTION_MODE_MULTIPLE = "multiple";
 	public static final String SELECTION_MODE_SINGLE = "single";

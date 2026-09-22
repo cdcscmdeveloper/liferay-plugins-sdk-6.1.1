@@ -4,7 +4,7 @@
  * 
  * Release 1.00    
  *    
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
  */
@@ -55,6 +55,7 @@ public class TemplateSpecBean implements Serializable {
 	private List<TplSpecAnswer> hideanswerList;
 	// #25138 -End
 	private boolean wordBreakForQT;//#29007 Added Vinod
+	private boolean weightage35384WIP;;//#38151
 	
 
 	/**
@@ -363,5 +364,14 @@ public class TemplateSpecBean implements Serializable {
 		this.wordBreakForQT = wordBreakForQT;
 	}
 	// #29007 End Vinod
-	
+
+	//#38151
+	public boolean isWeightage35384WIP() {
+		return weightage35384WIP;
+	}
+
+	public void setWeightage35384WIP(boolean weightage35384WIP) {
+		this.weightage35384WIP = weightage35384WIP;
+	}
+	//#38151
 }

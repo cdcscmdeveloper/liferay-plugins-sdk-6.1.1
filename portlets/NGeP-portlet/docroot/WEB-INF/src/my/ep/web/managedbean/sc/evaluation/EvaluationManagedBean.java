@@ -4,7 +4,7 @@
  *                ePerolehan 
  * Release 1.00    
  *    
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
  */
@@ -962,6 +962,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 	// #28784 - End
 
+	private boolean comingFromNextButton;//#38151
+	private boolean weightage35384WIP; //#38151
+	
 	/**
 	 * Gets the today.
 	 * 
@@ -4452,7 +4455,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.tooltipDemo = tooltipDemo;
 	}
 	//#28784 - End
-	
+
 	//34528-uat 4serangkai - start
 	public Paginator getFinancialPackagePaginator() {
 		return financialPackagePaginator;
@@ -4462,7 +4465,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.financialPackagePaginator = financialPackagePaginator;
 	}
 	//34528-uat 4serangkai - end
-	
+
 	//#21695 start
 	/**
 	 * @return the technicalSummaryView
@@ -4479,7 +4482,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.technicalSummaryView = technicalSummaryView;
 	}
 	//#21695 end
-	
+
 	//#25138 start
 	public Map<String, Object> getEvaluationContext() {
 		return evaluationContext;
@@ -4489,4 +4492,28 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.evaluationContext = evaluationContext;
 	}
 	//#25138 end
+
+	//#38151 - start
+	/**
+	 * @return the flag from nextbutton
+	 */
+	public boolean isComingFromNextButton() {
+		return comingFromNextButton;
+	}
+
+	/**
+	 * @param set flag from nextbutton
+	 */
+	public void setComingFromNextButton(boolean comingFromNextButton) {
+		this.comingFromNextButton = comingFromNextButton;
+	}
+
+	public boolean isWeightage35384WIP() {
+		return weightage35384WIP;
+	}
+
+	public void setWeightage35384WIP(boolean weightage35384WIP) {
+		this.weightage35384WIP = weightage35384WIP;
+	}
+	//#38151 - end
 }
