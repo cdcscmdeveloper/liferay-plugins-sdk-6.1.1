@@ -1273,6 +1273,14 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		return file.getMappedFieldAI();
 	}
 
+	// 1-ok, 2-err, 3-read only partly; a mismatch outranks a field the AI never read, per the BA
+	private static int bankVerdict(AiBankDocDTO entity){
+		if (entity.hasError()){
+			return 2;
+		}
+		return entity.hasWarning() ? 3 : 1;
+	}
+
 	private static void validateBankEntity(SmAppl appl, SmApplSupportDoc suppDoc, List<AiBankDocDTO> docEntities){
 		if (EntityHelper.isCollectionEmpty(docEntities)){
 			return;
@@ -1282,7 +1290,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			for (AiBankDocDTO entity : docEntities){
 				if (entity.getApiId() != null && entity.getApiId().equals(file.getAiApiResponseId())){
 					file.setMappedFieldAI(entity.getLabel());
-					file.setValidatedAI(entity.hasError() ? 2 : 1); //1-ok, 2-err
+					file.setValidatedAI(bankVerdict(entity));
 				}
 			}
 		}
