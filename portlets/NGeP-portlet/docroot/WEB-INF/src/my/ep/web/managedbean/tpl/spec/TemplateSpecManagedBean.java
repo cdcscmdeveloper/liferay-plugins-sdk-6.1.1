@@ -157,14 +157,6 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	/** The qt. */
 	private ScQt qt;
 	
-	// #29187 Start Vinod
-	List<SelectItem> mandatorySpecList;
-	private boolean zoneForItemHlink;
-	private TplSpecQuestion questionForItemHlink;
-	private List<TplSpecZoneQty> zoneQtyForItemHlink;
-	private boolean isComplianceOldNull;
-	// #29187 End Vinod
-
 	// #38151 Start
 	private boolean weightage35384WIP;
 	// #38151 End

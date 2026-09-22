@@ -3593,21 +3593,7 @@ public class TemplateSpecBackingBean extends
 		templateSpecBean.setSelectedSpecQuestion(null); //#40402
 	}
 	// #25039 End - version zonal
-	
-	// #31134&11104 -start-
-	public boolean checkPriceTierEnableColumn(TemplateSpecBean templateSpecBean) {
-		//int count = 0;
 
-		for (TplSpecAnswer retrieveAns : templateSpecBean.getSpecAnswerList()) {
-			if (retrieveAns != null && retrieveAns.getTplSpecTierQty() != null) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-	// #31134&11104 -end-
-	
 	// #35384, #36248_haziq - start
 	/**
 	 * #36248 To validate Wieghtage input value
