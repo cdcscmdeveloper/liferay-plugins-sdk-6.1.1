@@ -3500,7 +3500,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 */
 	public List<Object> getCombinedEvaluationReportList() {
 		
-		List<Object> combinedReportList = new ArrayList<Object>();
+		List<Object> combinedReportList = new ArrayList<>();
 
 		List<ScQtFinalizationReport> reports = getManagedBean().getDocumentList();
 		List<ScQtFinalizationReportDetail> details = getManagedBean().getDocumentDetailList();
@@ -3601,7 +3601,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 * @return ScAttachment
 	 */
 	private ScAttachment generateDocumentAttachment(String docDefinitionKey, String fileReportName) throws Exception {
-		debugLogger("generateDocumentAttachment");
 		
 		ScAttachment reportAttachment = new ScQtFinalizationReportDetailAttachment();
 		ScQt scQt = getManagedBean().getScQt();
@@ -3690,8 +3689,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	private List<ScAttachment> getScqtFinalizationReportDetails() throws Exception {
 
 		List<ScAttachment> attachments = new ArrayList<>();
-		List<ScQtFinalizationReportDetail> scQtFinalizationReportDetails = getManagedBean()
-				.getEvaluationReportDetailList();
+		List<ScQtFinalizationReportDetail> scQtFinalizationReportDetails = getManagedBean().getDocumentDetailList();
 		List<ScQtFinalizationReportDetailAttachment> scAttachmentsDetail = new ArrayList<>();
 
 		if (CollectionUtils.isNotEmpty(scQtFinalizationReportDetails)) {

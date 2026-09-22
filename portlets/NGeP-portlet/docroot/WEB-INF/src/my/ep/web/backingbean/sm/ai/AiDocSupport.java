@@ -439,8 +439,8 @@ public final class AiDocSupport {
 					JSONArray properties = bankEntity.getJSONArray(PROPERTIES);
 					parsed.add(toBankStatement(properties, entityId));
 				}
-				// one row per account, per FRS 2.4; the whole list is needed to decide
-				dto.setBankStatements(AiDocValidator.dedupeBankStatements(parsed));
+				// deduped in validateBank, so nothing is scored until the duplicates are gone
+				dto.setBankStatements(parsed);
 			} catch (JSONException e) {
 				log.error("Error DocEntity", e);
 				dto.setError(true);
@@ -633,6 +633,8 @@ public final class AiDocSupport {
 
 			// the flags live on each record, so a repeated account still has to be verified on its own file
 			for (AiBankDocDTO entity : docEntities) {
+				// one row per account, per FRS 2.4; nothing is scored until the duplicates are gone
+				entity.setBankStatements(dedupeBankStatements(entity.getBankStatements()));
 				for (AiBankDocDTO.AiBankStatementDTO bank : entity.getBankStatements()) {
 					validateBankRecord(bank, supplierAccounts, supplierOrgNames, candidates, companyNameSupp);
 				}
@@ -746,7 +748,10 @@ public final class AiDocSupport {
 		 * account arrives once per section; and a section it read no account number from, carrying a company
 		 * name that is already listed against an account, is that same statement re-read, not another account.
 		 * A company name that is not already listed is kept, so a statement in someone else's name still
-		 * mismatches. The bank name is not part of the identity: it is the field MIN_CONFIDENCE blanks.
+		 * mismatches. The bank name is not part of the identity: one response is one uploaded file, so the same
+		 * account number twice is the same account however its sections spell the bank, and a spelling the
+		 * resolver cannot place must not split it. The record that is kept is filled from the duplicates it
+		 * absorbs, so a field one printed section lost is taken from another.
 		 * @param banks every record parsed out of one response, in the order the OCR returned them
 		 * @return the records to show, first occurrence first
 		 */
@@ -769,13 +774,27 @@ public final class AiDocSupport {
 				// a record with no account number is identified by its company name instead
 				String key = accountNo.isEmpty() ? "|" + holder : accountNo;
 				AiBankDocDTO.AiBankStatementDTO seen = kept.get(key);
-				// the first record wins, unless MIN_CONFIDENCE blanked its bank name and a later one kept its own
-				if (seen == null || (StringUtils.isBlank(seen.getBankName())
-						&& !StringUtils.isBlank(bank.getBankName()))) {
+				if (seen == null) {
 					kept.put(key, bank);
+				} else {
+					fillBlankFields(seen, bank);
 				}
 			}
 			return new ArrayList<>(kept.values());
+		}
+
+		// a field one printed section lost is taken from another read of the same account
+		private static void fillBlankFields(AiBankDocDTO.AiBankStatementDTO kept,
+				AiBankDocDTO.AiBankStatementDTO duplicate) {
+			if (StringUtils.isBlank(kept.getBankName())) {
+				kept.setBankName(duplicate.getBankName());
+			}
+			if (StringUtils.isBlank(kept.getAccountNo())) {
+				kept.setAccountNo(duplicate.getAccountNo());
+			}
+			if (StringUtils.isBlank(kept.getAccountHolderName())) {
+				kept.setAccountHolderName(duplicate.getAccountHolderName());
+			}
 		}
 
 		public static String canonicalizeCompanyName(String name) {
@@ -1373,6 +1392,23 @@ public final class AiDocSupport {
 		}
 
 		/**
+		 * Whether the AI read this document only partly: no field contradicts the application, but at least
+		 * one bank on it is missing a field. Ranks below {@link #hasError()}, which the caller tests first.
+		 * @return true when a kept record is missing its bank name, account number or company name
+		 */
+		public boolean hasWarning() {
+			if (this.error || bankStatements == null || bankStatements.isEmpty()) {
+				return false;
+			}
+			for (AiBankStatementDTO bank : bankStatements) {
+				if (bank.hasNotExtracted()) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		/**
 		 * One bank-account record extracted by OCR, plus its per-field verification flags.
 		 */
 		public static class AiBankStatementDTO implements Serializable {
@@ -1389,35 +1425,34 @@ public final class AiDocSupport {
 
 			public String getLabel() {
 				StringBuilder sb = new StringBuilder();
-				String err1 = "<span style='color: red;'>";
-				String err2 = "</span>";
-				String yes = "&#x2713; ";
-				String no = "&#x2717; ";
-				if (accountHolderName != null) {
-					String s = AiDocParser.label("lbl.cm.company.name") + ": " + accountHolderName + BR;
-					if (!validAccountHolderName) {
-						sb.append(err1).append(no).append(s).append(err2);
-					} else {
-						sb.append(yes).append(s);
-					}
-				}
-				if (bankName != null) {
-					String s = AiDocParser.label("lbl.gfmas.bank.desc") + ": " + bankName + BR;
-					if (!validBankName) {
-						sb.append(err1).append(no).append(s).append(err2);
-					} else {
-						sb.append(yes).append(s);
-					}
-				}
-				if (accountNo != null) {
-					String s = AiDocParser.label("lbl.fl.bank.acc.no") + ": " + accountNo + BR;
-					if (!validAccountNo) {
-						sb.append(err1).append(no).append(s).append(err2);
-					} else {
-						sb.append(yes).append(s);
-					}
-				}
+				appendField(sb, "lbl.cm.company.name", accountHolderName, validAccountHolderName);
+				appendField(sb, "lbl.gfmas.bank.desc", bankName, validBankName);
+				appendField(sb, "lbl.fl.bank.acc.no", accountNo, validAccountNo);
 				return sb.toString();
+			}
+
+			// One labelled field row: a green tick when valid, a red cross when it contradicts the
+			// application, and a darkgoldenrod warning naming the field the OCR read nothing into.
+			private void appendField(StringBuilder sb, String labelKey, String value, boolean valid) {
+				String label = AiDocParser.label(labelKey);
+				if (StringUtils.isBlank(value)) {
+					sb.append("<span style='color: darkgoldenrod;'>").append("&#x26A0; ").append(label)
+							.append(": ").append(AiDocParser.label("lbl.sm.ai.doc.notextracted"))
+							.append(BR).append("</span>");
+					return;
+				}
+				String s = label + ": " + value + BR;
+				if (!valid) {
+					sb.append("<span style='color: red;'>").append("&#x2717; ").append(s).append("</span>");
+				} else {
+					sb.append("&#x2713; ").append(s);
+				}
+			}
+
+			// a field this statement carries no value for; nothing to verify, but nothing mapped either
+			public boolean hasNotExtracted() {
+				return StringUtils.isBlank(bankName) || StringUtils.isBlank(accountNo)
+						|| StringUtils.isBlank(accountHolderName);
 			}
 
 			public String getBankName() {
