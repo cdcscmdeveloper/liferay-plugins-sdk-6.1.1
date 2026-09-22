@@ -138,6 +138,16 @@ public class FlReportConst implements Serializable {
 	public static final String FL_RPT_PSF_PERIOD = "PSFPERIOD";
 	// 29554 end
 	
+	// #27476 start
+	public static final String FL_RPT_PROCUMENT_TYPE_CODE = "PPROCTYPECODE";
+	public static final String FL_RPT_GROUP_SUPP_NAME = "SUPPLIER NAME";
+	public static final String FL_RPT_GROUP_TREASURY_CIRCULAR = "PKP NO";
+	public static final String FL_RPT_GROUP_DOC_STATUS = "STATUS";
+	public static final String FL_RPT_GROUP_REQUISITIONER = "REQUISITIONER";
+	public static final String FL_RPT_GROUP_PROC_TYPE = "PROCUREMENT TYPE";
+	public static final String FL_RPT_GROUP_ITEM_TYPE = "ITEM TYPE";
+	// #27476 end
+	
 	
 	public FlReportConst(){}
 
