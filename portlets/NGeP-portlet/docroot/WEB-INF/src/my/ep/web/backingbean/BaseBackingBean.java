@@ -4064,6 +4064,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	} 
 	//26238 - END
+	
 	// #35238 start
 	/**
 	 * Common utility method to check if user has any role from the given set.

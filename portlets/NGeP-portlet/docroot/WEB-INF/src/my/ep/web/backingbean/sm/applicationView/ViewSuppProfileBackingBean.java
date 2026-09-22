@@ -444,7 +444,6 @@ public class ViewSuppProfileBackingBean extends
 			        }
 			    }
 	}
-
 	
 	// 26247 - start	
 	/**

@@ -11135,24 +11135,6 @@ public class SupplierFinalizationBackingBean extends
 					return loiAwarded || loaAwarded;
 				}
 
-	/**
-	 * #35320 - Check All supplier Offered Price Exceeded Committee Authority
-	 * 
-	 */
-	private boolean checkAllSupplierOfferPriceIsExceedCommitteeAuthority() {
-		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
-		String committeeType = getManagedBean().getCommitteeType();
-
-		BigDecimal committeeThreshold = getThresholdForCommitee(committeeType);
-		if (committeeThreshold == null) {
-			return false;
-		}
-
-		List<BigDecimal> offeredPrices = getOfferedPrices(scQtFinalization);
-		for (BigDecimal price : offeredPrices) {
-			if (price != null && price.compareTo(committeeThreshold) > 0) {
-				getManagedBean().setSelectedSupplierOfferedPrice(price.toString());
-				return true;
 			}
 		}
 		return false;
@@ -11200,6 +11182,30 @@ public class SupplierFinalizationBackingBean extends
 	}
 
 	// 26247 - end
+	
+	/**
+	 * #35320 - Check All supplier Offered Price Exceeded Committee Authority
+	 * 
+	 */
+	private boolean checkAllSupplierOfferPriceIsExceedCommitteeAuthority() {
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+		String committeeType = getManagedBean().getCommitteeType();
+
+		BigDecimal committeeThreshold = getThresholdForCommitee(committeeType);
+		if (committeeThreshold == null) {
+			return false;
+		}
+
+		List<BigDecimal> offeredPrices = getOfferedPrices(scQtFinalization);
+		for (BigDecimal price : offeredPrices) {
+			if (price != null && price.compareTo(committeeThreshold) > 0) {
+				getManagedBean().setSelectedSupplierOfferedPrice(price.toString());
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * #35320
 	 * Extracts all intended supplier offered prices from the given finalization

@@ -1047,21 +1047,6 @@ public abstract class BaseManagedBean implements Serializable {
 		this.forceReplace = forceReplace;
 	}
 	// #28895_35501 End
-	
-
-	/**
-	 * @return the disciplinaryAction
-	 */
-	public boolean isDisciplinaryAction() {
-		return disciplinaryAction;
-	}
-
-	/**
-	 * @param disciplinaryAction the disciplinaryAction to set
-	 */
-	public void setDisciplinaryAction(boolean disciplinaryAction) {
-		this.disciplinaryAction = disciplinaryAction;
-	}
 
 	// 37925 START
 	public String getStrLabelCountryOrigin() {
