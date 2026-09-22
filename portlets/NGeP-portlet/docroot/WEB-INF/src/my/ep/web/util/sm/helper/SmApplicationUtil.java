@@ -1573,25 +1573,29 @@ public class SmApplicationUtil {
 		boolean retVal = false;
 		if (paramBranch != null && paramBranch.getSupplierBranchId() != null
 				&& !SmCommonUtil.isCollectionEmpty(appl.getSmSupplierBanks())) {
-			for (SmSupplierBank bnk : appl.getSmSupplierBanks()) {
-				if (!SmCommonUtil.isCollectionEmpty(bnk
-						.getSmSupplierBranchBanks())) {
-					for (SmSupplierBranchBank brBank : bnk
-							.getSmSupplierBranchBanks()) {
-						if (brBank.getSmSupplierBranch() != null
-								&& brBank.getSmSupplierBranch()
-										.getSupplierBranchId() != null
-								&& brBank
-										.getSmSupplierBranch()
-										.getSupplierBranchId()
-										.compareTo(
-												paramBranch
-														.getSupplierBranchId()) == 0) {
-							retVal = true;
-							break;
+			if(paramBranch.getRecordStatusFlg() != SupplierManagementConst.RECORD_STATUS_DELETED){ //#29727
+				for (SmSupplierBank bnk : appl.getSmSupplierBanks()) {
+					if (!SmCommonUtil.isCollectionEmpty(bnk
+							.getSmSupplierBranchBanks())) {
+						for (SmSupplierBranchBank brBank : bnk
+								.getSmSupplierBranchBanks()) {
+							if (brBank.getSmSupplierBranch() != null
+									&& brBank.getSmSupplierBranch()
+											.getSupplierBranchId() != null
+									&& brBank
+											.getSmSupplierBranch()
+											.getSupplierBranchId()
+											.compareTo(
+													paramBranch
+															.getSupplierBranchId()) == 0) {
+								retVal = true;
+								break;
+							}
 						}
 					}
 				}
+			} else {
+				retVal = true;
 			}
 		}
 		return retVal;
@@ -3834,6 +3838,7 @@ public class SmApplicationUtil {
 
 	private static void validateOverlapCategory(SmApplicationManagedBean bean,
 			String currPage) {
+		SmAppl appl = bean.getSmAppl(); //#40444
 		String msg = currPage == null ? MessageConst.ERROR_722654
 				: MessageConst.ERROR_722661;
 		//#31018 START

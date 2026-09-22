@@ -27,6 +27,7 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.sc.BidItemBean;
 import my.ep.biz.bean.sc.BidPackageBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
@@ -35,6 +36,7 @@ import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sc.schedulebidding.IScheduleBiddingSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.comparator.sc.MemberRoleComparator;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
@@ -62,6 +64,8 @@ import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.dto.sc.schedulebidding.ScheduleBiddingReqDTO;
 import my.ep.dto.sc.schedulebidding.ScheduleBiddingResDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
@@ -93,6 +97,7 @@ import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
@@ -307,6 +312,10 @@ public class SupplierFinalizationBiddingBackingBean extends
 						new LinkedHashMap<Long, List<BidPackageBean>>());				
 				this.getManagedBean().setBidItemsByZone(
 						new LinkedHashMap<Long, List<ScBidItem>>());
+				// #28777 & #29729 - Start
+				this.getManagedBean().setBidDisSchedulesByZone(new LinkedHashMap<Long, List<ScBidSchedule>>());
+				this.getManagedBean().setBidDisPackageBeansByZone(new LinkedHashMap<Long, List<BidPackageBean>>());
+				// #28777 & #29729 - End
 				
 				Map<Long, List<ScQtRecommend>> scQtRecommendsByZone = 
 							new LinkedHashMap<Long, List<ScQtRecommend>>();
@@ -464,6 +473,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 		this.getManagedBean().setZoneActiveIndex(selectedZoneTabIndex);
 		retrieveBiddingSummary();
 		getManagedBean().setBidItemSuppliers(null);
+		getManagedBean().setBidItemSuppliersDisqualified(null); // #28777&#29729
 	}
 	
 	private void onZoneTabChangeAction(TplSpecZoneDtl specZoneDtl) {
@@ -473,8 +483,10 @@ public class SupplierFinalizationBiddingBackingBean extends
 		
 		if (isItemized) {
 			getManagedBean().setBidItemSuppliers(null);
+			getManagedBean().setBidItemSuppliersDisqualified(null); // #28777&#29729
 		} else {
 			getManagedBean().setBiddingPackagePriceList(null);
+			getManagedBean().setBiddingPackagePriceListDisqualified(null); // #28777&#29729
 		}
 		
 		retrieveBiddingSummary();
@@ -523,6 +535,14 @@ public class SupplierFinalizationBiddingBackingBean extends
 		List<ScQtEvaluationResultDtl> shortlistedSuppliers = null;
 		ScQtRecommendDtl awardedSupplier = null;
 		List<ScQtRecommend> recommendedItems = null;
+		
+		// #28777 & #29729 - Start
+		List<ScQtEvaluationResultDtl> notShortlistedSuppliers = new ArrayList<>();
+		Map<Long, List<ScQtEvaluationResultDtl>> pkgNotShortlistedSuppliersByZone = getManagedBean()
+				.getPkgNotShortlistedSuppliersByZone();
+		List<BidPackageBean> currentDisZoneBidPackageBeans = new ArrayList<>();
+		// #28777 & #29729 - End
+		
 		boolean isZonal = this.getManagedBean().getScQt().isZonal();
 		Map<Long,List<ScQtEvaluationResultDtl>> pkgShortlistedSuppliersByZone
 					= getManagedBean().getPkgShortlistedSuppliersByZone();	
@@ -539,23 +559,37 @@ public class SupplierFinalizationBiddingBackingBean extends
 				selectedZoneId = selectedZone.getSpecZoneId();
 				recommendedItems = getManagedBean().getScQtRecommendsByZone().get(selectedZoneId);
 				
-				if (MapUtils.isNotEmpty(
-						this.getManagedBean().getBidSchedulesByZone())) {
+				if (MapUtils.isNotEmpty(this.getManagedBean().getBidSchedulesByZone())
+						|| MapUtils.isNotEmpty(this.getManagedBean().getBidDisSchedulesByZone())) {// #28777&#29729
 					currentZoneBidSchedules = this.getManagedBean().getBidSchedulesByZone().get(selectedZoneId);
 					currentZoneBidPackageBeans = this.getManagedBean().getBidPackageBeansByZone().get(selectedZoneId);
+					
+					// #28777 & #29729 - Start
+					currentDisZoneBidPackageBeans = this.getManagedBean().getBidDisPackageBeansByZone()
+							.get(selectedZoneId);
+					// #28777 & #29729 - End
 				}
-				if (pkgShortlistedSuppliersByZone == null) {
-					pkgShortlistedSuppliersByZone 
-								= new HashMap<Long,List<ScQtEvaluationResultDtl>>();
-					getManagedBean().setPkgShortlistedSuppliersByZone(
-										pkgShortlistedSuppliersByZone);
+				if (pkgShortlistedSuppliersByZone == null || pkgNotShortlistedSuppliersByZone == null) { // #28777&#29729
+					pkgShortlistedSuppliersByZone = new HashMap<Long, List<ScQtEvaluationResultDtl>>();
+					getManagedBean().setPkgShortlistedSuppliersByZone(pkgShortlistedSuppliersByZone);
+					
+					// #28777 & #29729 - Start
+					pkgNotShortlistedSuppliersByZone = new HashMap<Long, List<ScQtEvaluationResultDtl>>();
+					getManagedBean().setPkgNotShortlistedSuppliersByZone(pkgNotShortlistedSuppliersByZone);
+					// #28777 & #29729 - End
 				} else {
-					shortlistedSuppliers = getManagedBean().getPkgShortlistedSuppliersByZone()
-												.get(selectedZoneId);
+					shortlistedSuppliers = getManagedBean().getPkgShortlistedSuppliersByZone().get(selectedZoneId);
 					getManagedBean().setShortlistedSuppliers(shortlistedSuppliers);
+					
+					// #28777 & #29729 - Start
+					notShortlistedSuppliers = getManagedBean().getPkgNotShortlistedSuppliersByZone()
+							.get(selectedZoneId);
+					getManagedBean().setNotShortlistedSuppliers(notShortlistedSuppliers);
+					// #28777 & #29729 - End
 				}
 			} else {
 				shortlistedSuppliers = getManagedBean().getShortlistedSuppliers();
+				notShortlistedSuppliers = getManagedBean().getNotShortlistedSuppliers();// #28777&#29729
 				ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 				recommendedItems = scQtFinalization.getScQtRecommends();
 			}
@@ -565,14 +599,12 @@ public class SupplierFinalizationBiddingBackingBean extends
 				awardedSupplier = getAwardedSupplier(recommendedItems.get(0).getRecommendDtls());
 			}
 			
-			if (CollectionUtils.isNotEmpty(
-					currentZoneBidSchedules) && 
-						CollectionUtils.isNotEmpty(
-							currentZoneBidPackageBeans) && 
-								CollectionUtils.isNotEmpty(
-										shortlistedSuppliers)) {
-				processPackageBidSchedules(
-						currentZoneBidSchedules, currentZoneBidPackageBeans, awardedSupplier);
+			if (CollectionUtils.isNotEmpty(currentZoneBidSchedules)
+					&& (CollectionUtils.isNotEmpty(shortlistedSuppliers) || CollectionUtils
+							.isNotEmpty(notShortlistedSuppliers))) {// #28777&#29729
+				processPackageBidSchedules(currentZoneBidSchedules, currentZoneBidPackageBeans,
+						currentDisZoneBidPackageBeans, awardedSupplier);// #28777&#29729
+
 			} else {
 				scheduleBiddingSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -587,30 +619,35 @@ public class SupplierFinalizationBiddingBackingBean extends
 				bidReqDTO.setQtId(getManagedBean().getScQt().getQtId());
 				bidReqDTO.setRecommendType(SourcingConstants.EVAL_STAGE_RECOMMENDATION_PKG);
 				bidReqDTO.setSpecZoneId(selectedZoneId);
+				bidReqDTO.setBidScheduleId(bidScheduleList.get(0).getBidScheduleId());// #28777&#29729
 				
 				BiddingResDTO bidResDTO = null;
-				if (CollectionUtils.isEmpty(shortlistedSuppliers)) {
+				if (CollectionUtils.isEmpty(shortlistedSuppliers) || CollectionUtils.isEmpty(notShortlistedSuppliers)) {// #28777&#29729
 					bidResDTO = biddingSO.retrieveShortlistedSuppliersForBidding(bidReqDTO);
 					shortlistedSuppliers = bidResDTO.getShortlistedSuppliers();
+					notShortlistedSuppliers = bidResDTO.getNotShortlistedSuppliers(); // #28777&#29729
 					if (isZonal) {
-						pkgShortlistedSuppliersByZone.put(
-								selectedZoneId, shortlistedSuppliers);
+						pkgShortlistedSuppliersByZone.put(selectedZoneId, shortlistedSuppliers);
+						pkgNotShortlistedSuppliersByZone.put(selectedZoneId, notShortlistedSuppliers);// #28777&#29729
 					}
 				}
-				this.getManagedBean().setShortlistedSuppliers(
-										shortlistedSuppliers);
+				this.getManagedBean().setShortlistedSuppliers(shortlistedSuppliers);
+				this.getManagedBean().setNotShortlistedSuppliers(notShortlistedSuppliers); // #28777&#29729
 				Long bidScheduleId = bidScheduleList.get(0)
 										.getBidScheduleId();				
 				bidReqDTO.setBidScheduleId(bidScheduleId);				
 				bidResDTO = biddingSO.retrieveBidScheduleDtl(bidReqDTO);				
 
 				if (bidResDTO.isSuccessful()) {
-					processPackageBidSchedules(bidScheduleList, bidResDTO.getBidPackages(), awardedSupplier);
+					processPackageBidSchedules(bidScheduleList, bidResDTO.getBidPackages(),
+							bidResDTO.getBidPackagesDisqualified(), awardedSupplier);// #28777&#29729
 					if (isZonal) {
 						this.getManagedBean().getBidSchedulesByZone()
 							.put(selectedZoneId, bidScheduleList);
 						this.getManagedBean().getBidPackageBeansByZone()
-							.put(selectedZoneId, bidResDTO.getBidPackages());						
+							.put(selectedZoneId, bidResDTO.getBidPackages());	
+						this.getManagedBean().getBidDisPackageBeansByZone()
+					    .put(selectedZoneId, bidResDTO.getBidPackagesDisqualified());// #28777&#29729
 					}
 				}
 			}
@@ -652,8 +689,10 @@ public class SupplierFinalizationBiddingBackingBean extends
 		return supplierCodes;
 	}
 	
-	private void processPackageBidSchedules(List<ScBidSchedule> bidScheduleList, 
-						List<BidPackageBean> biddingPackagePriceList, ScQtRecommendDtl awardedSupplier) {
+	private void processPackageBidSchedules(List<ScBidSchedule> bidScheduleList,
+			List<BidPackageBean> biddingPackagePriceList, List<BidPackageBean> biddingPackagePriceListDis,
+			ScQtRecommendDtl awardedSupplier) {// #28777&#29729
+		
 		disableSupplierSelection(false);
 		getManagedBean().setSelectedPackageBean(null);
 		Map<Long,BidPackageBean> selectedPackageBeans 
@@ -674,10 +713,13 @@ public class SupplierFinalizationBiddingBackingBean extends
 			}			
 		}
 		
-		List<ScQtEvaluationResultDtl> shortlistedSuppliers 
-					= getManagedBean().getShortlistedSuppliers();
-		Map<Long, ScQtEvaluationResultDtl> supplierCodes 
-					= getSupplierCodes(shortlistedSuppliers);
+		List<ScQtEvaluationResultDtl> shortlistedSuppliers = getManagedBean().getShortlistedSuppliers();
+		Map<Long, ScQtEvaluationResultDtl> supplierCodes = getSupplierCodes(shortlistedSuppliers);
+		
+		// #28777 & #29729 - Start
+		List<ScQtEvaluationResultDtl> notShortlistedSuppliers = getManagedBean().getNotShortlistedSuppliers();
+		Map<Long, ScQtEvaluationResultDtl> disSupplierCodes = getSupplierCodes(notShortlistedSuppliers);
+		// #28777 & #29729 - End
 		
 		Long awardedSupplierId = null;
 		// Get awarded supplier id
@@ -692,9 +734,16 @@ public class SupplierFinalizationBiddingBackingBean extends
 		/*
 		 * 31101 - Shafful 
 		 */
-		settingDisciplinaryAction(biddingPackagePriceList, null, false);
+		settingDisciplinaryAction(biddingPackagePriceList, null, false);// #28777&#29729
 		getManagedBean().setBiddingPackagePriceList(biddingPackagePriceList);
 		// #31101, #26247 -end-
+		
+		// #28777 & #29729 - Start
+		if (CollectionUtils.isNotEmpty(biddingPackagePriceListDis)) {
+			settingDisciplinaryAction(biddingPackagePriceListDis, null, true);
+			getManagedBean().setBiddingPackagePriceListDisqualified(biddingPackagePriceListDis);
+		}
+		// #28777 & #29729 - End
 		
 		BigDecimal bumiSuppLowestOfferedPrice = null;
 		BigDecimal lowestNonBumiOfferedPrice = null;
@@ -741,6 +790,28 @@ public class SupplierFinalizationBiddingBackingBean extends
 					}
 				}
 			}
+			
+			// #28777 & #29729 - Start
+			for (BidPackageBean packageBean : biddingPackagePriceListDis) {
+				SmSupplier smSupplier = packageBean.getScBidSupplier().getSmSupplier();
+
+				if (smSupplier.isBumi()) {
+					bumiPriceList.add(packageBean.getBidPriceTotal());
+				} else {
+					nonBumiPriceList.add(packageBean.getBidPriceTotal());
+				}
+				if (StringUtils.isBlank(packageBean.getSupplierName())) {
+					packageBean.setSupplierName(packageBean.getScBidSupplier().getSmSupplier().getCompanyName());
+				}
+
+				Long supplierId = smSupplier.getSupplierId();
+				if (MapUtils.isNotEmpty(disSupplierCodes) && disSupplierCodes.containsKey(supplierId)) {
+					ScQtEvaluationResultDtl notShortlistedSupplier = disSupplierCodes.get(supplierId);
+					packageBean.setScQtProposal(notShortlistedSupplier.getQtEvaluationResult().getScQtProposal());
+					packageBean.setShortlistedSupplier(notShortlistedSupplier);
+				}
+			}
+			// #28777 & #29729 - End
 			if (CollectionUtils.isNotEmpty(bumiPriceList)) {
 				Collections.sort(bumiPriceList);
 				bumiSuppLowestOfferedPrice = bumiPriceList.get(0);
@@ -761,7 +832,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	
 	// 26247 - start
 	private void settingDisciplinaryAction(List<BidPackageBean> biddingPackagePriceList,
-			List<BidItemBean> biddingItemPriceList, boolean isDisqualified) {
+			List<BidItemBean> biddingItemPriceList, boolean isDisqualified) {// #28777&#29729
 		ScQt scQt = this.getManagedBean().getScQt();
 		if (CollectionUtils.isNotEmpty(biddingPackagePriceList)) {
 			for (BidPackageBean bidPackage : biddingPackagePriceList) {
@@ -862,6 +933,15 @@ public class SupplierFinalizationBiddingBackingBean extends
 					= getManagedBean().getItemShortlistedSuppliers();
 		Map<Long,Map<Long,List<ScQtEvaluationResultDtl>>> itemShortlistedSuppliersByZone
 					= getManagedBean().getItemShortlistedSuppliersByZone();
+		
+		// #28777 & #29729 - Start
+		List<ScQtEvaluationResultDtl> notShortlistedSuppliers = new ArrayList<>();
+		Map<Long, List<ScQtEvaluationResultDtl>> itemNotShortlistedSuppliers = getManagedBean()
+				.getItemNotShortlistedSuppliers();
+		Map<Long, Map<Long, List<ScQtEvaluationResultDtl>>> itemNotShortlistedSuppliersByZone = getManagedBean()
+				.getItemNotShortlistedSuppliersByZone();
+		// #28777 & #29729 - End
+		
 		Map<Long,BidItemBean> selectedItemBeans 
 					= getManagedBean().getSelectedItemBeans();
 		if (selectedItemBeans == null) {
@@ -888,6 +968,17 @@ public class SupplierFinalizationBiddingBackingBean extends
 						shortlistedSuppliers = itemShortlistedSuppliersByZone
 								.get(selectedZoneId).get(bidItem.getBidItemId());
 				}
+				
+				// #28777 & #29729 - Start
+				if (itemNotShortlistedSuppliersByZone == null) {
+					itemNotShortlistedSuppliersByZone = new HashMap<Long, Map<Long, List<ScQtEvaluationResultDtl>>>();
+					getManagedBean().setItemNotShortlistedSuppliersByZone(itemNotShortlistedSuppliersByZone);
+				} else if (itemNotShortlistedSuppliersByZone.containsKey(selectedZoneId)) {
+					notShortlistedSuppliers = itemNotShortlistedSuppliersByZone.get(selectedZoneId).get(
+							bidItem.getBidItemId());
+				}
+				// #28777 & #29729 - End
+				
 				recommendedItems = getManagedBean().getScQtRecommendsByZone().get(selectedZoneId);
 			} else {
 				if (itemShortlistedSuppliers == null) {
@@ -899,6 +990,16 @@ public class SupplierFinalizationBiddingBackingBean extends
 					shortlistedSuppliers = itemShortlistedSuppliers
 											.get(bidItem.getBidItemId());					
 				}
+				
+				// #28777 & #29729 - Start
+				if (itemNotShortlistedSuppliers == null) {
+					itemNotShortlistedSuppliers = new HashMap<Long, List<ScQtEvaluationResultDtl>>();
+					getManagedBean().setItemNotShortlistedSuppliers(itemNotShortlistedSuppliers);
+				} else {
+					notShortlistedSuppliers = itemNotShortlistedSuppliers.get(bidItem.getBidItemId());
+				}
+				// #28777 & #29729 - End
+				
 				ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 				recommendedItems = scQtFinalization.getScQtRecommends();
 			}
@@ -909,11 +1010,13 @@ public class SupplierFinalizationBiddingBackingBean extends
 			reqDTO.setSpecZoneId(selectedZoneId);
 			reqDTO.setScBidSchedule(bidItem.getScBidSchedule());
 			reqDTO.setBidItemId(bidItem.getScRequestItem().getRequestNoteItemId());
+			reqDTO.setBidScheduleId(bidItem.getScBidSchedule().getBidScheduleId());// #28777&#29729
 			
 			BiddingResDTO resDTO = null;
-			if (CollectionUtils.isEmpty(shortlistedSuppliers)) {
+			if (CollectionUtils.isEmpty(shortlistedSuppliers) || CollectionUtils.isEmpty(notShortlistedSuppliers)) {// #28777&#29729
 				resDTO = biddingSO.retrieveShortlistedSuppliersForBidding(reqDTO);
 				shortlistedSuppliers = resDTO.getShortlistedSuppliers();
+				notShortlistedSuppliers = resDTO.getNotShortlistedSuppliers(); // #28777&#29729
 				
 				if (isZonal) {
 					Map<Long,List<ScQtEvaluationResultDtl>> shortlistedSuppliersMap = null;
@@ -933,9 +1036,25 @@ public class SupplierFinalizationBiddingBackingBean extends
 												shortlistedSuppliers);
 					itemShortlistedSuppliersByZone.put(
 							selectedZoneId, shortlistedSuppliersMap);	
+					
+					// #28777 & #29729 - Start
+					Map<Long, List<ScQtEvaluationResultDtl>> notShortlistedSuppliersMap = null;
+					notShortlistedSuppliersMap = itemNotShortlistedSuppliersByZone.get(selectedZoneId);
+					if (itemNotShortlistedSuppliersByZone.containsKey(selectedZoneId)) {
+						if (MapUtils.isEmpty(shortlistedSuppliersMap)) {
+							notShortlistedSuppliersMap = new HashMap<Long, List<ScQtEvaluationResultDtl>>();
+						}
+					} else {
+						notShortlistedSuppliersMap = new HashMap<Long, List<ScQtEvaluationResultDtl>>();
+					}
+					notShortlistedSuppliersMap.put(bidItem.getBidItemId(), notShortlistedSuppliers);
+					itemNotShortlistedSuppliersByZone.put(selectedZoneId, notShortlistedSuppliersMap);
+					// #28777 & #29729 - End
+					
 				} else {
 					itemShortlistedSuppliers.put(
 							bidItem.getBidItemId(), shortlistedSuppliers);
+					itemNotShortlistedSuppliers.put(bidItem.getBidItemId(), notShortlistedSuppliers);//#28777 & #29729 
 				}
 			}
 
@@ -957,61 +1076,98 @@ public class SupplierFinalizationBiddingBackingBean extends
 			
 			Map<Long,ScQtEvaluationResultDtl> supplierCodes 
 						= getSupplierCodes(shortlistedSuppliers);
+			// #28777 & #29729 - Start
+			Map<Long, ScQtEvaluationResultDtl> disSupplierCodes = getSupplierCodes(notShortlistedSuppliers);
+			// #28777 & #29729 - End
+			
 			
 			reqDTO.setBidItemId(bidItem.getBidItemId());
 			resDTO = biddingSO.retrieveLastBidPricesByItem(reqDTO);
 			
 			if (resDTO.isSuccessful()) {
-				List<BidItemBean> biddingItemPriceList = resDTO.getBidPriceItems();
-				if (CollectionUtils.isNotEmpty(biddingItemPriceList)) {
-					List<BigDecimal> nonBumiPriceList = new ArrayList<BigDecimal>();
-					
-					/*
-					 * 31101, 26247 - WIP Impact , added Disciplinary Action -start-
-					 */
-					settingDisciplinaryAction(null, biddingItemPriceList, false);
-					// 31101, 26247 -end-
-					
-					for (BidItemBean itemBean : biddingItemPriceList) {
-						SmSupplier smSupplier = itemBean.getSupplier();
-						itemBean.setSupplierName(smSupplier.getCompanyName());
-						
-						if (!itemBean.isBumi()) {
-							nonBumiPriceList.add(itemBean.getBidPriceTotal());
-						}		
-						if (MapUtils.isNotEmpty(supplierCodes) && 
-								supplierCodes.containsKey(smSupplier.getSupplierId())) {
-							ScQtEvaluationResultDtl shortlistedSupplier 
-											= supplierCodes.get(smSupplier.getSupplierId());
-							itemBean.setScQtProposal(shortlistedSupplier
-									.getQtEvaluationResult().getScQtProposal());
-							itemBean.setShortlistedSupplier(shortlistedSupplier);
-						}
-						// 26247, 31101 - start
-						SmSupplier supplier = itemBean.getSupplier();
-						if (smSupplier.getSupplierId().equals(awardedSupplierId) && !this.disabledQTProcess(supplier)) {
-						// 26247, 31101 - end
-							getManagedBean().setSelectedBidItemBean(itemBean);
-							selectedItemBeans.put(bidItem.getBidItemId(), itemBean);
-						}
-					}
-					
-					if (CollectionUtils.isNotEmpty(
-										nonBumiPriceList)) {
-						Collections.sort(nonBumiPriceList);
-						if (nonBumiPriceList.get(0) != null) {
-							getManagedBean().setLowestNonBumiOfferedPrice(
-									nonBumiPriceList.get(0));
-						}
-					}				
-				}
 				
-				getManagedBean().setBidItemSuppliers(biddingItemPriceList);
+				// #28777 & #29729 - Start
+				if (CollectionUtils.isNotEmpty(resDTO.getBidPriceItemsDisqualified())) {
+					processSelectBiddingItem(resDTO.getBidPriceItemsDisqualified(), disSupplierCodes,
+							null, selectedItemBeans, bidItem, true);
+				}
+				processSelectBiddingItem(resDTO.getBidPriceItems(), supplierCodes, awardedSupplierId,
+						selectedItemBeans, bidItem, false);
+				// #28777 & #29729 - End
+				
 			}
 		} finally {
 			biddingSO = null;
 		}
 	}
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method process select bidding item and set bid suppliers items
+	 * 
+	 * @param biddingItemPriceList
+	 * @param supplierCodes
+	 * @param awardedSupplierId
+	 * @param selectedItemBeans
+	 * @param bidItem
+	 * @param isDisqualified
+	 **/
+	private void processSelectBiddingItem(List<BidItemBean> biddingItemPriceList,
+			Map<Long, ScQtEvaluationResultDtl> supplierCodes, Long awardedSupplierId,
+			Map<Long, BidItemBean> selectedItemBeans, ScBidItem bidItem, boolean isDisqualified) {
+
+		if (CollectionUtils.isNotEmpty(biddingItemPriceList)) {
+			List<BigDecimal> nonBumiPriceList = new ArrayList<BigDecimal>();
+			
+			/*
+			 * 31101, 26247 - WIP Impact , added Disciplinary Action -start-
+			 */
+			settingDisciplinaryAction(null, biddingItemPriceList, false);
+			// 31101, 26247 -end-
+
+			for (BidItemBean itemBean : biddingItemPriceList) {
+				SmSupplier smSupplier = itemBean.getSupplier();
+				itemBean.setSupplierName(smSupplier.getCompanyName());
+				
+				if (!itemBean.isBumi()) {
+					nonBumiPriceList.add(itemBean.getBidPriceTotal());
+				}		
+				if (MapUtils.isNotEmpty(supplierCodes) && 
+						supplierCodes.containsKey(smSupplier.getSupplierId())) {
+					ScQtEvaluationResultDtl shortlistedSupplier 
+									= supplierCodes.get(smSupplier.getSupplierId());
+					itemBean.setScQtProposal(shortlistedSupplier
+							.getQtEvaluationResult().getScQtProposal());
+					itemBean.setShortlistedSupplier(shortlistedSupplier);
+				}
+				// 26247, 31101 - start
+				SmSupplier supplier = itemBean.getSupplier();
+				if (smSupplier.getSupplierId().equals(awardedSupplierId) && !this.disabledQTProcess(supplier)) {
+				// 26247, 31101 - end
+
+					getManagedBean().setSelectedBidItemBean(itemBean);
+					selectedItemBeans.put(bidItem.getBidItemId(), itemBean);
+				}
+			}
+			
+			if (CollectionUtils.isNotEmpty(
+								nonBumiPriceList)) {
+				Collections.sort(nonBumiPriceList);
+				if (nonBumiPriceList.get(0) != null) {
+					getManagedBean().setLowestNonBumiOfferedPrice(
+							nonBumiPriceList.get(0));
+				}
+			}				
+		}
+
+		if (isDisqualified) {
+			getManagedBean().setBidItemSuppliersDisqualified(biddingItemPriceList);
+		} else {
+			getManagedBean().setBidItemSuppliers(biddingItemPriceList);
+		}
+	}
+
+	// #28777 & #29729 - End
 	
 	/**
 	 * Award Supplier event
@@ -2165,6 +2321,55 @@ public class SupplierFinalizationBiddingBackingBean extends
     }
 	// #25638 - End.
 	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to set flag if have supplier branch deleted
+	 **/
+	private void setFlagForSupplierBranchDeleted() {
+	
+		ScQt scqt = this.getManagedBean().getScQt();
+		ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
+		ScWorkFlowStatus currentStatus = scQtFinalization.getCurrentStatus();
+		boolean statusRevision = currentStatus != null
+				&& QTStatusConst.SF_PENDING_BIDDING_FINALIZATION_REVISION.equals(currentStatus.getPmStatus()
+						.getStatusId());
+		List<ScQtRecommend> recommendedItems = scQtFinalization.getScQtRecommends();
+
+		if (statusRevision && CollectionUtils.isNotEmpty(recommendedItems)) {
+			setDetailForSupplierBranchDeleted(recommendedItems, scqt);
+		}
+	}
+
+	// #28777 & #29729 - End
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to check details if have supplier branch deleted
+	 * 
+	 * @param recommendedItems
+	 * @param scQt
+	 * 
+	 **/
+	private void setDetailForSupplierBranchDeleted(List<ScQtRecommend> recommendedItems, ScQt scqt) {
+		for (ScQtRecommend recommend : recommendedItems) {
+			TplSpecZoneDtl tplSpecZoneDtl = recommend.getTplSpecZoneDtl();
+			if (tplSpecZoneDtl != null) {
+				Long specZoneId = tplSpecZoneDtl.getSpecZoneId();
+				if (checkListZonesDisqualifiedSupplierBranchDeleted(scqt.getQtId(), specZoneId)
+						|| checkBiddingSupplierDeactivated(scqt.getQtId())) {
+					this.getManagedBean().setFlagBranchDeleted(true);
+				}
+			} else {
+				if (checkListDisqualifiedSupplierBranchDeleted(scqt.getQtId())
+						|| checkBiddingSupplierDeactivated(scqt.getQtId())) {
+					this.getManagedBean().setFlagBranchDeleted(true);
+				}
+			}
+		}
+	}
+
+	// #28777 & #29729 - End
+	
 	/**
 	 * To submit bidding endorsement
 	 * 
@@ -2188,6 +2393,12 @@ public class SupplierFinalizationBiddingBackingBean extends
 			checkSupplierAwardedRejectValidityExtension();
 		}
 		// #21692 - End
+		
+		//#28777#29729 - Start
+		if(checkFlagForSupplierBranchDeleted(outcome)){
+		    checkNeedSupplierIfHaveBranchDeleted(outcome);
+		}
+		//#28777#29729 - End
 		
 		List<ScQtMeeting> meetingList=this.getManagedBean().getMeetingList();
 		if(CollectionUtils.isNotEmpty(meetingList)){
@@ -2260,6 +2471,12 @@ public class SupplierFinalizationBiddingBackingBean extends
 			checkSupplierAwardedRejectValidityExtension();
 		}
 		// #21692 - End
+		
+		//#28777#29729 - Start
+		if(checkFlagForSupplierBranchDeleted(outCome)){
+		    checkNeedSupplierIfHaveBranchDeleted(outCome);
+		}
+		//#28777#29729 - End
 		
 		SuppFinalizationResDTO suppFinalizationResDTO = null;
 		suppFinalizationReqDTO.setOutcome(outCome);
@@ -2435,6 +2652,65 @@ public class SupplierFinalizationBiddingBackingBean extends
 		}
 	}
 	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to display validation revision for supplier branch deleted
+	 * 
+	 * @param specZone
+	 * @param scQtRecommend
+	 * @param supplierSelected
+	 * 
+	 **/
+	private void validationRevisionSupplierBranchDeleted(TplSpecZoneDtl specZone, ScQtRecommend scQtRecommend) {
+		boolean itemized = this.getManagedBean().isItemized();
+		if (this.getManagedBean().isFlagBranchDeleted()) {
+			if (itemized) {
+				validationRevisionItemized(specZone, scQtRecommend);
+			} else {
+				validationRevisionPackage(specZone);
+			}
+		}
+	}
+	
+	// #28777 & #29729 - End
+
+	// #28777 & #29729 - Start
+	/**
+	 * Method to display validation revision for itemized
+	 * 
+	 * @param specZone
+	 * @param scQtRecommend
+	 * 
+	 **/
+	private void validationRevisionItemized(TplSpecZoneDtl specZone, ScQtRecommend scQtRecommend) {
+		if (specZone != null) {
+			throw new EpException(MessageConst.ERROR_760628, new String[] { specZone.getZoneName(),
+					scQtRecommend.getRequestItem().getItemName() });
+		} else {
+			throw new EpException(MessageConst.ERROR_760629, new String[] { scQtRecommend.getRequestItem()
+					.getItemName() });
+		}
+	}
+	
+	// #28777 & #29729 - End
+
+	// #28777 & #29729 - Start
+	/**
+	 * Method to display validation revision for package
+	 * 
+	 * @param specZone
+	 * @param supplierSelected
+	 * 
+	 **/
+	private void validationRevisionPackage(TplSpecZoneDtl specZone) {
+		if (specZone != null) {
+			throw new EpException(MessageConst.ERROR_760626, new String[] { specZone.getZoneName() });
+		} else {
+			throw new EpException(MessageConst.ERROR_760627);
+		}
+	}
+	// #28777 & #29729 - End
+	
 	private void validateBiddingSubmission() {
 		// 26247, 38591 - start
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
@@ -2481,7 +2757,12 @@ public class SupplierFinalizationBiddingBackingBean extends
 					ScQtRecommend recommend = recommendMap.get(entry.getKey());
 					if (getManagedBean().isZonal()) {
 						setZoneAndTabIndexOnException(recommend.getTplSpecZoneDtl());
+						
+						validationRevisionSupplierBranchDeleted(recommend.getTplSpecZoneDtl(), recommend); //#28777&#29729
 					}
+					
+					validationRevisionSupplierBranchDeleted(recommend.getTplSpecZoneDtl(), recommend); //#28777&#29729
+					
 					if (getManagedBean().isItemized()) {
 						throw new EpException(MessageConst.ERROR_760377, new String[] { recommend.getRequestItem()
 								.getItemName() });
@@ -3081,12 +3362,471 @@ public class SupplierFinalizationBiddingBackingBean extends
 		this.checkIfLoggedinUserIsSecretary();
 		if (this.getManagedBean().isSecretaryUser()
 				&& this.getManagedBean().getTaskName().equalsIgnoreCase(SCProcessNameConst.FINALISE_FC_SELECTION)) {
+			
+			setFlagForSupplierBranchDeleted(); //#28777#29729
+			
 			RequestContext.getCurrentInstance().execute("submissionPopup.show()");
 		} else {
 			this.submitBiddingEndorsement(action);
 		}
 	}
 	// 25037 - end
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to display list of supplier branch had deleted or not with related
+	 * current QT
+	 * 
+	 * @param supplierId
+	 **/
+	public void showSupplierBranchList(Long supplierId) {
+
+		ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+
+		SupplierSearchReqDTO suppSearchDeletedReqDTO = new SupplierSearchReqDTO();
+		suppSearchDeletedReqDTO.setSupplierId(supplierId);
+		SupplierSearchResDTO suppSearchDeletedResDTO = supplierSearchSO
+				.retrieveSmSupplierBranchDeletedBySupplier(suppSearchDeletedReqDTO);
+		List<SmSupplierBranch> supplierBranchListDeleted = suppSearchDeletedResDTO.getSmSupplierBranchList();
+
+		for (SmSupplierBranch supplierBranch : supplierBranchListDeleted) {
+			int statusFlag = supplierBranch.getRecordStatusFlg();
+			if (statusFlag == DbValueConst.RECORD_STATUS_DELETED) {
+				supplierBranch.setQtRelatedSupplierBranch(DbValueConst.FLAG_YES);
+			} else {
+				supplierBranch.setQtRelatedSupplierBranch(DbValueConst.FLAG_NO);
+			}
+		}
+
+		List<SmSupplierBranch> wipSupplierBranchListDeleted = sourcingIntegrationSO.checkWIPSupplierBranchDeleted(supplierId);
+		for (SmSupplierBranch wipSupplierBranch : wipSupplierBranchListDeleted) {
+			int statusFlag = wipSupplierBranch.getRecordStatusFlg();
+			if (statusFlag == DbValueConst.RECORD_STATUS_ACTIVE) {
+				wipSupplierBranch.setQtRelatedSupplierBranch(DbValueConst.FLAG_YES);
+			} else {
+				wipSupplierBranch.setQtRelatedSupplierBranch(DbValueConst.FLAG_NO);
+			}
+		}
+
+		List<SmSupplierBranch> supplierBranchListActive = listSupplierBranchList(supplierId);
+		if (CollectionUtils.isNotEmpty(supplierBranchListDeleted)) {
+			supplierBranchListDeleted.addAll(supplierBranchListActive);
+			getManagedBean().setSupplierBranchList(supplierBranchListDeleted);
+		} else {
+			if (CollectionUtils.isNotEmpty(wipSupplierBranchListDeleted)) {
+				wipSupplierBranchListDeleted.addAll(supplierBranchListActive);
+				getManagedBean().setSupplierBranchList(wipSupplierBranchListDeleted);
+			} else {
+				if (CollectionUtils.isNotEmpty(supplierBranchListActive)) {
+					getManagedBean().setSupplierBranchList(supplierBranchListActive);
+				}
+			}
+		}
+		
+	}
+
+	// #28777 & #29729 - End
+
+	// #28777 & #29729 - Start
+	/**
+	 * Method to display list of supplier branch
+	 * 
+	 * @param supplierId
+	 * @return List<SmSupplierBranch>
+	 **/
+	private List<SmSupplierBranch> listSupplierBranchList(Long supplierId) {
+
+		ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+
+		SupplierSearchReqDTO suppSearchReqDTO = new SupplierSearchReqDTO();
+		suppSearchReqDTO.setSupplierId(supplierId);
+		SupplierSearchResDTO suppSearchResDTO = supplierSearchSO.retrieveSmSupplierBranchBySupplier(suppSearchReqDTO);
+		return suppSearchResDTO.getSmSupplierBranchList();
+	}
+
+	// #28777 & #29729 - End
+
+	// #28777 & #29729 - Start
+	/**
+	 * Method to display instruction when had supplier deleted branch
+	 * 
+	 * @param qtId
+	 * @return true or false
+	 **/
+	public Boolean checkInstructionSupplierBranchDeleted(Long qtId) {
+		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		List<TplSpecZoneDtl> zoneDetails = this.getManagedBean().getBiddingZoneDetails();
+		int zoneActiveIndex = this.getManagedBean().getZoneActiveIndex();
+		boolean isZonal = this.getManagedBean().getScQt().isZonal();
+
+		if (isZonal) {
+			if ((CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1 && zoneDetails.get(zoneActiveIndex)
+					.isBranchDeactivated()) || checkBiddingSupplierDeactivated(qtId)) {
+				return true;
+			}
+		} else {
+			if (sourcingIntegrationSO.checkInstructionDisqualifiedSupplierBranchDeleted(qtId)
+					|| checkBiddingSupplierDeactivated(qtId)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	// #28777 & #29729 - End
+
+	// #28777 & #29729 - Start
+	/**
+	 * Method to check supplier deactivated
+	 * 
+	 * @param qtId
+	 * @return true or false
+	 **/
+	public Boolean checkBiddingSupplierDeactivated(Long qtId) {
+		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+
+		ScBidSchedule scBidSchedule;
+		Long bidScheduleId = null;
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getBiddingItemList())) {
+			scBidSchedule = this.getManagedBean().getBiddingItemList().get(0).getScBidSchedule();
+			bidScheduleId = scBidSchedule.getBidScheduleId();
+		}
+
+		if (this.getManagedBean().getScheduledBid() != null) {
+			scBidSchedule = this.getManagedBean().getScheduledBid();
+			bidScheduleId = scBidSchedule.getBidScheduleId();
+		}
+
+		if (bidScheduleId != null && sourcingIntegrationSO.flagBiddingScBidSupplierDeactivated(qtId, bidScheduleId)) {
+			return true;
+		}
+		return false;
+	}
+
+	// #28777 & #29729 - End
+
+	// #28777 & #29729 - Start
+	/**
+	 * Method to check had disqualified supplier list
+	 * 
+	 * @param qtId
+	 * @return true or false
+	 **/
+	public Boolean checkListDisqualifiedSupplierBranchDeleted(Long qtId) {
+		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		List<TplSpecZoneDtl> zoneDetails = this.getManagedBean().getBiddingZoneDetails();
+		int zoneActiveIndex = this.getManagedBean().getZoneActiveIndex();
+		boolean isZonal = this.getManagedBean().getScQt().isZonal();
+
+		if (isZonal) {
+			if ((CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1 && zoneDetails.get(zoneActiveIndex)
+					.isBranchDeactivated()) || checkBiddingSupplierDeactivated(qtId)) {
+				return true;
+			}
+		} else {
+			if (sourcingIntegrationSO.checkListDisqualifiedSupplierBranchDeleted(qtId)
+					|| checkBiddingSupplierDeactivated(qtId)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	// #28777 & #29729 - End
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to check list had disqualified zones
+	 * 
+	 * @param qtId
+	 * @param specZoneId
+	 * @return true or false
+	 **/
+	public Boolean checkListZonesDisqualifiedSupplierBranchDeleted(Long qtId, Long specZoneId) {
+		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		return sourcingIntegrationSO.checkListZonesDisqualifiedSupplierBranchDeleted(qtId, specZoneId);
+	}
+
+	// #28777 & #29729 - End
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to check if have supplier branch deleted
+	 * 
+	 * @param outcome
+	 * @return true or false
+	 * 
+	 **/
+	private Boolean checkFlagForSupplierBranchDeleted(String outcome) {
+
+		boolean isEndorseOrSignOff = false;
+		if (outcome != null
+				&& (outcome.equals(BpmOutcomeConst.BPM_ENDORSE) || outcome.equals(BpmOutcomeConst.BPM_SIGNOFF))) {
+			isEndorseOrSignOff = true;
+		}
+
+		ScQt scqt = this.getManagedBean().getScQt();
+		ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
+		List<ScQtRecommend> recommendedItems = scQtFinalization.getScQtRecommends();
+
+		if (isEndorseOrSignOff && CollectionUtils.isNotEmpty(recommendedItems)
+				&& checkDetailForSupplierBranchDeleted(recommendedItems, scqt)) {
+			return true;
+		}
+		return false;
+	}
+
+	// #28777 & #29729 - End
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to check details if have supplier branch deleted
+	 * 
+	 * @param recommendedItems
+	 * @param scQt
+	 * 
+	 **/
+	private Boolean checkDetailForSupplierBranchDeleted(List<ScQtRecommend> recommendedItems, ScQt scqt) {
+
+		for (ScQtRecommend recommend : recommendedItems) {
+			TplSpecZoneDtl tplSpecZoneDtl = recommend.getTplSpecZoneDtl();
+			if (tplSpecZoneDtl != null) {
+				Long specZoneId = tplSpecZoneDtl.getSpecZoneId();
+				if (checkListZonesDisqualifiedSupplierBranchDeleted(scqt.getQtId(), specZoneId)
+						|| checkBiddingSupplierDeactivated(scqt.getQtId())) {
+					return true;
+				}
+			} else {
+				if (checkListDisqualifiedSupplierBranchDeleted(scqt.getQtId())
+						|| checkBiddingSupplierDeactivated(scqt.getQtId())) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	// #28777 & #29729 - End
+	
+	// #28777 & #29729 - Start
+	/**
+	 * Method to check outcome endorse/sign off and get recommend details
+	 * 
+	 * @param outcome
+	 * 
+	 **/
+	private void checkNeedSupplierIfHaveBranchDeleted(String outcome) {
+
+		boolean isEndorseOrSignOff = false;
+		if (outcome != null
+				&& (outcome.equals(BpmOutcomeConst.BPM_ENDORSE) || outcome.equals(BpmOutcomeConst.BPM_SIGNOFF))) {
+			isEndorseOrSignOff = true;
+		}
+
+		ScQt scQt = this.getManagedBean().getScQt();
+		ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
+		List<ScQtRecommend> recommendedItems = scQtFinalization.getScQtRecommends();
+
+		if (isEndorseOrSignOff && CollectionUtils.isNotEmpty(recommendedItems)) {
+			validationNeedSupplier(recommendedItems, scQt);
+		}
+	}
+
+	// #28777 & #29729 - End
+
+	// #28777 & #29729 - Start
+	/**
+	 * Method to set recommend details to do identifier data either true or
+	 * false
+	 * 
+	 * @param recommendedItems
+	 * @param scQt
+	 * 
+	 **/
+	private void validationNeedSupplier(List<ScQtRecommend> recommendedItems, ScQt scQt) {
+
+		Map<Long, ScQtRecommend> recommendMap = new HashMap<>();
+		Map<Long, Boolean> identifierMap = new HashMap<>();
+		boolean isItemized = this.getManagedBean().isItemized();
+
+		for (ScQtRecommend recommend : recommendedItems) {
+			Long recommendId = recommend.getQtRecommendId();
+			recommendMap.put(recommendId, recommend);
+			TplSpecZoneDtl tplSpecZoneDtl = recommend.getTplSpecZoneDtl();
+
+			if (!identifierMap.containsKey(recommendId)) {
+				identifierMap.put(recommendId, false);
+			}
+
+			for (ScQtRecommendDtl recommendDtl : recommend.getRecommendDtls()) {
+				Long supplierId = recommendDtl.getSupplier().getSupplierId();
+				if (checkIdentifierForSupplierBranchDeleted(tplSpecZoneDtl, recommendDtl, scQt, supplierId)
+						&& identifierMap.containsKey(recommendId)) {
+					identifierMap.put(recommendId, true);
+				}
+			}
+		}
+
+		if (isItemized) {
+			validationItemizedSupplier(recommendMap, identifierMap, scQt);
+		} else {
+			validationPackageSupplier(recommendMap, identifierMap, scQt);
+		}
+	}
+
+	// #28777 & #29729 - End
+
+	// #28777 & #29729 - Start
+	/**
+	 * Method to check flag identifier if have supplier branch deleted
+	 * 
+	 * @param tplSpecZoneDtl
+	 * @param recommendDtl
+	 * @param scQt
+	 * @param supplierId
+	 * 
+	 **/
+	private Boolean checkIdentifierForSupplierBranchDeleted(TplSpecZoneDtl tplSpecZoneDtl,
+			ScQtRecommendDtl recommendDtl, ScQt scQt, Long supplierId) {
+		int recordStatusFlg = recommendDtl.getRecordStatusFlg().intValue();
+
+		if (tplSpecZoneDtl != null) {
+			Long specZoneId = tplSpecZoneDtl.getSpecZoneId();
+			List<Long> qualifiedZoneSupplierList = retrieveZoneSuppliersIdsByQtIdAndSpecZoneId(true, scQt.getQtId(),
+					specZoneId);
+			for (Long qualifiedZoneSupplier : qualifiedZoneSupplierList) {
+				if (recordStatusFlg == DbValueConst.RECORD_STATUS_ACTIVE && qualifiedZoneSupplier.equals(supplierId)) {
+					return true;
+				}
+			}
+
+		} else {
+
+			List<Long> qualifiedSupplierList = retrieveSuppliersIdsByQtId(true, scQt.getQtId());
+			for (Long qualifiedSupplier : qualifiedSupplierList) {
+				if (recordStatusFlg == DbValueConst.RECORD_STATUS_ACTIVE && qualifiedSupplier.equals(supplierId)) {
+					return true;
+				}
+			}
+
+		}
+		return false;
+	}
+	
+	// #28777 & #29729 - End
+
+	// #28777 & #29729 - Start
+	/**
+	 * Method to retrieve qualified supplier to get suppliersId
+	 * 
+	 * @param isQualified
+	 * @param qtId
+	 * @return List<Long>
+	 **/
+	public List<Long> retrieveSuppliersIdsByQtId(boolean isQualified, Long qtId) {
+		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		return sourcingIntegrationSO.retrieveSuppliersIdsByQtId(isQualified, qtId);
+	}
+
+	// #28777 & #29729 - End
+
+	// #28777 & #29729 - Start
+	/**
+	 * Method to retrieve qualified supplier to get suppliersIds
+	 * 
+	 * @param isQualified
+	 * @param qtId
+	 * @param specZoneId
+	 * @return List<Long>
+	 **/
+	public List<Long> retrieveZoneSuppliersIdsByQtIdAndSpecZoneId(boolean isQualified, Long qtId, Long specZoneId) {
+		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		return sourcingIntegrationSO.retrieveZoneSuppliersIdsByQtIdAndSpecZoneId(isQualified, qtId, specZoneId);
+	}
+	
+	// #28777 & #29729 - End
+
+	// #28777 & #29729 - Start
+	/**
+	 * Method to display validation if no supplier for itemized
+	 * 
+	 * @param recommendMap
+	 * @param identifierMap
+	 * @param scQt
+	 * 
+	 * 
+	 **/
+	private void validationItemizedSupplier(Map<Long, ScQtRecommend> recommendMap, Map<Long, Boolean> identifierMap,
+			ScQt scQt) {
+
+		boolean foundFalse = false;
+		Long falseKey = null;
+
+		for (Map.Entry<Long, Boolean> entry : identifierMap.entrySet()) {
+			if (!entry.getValue()) {
+				foundFalse = true;
+				falseKey = entry.getKey();
+				break;
+			}
+		}
+
+		if (foundFalse) {
+			ScQtRecommend recommend = recommendMap.get(falseKey);
+			if (scQt.isZonal()) {
+				setZoneAndTabIndexOnException(recommend.getTplSpecZoneDtl());
+				throw new EpException(MessageConst.ERROR_760623, new String[] {
+						recommend.getTplSpecZoneDtl().getZoneName(), recommend.getRequestItem().getItemName() });
+			} else {
+				navigateToBiddingSummaryTab();
+				throw new EpException(MessageConst.ERROR_760622, new String[] { recommend.getRequestItem()
+						.getItemName() });
+			}
+		}
+	}
+
+	// #28777 & #29729 - End
+
+	// #28777 & #29729 - Start
+	/**
+	 * Method to display validation if no supplier for package
+	 * 
+	 * @param recommendMap
+	 * @param identifierMap
+	 * @param scQt
+	 * 
+	 **/
+	private void validationPackageSupplier(Map<Long, ScQtRecommend> recommendMap, Map<Long, Boolean> identifierMap,
+			ScQt scQt) {
+
+		for (Map.Entry<Long, Boolean> entry : identifierMap.entrySet()) {
+			if (!entry.getValue()) {
+				ScQtRecommend recommend = recommendMap.get(entry.getKey());
+				if (scQt.isZonal()) {
+					setZoneAndTabIndexOnException(recommend.getTplSpecZoneDtl());
+					throw new EpException(MessageConst.ERROR_760625, new String[] { recommend.getTplSpecZoneDtl()
+							.getZoneName() });
+				} else {
+					navigateToBiddingSummaryTab();
+					throw new EpException(MessageConst.ERROR_760624);
+				}
+			}
+		}
+	}
+
+	// #28777 & #29729 - End
+
 
 	// #21692 - Start
 	public boolean supplierRejectEPV(ScQtProposal proposal) {

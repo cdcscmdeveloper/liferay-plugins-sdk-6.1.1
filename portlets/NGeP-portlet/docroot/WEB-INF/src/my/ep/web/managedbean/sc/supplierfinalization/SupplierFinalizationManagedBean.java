@@ -36,6 +36,7 @@ import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationMeetingBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -257,6 +258,13 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean haveSupplierRejection;
 	// #11134 - End
 	
+	// #28777 & #29729 - Start
+	private List<SmSupplierBranch> supplierBranchList;
+	private IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersByRecommendType;
+	private IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersByEvalStage;	
+	private boolean flagBranchDeleted = false;
+	// #28777 & #29729 - End
+	
 	// 28834 starts
 	private boolean disableBfButton;
 	private boolean ktReportGenerated;
@@ -274,7 +282,9 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	// 26247 - start
 	private List<String> disabledSupplierIds;
 	// 26247 - end
-	
+
+	private boolean isReviseBriefMsg = Boolean.FALSE; // #39077
+
 	// #35320 - Start
 	private String selectedSupplierOfferedPrice;
 	// #35320 - End
@@ -2167,6 +2177,43 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 	// #11134 -end-
 	
+	// #28777 & #29729 - Start
+	public List<SmSupplierBranch> getSupplierBranchList() {
+		return supplierBranchList;
+	}
+
+	public void setSupplierBranchList(List<SmSupplierBranch> supplierBranchList) {
+		this.supplierBranchList = supplierBranchList;
+	}
+
+	public IPagingDataModel<ScQtEvaluationResultDtl> getDisqualifiedSuppliersByRecommendType() {
+		return disqualifiedSuppliersByRecommendType;
+	}
+
+	public void setDisqualifiedSuppliersByRecommendType(
+			IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersByRecommendType) {
+		this.disqualifiedSuppliersByRecommendType = disqualifiedSuppliersByRecommendType;
+	}
+
+	public IPagingDataModel<ScQtEvaluationResultDtl> getDisqualifiedSuppliersByEvalStage() {
+		return disqualifiedSuppliersByEvalStage;
+	}
+
+	public void setDisqualifiedSuppliersByEvalStage(
+			IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersByEvalStage) {
+		this.disqualifiedSuppliersByEvalStage = disqualifiedSuppliersByEvalStage;
+	}
+	
+	public boolean isFlagBranchDeleted() {
+		return flagBranchDeleted;
+	}
+
+	public void setFlagBranchDeleted(boolean flagBranchDeleted) {
+		this.flagBranchDeleted = flagBranchDeleted;
+	}
+	
+	// #28777 & #29729 - End
+	
 	// 28834 start
 	public boolean isDisableBfButton() {
 		return disableBfButton;
@@ -2303,19 +2350,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.lastSelectedItem = lastSelectedItem;
 	}
 	// 35157, #26247 - end
-	
-	//#28784 - Start
-	public boolean isDemoReq() {
-		return isDemoReq;
-	}
-	//#28784 - End
 
-	//#28784 - Start
-	public void setDemoReq(boolean isDemoReq) {
-		this.isDemoReq = isDemoReq;
-	}
-	//#28784 - End
-	
 	// 26247 - start
 	public List<String> getDisabledSupplierIds() {
 		return disabledSupplierIds;
@@ -2325,23 +2360,51 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.disabledSupplierIds = disabledSupplierIds;
 	}
 	// 26247 - end
-	
-	//#21692 - Start
+
+	// #28784 - Start
+	public boolean isDemoReq() {
+		return isDemoReq;
+	}
+
+	public void setDemoReq(boolean isDemoReq) {
+		this.isDemoReq = isDemoReq;
+	}
+	// #28784 - End
+
+	// #21692 - Start
 	public boolean isAllSupplierDisagreeEPV() {
 		return allSupplierDisagreeEPV;
 	}
+
 	public void setAllSupplierDisagreeEPV(boolean allSupplierDisagreeEPV) {
 		this.allSupplierDisagreeEPV = allSupplierDisagreeEPV;
 	}
-	//#21692 - End
-	
+	// #21692 - End
+
+	// 39077 -start-
+	/**
+	 * @return the isReviseBriefMsg
+	 */
+	public boolean isReviseBriefMsg() {
+		return isReviseBriefMsg;
+	}
+
+	/**
+	 * @param isReviseBriefMsg
+	 *            the isReviseBriefMsg to set
+	 */
+	public void setReviseBriefMsg(boolean isReviseBriefMsg) {
+		this.isReviseBriefMsg = isReviseBriefMsg;
+	}
+	// 39077 -end-
+
 	// #35320 - Start
 	public String getSelectedSupplierOfferedPrice() {
 		return selectedSupplierOfferedPrice;
 	}
 
-	public void setSelectedSupplierOfferedPrice(
-			String selectedSupplierOfferedPrice) {
+	public void setSelectedSupplierOfferedPrice(String selectedSupplierOfferedPrice) {
 		this.selectedSupplierOfferedPrice = selectedSupplierOfferedPrice;
-	}// #35320 - End	
+	}
+	// #35320 - End	
 }
