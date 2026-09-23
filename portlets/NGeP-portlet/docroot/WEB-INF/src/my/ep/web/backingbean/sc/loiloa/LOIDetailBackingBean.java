@@ -469,9 +469,8 @@ public class LOIDetailBackingBean extends
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes().getUserLocale());
 		getManagedBean().setLoiSupplierProposalspec(message);
-					Long statusId = 62707L;
-					ScLoi scLoi = getManagedBean().getScLoi();  //62707L
-					 statusId =scLoi.getScWorkFlowStatus().getPmStatus().getStatusId();//20230711@Asyrafhaziq-SQUBE Bug Minor #16
+					ScLoi scLoi = getManagedBean().getScLoi();
+					Long statusId =scLoi.getScWorkFlowStatus().getPmStatus().getStatusId();//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 		isSupplierEPVStatusRejected(scLoi);// #21692
 		getSupplierRejectProposalValidityExtensionNotification(scLoi);// #21692
 		
