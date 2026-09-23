@@ -253,8 +253,10 @@ import org.primefaces.model.StreamedContent;
 
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.util.PortalUtil;
-// #RUU
+// #RUU Start
 import my.ep.persistence.entity.py.PyBillDtl;
+import my.ep.web.vo.SmOverlapCategoryVO;
+//#RUU End
 
 @ManagedBean(name = "backingBean")
 @RequestScoped
@@ -20364,11 +20366,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			regDetails = "MOF Registration Fee (Add Category)";
 			proDetails = "MOF Processing Fee (Add Category)";
 		} else if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)){
-			regDetails = "MOF Registration Fee (Bumiputera Status Application Application)";
 			bumiDetails = "Bumiputra Certification Fee";
 			proDetails = "MOF Processing Fee (Bumiputera Status Application Application)";
 		} else if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
-			regDetails = "MOF Registration Fee (Update MOF Profile)";
 			proDetails = "MOF Processing Fee (Update MOF Profile)";
 		} else if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
 			regDetails = "MOF Registration Fee (Renewal)";
@@ -20383,11 +20383,14 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		getManagedBean().setGstPercentageLabels(
 				SmCommonUtil.getMessage("lbl.sm.gst.percent", new String[] { getManagedBean().getGstAmount().toString() }));
 		
-		SmPaymentDetailsVO regPaymentVO = new SmPaymentDetailsVO();
-		regPaymentVO.setDetails(regDetails);
-		regPaymentVO.setPrice(new BigDecimal(600));
-		regPaymentVO.setTotalAmount(regPaymentVO.getPrice());	
-		getManagedBean().getPaymentDetailsVOList().add(regPaymentVO);
+		if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+				|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
+			SmPaymentDetailsVO regPaymentVO = new SmPaymentDetailsVO();
+			regPaymentVO.setDetails(regDetails);
+			regPaymentVO.setPrice(new BigDecimal(600));
+			regPaymentVO.setTotalAmount(regPaymentVO.getPrice());
+			getManagedBean().getPaymentDetailsVOList().add(regPaymentVO);
+		}
 
 		SmPaymentDetailsVO proPaymentVO = new SmPaymentDetailsVO();
 		proPaymentVO.setDetails(proDetails);
@@ -20407,38 +20410,38 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		
 		countNormalCatCode();
 		if (getManagedBean().getNormalCodeCount() > 0) {
-			SmPaymentDetailsVO nPaymentVO = new SmPaymentDetailsVO();
-			nPaymentVO = new SmPaymentDetailsVO();
-			nPaymentVO.setDetails("Normal Category Fee");
-			nPaymentVO.setPrice(new BigDecimal(200));
-			nPaymentVO.setQuantity(getManagedBean().getNormalCodeCount());
-			nPaymentVO.setHasQuantity(true);
-			nPaymentVO.setTotalAmount(nPaymentVO.getPrice().multiply(BigDecimal.valueOf(getManagedBean().getNormalCodeCount())));
-			getManagedBean().getPaymentDetailsVOList().add(nPaymentVO);
+			SmPaymentDetailsVO normalPaymentVO = new SmPaymentDetailsVO();
+			normalPaymentVO = new SmPaymentDetailsVO();
+			normalPaymentVO.setDetails("Normal Category Fee");
+			normalPaymentVO.setPrice(new BigDecimal(200));
+			normalPaymentVO.setQuantity(getManagedBean().getNormalCodeCount());
+			normalPaymentVO.setHasQuantity(true);
+			normalPaymentVO.setTotalAmount(normalPaymentVO.getPrice().multiply(BigDecimal.valueOf(getManagedBean().getNormalCodeCount())));
+			getManagedBean().getPaymentDetailsVOList().add(normalPaymentVO);
 		}
 		
 		countSpecialCatCode();
 		if (getManagedBean().getSpecialCodeCount() > 0) {
-			SmPaymentDetailsVO sPaymentVO = new SmPaymentDetailsVO();
-			sPaymentVO = new SmPaymentDetailsVO();
-			sPaymentVO.setDetails("Special Category Fee");
-			sPaymentVO.setPrice(new BigDecimal(1200));
-			sPaymentVO.setQuantity(getManagedBean().getSpecialCodeCount());
-			sPaymentVO.setHasQuantity(true);
-			sPaymentVO.setTotalAmount(sPaymentVO.getPrice().multiply(BigDecimal.valueOf(getManagedBean().getSpecialCodeCount())));
-			getManagedBean().getPaymentDetailsVOList().add(sPaymentVO);
+			SmPaymentDetailsVO specialPaymentVO = new SmPaymentDetailsVO();
+			specialPaymentVO = new SmPaymentDetailsVO();
+			specialPaymentVO.setDetails("Special Category Fee");
+			specialPaymentVO.setPrice(new BigDecimal(1200));
+			specialPaymentVO.setQuantity(getManagedBean().getSpecialCodeCount());
+			specialPaymentVO.setHasQuantity(true);
+			specialPaymentVO.setTotalAmount(specialPaymentVO.getPrice().multiply(BigDecimal.valueOf(getManagedBean().getSpecialCodeCount())));
+			getManagedBean().getPaymentDetailsVOList().add(specialPaymentVO);
 		}
 		
 		countCancelledCatCode();
 		if (getManagedBean().getCancelledCount() > 0) {
-			SmPaymentDetailsVO cPaymentVO = new SmPaymentDetailsVO();
-			cPaymentVO = new SmPaymentDetailsVO();
-			cPaymentVO.setDetails("Re-Add Category Fee");
-			cPaymentVO.setPrice(new BigDecimal(1000));
-			cPaymentVO.setQuantity(getManagedBean().getCancelledCount());
-			cPaymentVO.setHasQuantity(true);
-			cPaymentVO.setTotalAmount(cPaymentVO.getPrice().multiply(BigDecimal.valueOf(getManagedBean().getCancelledCount())));
-			getManagedBean().getPaymentDetailsVOList().add(cPaymentVO);
+			SmPaymentDetailsVO cancelPaymentVO = new SmPaymentDetailsVO();
+			cancelPaymentVO = new SmPaymentDetailsVO();
+			cancelPaymentVO.setDetails("Re-Add Category Fee");
+			cancelPaymentVO.setPrice(new BigDecimal(1000));
+			cancelPaymentVO.setQuantity(getManagedBean().getCancelledCount());
+			cancelPaymentVO.setHasQuantity(true);
+			cancelPaymentVO.setTotalAmount(cancelPaymentVO.getPrice().multiply(BigDecimal.valueOf(getManagedBean().getCancelledCount())));
+			getManagedBean().getPaymentDetailsVOList().add(cancelPaymentVO);
 		}
 		
 		if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)){
@@ -20454,6 +20457,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			getManagedBean().setTotalPaymentAmount(
 					getManagedBean().getTotalPaymentAmount().add(
 							paymentDetailsVO.getTotalAmount()));
+		}
+		
+		getOverlapFee();
+		if(getManagedBean().getOverlapPrice().compareTo(BigDecimal.ZERO) > 0){
+			SmPaymentDetailsVO overlapPaymentVO = new SmPaymentDetailsVO();
+			overlapPaymentVO.setDetails("Overlapping Fee");
+			overlapPaymentVO.setPrice(getManagedBean().getOverlapPrice());
+			overlapPaymentVO.setTotalAmount(overlapPaymentVO.getPrice());	
+			getManagedBean().getPaymentDetailsVOList().add(overlapPaymentVO);
 		}
 	}
 	
@@ -20532,7 +20544,58 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			}
 		}
 	}
+	
+	private void getOverlapFee() {
+		SmOverlapCategoryVO overlapVO = SmApplicationUtil.getOverlapCategoryVO(getManagedBean().getSmAppl());
 
+		int normal = 0;
+		int special = 0;
+
+		if (overlapVO != null) {
+			List<SmBulkApplOverlapCatVO> categories = overlapVO.getOverlapCategoryVOList();
+
+			if (categories == null || categories.isEmpty()) {
+				categories = overlapVO.getOverlapCategoryMalayList();
+			}
+
+			if (categories != null) {
+				countOverlapCatCode(categories,normal,special);
+			}
+		}
+
+		BigDecimal normalFee = BigDecimal.valueOf(1000L).multiply(BigDecimal.valueOf(normal));
+		BigDecimal specialFee = BigDecimal.valueOf(5000L).multiply(BigDecimal.valueOf(special));
+		BigDecimal totalOverlapFee = normalFee.add(specialFee);
+		getManagedBean().setOverlapPrice(totalOverlapFee);
+	}
+	
+	// count price for overlapped code and person
+	private void countOverlapCatCode(List<SmBulkApplOverlapCatVO> categories, int normal, int special) {
+		for (SmBulkApplOverlapCatVO category : categories) {
+			String code = category.getCategoryCode();
+			boolean isSpecial = isSpecialCategory(code, getManagedBean().getSmAppl());
+
+			for (SmBulkApplOverlapCatVO detail : category.getOverlapInfoList()) {
+				if(isSpecial){
+					special = special + 1;
+				} else {
+					normal = normal + 1;
+				}
+			}
+		}
+	}
+
+	// Check overlapped category is special or not
+	private boolean isSpecialCategory(String categoryCode, SmAppl appl) {
+		boolean isSpecial = false;
+	    for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
+	        if (categoryCode.equals(CustomUtils.getCategoryCode(cat))) {
+	        	isSpecial =  cat.isSpecialCategory();
+	        }
+	    }
+	    return isSpecial;
+	}
+	
 	// Bill for additonal Fee
 	private void createCatPyBill(ReviewApplicationReqDTO reqDTO) {
 		List<PyBillDtl> catPyBillList = new ArrayList<PyBillDtl>();

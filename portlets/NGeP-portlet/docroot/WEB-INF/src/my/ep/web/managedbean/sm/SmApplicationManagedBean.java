@@ -704,6 +704,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private int normalCodeCount;
 	private int specialCodeCount;
 	private int cancelledCount;
+	private BigDecimal overlapPrice;
 	// #RUU End
 
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
@@ -4983,6 +4984,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setCancelledCount(int cancelledCount) {
 		this.cancelledCount = cancelledCount;
+	}
+
+	public BigDecimal getOverlapPrice() {
+		return overlapPrice;
+	}
+
+	public void setOverlapPrice(BigDecimal overlapPrice) {
+		this.overlapPrice = overlapPrice;
 	}
 	// #RUU End
 }
