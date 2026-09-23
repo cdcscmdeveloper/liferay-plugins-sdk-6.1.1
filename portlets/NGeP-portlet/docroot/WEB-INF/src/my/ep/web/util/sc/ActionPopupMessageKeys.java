@@ -13,11 +13,11 @@ import java.util.ResourceBundle;
  */
 public class ActionPopupMessageKeys {
 
-    /** Action â†’ title key */
+    /** Action â† title key */
     private static final Map<String, String> TITLE_KEYS =
             new HashMap<String, String>();
 
-    /** Action â†’ content key */
+    /** Action â† content key */
     private static final Map<String, String> CONTENT_KEYS =
             new HashMap<String, String>();
     
@@ -50,7 +50,7 @@ public class ActionPopupMessageKeys {
         TITLE_KEYS.put("APPROVELOA", "lbl.sc.popup.confirm.loa.approve.header");
         CONTENT_KEYS.put("APPROVELOA", "lbl.sc.popup.confirm.loa.approve.content");
         
-     // ===== SUBMISSIONLOA =====
+     // ===== SUBMISSIONLOI =====
         TITLE_KEYS.put("SUBMISSIONLOI", "lbl.sc.popup.confirm.loi.submission.header");
         CONTENT_KEYS.put("SUBMISSIONLOI", "lbl.sc.popup.confirm.loi.submission.content");
         
