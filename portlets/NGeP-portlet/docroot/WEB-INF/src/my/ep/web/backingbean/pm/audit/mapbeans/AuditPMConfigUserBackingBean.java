@@ -507,11 +507,12 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 	}
 	
 	/**
+	 * This method is to mapping value to AuditPMSPDTO to be used in Stored Procedure
+	 * 
 	 * @param fieldLabelId
 	 * @param oldValue
 	 * @param newValue
 	 * @param actionType
-	 * This method is to mapping value to AuditPMSPDTO to be used in Stored Procedure
 	 */
 	private void detailObj(BigInteger fieldLabelId, String oldValue, String newValue, String actionType) {
 		dtlObj = new AuditPMSPDTO();
@@ -540,12 +541,12 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 	}
 	
 	/**
+	 * This method is to mapping value to AuditPMSPDTO to be used in Stored Procedure with added info Context Value and Context Type
+	 * 
 	 * @param fieldLabelId
 	 * @param oldValue
 	 * @param newValue
 	 * @param actionType
-	 *    This method is to mapping value to AuditPMSPDTO to be used in
-	 *     Stored Procedure with added info Context Value and Context Type
 	 */
 	private void detailObjContext(BigInteger fieldLabelId, String oldValue, String newValue, String actionType,
 			String contextValue, String contextType) {
