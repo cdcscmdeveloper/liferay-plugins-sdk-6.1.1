@@ -38,7 +38,7 @@
 					<c:choose>
 						<c:when
 							test="#{isEditableStatus and empty directLOABackingBean.managedBean.taskId and !directLOABackingBean.managedBean.readOnly}">
-							<p:commandButton value="#{lbl['lbl.btn.submit']} ++333@#$"
+							<p:commandButton value="#{lbl['lbl.btn.submit']}"
 								action="#{directLOABackingBean.submitAction}"
 								process="@form" update="@form" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" />
@@ -58,12 +58,12 @@
 									</ui:remove>
 									<h:panelGroup rendered="#{bpmAction == 'REVISE'}">
 										<c:when test="#{isPendingVerification}">
-											<p:commandButton value="#{lbl['lbl.btn.supplierAction']} **%%%5531"
+											<p:commandButton value="#{lbl['lbl.btn.supplierAction']}"
 												rendered="#{isPendingVerification}"
 												onstart="blockWidget.show();cd.show();"
 												oncomplete="blockWidget.hide();" />
 											<p:confirmDialog
-												message="#{lbl['lbl.sc.loa.supplier.reviseDocument']} + 3765***"
+												message="#{lbl['lbl.sc.loa.supplier.reviseDocument']}"
 												header="#{lbl['lbl.sc.dialog.cofirm.header']}"
 												severity="alert" widgetVar="cd">
 												<div class="ppRightBtn">
@@ -83,7 +83,7 @@
 											Enhancement #21694 TO CATER BUG REVISE BUTTON NOT APPEAR AT APPROVAL START
 										</ui:remove>
 										<c:otherwise>
-											<p:commandButton value="#{lbl[buttonLabel]} +6661"
+											<p:commandButton value="#{lbl[buttonLabel]}"
 												styleClass="ui-button" onstart="blockWidget.show();"
 												rendered="#{!isPendingVerification}"
 												oncomplete="blockWidget.hide();"
@@ -99,7 +99,7 @@
 								<!-- 20190405@asyrafhaziq - CR(25062)- Start -->
 								<!-- changes the calling action   -->
 								<h:panelGroup rendered="#{bpmAction !='REVISE'}">
-									<p:commandButton value="#{lbl[buttonLabel]} +00983"
+									<p:commandButton value="#{lbl[buttonLabel]}"
 									styleClass="ui-button" onstart="blockWidget.show();"
 									rendered="#{!isPendingVerification}"
 									oncomplete="blockWidget.hide();"
@@ -107,7 +107,7 @@
 									partialSubmit="true" process="#{isCancelNReject ? '@this' : '@form'}"
 									update="#{isCancelNReject ? '@this' : '@form'}" />
 
-									<p:commandButton value="#{lbl[buttonLabel]} +12312N"
+									<p:commandButton value="#{lbl[buttonLabel]}"
 										styleClass="ui-button" onstart="blockWidget.show();"
 										rendered="#{isPendingVerification}"
 										oncomplete="blockWidget.hide();"
