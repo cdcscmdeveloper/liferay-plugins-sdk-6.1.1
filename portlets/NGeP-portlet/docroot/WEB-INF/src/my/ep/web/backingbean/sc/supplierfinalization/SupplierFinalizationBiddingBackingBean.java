@@ -3230,9 +3230,10 @@ public class SupplierFinalizationBiddingBackingBean extends
 			// #25651 - Start
 			reqDTO.setDocumentCategory(ParameterConst.DOCUMENT_CATEGORY_BRIEFING_PAPER);
 			reqDTO.setExcludedDocNames(SupplierFinalizationBiddingManagedBean.getDirectdownloaddocdefkeys());
-			List<ScQtFinalizationReportDetail> finalizationReportsDetail = qtSuppFinalizationSO.retriveFinalizationReportDetail(reqDTO).getScQtFinalizationReportDetails();
+			List<ScQtFinalizationReportDetail> finalizationReportsDetail = qtSuppFinalizationSO
+					.retriveFinalizationReportDetail(reqDTO).getScQtFinalizationReportDetails();
 			populateEvaluationBreifingReportDetails(finalizationReportsDetail, getManagedBean().getScQt());
-			this.getManagedBean().setScQtFinalizationReportDetail(finalizationReportsDetail);
+			populateBriefingReportDetails(finalizationReportsDetail);
 			// #25651 - End
 			
 		} finally {
@@ -3500,7 +3501,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 */
 	public List<Object> getCombinedEvaluationReportList() {
 		
-		List<Object> combinedReportList = new ArrayList<Object>();
+		List<Object> combinedReportList = new ArrayList<>();
 
 		List<ScQtFinalizationReport> reports = getManagedBean().getDocumentList();
 		List<ScQtFinalizationReportDetail> details = getManagedBean().getDocumentDetailList();
@@ -3601,7 +3602,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 * @return ScAttachment
 	 */
 	private ScAttachment generateDocumentAttachment(String docDefinitionKey, String fileReportName) throws Exception {
-		debugLogger("generateDocumentAttachment");
 		
 		ScAttachment reportAttachment = new ScQtFinalizationReportDetailAttachment();
 		ScQt scQt = getManagedBean().getScQt();
@@ -3690,8 +3690,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	private List<ScAttachment> getScqtFinalizationReportDetails() throws Exception {
 
 		List<ScAttachment> attachments = new ArrayList<>();
-		List<ScQtFinalizationReportDetail> scQtFinalizationReportDetails = getManagedBean()
-				.getEvaluationReportDetailList();
+		List<ScQtFinalizationReportDetail> scQtFinalizationReportDetails = getManagedBean().getDocumentDetailList();
 		List<ScQtFinalizationReportDetailAttachment> scAttachmentsDetail = new ArrayList<>();
 
 		if (CollectionUtils.isNotEmpty(scQtFinalizationReportDetails)) {
