@@ -48,7 +48,7 @@
 			<ui:decorate
 				template="/WEB-INF/facelets/templates/claim_template.xhtml">
 				<ui:define name="outComeSection">
-					<p:commandButton value="#{lbl['lbl.btn.save']} N22222" process="@all"
+					<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
 						partialSubmit="true" update="@form" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
 						rendered="#{isPendingNegotiationStatus}"
@@ -59,7 +59,7 @@
 						<ui:param name="buttonLabel"
 							value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 
-						<p:commandButton value="#{lbl[buttonLabel]} NNNN1111"
+						<p:commandButton value="#{lbl[buttonLabel]}"
 							styleClass="ui-button"
 							partialSubmit="true" onstart="blockWidget.show();"
 							oncomplete="blockWidget.hide(); popupConfirmInfoDlg.show();" 
@@ -181,7 +181,7 @@
 			</table>
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.yes']} mmm333"
+			<p:commandButton value="#{lbl['lbl.btn.yes']}"
 				oncomplete="reviseLoiDlgs.hide();"
 				action="#{lOIDetailBackingBean.reviseAction()}" />
 			<p:commandButton value="#{lbl['lbl.btn.no']}"

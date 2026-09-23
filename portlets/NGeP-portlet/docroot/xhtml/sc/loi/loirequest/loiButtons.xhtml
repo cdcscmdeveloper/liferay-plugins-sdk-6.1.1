@@ -67,7 +67,7 @@
 				<ui:param name="bpmBtnAction" value="SUBMISSIONLOI" />
 				
 				<ui:param name="popupMsgActionBtn" value="#{lOIDetailBackingBean.submitAction()}" />
-				<p:commandButton value="#{lbl['lbl.btn.submit']} ++LOI sumit"
+				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt and lOIDetailBackingBean.managedBean.ableToSubmitLOI}"
 					process="@form"
 					actionListener="#{lOIDetailBackingBean.managedBean.prepareAction(bpmBtnAction)}"
@@ -115,7 +115,7 @@
 							<ui:param name="bpmBtnAction" value="#{bpmAction eq 'SUBMIT' ? 'SUBMISSIONLOI' : (bpmAction eq 'APPROVE' ? 'APPROVELOI' : null)}"/>
 							<ui:param name="popupMsgActionBtn" value="#{lOIDetailBackingBean.validateNegoDecisionAction(empty bpmAction ? 'SUBMIT' : bpmAction)}" />						
 							
-							<p:commandButton value="#{lbl[buttonLabel]} +3235 + #{empty bpmAction ? 'SUBMIT' : bpmAction}"
+							<p:commandButton value="#{lbl[buttonLabel]}"
 								rendered="#{validityDaysExpiredQt and (bpmAction == 'APPROVE' or bpmAction == 'SUBMIT') and lOIDetailBackingBean.managedBean.ableToSubmitLOI}"
 								onstart="blockWidget.show();"
 								styleClass="ui-button"
