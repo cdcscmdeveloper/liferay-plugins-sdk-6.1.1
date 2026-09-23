@@ -3014,8 +3014,10 @@ public class LOIDetailBackingBean extends
 	 *            the digi sign
 	 * @return AwardSupplierResDTO
 	 */
+	/*#34444 Start*/
 	public AwardSupplierResDTO updateBPMTask(String outcome,
 			PmDigiSign digiSign) {
+		/*#34444 End*/
 		debugLogger("updateBPMTask");
 		AwardSupplierResDTO awardSupplierResDTO = null;
 		try {
@@ -3171,7 +3173,9 @@ public class LOIDetailBackingBean extends
 						scLoi.getLoiNo(), Boolean.TRUE);
 				}
 			}
+			/*#34444 Start*/
 			return awardSupplierResDTO;
+			/*#34444 End*/
 		} finally {
 			// iqtAwardSO = null;
 		}
@@ -3242,13 +3246,6 @@ public class LOIDetailBackingBean extends
 			RequestContext.getCurrentInstance().execute("spki_dlg.show();");
 			RequestContext.getCurrentInstance().execute("blockWidget.hide();");
 		} else {
-			//#34444 - Start
-			//getManagedBean().setBtnAction("SUBMISSIONLOI");
-			//getManagedBean().prepareAction("SUBMISSIONLOI");
-//			getManagedBean().setAction(outcome);
-//			RequestContext.getCurrentInstance().execute("popupConfirmInfoDlg.show();");
-			//RequestContext.getCurrentInstance().execute("blockWidget.hide();");
-			//#34444 - End
 			updateBPMTask(outcome, null);
 		}
 	}
@@ -3401,8 +3398,6 @@ public class LOIDetailBackingBean extends
 	            throw new EpException(MessageConst.ERR_775152);
 	        }
 	        /*#34444 - Start*/
-			//RequestContext.getCurrentInstance().execute("reviseLoiDlgs.show()");
-			//return;
 	        reviseAction();
 	        /*#34444 - End*/
 		}
@@ -7889,16 +7884,18 @@ public class LOIDetailBackingBean extends
 	 */
 	public void validateNegoDecisionAction(String outcome) {
 		try {
+			/*#34444 Start*/
 			System.out.println("Received = " + outcome);
 			if (outcome == null) {
 				throw new EpException("TEST TEST TEST ::::: ");
 			}
-			
+			this.getManagedBean().setAction(outcome);
 			log.info("validateNegoDecisionAction(String outcome ::>:: " + outcome);
+			/*#34444 End*/
 			ScLoi scLoi = getManagedBean().getScLoi();
 			Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId();
 			String bpmAction = outcome;
-			this.getManagedBean().setAction(outcome);
+			
 
 			if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)) {
 				String decision = this.getManagedBean().getDecisionCode();
