@@ -126,22 +126,24 @@
 			</td>
 			<td><p:outputLabel value="#{lbl['lbl.rpt.group']}" /></td>
 			<td><p:selectOneMenu value="#{prRptBB.managedBean.group}">
+					<!-- #41069 start -->
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
-						itemValue="#{null}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" itemDisabled="#{prRptBB.hasSupplierRole()}"
-						itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.treasurycrclr']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.treasurycrclrvalue']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.doc.status']}"
-						itemValue="#{lbl['lbl.fl.doc.maintain.doc.status']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.fl.do.requisitioner']}"
-						itemValue="#{lbl['lbl.fl.do.requisitioner']}"></f:selectItem>
-					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+						itemValue="#{FlReportConst.getFlRptGroupNone()}"></f:selectItem>
+					<!-- #41069 end-->
 					<ui:remove>#27476 start</ui:remove>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" itemDisabled="#{prRptBB.hasSupplierRole()}"
+						itemValue="#{FlReportConst.getFlRptGroupSuppName()}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.treasurycrclr']}"
+						itemValue="#{FlReportConst.getFlRptGroupTreasuryCircular()}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.doc.status']}"
+						itemValue="#{FlReportConst.getFlRptGroupDocStatus()}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.fl.do.requisitioner']}"
+						itemValue="#{FlReportConst.getFlRptGroupRequisitioner()}"></f:selectItem>
 					<c:if test="#{prRptBB.hasRoleForProcumentType()}">
 						<f:selectItem itemLabel="#{lbl['lbl.fl.procurement.type']}"
-							itemValue="#{lbl['lbl.rpt.prcmnttype']}"></f:selectItem>
+							itemValue="#{FlReportConst.getFlRptGroupProcType()}"></f:selectItem>
 					</c:if>
+					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 					<ui:remove>#27476 end</ui:remove>
 				</p:selectOneMenu></td>
 							

@@ -29,6 +29,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;//#28188
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -237,6 +238,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
 import my.ep.persistence.entity.sc.quationtender.ScQtBSVRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
+import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;//#28188
 import my.ep.persistence.entity.sc.quationtender.ScQtBudget;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategoryHistory;
@@ -267,6 +269,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtlHistory;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.LanguageCode;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.PTJLocalityCode;
 import my.ep.type.pm.RoleCode;
@@ -894,9 +897,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#28784
 			checkDemoPresentationByStatus();
 			//#10141 Start Vinod
+			this.getManagedBean().setShowInactiveChecklistWarning(inactiveCLWarn);
+			this.getManagedBean().setInActiveChecklistNotificationText(notifyText);
 			if(isSendNotificationButton){
-				this.getManagedBean().setShowInactiveChecklistWarning(inactiveCLWarn);
-				this.getManagedBean().setInActiveChecklistNotificationText(notifyText);
 				this.getManagedBean().setSaveForSendNotification(false);
 				FacesContext.getCurrentInstance().addMessage(
 						null,
@@ -3373,11 +3376,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 //									specZoneDtl,
 //									briefingResDTO.getBriefingList(),
 //									briefingResDTO.getSiteVisitList(), scQtBsv);
+
 							//#28188 - Start (for sorting) 
 							BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
 									specZoneDtl,
-									groupAndSortSiteVisitList(briefingResDTO.getBriefingList()),
-									groupAndSortSiteVisitList(briefingResDTO.getSiteVisitList()), scQtBsv);
+									groupAndSortBriefingSiteVisitDtls(briefingResDTO.getBriefingList()),
+									groupAndSortBriefingSiteVisitDtls(briefingResDTO.getSiteVisitList()), scQtBsv);
 							//#28188 - End
 							zoneBeans.add(briefingZoneBean);
 						}
@@ -3406,8 +3410,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 //							resDTO.getSiteVisitList(), qtBsv);
 					//#28188 - Start (for sorting)
 					BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
-							null, groupAndSortSiteVisitList(resDTO.getBriefingList()),
-							groupAndSortSiteVisitList(resDTO.getSiteVisitList()), qtBsv);
+							null, groupAndSortBriefingSiteVisitDtls(resDTO.getBriefingList()),
+							groupAndSortBriefingSiteVisitDtls(resDTO.getSiteVisitList()), qtBsv);
 					//#28188 - End
 					this.getManagedBean().setBsvDtlBean(briefingZoneBean);
 				}
@@ -3738,11 +3742,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		//#27502 - New DO MOF Role and Process - Start
 		for (TabBean tabBean : committeTabs) {
 		    String tabType = tabBean.getTabType();
-		    Long statusId = tabBean.getScQtCommittee().getScCommittee().getCommitteStatus().getStatusId();
 
 		    // Condition 1: If tabType is not FINALIZATION and committee status is CMT_COMPLETED
-		    boolean isTabTypeNotFinalizationAndCompleted = !SourcingConstants.COMMITTE_TYPE_FINALIZATION.equals(tabType)
-		            && QTStatusConst.CMT_COMPLETED.equals(statusId);
+			boolean isTabTypeNotFinalizationAndCompleted = !SourcingConstants.COMMITTE_TYPE_FINALIZATION
+					.equals(tabType)
+					&& QTStatusConst.CMT_COMPLETED.equals(tabBean.getScQtCommittee().getScCommittee()
+							.getCommitteStatus().getStatusId());
 
 		    // Condition 2: If tabType is FINALIZATION and necessary fields in scQt are set
 		    boolean isFinalizationWithRequiredFields = SourcingConstants.COMMITTE_TYPE_FINALIZATION.equals(tabType)
@@ -3788,18 +3793,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		Long currentStatusId = scQt.getQtStatus().getStatusId();
 		
 		// #35320 - Start;
-		if (scQt.getFinalizationCommitte() != null && scQt.getFinalizationCommitte().getParameterCode() != null) {
-			if (scQt.getFinalizationCommitte().getParameterCode()
-					.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
-					|| scQt.getFinalizationCommitte().getParameterCode()
-							.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
-				if (isStatusTrigger(currentStatusId)) {
-					scQt.setFinalizationCommitte(new PmParameter());
-					scQt.setFinalizationSecratery(new PmUser());
-					this.getManagedBean().setQt(scQt);
-				}
-			}
-		}
+		resetFinalizationCommittee(scQt, currentStatusId);
 		// #35320 - End
 		
 		if (finalizationSecratary == null
@@ -3835,6 +3829,66 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		return finalizationSecratary;
 	}
+	
+	// #35320 - Start;
+		/**
+		 * #35320
+		 * Resets the finalization committee and secretary when the quotation
+		 * is finalized by a supported quotation committee and the current status
+		 * is a trigger status.
+		 *
+		 * @param scQt the quotation object to be updated
+		 * @param currentStatusId the current quotation status identifier
+		 */
+		private void resetFinalizationCommittee(ScQt scQt, Long currentStatusId) {
+		    if (!isValidFinalizationCommittee(scQt)) {
+		        return;
+		    }
+
+		    if (!isQuotationCommittee(scQt.getFinalizationCommitte())) {
+		        return;
+		    }
+
+		    if (!resetCommitteeByStatus(currentStatusId)) {
+		        return;
+		    }
+
+		    scQt.setFinalizationCommitte(new PmParameter());
+		    scQt.setFinalizationSecratery(new PmUser());
+		    this.getManagedBean().setQt(scQt);
+		}
+
+		/**
+		 * #35320
+		 * Checks whether the quotation has a valid finalization committee
+		 * and parameter code.
+		 *
+		 * @param scQt the quotation object
+		 * @return {@code true} if the committee and parameter code are present;
+		 *         {@code false} otherwise
+		 */
+		private boolean isValidFinalizationCommittee(ScQt scQt) {
+		    return scQt != null
+		            && scQt.getFinalizationCommitte() != null
+		            && scQt.getFinalizationCommitte().getParameterCode() != null;
+		}
+
+		/**
+		 * #35320
+		 * Determines whether the supplied parameter represents one of the
+		 * supported quotation committee types.
+		 *
+		 * @param committee the finalization committee parameter
+		 * @return {@code true} if the committee is quotation committee A or B;
+		 *         {@code false} otherwise
+		 */
+		private boolean isQuotationCommittee(PmParameter committee) {
+		    String parameterCode = committee.getParameterCode();
+
+		    return ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(parameterCode)
+		            || ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(parameterCode);
+		}
+		// #35320 - End;
 
 	/**
 	 * Retrieve business owner tab dtl.
@@ -4335,6 +4389,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 
 			Long currentStatus = qt.getQtStatus().getStatusId();
+			//#38107 - Start
+			checkSettingPopUpeGPAApprovalNeeded(qt);
+			//#38107 - End
 			//#25077 Start 
 			if (currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
 					|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION) 
@@ -4361,7 +4418,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
 					|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION)
 					|| currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION)
-					|| currentStatus.equals(QTStatusConst.QT_PENDING_DOCUMENT_REVISION)) {
+					|| currentStatus.equals(QTStatusConst.QT_PENDING_DOCUMENT_REVISION)
+					|| currentStatus.equals(QTStatusConst.QT_PENDING_RESCHEDULE_EGPA)) {//#38107
 
 				// check if its Pending Schedule and Documents , only execute
 				// this part
@@ -4506,6 +4564,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							approvalCategory);
 				}
 				this.getManagedBean().setResetBpkCurrentArea(false); //#25077
+				this.getManagedBean().setReseteGPACurrentArea(false);//#38107
 				
 				// 29732 fix duplicate issues -start-
 				List<ScQtCategory> removeCategoryCodes = this.getManagedBean().getTobeRemoveCategoryCodes();
@@ -4616,12 +4675,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (approverPublication == null 
 					|| CollectionUtils.isEmpty(approverPublication.getApproverSettings())) {
 				this.getManagedBean().setResetBpkCurrentArea(false); // #25077
+				   this.getManagedBean().setReseteGPACurrentArea(false);//#38107
 				throw new EpException(MessageConst.ERROR_775174);
 			}
 
 			if ((currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION)
 					|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION) || currentStatus
-						.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT))
+						.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) || currentStatus
+						.equals(QTStatusConst.QT_PENDING_RESCHEDULE_EGPA))//#38107
 					&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT)
 					) {
 
@@ -4706,6 +4767,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		if (isInactiveCommiteeApproverRole(null, approverSettings, RoleCode.PUBLICATION_APPROVER.value())) {
 			String roleName = getEpRoleDescByRoleCode(RoleCode.PUBLICATION_APPROVER.value());
 			this.getManagedBean().setResetBpkCurrentArea(false); // #25077
+			   this.getManagedBean().setReseteGPACurrentArea(false);//#38107
 			throw new EpException(MessageUtils.getMessage(MessageConst.ERROR_775171, new String[] { roleName },
 					MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()));
 
@@ -4803,9 +4865,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						 * approverSettingDtls( RoleCode.BUDGET_APPROVER,
 						 * qtApproval))); } else
 						 */
+						//#38107 - Start
+                      	List<String> categoryCodes = new ArrayList<>();
+                      	categoryCodes.add(ParameterConst.APPROVAL_CATEGORY_BPK);
+                      	categoryCodes.add(ParameterConst.APPROVAL_CATEGORY_EGPA);
 						List<PmParameter> settings = null;
-						if (ParameterConst.APPROVAL_CATEGORY_BPK
-								.equals(approvalCategoryCode)) {
+						if (categoryCodes.contains(approvalCategoryCode)) {
+						//#38107 - End
 							tabBeans.add(new TabBean(titleName,
 									approvalCategoryCode, qtApproval, settings));
 						} else if (ParameterConst.APPROVAL_CATEGORY_PTJ
@@ -6451,6 +6517,19 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					}
 					checkDemoPresentationByStatus();//#28784
 				}
+
+				// 41312 -start-
+				if (null != scQt.getQtStatus()
+						&& isQTStatusGreaterThanOrEquals(scQt.getQtStatus()
+								.getStatusId(),
+								QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
+						&& null == scQt.getEstimatedAmount()) {
+					BigDecimal estimatedAmount = checkEstimatedAmount(scQt);
+					scQt.setEstimatedAmount(estimatedAmount);
+
+				}
+				// 41312 -end-
+	
 			} finally {
 				QtDetailsSO = null;
 			}
@@ -7399,6 +7478,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			retrieveSuppQualificationTabDtl();
 			setAmmendMentBean(resDTO.getAmendMentBean());
 			getfulfilmentDtls(resDTO.getQtDetail());//#29474
+			//29661 && 41163 -start-
+			if(this.getManagedBean().getQt().isPanel()){
+				getPanelCategory();
+			}
+			//29661 && 41163 -end-
+			
 			break;
 		case 2:
 			//Added the validation for committee while save - 13342
@@ -7873,6 +7958,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				//#35285 & #25635 - End
 				if(!this.getManagedBean().getQt().isCloneEnabled()){//25635&34502-start
 					//#25077 - Start
+					setOtherApprovalLoaded();// 12471
 					if (!getManagedBean().isApproverTabLoaded()) {
 					    retrieveOthersApprovalTabDtl();
 					}
@@ -8250,7 +8336,53 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#35500 fix issue 5 End
 			quationTenderReqDTO.setNewCommitteeMembersAuditTrailList(this.getManagedBean().getNewScCommitteeMemberAuditTrailList());			//28895 - 35500 end
 			// 25037 - end
+			
+			//#28188 - Start
+			List<ScQtBsvRegistration> briefingRegistrationList = getBriefingRegistrationListFromSession();
+	
+			if (CollectionUtils.isNotEmpty(briefingRegistrationList)) {
 
+			    quationTenderReqDTO.setBriefingRegistrationList(
+			            briefingRegistrationList);
+
+			    FacesContext.getCurrentInstance()
+			            .getExternalContext()
+			            .getSessionMap()
+			            .remove("briefingRegistrationList");
+			    
+				// 28188 -start-
+			    quationTenderReqDTO.setStatusId(workflowStatusId);
+				Map<Long, List<ScQtBsvRegistration>> briefingRegistrationMap = getBsvRegisterDetailsIntoMap();
+				if (null != briefingRegistrationMap
+						&& !briefingRegistrationMap.isEmpty()) {
+					quationTenderReqDTO
+							.setBsvAttandanceRegister(briefingRegistrationMap);
+				}
+				removeBsvRegisterDetailsIntoMap();
+				// 28188 -end-
+			}
+			
+			// 28188 -start-
+			else if (QTStatusConst.QT_PROPOSAL_PREPARATION
+					.equals(workflowStatusId)
+					&& CollectionUtils.isEmpty(briefingRegistrationList)) {
+				setBsvRegisterDtls(quationTenderReqDTO,workflowStatusId);
+			}
+			// 28188 -end-
+			
+			ScQtApproval scQtApproval = getApprovalRegistrationFromSession();
+	
+			if (scQtApproval != null) {
+			    quationTenderReqDTO.setQtApproval(scQtApproval);
+
+			    FacesContext.getCurrentInstance()
+			            .getExternalContext()
+			            .getSessionMap()
+			            .remove("scQtApprovalRegistration");
+			}
+			
+			//#28188 - End
+			
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.updateQtMaintananceDetails(quationTenderReqDTO);
 			if (quationTenderResDTO.isSuccessful()) {
@@ -9799,7 +9931,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (QTStatusConst.QT_PENDING_SCHEDULE_REVISION.equals(statusId)
 					|| QTStatusConst.QT_PENDING_PB_APPROVAL.equals(statusId)
 					|| QTStatusConst.QT_PENDING_BPK_APPROVAL.equals(statusId)
-					|| QTStatusConst.QT_PENDING_DOCUMENT_REVISION.equals(statusId)) {
+					|| QTStatusConst.QT_PENDING_DOCUMENT_REVISION.equals(statusId)
+					|| QTStatusConst.QT_PENDING_RESCHEDULE_EGPA.equals(statusId)) {//#38107
 				isStatusOfBpkOrScheduleRevise = true;
 			}
 		}
@@ -12064,6 +12197,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		 	  			                 ScQtApprovalReqAttachement approvalReqAttachement = approvalRequestHistory.get(j).getApprovalRequestAttachement();
 		 	      	                     if(null == approvalReqAttachement){
 		 	      	                    	  this.getManagedBean().setResetBpkCurrentArea(false);
+		 	      	                    	  this.getManagedBean().setReseteGPACurrentArea(false);//#38107
 		 	      	                    	  throw new EpException(MessageConst.ERROR_760509);
 		 	      	                     }
 	    						  }
@@ -12074,6 +12208,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		 	  			                 ScQtApprovalReqAttachement approvalReqAttachement = approvalRequestHistory.get(j).getApprovalRequestAttachement();
 		 	      	                     if(null == approvalReqAttachement){
 		 	      	                    	  this.getManagedBean().setResetBpkCurrentArea(false);
+		 	      	                    	  this.getManagedBean().setReseteGPACurrentArea(false);//#38107
 		 	      	                    	  throw new EpException(MessageConst.ERROR_760509);
 		 	      	                     }
 						         } 
@@ -12096,6 +12231,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						PmParameter approverAction = approvalRequest.get(j).getApproverAction();
 						if (null == approverAction || null == approverAction.getParameterId()) {
 							this.getManagedBean().setResetBpkCurrentArea(false);
+							this.getManagedBean().setReseteGPACurrentArea(false);//#38107
 							//25635,37892 -start-
 							setOtherApprovalLoaded();
 							//25635,37892 -end-
@@ -12105,6 +12241,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						ScQtApprovalReqAttachement approvalReqAttachement = approvalRequest.get(j).getApprovalRequestAttachement();
 	                    if(null == approvalReqAttachement){
 	                    	this.getManagedBean().setResetBpkCurrentArea(false);
+	     				   	this.getManagedBean().setReseteGPACurrentArea(false);//#38107
 	                    	throw new EpException(MessageConst.ERROR_760509);
 	                    }
 	                    
@@ -13408,8 +13545,6 @@ public void retrieveDemoQtDetails(Long qtId) {
 		checkStatus.add(SCProcessNameConst.PREPARE_QT_SCHEDULE);
 		checkStatus.add(SCProcessNameConst.REVISE_QT_SCHEDULE);
 		checkStatus.add(SCProcessNameConst.APPROVE_PUBLICATION);
-		checkStatus.add(SCProcessNameConst.REVISE_BPK);
-		checkStatus.add(SCProcessNameConst.APPROVE_BPK);
 		
 		if (checkStatus.contains(status)) {
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
@@ -13513,14 +13648,24 @@ public void retrieveDemoQtDetails(Long qtId) {
 
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
 		reqDTO.setQtId(getManagedBean().getQt().getQtId());
+		reqDTO.setCommitteeType(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
 		CommitteResDTO resDTO = null;
 		ICommitteSO committeSO;
+		PmUser secretaryUser = new PmUser();
 		try {
 			committeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 					ICommitteSO.class);
 			resDTO = committeSO.retrieveCommitteMembersByQtIdAndCommType(reqDTO);
 			List<ScCommitteeMember> committeeMembersList = resDTO.getCommMemberResultBean().getResultList();
 			qtReqDTO.setScCommitteeMemberList(committeeMembersList);
+			if (CollectionUtils.isNotEmpty(committeeMembersList)) {
+				for (ScCommitteeMember committeeMem : committeeMembersList) {
+					if (committeeMem.getMemberRole().getParameterCode().equals(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
+						secretaryUser = committeeMem.getPmUser();
+						break;
+					}
+				}
+			}
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_DETAIL_BACKINGBEAN,
 					this.getManagedBean().getQt().getQtNo(),
@@ -13528,10 +13673,16 @@ public void retrieveDemoQtDetails(Long qtId) {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
+		
+		String languageCode = secretaryUser.getPreferredLanguage() != null
+				|| !secretaryUser.getPreferredLanguage().isEmpty() ? secretaryUser
+				.getPreferredLanguage() : CommonConstants.DEFAULT_LANGUAGE_CODE;
+		Locale userLocale = new Locale(languageCode,
+				LanguageCode.getCountryCode(languageCode.toUpperCase()));
 
 		qtReqDTO.setQtdetail(this.getManagedBean().getQt());
 		qtReqDTO.setInActiveChecklist(this.getManagedBean().getInActiveChecklist());
-		qtReqDTO.setProcurementModeStr(this.getParameterDesc(this.getManagedBean().getQt().getProcurementMode()));
+		qtReqDTO.setProcurementModeStr(this.getParameterDesc(this.getManagedBean().getQt().getProcurementMode(), userLocale));
 		qtResDTO = detailSO.updateChecklistNotify(qtReqDTO);
 
 		if (qtResDTO.isSuccessful()) {
@@ -15074,19 +15225,11 @@ public void retrieveDemoQtDetails(Long qtId) {
 			this.getManagedBean().setCtPanelCategory(true);
 			//#29661 #40094 Start
 			this.getManagedBean().setShowCategoryCodePanel(true);
-			if (isQTStatusPublished(status)){
-				List<TabBean> committeeTabList = this.getManagedBean().getScCommitteeMemberTabList();//#29661 #40093 27th Apr
-				for (TabBean committeeTab :  committeeTabList != null ? committeeTabList : Collections.<TabBean>emptyList()) {
-					if (!ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equals(committeeTab.getTabType())){
-						this.getManagedBean().setShowCategoryCodePanel(false);
-						break;
-					}
-				}
-				//#29661 #40093 27th Apr start
-				if (CollectionUtils.isEmpty(this.getManagedBean().getScCommitteeMemberTabList())){
-					this.getManagedBean().setShowCategoryCodePanel(false);
-				}
-			} //#29661 #40093 27th Apr end
+			//#41068 start
+			if (isQTStatusGreaterThanOrEquals(status, QTStatusConst.QT_CLOSED)){
+				this.getManagedBean().setShowCategoryCodePanel(false);
+			}
+			//#41068 end
 		}
 		//#29661 #40094 End
 	}
@@ -15215,13 +15358,8 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 * @param statusId
 	 * @return boolean
 	 */
-	private static boolean isStatusTrigger(long statusId) {
-        final List<Long> triggerStatuses = Arrays.asList(
-                QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
-                QTStatusConst.QT_REVISION_PUBLICATION,
-                QTStatusConst.QT_PENDING_SCHEDULE_REVISION,
-                QTStatusConst.CMT_PENDING_ASSIGN_FC_SECRETARY
-        );
+	private static boolean resetCommitteeByStatus(long statusId) {
+		final List<Long> triggerStatuses = Arrays.asList(QTStatusConst.RESET_COMMITTEE_BY_STATUS);
         return triggerStatuses.contains(statusId);
 	}
 	
@@ -15251,23 +15389,31 @@ public void retrieveDemoQtDetails(Long qtId) {
 
 			for (BriefingZoneBean bsvDtlBean : beansList) {
 				ScQtBsv scQtBsv = constructBsvByBean(bsvDtlBean);
+				//28188 -start-
+				if(null!=scQtBsv){
 				boolean isBsvdtlsChange = checkBsvdtlsChange(scQtBsv
 						.getScQtBsvDtls());
 				
 				if (isBsvdtlsChange) {
 					checkBsvRemarksMandatory(scQtBsv);
 				}
+				}
+				//28188 -end
 			}
 		} else {
 			
 			BriefingZoneBean bsvDtlBean = this.getManagedBean().getBsvDtlBean();
 			ScQtBsv scQtBsv = constructBsvByBean(bsvDtlBean);
+			//28188 -start-
+			if(null!=scQtBsv){
 			boolean isBsvdtlsChange = checkBsvdtlsChange(scQtBsv
 					.getScQtBsvDtls());
 			
 			if (isBsvdtlsChange) {
 				checkBsvRemarksMandatory(scQtBsv);
 			}
+			}
+			//28188 -end-
 
 		}
 	}
@@ -15312,132 +15458,242 @@ public void retrieveDemoQtDetails(Long qtId) {
 	}
 	//28188 -end-
 	
+
+
+	//#38107 - Start
+	private void checkSettingPopUpeGPAApprovalNeeded(ScQt scQt) {
+		IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTDetailSO.class);
+
+		boolean enableeGPAStatuses = scQt.getQtStatus() != null
+				&& QTStatusConst.getStatusAbleToUpdatePublishPeriod().contains(scQt.getQtStatus().getStatusId());
+		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+		reqDTO.setQtdetail(scQt);
+		QuationTenderResDTO resDTO = detailSO.retriveQTApprovalDetails(reqDTO);
+		if (resDTO.getApproval() != null && enableeGPAStatuses && !this.getManagedBean().isResetBpkCurrentArea()) {
+			List<ScQtApproval> listOfApprovals = resDTO.getApproval();
+			for (ScQtApproval approval : listOfApprovals) {
+				String approvalCategoryCode = approval.getApprovalCategory().getParameterCode();
+				if (!this.getManagedBean().isReseteGPACurrentArea() && !approval.isDeleted()
+						&& ParameterConst.APPROVAL_CATEGORY_EGPA.equals(approvalCategoryCode)
+						&& !this.getManagedBean().isMaintanceFlow()) {
+					List<ScQtApprovalRequest> requests = approval.getScQtApprovalDtls();
+					eGPAPopUpDetail(requests);
+				}
+				validateeGPAPublishPeriod(scQt, approvalCategoryCode);
+			}
+		}
+	}
+	//#38107 - End
+	
+	//#38107 - Start
+	private void eGPAPopUpDetail(List<ScQtApprovalRequest> requests) {
+		for (ScQtApprovalRequest req : requests) {
+			if (req.getApproverAction() == null && req.getApproverActionDate() == null) {
+				this.getManagedBean().setShowPopUpBPKApprovalNeeded(true);
+				RequestContext.getCurrentInstance().execute("eGPAApprovalNeededDlgTemp.show()");
+				throw new EpException(" ");
+			}
+		}
+	}
+	//#38107 - End
+	
+	//#38107 - Start
+	private void validateeGPAPublishPeriod(ScQt scQt, String approvalCategoryCode) {
+		FacesContext fc = FacesContext.getCurrentInstance();
+
+		if (QTStatusConst.getStatusAbleToUpdatePublishPeriod().contains(scQt.getQtStatus().getStatusId())
+				&& ParameterConst.APPROVAL_CATEGORY_EGPA.equals(approvalCategoryCode)) {
+			IQTDetailSO qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			// eGPA review decision that made it so RPP cannot be reduce,
+			// can only be increase
+			List<String> eGPAFinalDecision = new ArrayList<>();
+			eGPAFinalDecision.add(ParameterConst.APPROVAL_EGPA_DECISION_APPROVED_WITHOUT_AMEND);
+			eGPAFinalDecision.add(ParameterConst.APPROVAL_EGPA_DECISION_APPROVED_WITH_AMEND);
+			checkForRepublishQT(scQt, eGPAFinalDecision);
+			ScQtApprovalRequest eGPAApprovalRequest = qtDetailSO
+					.getLatesteGPAApprovalRequestBasedOnQtId(scQt.getQtId());
+			if (eGPAApprovalRequest != null) {
+				String eGPADecision = eGPAApprovalRequest.getApproverAction().getParameterCode();
+				if (eGPAFinalDecision.contains(eGPADecision)
+						&& scQt.getPublishPeriod() < eGPAApprovalRequest.getResponsePeriod()) {
+					this.getManagedBean().setReseteGPACurrentArea(false);
+					throw new EpException(MessageConst.ERROR_770408);
+				} else if (eGPAFinalDecision.equals(ParameterConst.APPROVAL_EGPA_DECISION_NOT_APPROVED)
+						&& scQt.getPublishPeriod() < Integer.parseInt(eGPAApprovalRequest.getOriginalValue())) {
+					addFacesMessage(fc, MessageConst.ERROR_760260,
+							new String[] { String.valueOf(scQt.getPublishPeriod()) });
+				}
+			}
+		}
+	}
+	//#38107 - End
+	
+	//#38107 - Start
+	private void checkForRepublishQT(ScQt scQt, List<String> eGPAFinalDecision) {
+		try {
+			FacesContext fc = FacesContext.getCurrentInstance();
+			IQTDetailSO qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			if (scQt.getParentQtId() != null) {
+				ScQtApprovalRequest eGPAApprovalRequest = qtDetailSO.getLatesteGPAApprovalRequestBasedOnQtId(scQt
+						.getParentQtId());
+				if (eGPAApprovalRequest != null) {
+					String eGPADecision = eGPAApprovalRequest.getApproverAction().getParameterCode();
+					if (eGPAFinalDecision.contains(eGPADecision)
+							&& scQt.getPublishPeriod() < eGPAApprovalRequest.getResponsePeriod()) {
+						addFacesMessage(fc, MessageConst.ERROR_770408, null);
+					} else if (eGPAFinalDecision.equals(ParameterConst.APPROVAL_EGPA_DECISION_NOT_APPROVED)
+							&& scQt.getPublishPeriod() < Integer.parseInt(eGPAApprovalRequest.getOriginalValue())) {
+						addFacesMessage(fc, MessageConst.ERROR_760260,
+								new String[] { String.valueOf(scQt.getPublishPeriod()) });
+					}
+				}
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(SourcingConstants.SUPPLIER_SELECTION_DOC_TYPE, "checkForRepublishQT",
+					scQt.getQtNo(), "checkForRepublishQT", getUserIdSessionFromLoginId(), e);
+		}
+	}
+	//#38107 - End
+	
+	//#38107 - Start
+	/**
+	 * Make sure eGPA confirmation box only appear once
+	 * 
+	 * @param actionFlow
+	 */
+	public void reseteGPACurrentArea(boolean proceedeGPA){
+		if(proceedeGPA){
+		   this.getManagedBean().setReseteGPACurrentArea(true);
+		   this.getManagedBean().setShowPopUpBPKApprovalNeeded(false);
+		}else{
+		   this.getManagedBean().setShowPopUpBPKApprovalNeeded(false);
+		}
+	}
+	//#38107 - End
+	
+	//#38107 - Start
+	/**
+	 * Retrieve all details needed for eGPA approval screen
+	 * 
+	 * @param approvalReq
+	 * @return
+	 */
+	public String geteGPAApprovalDtl(ScQtApprovalRequest approvalReq) {
+		this.getManagedBean().setScQtApprovalRequest(approvalReq);
+		return QTConstants.MAINT_EGPA_APPROVAL_DETAIL;
+	}
+	//#38107 - End
+
+	//#38107 - Start
+	/**
+	 * 
+	 * Back action for any approval details page
+	 * 
+	 * @return String
+	 */
+	public String maintenanceDetailsBackAction() {
+		this.getManagedBean().setScQtApprovalRequest(null);
+		return QTConstants.MAINTANANCE_PAGE_FULL;
+	}
+	//#38107 - End
+	
+	//#38107 - Start
+	/**
+	 * To Convert existing date to name of month in the middle instead of number
+	 * 
+	 * @param date
+	 * @return
+	 */
+	public String convertDayDateToMonthDate(Date date) {
+		String pattern = "dd-MMMM-yy";
+
+		// Create an instance of SimpleDateFormat used for formatting
+		// the string representation of date according to the chosen pattern
+		DateFormat df = new SimpleDateFormat(pattern);
+
+		// Using DateFormat format method we can create a string
+		// representation of a date with the defined format.
+		return df.format(date);
+	}
+	//#38107 - End
+	
+	//#38107 - Start
+	public String retrieveeGPAApproverRemark(Long docId) {
+		try {
+			return getQTDetailSO().retrieveeGPAApproverRemark(SourcingConstants.SC_REMARK_DOC_TYPE_EGPA, docId);
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("QT", "retrieveeGPAApproverRemark", docId.toString(),
+					"retrieveeGPAApproverRemark", getUserIdSessionFromLoginId(), e);
+		}
+		return null;
+	}
+	//#38107 - End
+	
+	//#38107 - Start
+	public boolean currentStatuseGPAReview() {
+		return this.getManagedBean().getQt().getCurrentWorkFlowStatus().getPmStatus().getStatusId().equals(QTStatusConst.QT_PENDING_REQUEST_REVIEW_FROM_EGPA);
+	}
+	//#38107 - End
+	
+	//28188 -start-
+	/**
+	 * set bsvDeatils id during submit.
+	 * @param reqDTO
+	 * @param statusId
+	 * @return
+	 */
+	private QuationTenderReqDTO setBsvRegisterDtls(QuationTenderReqDTO reqDTO,
+			Long statusId) {
+		Map<Long, List<Long>> bsvRegisterDetails = this.getManagedBean()
+				.getBsvRegisterDetails();
+		ScQt qt = this.getManagedBean().getQt();
+		Long qtId = qt.getQtId();
+		reqDTO.setStatusId(statusId);
+		if (null != bsvRegisterDetails) {
+			List<Long> bsvDtlIds = bsvRegisterDetails.get(qtId);
+			if (CollectionUtils.isNotEmpty(bsvDtlIds)) {
+				reqDTO.setBsvDtlIds(bsvDtlIds);
+			}
+		}
+		return reqDTO;
+	}
+	
+	//#28188 - end-
+	
 	//#28188 - Start
-	private List<ScQtBsvDtl> groupAndSortSiteVisitList(List<ScQtBsvDtl> inputList) {
+	@SuppressWarnings("unchecked")
+	private List<ScQtBsvRegistration> getBriefingRegistrationListFromSession() {
 
-	    if (CollectionUtils.isEmpty(inputList)) {
-	        return new ArrayList<ScQtBsvDtl>();
+	    Object obj = FacesContext.getCurrentInstance()
+	            .getExternalContext()
+	            .getSessionMap()
+	            .get("briefingRegistrationList");
+
+	    if (obj instanceof List<?>) {
+	        return (List<ScQtBsvRegistration>) obj;
 	    }
 
-	    // ==================================================
-	    // STEP 1 : GROUP USING PARENT RELATION
-	    // ==================================================
-	    Map<Long, List<ScQtBsvDtl>> grouped =
-	            new LinkedHashMap<Long, List<ScQtBsvDtl>>();
-
-	    for (ScQtBsvDtl dtl : inputList) {
-
-	        Long key = null;
-
-	        // child record
-	        if (dtl.getParentQtBsvDtlId() != null) {
-	            key = dtl.getParentQtBsvDtlId();
-	        }
-	        // original/parent record
-	        else {
-	            key = dtl.getQtBsvDtlId();
-	        }
-
-	        if (!grouped.containsKey(key)) {
-	            grouped.put(key, new ArrayList<ScQtBsvDtl>());
-	        }
-
-	        grouped.get(key).add(dtl);
-	    }
-
-	    // ==================================================
-	    // STEP 2 : SORT INSIDE EACH GROUP
-	    // Parent(Postpone) first
-	    // Child(Pending) second
-	    // ==================================================
-	    for (List<ScQtBsvDtl> list : grouped.values()) {
-
-	        Collections.sort(list, new Comparator<ScQtBsvDtl>() {
-
-	            @Override
-	            public int compare(ScQtBsvDtl bsvDtl1,
-	                               ScQtBsvDtl bsvDtl2) {
-
-	                boolean isChild1 =
-	                        bsvDtl1.getParentQtBsvDtlId() != null;
-
-	                boolean isChild2 =
-	                        bsvDtl2.getParentQtBsvDtlId() != null;
-
-	                // parent first
-	                if (isChild1 && !isChild2) {
-	                    return 1;
-	                }
-
-	                if (!isChild1 && isChild2) {
-	                    return -1;
-	                }
-
-	                Date date1 = bsvDtl1.getBsvDate();
-	                Date date2 = bsvDtl2.getBsvDate();
-
-	                if (date1 == null && date2 == null) {
-	                    return 0;
-	                }
-
-	                if (date1 == null) {
-	                    return 1;
-	                }
-
-	                if (date2 == null) {
-	                    return -1;
-	                }
-
-	                return date1.compareTo(date2);
-	            }
-	        });
-	    }
-
-	    // ==================================================
-	    // STEP 3 : SORT GROUP ORDER
-	    // Based on parent/original date
-	    // ==================================================
-	    List<List<ScQtBsvDtl>> groupedList =
-	            new ArrayList<List<ScQtBsvDtl>>(grouped.values());
-
-	    Collections.sort(groupedList,
-	            new Comparator<List<ScQtBsvDtl>>() {
-
-	        @Override
-	        public int compare(List<ScQtBsvDtl> list1,
-	                           List<ScQtBsvDtl> list2) {
-
-	            Date date1 = list1.get(0).getBsvDate();
-	            Date date2 = list2.get(0).getBsvDate();
-
-	            if (date1 == null && date2 == null) {
-	                return 0;
-	            }
-
-	            if (date1 == null) {
-	                return 1;
-	            }
-
-	            if (date2 == null) {
-	                return -1;
-	            }
-
-	            return date1.compareTo(date2);
-	        }
-	    });
-
-	    // ==================================================
-	    // STEP 4 : MERGE BACK
-	    // ==================================================
-	    List<ScQtBsvDtl> finalList =
-	            new ArrayList<ScQtBsvDtl>();
-
-	    for (List<ScQtBsvDtl> list : groupedList) {
-	        finalList.addAll(list);
-	    }
-
-	    return finalList;
+	    return new ArrayList<ScQtBsvRegistration>();
 	}
 	//#28188 - End
+	
+	//#28188 - Start
+	private ScQtApproval getApprovalRegistrationFromSession() {
 
+	    Object obj = FacesContext.getCurrentInstance()
+	            .getExternalContext()
+	            .getSessionMap()
+	            .get("scQtApprovalRegistration");
+
+	    if (obj instanceof ScQtApproval) {
+	        return (ScQtApproval) obj;
+	    }
+
+	    return null;
+	}
+	//#28188 - End
+	
 }

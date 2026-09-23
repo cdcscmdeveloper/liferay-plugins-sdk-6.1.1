@@ -144,43 +144,43 @@
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText></td>
 		</tr>
-		
+
 		<tr>
-			<td>
-				<p:outputLabel value="#{lbl['lbl.fl.physical.treasury.circular']}"/>
-			</td>
-			<td>
-			<p:inputText maxlength="20" id="pkpNoId"
+			<td><p:outputLabel
+					value="#{lbl['lbl.fl.physical.treasury.circular']}" /></td>
+			<td><p:inputText maxlength="20" id="pkpNoId"
 					label="#{lbl['lbl.fl.physical.treasury.circular']}"
 					value="#{crRejectRptBB.managedBean.pkpNo}"
 					style="margin-top:5px;width:268px;">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
-				</p:inputText><ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforcc']}"/>
-			</td>
+				</p:inputText>
+				<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforcc']}" /></td>
 			<td><p:outputLabel value="#{lbl['lbl.rpt.group']}" /></td>
+			<!-- #41069 start -->
 			<td><p:selectOneMenu value="#{crRejectRptBB.managedBean.group}">
 
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
-						itemValue="#{null}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptGroupNone()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
-						itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptGroupSuppName()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
-						itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptCcSstNo()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.treasurycrclr']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.treasurycrclrvalue']}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptGroupTreasuryCircular()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
-						itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptCcContractNo()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptCcPhysicalContractNo()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptCcPhysicalLoaNo()}"></f:selectItem>
 					<f:selectItem
 						itemLabel="#{lbl['lbl.rpt.drpdown.requistionername']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.requistionername']}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptGroupRequisitioner()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.approverName']}"
-						itemValue="#{lbl['lbl.rpt.approverName']}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptCcApproverName()}"></f:selectItem>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
+				<!-- #41069 end-->
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.fl.created.date.from']}" /></td>

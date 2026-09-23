@@ -165,9 +165,6 @@ public abstract class BaseManagedBean implements Serializable {
 	private Boolean isDowngradeRole;
 	// end #29956
 	
-	//14685 - START
-	private boolean showMessage;
-	//14685 - END
 	
 	// 27346
 	private StreamedContent downloadfile;
@@ -211,6 +208,10 @@ public abstract class BaseManagedBean implements Serializable {
 	
 	// #25651 - Start
 	List<ScQtFinalizationReportDetail> scQtFinalizationReportDetail; 
+	private List<ScQtFinalizationReportDetail> removeFinalizationReportDetails;
+	private ScQtFinalizationReportDetail selectedBriefingReportDetail;
+	private List<ScQtFinalizationReportDetail> evaluationReportDetailList;
+	
 	private List<Map.Entry<String, String>> reportDetail = new ArrayList<>();
 	
 	public BaseManagedBean(){
@@ -224,14 +225,6 @@ public abstract class BaseManagedBean implements Serializable {
 				SourcingConstants.LAPORAN_KERTAS_TAKLIMAT_PERTIMBANGAN));
 		reportDetail.add(new AbstractMap.SimpleEntry<>(SourcingConstants.DOC_DEF_KEY_LAPORAN_KERTAS_TAKLIMAT_PAKEJ,
 				SourcingConstants.LAPORAN_KERTAS_TAKLIMAT_PERTIMBANGAN_ANALISIS));
-	}
-	
-	public List<ScQtFinalizationReportDetail> getScQtFinalizationReportDetail() {
-		return scQtFinalizationReportDetail;
-	}
-
-	public void setScQtFinalizationReportDetail(List<ScQtFinalizationReportDetail> scQtFinalizationReportDetail) {
-		this.scQtFinalizationReportDetail = scQtFinalizationReportDetail;
 	}
 	
 	public List<Map.Entry<String, String>> getReportDetail() {
@@ -1096,15 +1089,6 @@ public abstract class BaseManagedBean implements Serializable {
 		this.errorInvalidSelfRequest = errorInvalidSelfRequest;
 	}
 	
-	//14685 - START
-	public boolean isShowMessage() {
-		return showMessage;
-	}
-
-	public void setShowMessage(boolean showMessage) {
-		this.showMessage = showMessage;
-	}
-	//14685 - END
 
 	//start #29956
 	public Boolean isDowngradeRole() {
@@ -1302,4 +1286,38 @@ public abstract class BaseManagedBean implements Serializable {
 		this.displayDropdownRegStatus = displayDropdownRegStatus;
 	}
 //	37925 END
+	
+	// #25651 - Start
+	public List<ScQtFinalizationReportDetail> getScQtFinalizationReportDetail() {
+		return scQtFinalizationReportDetail;
+	}
+
+	public void setScQtFinalizationReportDetail(List<ScQtFinalizationReportDetail> scQtFinalizationReportDetail) {
+		this.scQtFinalizationReportDetail = scQtFinalizationReportDetail;
+	}
+	
+	public List<ScQtFinalizationReportDetail> getRemoveFinalizationReportDetails() {
+		return removeFinalizationReportDetails;
+	}
+
+	public void setRemoveFinalizationReportDetails(List<ScQtFinalizationReportDetail> removeFinalizationReportDetails) {
+		this.removeFinalizationReportDetails = removeFinalizationReportDetails;
+	}
+
+	public ScQtFinalizationReportDetail getSelectedBriefingReportDetail() {
+		return selectedBriefingReportDetail;
+	}
+
+	public void setSelectedBriefingReportDetail(ScQtFinalizationReportDetail selectedBriefingReportDetail) {
+		this.selectedBriefingReportDetail = selectedBriefingReportDetail;
+	}
+	
+	public List<ScQtFinalizationReportDetail> getEvaluationReportDetailList() {
+		return evaluationReportDetailList;
+	}
+
+	public void setEvaluationReportDetailList(List<ScQtFinalizationReportDetail> evaluationReportDetailList) {
+		this.evaluationReportDetailList = evaluationReportDetailList;
+	}
+	// #25651 - End
 }
