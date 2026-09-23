@@ -3230,9 +3230,10 @@ public class SupplierFinalizationBiddingBackingBean extends
 			// #25651 - Start
 			reqDTO.setDocumentCategory(ParameterConst.DOCUMENT_CATEGORY_BRIEFING_PAPER);
 			reqDTO.setExcludedDocNames(SupplierFinalizationBiddingManagedBean.getDirectdownloaddocdefkeys());
-			List<ScQtFinalizationReportDetail> finalizationReportsDetail = qtSuppFinalizationSO.retriveFinalizationReportDetail(reqDTO).getScQtFinalizationReportDetails();
+			List<ScQtFinalizationReportDetail> finalizationReportsDetail = qtSuppFinalizationSO
+					.retriveFinalizationReportDetail(reqDTO).getScQtFinalizationReportDetails();
 			populateEvaluationBreifingReportDetails(finalizationReportsDetail, getManagedBean().getScQt());
-			this.getManagedBean().setScQtFinalizationReportDetail(finalizationReportsDetail);
+			populateBriefingReportDetails(finalizationReportsDetail);
 			// #25651 - End
 			
 		} finally {
