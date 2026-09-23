@@ -217,7 +217,7 @@
 													converterId="cmNumberConverter" />
 												<f:attribute name="numberType" value="DECIMAL"/>
 											</p:inputText> 
-											#{lbl['lbl.cm.pub.catalog.to']} 
+											#{lbl['lbl.cm.pub.catalog.to']}
 											<p:inputText
 												label="#{lbl['lbl.cm.pub.catalog.price.range']}"
 												value="#{pCatalogueBackingBean.managedBean.priceTo}"
@@ -245,7 +245,7 @@
 												size="10">
 												<f:converter
 													rendered="#{pCatalogueBackingBean.managedBean.converterVisible}"
-														converterId="cmNumberConverter" />
+													converterId="cmNumberConverter" />
 												<f:attribute name="numberType" value="INTEGER"/>
 											</p:inputText> 
 											#{lbl['lbl.cm.pub.catalog.to']} 
@@ -256,7 +256,7 @@
 												size="10">
 												<f:converter
 													rendered="#{pCatalogueBackingBean.managedBean.converterVisible}"
-														converterId="cmNumberConverter" />
+													converterId="cmNumberConverter" />
 												<f:attribute name="numberType" value="INTEGER"/>
 											</p:inputText>
 										</td>
@@ -288,8 +288,8 @@
 										rendered="#{!pCatalogueBackingBean.managedBean.keyWord}"
 										style="font-weight:bold;float:left;font-size:15px;"
 										value="#{pCatalogueBackingBean.managedBean.totalRecord} #{lbl['lbl.cm.pub.catalog.result.title']} #{pCatalogueBackingBean.managedBean.unspscTitle}"></p:outputLabel>
-										
-									<!-- #10747, #35739 - Start -->
+								     
+								    <!-- #10747, #35739 - Start -->
 								    <h:panelGroup rendered="#{!pCatalogueBackingBean.managedBean.keyWord and pCatalogueBackingBean.managedBean.unspscTitle.length() > 12 || pCatalogueBackingBean.managedBean.itemName.length() > 12}">
 								    <br />
 									<hr class="horizontal_dotted_line_visible"/>
@@ -329,7 +329,7 @@
 										label="#{lbl['lbl.cm.item.per.page']}"
     									style="font-weight:bold; float:right; font-size:15px; width:100%; max-width:50px; box-sizing:border-box;"
 										value="#{pCatalogueBackingBean.managedBean.itemPerPage}">
-										<f:selectItem itemLabel="15" itemValue="15"/>	
+										<f:selectItem itemLabel="15" itemValue="15"/>
 										<f:selectItem itemLabel="25" itemValue="25" />
 										<f:selectItem itemLabel="50" itemValue="50" />
 										<p:ajax process="@this" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" event="change" partialSubmit="true"
