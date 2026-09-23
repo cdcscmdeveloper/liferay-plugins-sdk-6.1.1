@@ -19,7 +19,6 @@ import org.apache.log4j.Logger;
 import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.constants.CommonConstants;
 import my.ep.factory.EpLogger;
-import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.report.fl.FlReportBackingBean;
 import my.ep.web.constant.report.FlReportConst;
@@ -90,12 +89,6 @@ public class PurchaseRequestRptBackingBean extends FlReportBackingBean<PurchaseR
 		if(StringUtils.isNotBlank(getManagedBean().getGroup())){
 			params.put(FlReportConst.FL_RPT_GROUP_BY, getManagedBean().getGroup());
 		}
-		// #27476 start
-		if (StringUtils.isNotBlank(getManagedBean().getProcumentType())) {
-			params.put(FlReportConst.FL_RPT_PROCUMENT_TYPE_CODE, getManagedBean().getProcumentType());
-		}
-		// #27476 end
-		
 		generateFlReport(params);
 	}
 	
@@ -113,39 +106,8 @@ public class PurchaseRequestRptBackingBean extends FlReportBackingBean<PurchaseR
 	 * reset action
 	 */
 	public void resetAction(){
-		getManagedBean().setProcumentType(null); //#27476
 		getManagedBean().setPurchaseRequestNo(null);
 		resetSearchCriteriaValues();
 	}
 	
-	// #27476 start
-	/**
-	 * to check if user has role that has access for procument type filtering
-	 * report
-	 * 
-	 * @return boolean
-	 */
-	public boolean hasRoleForProcumentType() {
-		if (getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()) || hasAuditorRole()
-				|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())) {
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * to check if user has auditor role
-	 * 
-	 * @return boolean
-	 */
-	public boolean hasAuditorRole() {
-		if (getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
-			return true;
-		}
-		return false;
-	}
-	// #27476 end
 }
