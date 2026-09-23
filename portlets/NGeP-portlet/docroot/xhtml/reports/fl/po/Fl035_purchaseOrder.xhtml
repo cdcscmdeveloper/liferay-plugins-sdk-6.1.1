@@ -127,42 +127,23 @@
 		
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.rpt.group']}" /></td>
-			<td><p:selectOneMenu value="#{poPurRptBB.managedBean.group}">
+			<td><p:selectOneMenu value="#{reportBackingBean.flGroupOne}">
+
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
 						itemValue="#{null}"></f:selectItem>
-					<ui:remove>#27476 start</ui:remove>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" itemDisabled="#{poPurRptBB.hasSupplierRole()}"
-						itemValue="#{FlReportConst.getFlRptGroupSuppName()}"></f:selectItem>
+						itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.itemType']}"
-						itemValue="#{FlReportConst.getFlRptGroupItemType()}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.procurementtypeScreen']}"
-						itemValue="#{FlReportConst.getFlRptGroupProcType()}"></f:selectItem>
+						itemValue="#{lbl['lbl.rpt.itmtype']}"></f:selectItem>
+					<f:selectItem
+						itemLabel="#{lbl['lbl.rpt.procurementtypeScreen']}"
+						itemValue="#{lbl['lbl.rpt.prcmnttype']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}"
-						itemValue="#{FlReportConst.getFlRptGroupDocStatus()}"></f:selectItem>
+						itemValue="#{lbl['lbl.rpt.sts']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.treasurycrclr']}"
-						itemValue="#{FlReportConst.getFlRptGroupTreasuryCircular()}"></f:selectItem>
-					<c:if test="#{poPurRptBB.hasRoleForProcumentType()}">
-						<f:selectItem itemLabel="#{lbl['lbl.fl.procurement.type']}"
-							itemValue="#{FlReportConst.getFlRptGroupProcType()}"></f:selectItem>
-					</c:if>
-					<ui:remove>#27476 end</ui:remove>
+						itemValue="#{lbl['lbl.rpt.drpdown.treasurycrclrvalue']}"></f:selectItem>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
-
-			<ui:remove>#27476 start</ui:remove>
-			<c:if test="#{poPurRptBB.hasRoleForProcumentType()}">
-				<td width="15%"><p:outputLabel
-						value="#{lbl['lbl.fl.procurement.type']}" /></td>
-				<td width="35%"><p:selectOneMenu
-						value="#{poPurRptBB.managedBean.procumentType}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.all']}"
-							itemValue="#{null}" />
-						<f:selectItems
-							value="#{poPurRptBB.getDropDownValuesCombineWIPParameter(ParameterTypeConst.procurementTypeRpt,ParameterTypeConst.procurementType,ParameterTypeConst.procurementCodePk7)}" />
-						<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
-					</p:selectOneMenu></td>
-			</c:if>
-			<ui:remove>#27476 end</ui:remove>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.fl.created.date.from']}" /></td>

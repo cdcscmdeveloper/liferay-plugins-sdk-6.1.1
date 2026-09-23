@@ -28,10 +28,6 @@ public class PurchaseRequestRptManagedBean extends FlReportManagedBean{
 	private String purchaseRequestNo;
 	private String reportUrl;
 	
-	//#27476 start
-	private String procumentType;
-	//#27476 end
-	
 	public PurchaseRequestRptManagedBean(){}
 	
 	public List<String> getHighRoleCodeList() {
@@ -74,20 +70,6 @@ public class PurchaseRequestRptManagedBean extends FlReportManagedBean{
 
 	public void setReportUrl(String reportUrl) {
 		this.reportUrl = reportUrl;
-	}
-
-	/**
-	 * @return the procumentType
-	 */
-	public String getProcumentType() {
-		return procumentType;
-	}
-
-	/**
-	 * @param procumentType the procumentType to set
-	 */
-	public void setProcumentType(String procumentType) {
-		this.procumentType = procumentType;
 	}
 
 }

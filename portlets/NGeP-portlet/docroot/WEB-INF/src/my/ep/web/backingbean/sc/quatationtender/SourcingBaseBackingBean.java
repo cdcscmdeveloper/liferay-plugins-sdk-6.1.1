@@ -2166,17 +2166,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 			boolean setBondReq = true;
 			//#25726 - Start
 				
-			/*
-			 * #29766 Start Vinod updated
-			 * getQTTypeItemInPK7AndPK7WPChecking to check 2 QT type
-			 * codes and refactor old code.
-			 */
-			boolean isQTtypePK7 = null != scLoa.getQtType()
-					&& null != scLoa.getQtType().getParameterId()
-					&& ParameterConst.getQTTypeItemInPK7AndPK7WPChecking().contains(
-							scLoa.getQtType().getParameterCode());
-			// #29766 -end-
-
+			boolean isQTtypePK7 = null != scLoa.getQtType() && null != scLoa.getQtType().getParameterId()
+					&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(scLoa.getQtType().getParameterCode());
+		
 			if (isQTtypePK7 ) {
 		
 			//#25726 - End

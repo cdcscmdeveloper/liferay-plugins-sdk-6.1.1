@@ -79,10 +79,6 @@ a:hover.blue_font {
 	<ui:param name="StatusLOAApproval"
 		value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_APPROVAL || directLOABackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_REVISION_APPROVAL}"></ui:param>
 	<!-- #25726 END -->
-	<ui:remove>#29766 Start Vinod</ui:remove>
-	<ui:param name="isOldpK7selected"
-		value="#{directLOABackingBean.checkOldPK7PselectedToDisable()}" />
-	<ui:remove>#29766 End Vinod</ui:remove>
 	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}"
 		toggleable="true">
 		
@@ -301,20 +297,15 @@ a:hover.blue_font {
 				</td>
 				<td>
 					<c:choose>
-						<ui:remove>#29766 Start Vinod added isPendingRevApprovalStatus</ui:remove>
-						<!-- #34162 Added isPendingVerification Vinod -->
-						<c:when
-							test="#{!isPendingRevApprovalStatus and !isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}">
-							<ui:remove>#29766 End Vinod</ui:remove>
+						<c:when test="#{!isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod -->
 							<p:selectOneMenu id="procMode" required="true"
 								value="#{directLOABackingBean.managedBean.scLoa.procurementMode.parameterId}"
 								style="margin-bottom:5px;width:246px;"
 								label="#{lbl['lbl.sc.procurement.mode']}"
 								disabled="#{directLOABackingBean.managedBean.disableFields}">
-								<f:selectItems
-									value="#{directLOABackingBean.getProcurementModeDropdownValues()}" />
-								<p:ajax event="change" process="@this" partialSubmit="true"
-									update="qtType"
+								<f:selectItems value="#{directLOABackingBean.getProcurementModeDropdownValues()}" />
+								<p:ajax event="change" 
+									process="@this" partialSubmit="true" update="qtType"
 									listener="#{directLOABackingBean.procurementModeChanged}" />
 							</p:selectOneMenu>
 							<p:message id="procModeMsg" for="procMode" display="icon" />
@@ -332,38 +323,26 @@ a:hover.blue_font {
 				</td>
 				<td>
 					<c:choose>
-						<ui:remove>#29766 Start Vinod added isPendingRevApprovalStatus</ui:remove>
-						<!-- #34162 Added isPendingVerification Vinod -->
-						<c:when
-							test="#{!isPendingRevApprovalStatus and !isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}">
-							<ui:remove>#29766 End Vinod</ui:remove>
+						<c:when test="#{!isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod -->
 							<p:selectOneMenu id="qtType" required="true"
 								value="#{directLOABackingBean.managedBean.scLoa.qtType.parameterId}"
 								style="margin-bottom:5px;width:206px;"
 								label="#{lbl['lbl.sc.qttentype']}"
 								disabled="#{directLOABackingBean.managedBean.disableFields}">
-								<f:selectItems
-									value="#{directLOABackingBean.getQTTypesDropdownValues()}" />
-								<p:ajax event="change" process="@this" partialSubmit="true"
-									listener="#{directLOABackingBean.qtTypeChanged}"
-									update="@([id$=uploadApprovalLetterPg])" />
-								<!-- #25726 -->
+								<f:selectItems value="#{directLOABackingBean.getQTTypesDropdownValues()}" />
+								<p:ajax event="change" 
+									process="@this" partialSubmit="true" 
+									listener="#{directLOABackingBean.qtTypeChanged}" 
+									update="@([id$=uploadApprovalLetterPg])"/><!-- #25726 -->
 								<p:ajax event="change"
 									listener="#{directLOABackingBean.isPbDropDown()}"
-									partialSubmit="true"
-									update="bondReqPG, menuItems, reasonPG, reasonDescPG" />
+									partialSubmit="true" update="bondReqPG, menuItems, reasonPG, reasonDescPG" />
 								<p:ajax event="change"
 									listener="#{directLOABackingBean.isAgreementDropDown}"
 									partialSubmit="true" update="agreementReqPG" />
 								<p:ajax event="change"
 									listener="#{directLOABackingBean.isPk7Periodic()}"
-									partialSubmit="true"
-									update="bondReqPG, menuItems, agreementReqPG" />
-								<ui:remove>#29766 Start Vinod</ui:remove>
-								<p:ajax event="change"
-									listener="#{directLOABackingBean.checkQTTypePk7WpItem()}"
-									update="bondReqPG, menuItems, agreementReqPG" />
-								<ui:remove>#29766 End Vinod</ui:remove>
+									partialSubmit="true" update="bondReqPG, menuItems, agreementReqPG" />
 							</p:selectOneMenu>
 							<p:message id="qtTypeMsg" for="qtType" display="icon" />
 						</c:when>
@@ -420,15 +399,12 @@ a:hover.blue_font {
 						<c:if test="#{directLOABackingBean.isPbDropDown() || directLOABackingBean.isPk7Periodic()}">
 							<!-- 19336 -start- -->
 							<c:choose>
-								<ui:remove>35335_haziq, 29766 Vinod added isOldpK7selected -start-</ui:remove>
-								<c:when
-									test="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly or isOldpK7selected}">
-									<ui:remove>35335_haziq,29766 Vinod -end-</ui:remove>
-									<p:inputText
-										value="#{directLOABackingBean.getReasonDesc(directLOABackingBean.managedBean.scLoa.justificationType.reasonCode)}"
-										size="35" disabled="true" />
-								</c:when>
-								<c:otherwise>
+							<c:when test="#{directLOABackingBean.managedBean.disableFields or directLOABackingBean.managedBean.readOnly}" >
+							<p:inputText 
+								value="#{directLOABackingBean.getReasonDesc(directLOABackingBean.managedBean.scLoa.justificationType.reasonCode)}"
+								size="35" disabled="true" />
+							</c:when>
+							<c:otherwise>
 							<!-- 19336 -end- -->
 								<p:selectOneMenu
 										style="width: 206px;margin-bottom: 5px;" id="justificationId"
@@ -677,9 +653,7 @@ a:hover.blue_font {
 														<c:when test="#{directLOABackingBean.isPk7Periodic()}">
 															<!-- 19336 -start- -->
 															<c:choose>
-															<!-- 35335_haziq start -->
-															<c:when test="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" >
-															<!-- 35335_haziq end -->
+															<c:when test="#{directLOABackingBean.managedBean.readOnly}" >
 																<p:inputText 
 																value="#{directLOABackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(directLOABackingBean.managedBean.scLoa.bondReq))}"
 																size="28" disabled="true" />
@@ -715,9 +689,7 @@ a:hover.blue_font {
 												<c:otherwise>
 													<!-- 19336 -start- -->
 													<c:choose>
-													<!-- 35335_haziq start -->
-													<c:when test="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" >
-													<!-- 35335_haziq end -->
+													<c:when test="#{directLOABackingBean.managedBean.readOnly}" >
 														<p:inputText 
 														value="#{directLOABackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(directLOABackingBean.managedBean.scLoa.bondReq))}"
 														size="28" disabled="true" />
