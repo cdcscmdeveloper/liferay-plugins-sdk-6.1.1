@@ -22952,8 +22952,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		if (CollectionUtils.isEmpty(inActiveChecklist)) {
 			return;
 		}
-		List<ScQtCheckList> specCheckLists = new ArrayList<ScQtCheckList>();
-		List<ScQtCheckList> otherCheckLists = new ArrayList<ScQtCheckList>();
+		List<ScQtCheckList> specCheckLists = new ArrayList<>();
+		List<ScQtCheckList> otherCheckLists = new ArrayList<>();
 		for (ScQtCheckList checklist : inActiveChecklist) {
 			if (null == checklist.getQtChecklistId()) {
 				continue;
