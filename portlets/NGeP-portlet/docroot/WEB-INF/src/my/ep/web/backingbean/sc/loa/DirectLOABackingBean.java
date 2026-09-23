@@ -5526,6 +5526,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		Long statusId = scLoa.getPmStatus().getStatusId();
 		if (!QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)) {
 			getSmSupplierCategory(this.getManagedBean().getScLoa());
+		} else {
+			this.getManagedBean().setShowCategoryCode(true);//#41377
 		}
 		//#29661 #40096 End
 

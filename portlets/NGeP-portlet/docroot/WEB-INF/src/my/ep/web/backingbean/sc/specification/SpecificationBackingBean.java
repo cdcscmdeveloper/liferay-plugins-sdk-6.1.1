@@ -12309,6 +12309,7 @@ public class SpecificationBackingBean extends
 					.isProcMethodDropdownPresent();
 			ScWorkFlowStatus scWorkFlowStatus = this.getManagedBean()
 					.getSpecMaintenanceWorkFlowStatus();
+			boolean weightage35384WIP = this.getManagedBean().isWeightage35384WIP();//#38151
 
 			SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 			List<ScQtDeliveryLoc> deliveryRemoveList = this.getManagedBean()
@@ -12725,6 +12726,8 @@ public class SpecificationBackingBean extends
 					specScreenMaintenance);
 			this.getManagedBean().setSpecMaintenance(specMaintenance);
 			this.getManagedBean().setUpdateSpec(updateSpec);
+			this.getManagedBean().setWeightage35384WIP(weightage35384WIP); //#38151
+
 			if (null != this.getManagedBean().getCtContract()) {
 				this.getManagedBean()
 						.getCtContract()
@@ -23650,6 +23653,45 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 	// #10141 End Vinod
 
+	// #29661, #41264 - Start
+	/**
+	 * Collects ids of the ticked preview rows.
+	 * 
+	 * @param previewList
+	 * @return
+	 */
+	private Set<Long> selectedChecklistPreviewIds(List<ScQtCheckList> previewList) {
+		Set<Long> selectedIds = new HashSet<>();
+		if (CollectionUtils.isNotEmpty(previewList)) {
+			for (ScQtCheckList checkList : previewList) {
+				if (checkList.isSelected()) {
+					selectedIds.add(checkList.getQtChecklistId());
+				}
+			}
+		}
+		return selectedIds;
+	}
+
+	/**
+	 * Re-ticks the preview rows after the list is rebuilt.
+	 * 
+	 * @param previewList
+	 * @param selectedIds
+	 * @return true when every row is ticked
+	 */
+	private boolean restoreChecklistPreviewSelection(List<ScQtCheckList> previewList, Set<Long> selectedIds) {
+		boolean allSelected = CollectionUtils.isNotEmpty(previewList);
+		if (CollectionUtils.isNotEmpty(previewList)) {
+			for (ScQtCheckList checkList : previewList) {
+				checkList.setSelected(selectedIds.contains(checkList.getQtChecklistId()));
+				allSelected = allSelected && checkList.isSelected();
+			}
+		}
+		return allSelected;
+	}
+
+	// #29661, #41264 - End
+
 	// #10141 Start Vinod
 	/**
 	 * this method will download Detailed technical checklist report.
@@ -23676,6 +23718,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 		downloadReportBasedOnChecklistTypeAndAction(reportAttachment, reportName, this.getManagedBean()
 				.getTechChecklistPreview(), false);
+		Set<Long> selectedIds = selectedChecklistPreviewIds(this.getManagedBean().getTechChecklistPreview()); //#29661, #41264
 		validatePrepareQtChecklist();
 		 // #41066 - Start
 		if (this.getManagedBean().isMaintanceFlow()) {
@@ -23683,6 +23726,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 		 // #41066 - End
 		technicalCheckListPreview();
+		this.getManagedBean().setSelectAllTechPreview(
+				restoreChecklistPreviewSelection(this.getManagedBean().getTechChecklistPreview(), selectedIds)); //#29661, #41264
 	}
 
 	// #10141 End Vinod
@@ -23752,6 +23797,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 		downloadReportBasedOnChecklistTypeAndAction(reportAttachment, reportName, this.getManagedBean()
 				.getFinChecklistPreview(), false);
+		Set<Long> selectedIds = selectedChecklistPreviewIds(this.getManagedBean().getFinChecklistPreview()); //#29661, #41264
 		validatePrepareQtChecklist();
 		 // #41066 - Start
 		if (this.getManagedBean().isMaintanceFlow()) {
@@ -23759,6 +23805,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 		 // #41066 - End
 		financialCheckListPreview();
+		this.getManagedBean().setSelectAllFinPreview(
+				restoreChecklistPreviewSelection(this.getManagedBean().getFinChecklistPreview(), selectedIds)); //#29661, #41264
 	}
 
 	// #10141 End Vinod

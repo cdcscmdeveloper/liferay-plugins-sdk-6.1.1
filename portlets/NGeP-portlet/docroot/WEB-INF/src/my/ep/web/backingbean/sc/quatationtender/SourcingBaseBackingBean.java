@@ -8096,6 +8096,23 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	// 29661 -end-
+	
+	// 41312 -start-
+	/**
+	 * check estimated amount is null fetched amount from templatespec.
+	 * 
+	 * @param scQt
+	 * @return BigDecimal
+	 */
+	protected BigDecimal checkEstimatedAmount(ScQt scQt) {
+		SpecificationReqDTO estimatedReqDTo = new SpecificationReqDTO();
+		estimatedReqDTo.setQtId(scQt.getQtId());
+		return getQTSpecSO().calCulateTemplateSpecEstimations(estimatedReqDTo)
+				.getTotalSpecEstimatedAmount();
+
+	}
+
+	// 41312 -end-
 
 	//#28784 - Start
 	private boolean checkDemoWIP(ScQt scQt) {
