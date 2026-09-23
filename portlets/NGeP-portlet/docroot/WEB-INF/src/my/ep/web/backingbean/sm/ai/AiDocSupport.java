@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -46,6 +47,7 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 public final class AiDocSupport {
 
 	private static final String BR = "<br/>";
+	private static final String LBL_DOC_INVALID = "lbl.sm.ai.doc.invalid";
 	private static final String AI_ONOFF = EpPropertiesUtils.getInstance().getProperty("google.doc.ai.onoff");
 	private static final String AI_BANK_OCR = EpPropertiesUtils.getInstance().getProperty("google.doc.bank.co.name.check.onoff");
 	// this filename will always go to API
@@ -77,6 +79,8 @@ public final class AiDocSupport {
 	public static final class AiUserEdit {
 
 		public static final String KEY_TENANCY = "hq";
+		// accepted fields hang off the same map under a prefixed key, so the CLOB keeps one shape
+		private static final String ACCEPTED_PREFIX = "+";
 		public static final String F_EPF_NO = "epf_no";
 		public static final String F_NAME = "name";
 		public static final String F_IC = "ic";
@@ -90,6 +94,9 @@ public final class AiDocSupport {
 		public static final String F_STATE = "state";
 		public static final String F_DISTRICT = "district";
 		public static final String F_CITY = "city";
+		// submitting the dialog applies the whole extracted statement, so all of these are accepted at once
+		static final String[] F_TENANCY_ALL = { F_OWNER_NAME, F_RENTAL_RATE, F_ADDRESS1,
+				F_ADDRESS2, F_ADDRESS3, F_POSTCODE, F_COUNTRY, F_STATE, F_DISTRICT, F_CITY };
 
 		private static final Logger log = Logger.getLogger(AiUserEdit.class);
 
@@ -154,6 +161,18 @@ public final class AiDocSupport {
 
 		public static boolean clear(Map<String, Set<String>> edits, String entityKey) {
 			return entityKey != null && edits.remove(entityKey) != null;
+		}
+
+		/**
+		 * Fields the applicant applied by submitting the AI Assistant dialog. Nothing outside this
+		 * set ever carries an AI icon, whatever the typed value happens to be.
+		 */
+		public static Set<String> accepted(Map<String, Set<String>> edits, String entityKey) {
+			return fields(edits, entityKey == null ? null : ACCEPTED_PREFIX + entityKey);
+		}
+
+		public static boolean accept(Map<String, Set<String>> edits, String entityKey, String field) {
+			return add(edits, entityKey == null ? null : ACCEPTED_PREFIX + entityKey, field);
 		}
 	}
 
@@ -378,9 +397,11 @@ public final class AiDocSupport {
 				if ("KWSP_number".equals(type)) {
 					emp.setKwspNumber(value);
 				} else if ("NRIC_number".equals(type)) {
-					emp.setNricNumber(value);
+					// the statement prints the NRIC dashed or spaced; eP stores the 12 digits
+					emp.setNricNumber(AiDocValidator.normalizeNric(value));
 				} else if ("employee_name".equals(type)) {
-					emp.setEmployeeName(value);
+					// the OCR keeps the statement's own line breaks inside a name
+					emp.setEmployeeName(AiDocValidator.normalizePersonName(value));
 				}
 			}
 			return emp;
@@ -413,18 +434,15 @@ public final class AiDocSupport {
 				return dto;
 			}
 			try {
-				Set<String> seen = new HashSet<>();
+				List<AiBankDocDTO.AiBankStatementDTO> parsed = new ArrayList<>();
 				for (int i = 0; i < entities.length(); i++) {
 					JSONObject bankEntity = entities.getJSONObject(i);
 					String entityId = bankEntity.getString("entity");
 					JSONArray properties = bankEntity.getJSONArray(PROPERTIES);
-					AiBankDocDTO.AiBankStatementDTO bank = toBankStatement(properties, entityId);
-					// one row per bank name + account number, per FRS 2.4
-					String key = AiDocValidator.bankAccountKey(bank);
-					if (key == null || seen.add(key)) {
-						dto.getBankStatements().add(bank);
-					}
+					parsed.add(toBankStatement(properties, entityId));
 				}
+				// deduped in validateBank, so nothing is scored until the duplicates are gone
+				dto.setBankStatements(parsed);
 			} catch (JSONException e) {
 				log.error("Error DocEntity", e);
 				dto.setError(true);
@@ -589,7 +607,8 @@ public final class AiDocSupport {
 
 		/**
 		 * Verify an EPF extraction's employer name against the registered company name; sets the verdict flag
-		 * on the DTO. A blank employer name is excluded from the verdict (left valid), as with the other docs.
+		 * on the DTO. Unlike the other docs, a blank employer name counts as a mismatch: its employees are
+		 * dropped from the list and light no icons.
 		 */
 		public static void validateEpf(AiEpfResultDTO ee, String companyName) {
 			if (ee == null) {
@@ -609,22 +628,24 @@ public final class AiDocSupport {
 			if (EntityHelper.isCollectionEmpty(docEntities)) {
 				return;
 			}
-			Map<String, Long> supplierAccounts = collectSupplierAccounts(appl);
-			Set<Long> supplierOrgIds = new HashSet<>(supplierAccounts.values());
+			Map<String, String> supplierAccounts = collectSupplierAccounts(appl);
+			Set<String> supplierOrgNames = new HashSet<>(supplierAccounts.values());
 			List<PmFinancialOrg> candidates = candidateFinancialOrgs(appl);
 			String companyNameSupp = appl.getSmSupplier().getCompanyName();
 
 			// the flags live on each record, so a repeated account still has to be verified on its own file
 			for (AiBankDocDTO entity : docEntities) {
+				// one row per account, per FRS 2.4; nothing is scored until the duplicates are gone
+				entity.setBankStatements(dedupeBankStatements(entity.getBankStatements()));
 				for (AiBankDocDTO.AiBankStatementDTO bank : entity.getBankStatements()) {
-					validateBankRecord(bank, supplierAccounts, supplierOrgIds, candidates, companyNameSupp);
+					validateBankRecord(bank, supplierAccounts, supplierOrgNames, candidates, companyNameSupp);
 				}
 			}
 		}
 
-		// Account number -> chosen financial org id, over every bank keyed in at Bank Information.
-		private static Map<String, Long> collectSupplierAccounts(SmAppl appl) {
-			Map<String, Long> supplierAccounts = new HashMap<>();
+		// Account number -> chosen bank's canonical name, over every bank keyed in at Bank Information.
+		private static Map<String, String> collectSupplierAccounts(SmAppl appl) {
+			Map<String, String> supplierAccounts = new HashMap<>();
 			if (EntityHelper.isCollectionEmpty(appl.getSmSupplierBanks())) {
 				return supplierAccounts;
 			}
@@ -634,7 +655,7 @@ public final class AiDocSupport {
 				if (StringUtils.isEmpty(accountNo) || suppBank.getPmFinancialOrg() == null) {
 					continue;
 				}
-				supplierAccounts.put(accountNo, suppBank.getPmFinancialOrg().getFinancialOrgId());
+				supplierAccounts.put(accountNo, canonicalizeCompanyName(suppBank.getPmFinancialOrg().getFinOrgName()));
 			}
 			return supplierAccounts;
 		}
@@ -651,7 +672,9 @@ public final class AiDocSupport {
 			if (serviceTypes.isEmpty()) {
 				addBankServiceTypes(serviceTypes, null);
 			}
-			Map<Long, PmFinancialOrg> candidates = new HashMap<>();
+			// keyed by canonical name, not id: PM_FINANCIAL_ORG holds the same bank under several ids,
+			// and identical names would otherwise cancel each other out on the runner-up margin below
+			Map<String, PmFinancialOrg> candidates = new HashMap<>();
 			for (String serviceType : serviceTypes) {
 				FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
 				reqDTO.setServiceType(serviceType);
@@ -661,7 +684,7 @@ public final class AiDocSupport {
 					continue;
 				}
 				for (PmFinancialOrg org : resDTO.getFinancialOrgList()) {
-					candidates.put(org.getFinancialOrgId(), org);
+					candidates.put(canonicalizeCompanyName(org.getFinOrgName()), org);
 				}
 			}
 			return new ArrayList<>(candidates.values());
@@ -679,23 +702,23 @@ public final class AiDocSupport {
 		}
 
 		private static void validateBankRecord(AiBankDocDTO.AiBankStatementDTO bank,
-				Map<String, Long> supplierAccounts, Set<Long> supplierOrgIds,
+				Map<String, String> supplierAccounts, Set<String> supplierOrgNames,
 				List<PmFinancialOrg> candidates, String companyNameSupp) {
 			String companyNameJson = bank.getAccountHolderName();
-			Long resolvedOrgId = resolveFinancialOrg(bank.getBankName(), candidates);
-			Long chosenOrgId = supplierAccounts.get(normalizeAccountNo(bank.getAccountNo()));
+			String resolvedOrgName = resolveFinancialOrgName(bank.getBankName(), candidates);
+			String chosenOrgName = supplierAccounts.get(normalizeAccountNo(bank.getAccountNo()));
 			// a field the OCR did not read is not a mismatch, so it keeps its valid verdict
 			boolean hasBankName = !StringUtils.isBlank(bank.getBankName());
 			boolean hasAccountNo = !StringUtils.isBlank(bank.getAccountNo());
-			if (chosenOrgId == null) {
+			if (chosenOrgName == null) {
 				if (hasAccountNo) {
 					bank.setValidAccountNo(false);
 				}
 				// no account to anchor on, so the name only has to be one of the banks the supplier keyed in
-				if (hasBankName && (resolvedOrgId == null || !supplierOrgIds.contains(resolvedOrgId))) {
+				if (hasBankName && (resolvedOrgName == null || !supplierOrgNames.contains(resolvedOrgName))) {
 					bank.setValidBankName(false);
 				}
-			} else if (hasBankName && !chosenOrgId.equals(resolvedOrgId)) {
+			} else if (hasBankName && !chosenOrgName.equals(resolvedOrgName)) {
 				bank.setValidBankName(false);
 			}
 			// only a name that was actually extracted can mismatch the registered one
@@ -723,17 +746,57 @@ public final class AiDocSupport {
 		}
 		
 		/**
-		 * Grouping key for an extracted bank record: bank name + account number, per FRS 2.4.
-		 * @param bank
-		 * @return null when neither is present, so the record is never treated as a duplicate
+		 * One row per account, per FRS 2.4. The OCR segments a statement per printed section, so the same
+		 * account arrives once per section; and a section it read no account number from, carrying a company
+		 * name that is already listed against an account, is that same statement re-read, not another account.
+		 * A company name that is not already listed is kept, so a statement in someone else's name still
+		 * mismatches. The bank name is not part of the identity: one response is one uploaded file, so the same
+		 * account number twice is the same account however its sections spell the bank, and a spelling the
+		 * resolver cannot place must not split it. The record that is kept is filled from the duplicates it
+		 * absorbs, so a field one printed section lost is taken from another.
+		 * @param banks every record parsed out of one response, in the order the OCR returned them
+		 * @return the records to show, first occurrence first
 		 */
-		public static String bankAccountKey(AiBankDocDTO.AiBankStatementDTO bank) {
-			if (bank == null || (StringUtils.isBlank(bank.getBankName())
-					&& StringUtils.isBlank(bank.getAccountNo()))) {
-				return null;
+		public static List<AiBankDocDTO.AiBankStatementDTO> dedupeBankStatements(
+				List<AiBankDocDTO.AiBankStatementDTO> banks) {
+			// collected over the whole list before anything is dropped, so the OCR's order cannot change the outcome
+			Set<String> holdersWithAccount = new HashSet<>();
+			for (AiBankDocDTO.AiBankStatementDTO bank : banks) {
+				if (!normalizeAccountNo(bank.getAccountNo()).isEmpty()) {
+					holdersWithAccount.add(canonicalizeCompanyName(bank.getAccountHolderName()));
+				}
 			}
-			return canonicalizeCompanyName(bank.getBankName()) + "|"
-					+ normalizeAccountNo(bank.getAccountNo());
+			Map<String, AiBankDocDTO.AiBankStatementDTO> kept = new LinkedHashMap<>();
+			for (AiBankDocDTO.AiBankStatementDTO bank : banks) {
+				String accountNo = normalizeAccountNo(bank.getAccountNo());
+				String holder = canonicalizeCompanyName(bank.getAccountHolderName());
+				if (accountNo.isEmpty() && holdersWithAccount.contains(holder)) {
+					continue;
+				}
+				// a record with no account number is identified by its company name instead
+				String key = accountNo.isEmpty() ? "|" + holder : accountNo;
+				AiBankDocDTO.AiBankStatementDTO seen = kept.get(key);
+				if (seen == null) {
+					kept.put(key, bank);
+				} else {
+					fillBlankFields(seen, bank);
+				}
+			}
+			return new ArrayList<>(kept.values());
+		}
+
+		// a field one printed section lost is taken from another read of the same account
+		private static void fillBlankFields(AiBankDocDTO.AiBankStatementDTO kept,
+				AiBankDocDTO.AiBankStatementDTO duplicate) {
+			if (StringUtils.isBlank(kept.getBankName())) {
+				kept.setBankName(duplicate.getBankName());
+			}
+			if (StringUtils.isBlank(kept.getAccountNo())) {
+				kept.setAccountNo(duplicate.getAccountNo());
+			}
+			if (StringUtils.isBlank(kept.getAccountHolderName())) {
+				kept.setAccountHolderName(duplicate.getAccountHolderName());
+			}
 		}
 
 		public static String canonicalizeCompanyName(String name) {
@@ -755,6 +818,44 @@ public final class AiDocSupport {
 				return "";
 			}
 			return accountNo.replaceAll("[^0-9]", "");
+		}
+
+		/**
+		 * A Malaysian NRIC is 12 digits; the dashes and spaces are only how it gets printed on
+		 * the statement, so match on the digits alone.
+		 * @param nric
+		 * @return digits only, empty when there are none
+		 */
+		public static String normalizeNric(String nric) {
+			if (StringUtils.isBlank(nric)) {
+				return "";
+			}
+			return nric.replaceAll("[^0-9]", "");
+		}
+
+		/**
+		 * Collapse every run of whitespace - including the line breaks the OCR keeps inside a
+		 * name - to one space, so a name reads the same however the statement printed it.
+		 * @param name
+		 * @return
+		 */
+		public static String normalizePersonName(String name) {
+			if (StringUtils.isBlank(name)) {
+				return "";
+			}
+			return name.replaceAll("\\s+", " ").trim();
+		}
+
+		/**
+		 * Same person's name, whatever the spacing and case. Both sides are sanitized first.
+		 * @param st1
+		 * @param st2
+		 * @return
+		 */
+		public static boolean personNameEquals(String st1, String st2) {
+			String c1 = normalizePersonName(st1);
+			String c2 = normalizePersonName(st2);
+			return !c1.isEmpty() && c1.equalsIgnoreCase(c2);
 		}
 
 		public static List<String> tokenize(String name) {
@@ -806,13 +907,14 @@ public final class AiDocSupport {
 		}
 
 		/**
-		 * Resolve an extracted bank name to one PM_FINANCIAL_ORG row. Tokens are weighted by how rare they are
-		 * across the candidate list, so shared boilerplate such as BANK or BERHAD cannot carry a match on its own.
+		 * Resolve an extracted bank name to one candidate bank's canonical name. Tokens are weighted by how rare
+		 * they are across the candidate list, so shared boilerplate such as BANK or BERHAD cannot carry a match on
+		 * its own. The verdict is the name rather than the id, because one bank owns several PM_FINANCIAL_ORG rows.
 		 * @param extractedName
 		 * @param candidates
-		 * @return the financial org id, or null when nothing clears both the floor and the runner-up
+		 * @return the canonical bank name, or null when nothing clears both the floor and the runner-up
 		 */
-		public static Long resolveFinancialOrg(String extractedName, List<PmFinancialOrg> candidates) {
+		public static String resolveFinancialOrgName(String extractedName, List<PmFinancialOrg> candidates) {
 			Set<String> queryTokens = new HashSet<>(tokenize(extractedName));
 			if (queryTokens.isEmpty() || EntityHelper.isCollectionEmpty(candidates)) {
 				return null;
@@ -848,7 +950,7 @@ public final class AiDocSupport {
 			if (bestOrg == null || best < MIN_BANK_MATCH_SCORE || best - runnerUp < MIN_BANK_MATCH_MARGIN) {
 				return null;
 			}
-			return bestOrg.getFinancialOrgId();
+			return canonicalizeCompanyName(bestOrg.getFinOrgName());
 		}
 
 		private static Map<String, Integer> documentFrequency(List<PmFinancialOrg> pool) {
@@ -919,49 +1021,61 @@ public final class AiDocSupport {
 			}
 		}
 
-		// display AI icons when values match
-		public static void setTenancyAiFields(SmFacility fac, AiTenancyDTO te, Set<String> edited) {
+		// #40112 - populate a shadow field only where the applicant submitted it and has not since
+		// edited it; a value she typed herself carries no AI icon even when it equals the extraction
+		public static void setTenancyAiFields(SmFacility fac, AiTenancyDTO te, Set<String> accepted) {
 			if (fac == null || te == null) {
 				return;
 			}
-			if (!edited.contains(AiUserEdit.F_OWNER_NAME)) {
+			if (accepted.contains(AiUserEdit.F_OWNER_NAME)) {
 				fac.setOwnerNameAI(te.getLandlordsName());
 			}
-			if (!edited.contains(AiUserEdit.F_RENTAL_RATE)) {
+			if (accepted.contains(AiUserEdit.F_RENTAL_RATE)) {
 				fac.setRentalRateAI(te.getMonthlyRental());
 			}
-			SmAddress addr = fac.getSmAddress();
-			if (addr != null) {
-				if (!edited.contains(AiUserEdit.F_ADDRESS1)) {
-					addr.setAddress1AI(te.getAddr1());
-				}
-				if (!edited.contains(AiUserEdit.F_ADDRESS2)) {
-					addr.setAddress2AI(te.getAddr2());
-				}
-				if (!edited.contains(AiUserEdit.F_ADDRESS3)) {
-					addr.setAddress3AI(te.getAddr3());
-				}
-				if (!edited.contains(AiUserEdit.F_POSTCODE)) {
-					addr.setPostcodeAI(te.getPostcode());
-				}
-				PmCity city = te.getPmCity();
-				if (city != null) {
-					if (!edited.contains(AiUserEdit.F_CITY)) {
-						addr.setCityIdAI(city.getCityId());
-					}
-					if (!edited.contains(AiUserEdit.F_COUNTRY)) {
-						addr.setCountryIdAI(SmCommonUtil.getMyCountryId());
-					}
-					if (city.getPmDistrict() != null) {
-						if (!edited.contains(AiUserEdit.F_DISTRICT)) {
-							addr.setDistrictIdAI(city.getPmDistrict().getDistrictId());
-						}
-						if (city.getPmDistrict().getPmState() != null
-								&& !edited.contains(AiUserEdit.F_STATE)) {
-							addr.setStateIdAI(city.getPmDistrict().getPmState().getStateId());
-						}
-					}
-				}
+			setTenancyAddressAiFields(fac.getSmAddress(), te, accepted);
+		}
+
+		private static void setTenancyAddressAiFields(SmAddress addr, AiTenancyDTO te,
+				Set<String> accepted) {
+			if (addr == null) {
+				return;
+			}
+			if (accepted.contains(AiUserEdit.F_ADDRESS1)) {
+				addr.setAddress1AI(te.getAddr1());
+			}
+			if (accepted.contains(AiUserEdit.F_ADDRESS2)) {
+				addr.setAddress2AI(te.getAddr2());
+			}
+			if (accepted.contains(AiUserEdit.F_ADDRESS3)) {
+				addr.setAddress3AI(te.getAddr3());
+			}
+			if (accepted.contains(AiUserEdit.F_POSTCODE)) {
+				addr.setPostcodeAI(te.getPostcode());
+			}
+			setTenancyCityAiFields(addr, te.getPmCity(), accepted);
+		}
+
+		private static void setTenancyCityAiFields(SmAddress addr, PmCity city,
+				Set<String> accepted) {
+			if (city == null) {
+				return;
+			}
+			if (accepted.contains(AiUserEdit.F_CITY)) {
+				addr.setCityIdAI(city.getCityId());
+			}
+			if (accepted.contains(AiUserEdit.F_COUNTRY)) {
+				addr.setCountryIdAI(SmCommonUtil.getMyCountryId());
+			}
+			if (city.getPmDistrict() == null) {
+				return;
+			}
+			if (accepted.contains(AiUserEdit.F_DISTRICT)) {
+				addr.setDistrictIdAI(city.getPmDistrict().getDistrictId());
+			}
+			if (city.getPmDistrict().getPmState() != null
+					&& accepted.contains(AiUserEdit.F_STATE)) {
+				addr.setStateIdAI(city.getPmDistrict().getPmState().getStateId());
 			}
 		}
 	}
@@ -992,6 +1106,10 @@ public final class AiDocSupport {
 		 * employee rows carry no verdict of their own and are not rendered here.
 		 */
 		public String getLabel() {
+			// nothing mapped out of this file, same verdict as Bank and Tenancy report
+			if (employerName == null && getEmployees().isEmpty()) {
+				return AiDocParser.label(LBL_DOC_INVALID);
+			}
 			StringBuilder sb = new StringBuilder();
 			if (employerName != null) {
 				String s = AiDocParser.label("lbl.cm.company.name") + ": " + employerName + BR;
@@ -1094,7 +1212,7 @@ public final class AiDocSupport {
 		// Field labels from the common bundle (locale-sensitive at render time).
 		public String getLabel() {
 			if (this.error) {
-				return AiDocParser.label("lbl.sm.ai.doc.invalid");
+				return AiDocParser.label(LBL_DOC_INVALID);
 			}
 			StringBuilder sb = new StringBuilder();
 			appendField(sb, "lbl.cm.company.name", tenantsName, validTenantsName);
@@ -1282,13 +1400,15 @@ public final class AiDocSupport {
 		public String getLabel() {
 			StringBuilder sb = new StringBuilder();
 			if (this.error) {
-				return AiDocParser.label("lbl.sm.ai.doc.invalid");
+				return AiDocParser.label(LBL_DOC_INVALID);
 			}
 			if (this.bankStatements.size() == 1) {
 				return bankStatements.get(0).getLabel();
 			}
+			// number the rows that are shown; the OCR's own entity index skips whatever was de-duped
+			int bankNo = 1;
 			for (AiBankStatementDTO bank : this.bankStatements) {
-				sb.append("Bank " + bank.getEntityId().substring(5)).append(":<br/>");
+				sb.append("Bank ").append(bankNo++).append(":<br/>");
 				sb.append(bank.getLabel()).append(BR);
 			}
 			return sb.toString();
@@ -1303,6 +1423,23 @@ public final class AiDocSupport {
 			}
 			for (AiBankStatementDTO bank : bankStatements) {
 				if (!bank.isValidAccountHolderName() || !bank.isValidAccountNo() || !bank.isValidBankName()) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		/**
+		 * Whether the AI read this document only partly: no field contradicts the application, but at least
+		 * one bank on it is missing a field. Ranks below {@link #hasError()}, which the caller tests first.
+		 * @return true when a kept record is missing its bank name, account number or company name
+		 */
+		public boolean hasWarning() {
+			if (this.error || bankStatements == null || bankStatements.isEmpty()) {
+				return false;
+			}
+			for (AiBankStatementDTO bank : bankStatements) {
+				if (bank.hasNotExtracted()) {
 					return true;
 				}
 			}
@@ -1326,35 +1463,34 @@ public final class AiDocSupport {
 
 			public String getLabel() {
 				StringBuilder sb = new StringBuilder();
-				String err1 = "<span style='color: red;'>";
-				String err2 = "</span>";
-				String yes = "&#x2713; ";
-				String no = "&#x2717; ";
-				if (accountHolderName != null) {
-					String s = AiDocParser.label("lbl.cm.company.name") + ": " + accountHolderName + BR;
-					if (!validAccountHolderName) {
-						sb.append(err1).append(no).append(s).append(err2);
-					} else {
-						sb.append(yes).append(s);
-					}
-				}
-				if (bankName != null) {
-					String s = AiDocParser.label("lbl.gfmas.bank.desc") + ": " + bankName + BR;
-					if (!validBankName) {
-						sb.append(err1).append(no).append(s).append(err2);
-					} else {
-						sb.append(yes).append(s);
-					}
-				}
-				if (accountNo != null) {
-					String s = AiDocParser.label("lbl.fl.bank.acc.no") + ": " + accountNo + BR;
-					if (!validAccountNo) {
-						sb.append(err1).append(no).append(s).append(err2);
-					} else {
-						sb.append(yes).append(s);
-					}
-				}
+				appendField(sb, "lbl.cm.company.name", accountHolderName, validAccountHolderName);
+				appendField(sb, "lbl.gfmas.bank.desc", bankName, validBankName);
+				appendField(sb, "lbl.fl.bank.acc.no", accountNo, validAccountNo);
 				return sb.toString();
+			}
+
+			// One labelled field row: a green tick when valid, a red cross when it contradicts the
+			// application, and a darkgoldenrod warning naming the field the OCR read nothing into.
+			private void appendField(StringBuilder sb, String labelKey, String value, boolean valid) {
+				String label = AiDocParser.label(labelKey);
+				if (StringUtils.isBlank(value)) {
+					sb.append("<span style='color: darkgoldenrod;'>").append("&#x26A0; ").append(label)
+							.append(": ").append(AiDocParser.label("lbl.sm.ai.doc.notextracted"))
+							.append(BR).append("</span>");
+					return;
+				}
+				String s = label + ": " + value + BR;
+				if (!valid) {
+					sb.append("<span style='color: red;'>").append("&#x2717; ").append(s).append("</span>");
+				} else {
+					sb.append("&#x2713; ").append(s);
+				}
+			}
+
+			// a field this statement carries no value for; nothing to verify, but nothing mapped either
+			public boolean hasNotExtracted() {
+				return StringUtils.isBlank(bankName) || StringUtils.isBlank(accountNo)
+						|| StringUtils.isBlank(accountHolderName);
 			}
 
 			public String getBankName() {
