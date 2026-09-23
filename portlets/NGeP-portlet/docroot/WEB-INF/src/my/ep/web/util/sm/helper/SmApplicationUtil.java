@@ -2317,6 +2317,12 @@ public class SmApplicationUtil {
 			} 
 			//#31130 --END 040725
 			
+			//#40801 START
+			if (per.getEpRole() != null && !per.getEpRole().isEmpty() &&
+					(per.getEmail() == null || per.getEmail().trim().isEmpty())) {
+				validPersonnel = false;
+		    }
+			//#40801 END
 			//31130-start 040725
 			for (SmPersonnelAddress addressPer : per.getSmPersonnelAddresses()){
 				if (addressPer.getSmAddress() == null
