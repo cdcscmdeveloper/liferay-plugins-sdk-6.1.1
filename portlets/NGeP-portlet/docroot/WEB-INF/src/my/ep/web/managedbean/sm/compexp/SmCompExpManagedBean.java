@@ -83,6 +83,10 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 	private boolean consultant;
 	private transient IPagingDataModel<SmCompExpDraft> draftQtDataModel = new DraftQtPagingDataModel();
 	private boolean masterNew;
+	// #9299 - #40713
+	private String popUpHeader;
+	// #9299 - #40660
+	private SmCompExpMaster histMaster;
 
 	public SmSupplier getSupplier() {
 		return supplier;
@@ -536,5 +540,23 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 		}
 
 	}
+	// #9299 - #40713 Start
+	public String getPopUpHeader() {
+		return popUpHeader;
+	}
+
+	public void setPopUpHeader(String popUpHeader) {
+		this.popUpHeader = popUpHeader;
+	}
+	// #9299 - #40713 End
+	// #9299 - #40660 Start
+	public SmCompExpMaster getHistMaster() {
+		return histMaster;
+	}
+
+	public void setHistMaster(SmCompExpMaster histMaster) {
+		this.histMaster = histMaster;
+	}
+	// #9299 - #40660 End
 
 }

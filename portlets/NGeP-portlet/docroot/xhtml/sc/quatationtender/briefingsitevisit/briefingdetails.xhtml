@@ -40,8 +40,10 @@
 								value="*" styleClass="mandatory" /></td>
 						<td colspan="1">
 							<ac:dateTimeBsv id="briefdate"
-							    mindate="#{qTBriefingSiteVisitBackingBean.handleOriginalBSVMinDate()}"
-							    minDateTime="#{qTBriefingSiteVisitBackingBean.handleOriginalBSVMinDate()}"
+							    mindate="#{qTBriefingSiteVisitBackingBean.handleBSVCalendarMinDate()}"
+							    minDateTime="#{qTBriefingSiteVisitBackingBean.handleBSVCalendarMinDate()}"
+							    restrictionDateTime="#{qTBriefingSiteVisitBackingBean.handleBSVRestrictionDateTime()}"
+							    checkBSVNormalMain="#{qTBriefingSiteVisitBackingBean.checkBSVMaintenanceNormal()}"
 							    required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
 							    disabled="#{not empty qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.qtBsvDtlId and 
 							    			not empty qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDate}"

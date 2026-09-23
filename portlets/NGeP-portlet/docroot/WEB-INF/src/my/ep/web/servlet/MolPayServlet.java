@@ -409,6 +409,7 @@ public class MolPayServlet extends HttpServlet {
 					// for this payment id so no need to save to avoid duplicate
 					// resit
 					if (statusCode != null) {
+						log.info("###############38377 update payment  paymentOrder.setChannelName:"+paymentOrder.getChannelName());
 						pymtResDTO = reqSO.paymentBackendUpdate(pymtReqDTO);
 					}
 					printSuccessResponseCode(paymentGateway, statusCode, pymtResDTO.isSuccessful(), res.getWriter());

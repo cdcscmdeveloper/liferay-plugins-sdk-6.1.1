@@ -1711,6 +1711,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean selectAllFinPreview;
 	private boolean saveForSendNotification;
 	private ScAttachment scoreAttachment;
+	private boolean preRenderInactiveChecklist;
+	private boolean saveForScorePrintBtn;
 	// #10141 - end
 	private boolean isFromSpecEndorse = false; // Bug #33661@Syazani 06/10/2022
 
@@ -1956,6 +1958,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	//#28188 - Start
 	/** The Briefing/Site Visit postpone date. */
 	private Date briefingSiteVisitPostponeDate;
+	private Map<Long,List<Long>> bsvRegisterDetails;
+	
 	//#28188 - End
 	
 	// 12471 - start
@@ -11527,7 +11531,23 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setScoreAttachment(ScAttachment scoreAttachment) {
 		this.scoreAttachment = scoreAttachment;
 	}
+	
+	public boolean isPreRenderInactiveChecklist() {
+		return preRenderInactiveChecklist;
+	}
 
+	public void setPreRenderInactiveChecklist(boolean preRenderInactiveChecklist) {
+		this.preRenderInactiveChecklist = preRenderInactiveChecklist;
+	}
+
+	public boolean isSaveForScorePrintBtn() {
+		return saveForScorePrintBtn;
+	}
+
+	public void setSaveForScorePrintBtn(boolean saveForScorePrintBtn) {
+		this.saveForScorePrintBtn = saveForScorePrintBtn;
+	}
+	
 	// #10141 - end
 		
 		//#9019 - Start (Harun) 08082022 Missing remarks issue
@@ -12493,6 +12513,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setBriefingSiteVisitPostponeDate(Date briefingSiteVisitPostponeDate) {
 		this.briefingSiteVisitPostponeDate = briefingSiteVisitPostponeDate;
 	}
+	
+	public Map<Long, List<Long>> getBsvRegisterDetails() {
+		return bsvRegisterDetails;
+	}
+
+	public void setBsvRegisterDetails(Map<Long, List<Long>> bsvRegisterDetails) {
+		this.bsvRegisterDetails = bsvRegisterDetails;
+	}
+	
 	//#28188 - End
 	
 	// 12471 - start
@@ -12512,4 +12541,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.committeeMembersTypeMap = committeeMembersTypeMap;
 	}
 	// 12471 - end
+
+	
+	
+	
 }

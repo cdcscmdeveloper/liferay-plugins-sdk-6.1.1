@@ -16,12 +16,12 @@
 	<h:panelGroup id="recommendationid">
 			<p:panel id="package" toggleable="true">
 				<f:facet name="header">
-					<ui:remove><!-- #38151 start--></ui:remove>
+					<ui:remove><!-- #38151,#38679 start--></ui:remove>
 					<h:outputText value="#{lbl['lbl.sc.by.package.item']}" rendered="#{!specificationBackingBean.managedBean.weightage35384WIP}"/>
 					<h:outputText value="#{lbl['lbl.sc.by.package']}" rendered="#{specificationBackingBean.managedBean.weightage35384WIP}" />
 					<ac:iconTooltip
 						value="#{lbl['lbl.sc.by.package.item.recommendation.tooltip']}" rendered="#{!specificationBackingBean.managedBean.weightage35384WIP}"/>
-					<ui:remove><!-- #38151 End--></ui:remove>
+					<ui:remove><!-- #38151,#38679 End--></ui:remove>
 				</f:facet>
 
 				<table>
@@ -31,7 +31,7 @@
 						<td><p:inputText style="text-align:right" maxlength="3"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationPackageScore.overallTechnical}">
-								<ui:remove><!-- #38151 start--></ui:remove>
+								<ui:remove><!-- #38151,#38679 start--></ui:remove>
  								<f:convertNumber integerOnly="true" />
 								<p:ajax event="blur" update="@([id$=package])"
 									process="@this,package"
@@ -41,7 +41,7 @@
 									process="@this,package"
 									listener="#{specificationBackingBean.calculateonesetscoring(specificationBackingBean.managedBean.recommendationPackageScore,true)}"
 									rendered="#{!specificationBackingBean.managedBean.weightage35384WIP}"></p:ajax>
-								<ui:remove><!-- #38151 end--></ui:remove>
+								<ui:remove><!-- #38151,#38679 end--></ui:remove>
 							</p:inputText></td> 
 					</tr>
 					<tr>
@@ -51,7 +51,7 @@
 								readonly="true"
 								disabled="true"
 								value="#{specificationBackingBean.managedBean.recommendationPackageScore.overallFin}">
-								<ui:remove><!-- #38151 start--></ui:remove>
+								<ui:remove><!-- #38151,#38679 start--></ui:remove>
 								<p:ajax event="blur" update="@([id$=package])"
 									process="@this,package"
 									listener="#{specificationBackingBean.calculateTotalPackage(specificationBackingBean.managedBean.recommendationPackageScore,true)}"
@@ -60,7 +60,7 @@
 									process="@this,package"
 									listener="#{specificationBackingBean.calculateonesetscoring(specificationBackingBean.managedBean.recommendationPackageScore,true)}"
 									rendered="#{!specificationBackingBean.managedBean.weightage35384WIP}"></p:ajax>
-								<ui:remove><!-- #38151 end--></ui:remove>
+								<ui:remove><!-- #38151,#38679 end--></ui:remove>
 							</p:inputText></td> 
 					</tr>
 					<tr>
@@ -77,7 +77,7 @@
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationPackageScore.passingScore}">
                               <p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
-                              <ui:remove><!-- #38151 --></ui:remove>
+                              <ui:remove><!-- #38151,#38679 --></ui:remove>
                               <p:ajax event="blur" update="@([id$=package])"
 									process="@this,package"
 									listener="#{specificationBackingBean.calculateonesetscoring(specificationBackingBean.managedBean.recommendationPackageScore,true)}"
@@ -90,7 +90,7 @@
 			</p:panel>
 			
 			<ui:remove><!--  
-			//#38151 start
+			//#38151,#38679 start
 			//To apply the same scoring settings/calculation 
 			for both packages and items.Show only for WIP -->
 			</ui:remove>
@@ -201,8 +201,8 @@
 					</tr>
 				</table>
 			</p:panel>		
-			<!-- 38151 start -->
+			<!-- 38151,#38679 start -->
 		</c:if>
-		<!-- 38151 end -->
+		<!-- 38151,#38679 end -->
 	</h:panelGroup>
 </ui:composition>
