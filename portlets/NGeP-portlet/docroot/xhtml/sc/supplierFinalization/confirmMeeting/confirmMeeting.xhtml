@@ -20,7 +20,7 @@
 						autoUpdate="true" closable="true" severity="error, info" />
 
 					<div align="right" class="BtnSpacing">
-						<p:commandButton value="#{lbl['lbl.btn.save']} +save123" process="@all"
+						<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							partialSubmit="true"
 							action="#{suppFinalMeetingBackingBean.saveAction}" update="@form" />
@@ -30,7 +30,7 @@
 							<ui:fragment rendered="#{bpmAction ne '~'}">
 								<ui:param name="buttonLabel"
 									value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-								<p:commandButton value="#{lbl[buttonLabel]}+36533***"
+								<p:commandButton value="#{lbl[buttonLabel]}"
 									onstart="blockWidget.show();" styleClass="ui-button"
 									oncomplete="confirmSubmitMeetingPopup.show();blockWidget.hide();"
 									style="float:right;"
@@ -38,7 +38,7 @@
 									process="@all" update="@form" />
 							</ui:fragment>
 						</ui:repeat>
-						<ui:remove>#34444 Start Ann</ui:remove>
+						<ui:remove>#34444 Start END</ui:remove>
 					</div> <ui:include
 						src="/xhtml/sc/supplierFinalization/confirmMeeting/suppFinalizationHeader.xhtml"></ui:include>
 

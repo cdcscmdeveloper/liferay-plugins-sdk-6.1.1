@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+	xmlns:ac="http://ac.my/jsf/composite/cc"><ui:remove><!--  #34444 Start Ann--></ui:remove>
 
 	<ui:param name="validityDaysExpiredQt"
 		value="#{lOIDetailBackingBean.checkProposalValidityDateReach(lOIDetailBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
@@ -101,7 +101,7 @@
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 							<ui:param name="isReject" value="#{bpmAction == 'REJECT'}" />
 							<ui:remove>#30008 - Change Submit button to validate nego decision - Start</ui:remove>							
-								<p:commandButton value="#{lbl[buttonLabel]} +33977"
+								<p:commandButton value="#{lbl[buttonLabel]}"
 									rendered="#{validityDaysExpiredQt and bpmAction != 'APPROVE' and bpmAction != 'SUBMIT'}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									styleClass="ui-button"

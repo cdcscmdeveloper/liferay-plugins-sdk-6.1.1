@@ -73,13 +73,13 @@
 					actionListener="#{evaluationBackingBean.managedBean.prepareAction(bpmAction)}" 
 					process="@all" update="@all" 
 					disabled="#{evaluationBackingBean.managedBean.noProposalSubmitted}"/>
+				<ui:remove><!-- 6906 - #34444 -  start --></ui:remove>
 				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 					rendered="#{(!validityDaysExpiredQt and evaluationBackingBean.checkMeetingDoneLessThanValidityEndDate(evaluationBackingBean.managedBean.scQt.proposalValidityEndDate)) and bpmAction != 'SUBMIT' and bpmAction != 'REVISEBP' and bpmAction != 'REVISE'}" onstart="blockWidget.show();"
 					oncomplete ="blockWidget.hide(); popupConfirmInfoDlg.show();" style="float:right;"
 					actionListener="#{evaluationBackingBean.managedBean.prepareAction(bpmAction)}" 
 					process="@form" update="@form"  
-					disabled="#{evaluationBackingBean.managedBean.noProposalSubmitted}" />
-				<ui:remove><!-- 6906 - #34444 -  start --></ui:remove>
+					disabled="#{evaluationBackingBean.managedBean.noProposalSubmitted}" />			
 				<p:commandButton value="#{lbl[buttonLabel]}" onstart="blockWidget.show();" styleClass="ui-button" disabled="#{evaluationBackingBean.managedBean.noProposalSubmitted}" rendered="#{validityDaysExpiredQt and bpmAction == 'SUBMIT'}"
 					oncomplete="blockWidget.hide(); confirmUpdateAsAttendPopup.show();" style="float:right;" 
 					actionListener="#{evaluationBackingBean.managedBean.prepareAction(bpmAction)}" 
@@ -96,12 +96,13 @@
 					value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 				<ui:param name="validityDaysExpiredQt"
 					value="#{evaluationBackingBean.checkProposalValidityDateReach(evaluationBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
+				 <ui:remove><!--#34444--></ui:remove>
 				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 					rendered="#{validityDaysExpiredQt and bpmAction != 'SUBMIT' and bpmAction != 'REVISEBP'}" onstart="blockWidget.show();"
 					disabled="#{evaluationBackingBean.managedBean.isEvalStatusComp()}"
 					oncomplete="blockWidget.hide(); confirmUpdateAsAttendPopup.show();" style="float:right;" 
 					actionListener="#{evaluationBackingBean.managedBean.prepareAction(bpmAction)}" 
-					process="@form" update="@form" /> <ui:remove>#28784 / #34444</ui:remove>
+					process="@form" update="@form" /> <ui:remove><!--  #28784 / #34444--></ui:remove>
 				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button" rendered="#{validityDaysExpiredQt and bpmAction == 'SUBMIT'}"
 					disabled="#{evaluationBackingBean.managedBean.isEvalStatusComp()}" action="#{evaluationBackingBean.checkingForBeforeDemoMeetingDetails()}"
 					style="float:right;"/>

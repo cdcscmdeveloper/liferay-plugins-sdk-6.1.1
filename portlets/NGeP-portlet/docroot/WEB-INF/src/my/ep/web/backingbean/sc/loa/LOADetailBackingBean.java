@@ -13504,9 +13504,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * Trigger the LOA submit confirmation dialog.
 	 */
 	public void constructSubmitDialogMesssageLoa(){
-		//#34444 - START
+		/*#34444 - START*/
 		getManagedBean().setBtnAction("SUBMISSIONLOA");
 		RequestContext.getCurrentInstance().execute("popupConfirmInfoDlg.show()");
+		/*#34444 - END*/
 	}
 	
 	/**

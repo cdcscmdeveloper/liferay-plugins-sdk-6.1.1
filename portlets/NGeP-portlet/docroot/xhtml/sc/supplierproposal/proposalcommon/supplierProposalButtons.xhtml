@@ -41,7 +41,7 @@
 				<ui:param name="supplier" value="#{supplierProposalDetailBackingBean.managedBean.qtProposal.scQtSupplier.smSupplier}" />
 				<ui:param name="isDisciplinaryAction"
 					value="#{supplierProposalDetailBackingBean.disabledQTProcess(supplier)}" />
-				<ui:param name="btnAction" value="SUBMIT" />
+				<ui:remove>#34444 Start Ann</ui:remove><ui:param name="btnAction" value="SUBMIT" />
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					styleClass="BtnSpacing"					
 					rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly and !supplierProposalDetailBackingBean.managedBean.supplierBranchDeleted}"
@@ -54,7 +54,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.update']}"
 					styleClass="BtnSpacing"  onstart="updateProposal.show()"
 					rendered="#{supplierProposalDetailBackingBean.managedBean.readOnly and !supplierProposalDetailBackingBean.managedBean.qtClosed and !supplierProposalDetailBackingBean.managedBean.supplierBranchDeleted}"
-					update="@this" process="@this" partialSubmit="true"/> <ui:remove> 28777,29729 </ui:remove>				
+					update="@this" process="@this" partialSubmit="true"/> <ui:remove> 28777,29729, 34444 END </ui:remove>				
 	</div>
 	<ui:remove> #25791 end </ui:remove>
 	

@@ -27,8 +27,9 @@
 		<cc:attribute name="bean" type="java.lang.Object" />
 		<cc:attribute name="hasParam" default="false" />
 		<cc:attribute name="okParam" method-signature="java.lang.String action(java.lang.String)" />
-		<cc:attribute name="oncompleteOk" default="" />
 		<!-- #34445 - end -->
+		<!-- #34444 - START -->
+		<cc:attribute name="oncompleteOk" default="" /><!-- #34444 - end -->		
 	</cc:interface>
 
 	<cc:implementation>
@@ -79,14 +80,14 @@
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
 				<c:choose>
-					<!-- #34445 start -->
+					<!-- #34445 start / 34444 -->
 				    <c:when test="#{cc.attrs.hasParam}">
 						<p:commandButton id="yesWithParamId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
 							partialSubmit="true" onstart="#{cc.attrs.widget}.hide();#{cc.attrs.loadingWidget}.show();"
 							action="#{cc.attrs.okParam}"
 							oncomplete="#{cc.attrs.loadingWidget}.hide(); #{cc.attrs.oncompleteOk}" update="#{cc.attrs.update}" />
 					</c:when>
-				    <!-- #34445 end -->
+				    <!-- #34445 end / 34444 -->
 					<c:when test="#{not empty cc.attrs.loadingWidget}">
 						<ui:remove><!--trigger external blockwidget, TODO: maybe refactor this conditional fragment --></ui:remove>
 						<p:commandButton id="yesWithLoadId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
@@ -110,8 +111,7 @@
 								onstart="confirmPopupBlockWidget.show(); #{cc.attrs.widget}.hide();"
 								oncomplete="confirmPopupBlockWidget.hide(); #{cc.attrs.widget}.hide(); #{cc.attrs.oncompleteOk}"
 								update="#{cc.attrs.update}" />
-						</c:when>
-						<!-- #34444 end -->
+						</c:when>						
 						<c:otherwise>
 				        <p:commandButton id="yesWithoutResetId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
 							partialSubmit="true" 
@@ -120,7 +120,7 @@
 							oncomplete="confirmPopupBlockWidget.hide(); #{cc.attrs.widget}.hide(); #{cc.attrs.oncompleteOk}" update="#{cc.attrs.update}" >
 							<p:resetInput target="#{cc.attrs.resetInput}" />
 						</p:commandButton>
-				    </c:otherwise>
+				    </c:otherwise><!-- #34444 end -->
 				</c:choose>
 				<c:choose>
 				    <c:when test="#{not empty cc.attrs.cancelAction}">
