@@ -3380,6 +3380,10 @@ public class SimpleQuoteBackingBean extends
 							.getSupplierList();
 					deletedSupplierMap.put(supplier.getSmSupplier().getSupplierId(), supplier);
 					supplierList.remove(supplier);
+					//#40654 - start - also drop it from the persisted collection
+					// splitSuppliers() rebuilds the tabs from, or it comes back
+					removeFromQuoteSuppliers(supplier);
+					//#40654 - end
 					getManagedBean().setSupplierList(supplierList);
 					getManagedBean().setDeletedSupplierMap(deletedSupplierMap);
 				}
@@ -3407,6 +3411,11 @@ public class SimpleQuoteBackingBean extends
 					List<ScQuoteSupplier> govtSuppliers = getManagedBean()
 							.getGovtSellers();
 					govtSuppliers.remove(govtSeller);
+					//#40654 - start - drop it from the persisted collection too, and
+					// stash it so a re-pick reuses its row (see govtSellerListener)
+					removeFromQuoteSuppliers(govtSeller);
+					stashPersistedSuppliers(Arrays.asList(govtSeller));
+					//#40654 - end
 					getManagedBean().setGovtSellers(govtSuppliers);
 				}
 			}
@@ -5238,15 +5247,25 @@ public class SimpleQuoteBackingBean extends
 			QTSupplierReqDTO reqDTO = new QTSupplierReqDTO();
 			
 			for (PmOrgProfile orgProfile : orgProfiles) {
-				ScQuoteSupplier scQuoteSupplier = new ScQuoteSupplier();
 				reqDTO.setSupplierId(orgProfile.getOrgProfileId());
 				SmSupplier smSupplier = qtSupplierSO
 						.retrieveGovSellerById(reqDTO).getSmSupplier();
-				scQuoteSupplier.setSmSupplier(smSupplier);
-				scQuoteSupplier.setQuote(getManagedBean().getScQuote());
-				scQuoteSupplier.setMofNumber(getMofNoBySupplierId(smSupplier.getSupplierId()));
-				scQuoteSupplier.setSupplierName(smSupplier.getCompanyName());
-				
+				//#40654 - start
+				// A govt seller cleared by a procurement-type change and picked again must
+				// reuse its persisted row, as supplierListListener already does (#8648);
+				// a fresh instance would violate SC_QUOTE_SUPPLIER_UK on save.
+				Map<Long, ScQuoteSupplier> deletedSupplierMap = getManagedBean().getDeletedSupplierMap();
+				ScQuoteSupplier scQuoteSupplier = deletedSupplierMap != null
+						? deletedSupplierMap.get(smSupplier.getSupplierId()) : null;
+				if (scQuoteSupplier == null) {
+					scQuoteSupplier = new ScQuoteSupplier();
+					scQuoteSupplier.setSmSupplier(smSupplier);
+					scQuoteSupplier.setQuote(getManagedBean().getScQuote());
+					scQuoteSupplier.setMofNumber(getMofNoBySupplierId(smSupplier.getSupplierId()));
+					scQuoteSupplier.setSupplierName(smSupplier.getCompanyName());
+				}
+				//#40654 - end
+
 				getManagedBean().setGovtSellers(govtSuppliers);
 				if(getManagedBean().getGovtSellers() == null || getManagedBean().getGovtSellers().isEmpty()){
 					govtSuppliers.add(scQuoteSupplier);
@@ -10158,8 +10177,18 @@ public class SimpleQuoteBackingBean extends
 	 * scQuoteSuppliers. Clearing only the two UI lists would leave the persisted
 	 * collection populated, and splitSuppliers() rebuilds the UI lists from it -
 	 * resurrecting the supplier that was supposed to be gone.
+	 *
+	 * <p>Rows already persisted are stashed in deletedSupplierMap first, the same
+	 * way deleteSupplier() does (#8648), so that re-picking the same supplier
+	 * reuses the existing row instead of inserting a duplicate that would violate
+	 * SC_QUOTE_SUPPLIER_UK (EclipseLink inserts before it deletes the orphan).
 	 */
 	private void clearSupplierSelections() {
+		stashPersistedSuppliers(getManagedBean().getSupplierList());
+		stashPersistedSuppliers(getManagedBean().getGovtSellers());
+		if (getManagedBean().getScQuote() != null) {
+			stashPersistedSuppliers(getManagedBean().getScQuote().getScQuoteSuppliers());
+		}
 		if (CollectionUtils.isNotEmpty(getManagedBean().getSupplierList())) {
 			getManagedBean().getSupplierList().clear();
 		}
@@ -10169,6 +10198,47 @@ public class SimpleQuoteBackingBean extends
 		ScQuote quote = getManagedBean().getScQuote();
 		if (quote != null && CollectionUtils.isNotEmpty(quote.getScQuoteSuppliers())) {
 			quote.getScQuoteSuppliers().clear();
+		}
+	}
+
+	/**
+	 * Keeps every already-persisted supplier of the given list in
+	 * deletedSupplierMap, keyed by supplier id, so a later re-pick reuses it.
+	 * Unsaved selections have no row yet and are not kept.
+	 *
+	 * @param suppliers the suppliers about to be cleared; may be null
+	 */
+	private void stashPersistedSuppliers(List<ScQuoteSupplier> suppliers) {
+		if (CollectionUtils.isEmpty(suppliers)) {
+			return;
+		}
+		Map<Long, ScQuoteSupplier> deletedSupplierMap = getManagedBean().getDeletedSupplierMap();
+		if (deletedSupplierMap == null) {
+			deletedSupplierMap = new HashMap<Long, ScQuoteSupplier>();
+			getManagedBean().setDeletedSupplierMap(deletedSupplierMap);
+		}
+		for (ScQuoteSupplier supplier : suppliers) {
+			if (supplier.getQuoteSupplierId() != null && supplier.getSmSupplier() != null) {
+				deletedSupplierMap.put(supplier.getSmSupplier().getSupplierId(), supplier);
+			}
+		}
+	}
+
+	/**
+	 * Removes a supplier the user deleted from the quote's persisted collection.
+	 *
+	 * <p>For Special Item / PK7, splitSuppliers() gives supplierList and
+	 * govtSellers their own ArrayLists, so deleting from a tab alone leaves the
+	 * supplier in scQuoteSuppliers; the next splitSuppliers() then brings it back
+	 * and the save persists it. For Normal / G2G the lists are the same instance
+	 * and this is a no-op.
+	 *
+	 * @param supplier the supplier deleted from the Supplier or Agency tab
+	 */
+	private void removeFromQuoteSuppliers(ScQuoteSupplier supplier) {
+		ScQuote quote = getManagedBean().getScQuote();
+		if (quote != null && quote.getScQuoteSuppliers() != null) {
+			quote.getScQuoteSuppliers().remove(supplier);
 		}
 	}
 
