@@ -20451,13 +20451,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			bumiPaymentVO.setTotalAmount(bumiPaymentVO.getPrice());
 			getManagedBean().getPaymentDetailsVOList().add(bumiPaymentVO);
 		}
-
-		for (SmPaymentDetailsVO paymentDetailsVO : getManagedBean()
-				.getPaymentDetailsVOList()) {
-			getManagedBean().setTotalPaymentAmount(
-					getManagedBean().getTotalPaymentAmount().add(
-							paymentDetailsVO.getTotalAmount()));
-		}
 		
 		getOverlapFee();
 		if(getManagedBean().getOverlapPrice().compareTo(BigDecimal.ZERO) > 0){
@@ -20466,6 +20459,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			overlapPaymentVO.setPrice(getManagedBean().getOverlapPrice());
 			overlapPaymentVO.setTotalAmount(overlapPaymentVO.getPrice());	
 			getManagedBean().getPaymentDetailsVOList().add(overlapPaymentVO);
+		}
+
+		for (SmPaymentDetailsVO paymentDetailsVO : getManagedBean()
+				.getPaymentDetailsVOList()) {
+			getManagedBean().setTotalPaymentAmount(
+					getManagedBean().getTotalPaymentAmount().add(
+							paymentDetailsVO.getTotalAmount()));
 		}
 	}
 	
@@ -20547,9 +20547,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	
 	private void getOverlapFee() {
 		SmOverlapCategoryVO overlapVO = SmApplicationUtil.getOverlapCategoryVO(getManagedBean().getSmAppl());
-
-		int normal = 0;
-		int special = 0;
+		getManagedBean().setNormalCodes(new HashSet<String>());
+		getManagedBean().setNormalPersons(new HashSet<String>());
+		getManagedBean().setSpecialCodes(new HashSet<String>());
+		getManagedBean().setSpecialPersons(new HashSet<String>());
 
 		if (overlapVO != null) {
 			List<SmBulkApplOverlapCatVO> categories = overlapVO.getOverlapCategoryVOList();
@@ -20559,41 +20560,58 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			}
 
 			if (categories != null) {
-				countOverlapCatCode(categories,normal,special);
-			}
-		}
-
-		BigDecimal normalFee = BigDecimal.valueOf(1000L).multiply(BigDecimal.valueOf(normal));
-		BigDecimal specialFee = BigDecimal.valueOf(5000L).multiply(BigDecimal.valueOf(special));
-		BigDecimal totalOverlapFee = normalFee.add(specialFee);
-		getManagedBean().setOverlapPrice(totalOverlapFee);
-	}
-	
-	// count price for overlapped code and person
-	private void countOverlapCatCode(List<SmBulkApplOverlapCatVO> categories, int normal, int special) {
-		for (SmBulkApplOverlapCatVO category : categories) {
-			String code = category.getCategoryCode();
-			boolean isSpecial = isSpecialCategory(code, getManagedBean().getSmAppl());
-
-			for (SmBulkApplOverlapCatVO detail : category.getOverlapInfoList()) {
-				if(isSpecial){
-					special = special + 1;
-				} else {
-					normal = normal + 1;
+				for (SmBulkApplOverlapCatVO category : categories) {
+					countOverlapCatCode(category);
 				}
 			}
 		}
+		
+		long normal = (long) getManagedBean().getNormalCodes().size() + getManagedBean().getNormalPersons().size();
+		long special = (long) getManagedBean().getSpecialCodes().size() + getManagedBean().getSpecialPersons().size();
+		BigDecimal normalFee = BigDecimal.valueOf(1000L).multiply(BigDecimal.valueOf(normal));
+		BigDecimal specialFee = BigDecimal.valueOf(5000L).multiply(BigDecimal.valueOf(special));
+		getManagedBean().setOverlapPrice(normalFee.add(specialFee));
 	}
+	
+	// count price for overlapped code and person
+	private void countOverlapCatCode(SmBulkApplOverlapCatVO category) {
+		String code = category.getCategoryCode();
+		List<SmSupplierCategory> activeCategories = getManagedBean().getActiveCategoryList();
+		
+		if (ParameterConst.NEW_SM_APPLN_FOR_RENEW.equals(getManagedBean().getSmAppl().getApplType())
+				&& getManagedBean().getApprovedCategoryList() != null) {
+			activeCategories.addAll(getManagedBean().getApprovedCategoryList());
+		}
+		
+		SmSupplierCategory matchedCategory = null;
+		
+		for (SmSupplierCategory activeCategory : activeCategories) {
+            if (code != null
+                    && code.equals(CustomUtils.getCategoryCode(activeCategory))) {
+                matchedCategory = activeCategory;
+                break;
+            }
+        }
 
-	// Check overlapped category is special or not
-	private boolean isSpecialCategory(String categoryCode, SmAppl appl) {
-		boolean isSpecial = false;
-	    for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
-	        if (categoryCode.equals(CustomUtils.getCategoryCode(cat))) {
-	        	isSpecial =  cat.isSpecialCategory();
-	        }
-	    }
-	    return isSpecial;
+		if (matchedCategory != null && category.getOverlapInfoList() != null) {
+			boolean isSpecialCode = matchedCategory.isSpecialCategory();
+
+			for (SmBulkApplOverlapCatVO detail : category.getOverlapInfoList()) {
+				String company = detail.getRegNo();
+				String person = detail.getIdentificationNo();
+
+				String codeKey = company.trim() + "|" + code;
+				String personKey = company.trim() + "|" + person.trim();
+
+				if (isSpecialCode) {
+					getManagedBean().getSpecialCodes().add(codeKey);
+					getManagedBean().getSpecialPersons().add(personKey);
+				} else {
+					getManagedBean().getNormalCodes().add(codeKey);
+					getManagedBean().getNormalPersons().add(personKey);
+				}
+			}
+		}
 	}
 	
 	// Bill for additonal Fee

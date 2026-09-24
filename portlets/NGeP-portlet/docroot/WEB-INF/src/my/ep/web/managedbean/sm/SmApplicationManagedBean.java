@@ -107,6 +107,8 @@ import my.ep.web.vo.SoftcertUploadSuppDocVO;
 import org.apache.commons.lang3.StringUtils;
 
 import com.liferay.portal.model.Role;
+// #RUU
+import java.util.Set;
 
 @ManagedBean(name = "smApplMB")
 @SessionScoped
@@ -705,6 +707,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private int specialCodeCount;
 	private int cancelledCount;
 	private BigDecimal overlapPrice;
+	private Set<String> normalCodes;
+	private Set<String> specialCodes;
+	private Set<String> normalPersons;
+	private Set<String> specialPersons;
 	// #RUU End
 
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
@@ -4992,6 +4998,38 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setOverlapPrice(BigDecimal overlapPrice) {
 		this.overlapPrice = overlapPrice;
+	}
+
+	public Set<String> getNormalCodes() {
+		return normalCodes;
+	}
+
+	public void setNormalCodes(Set<String> normalCodes) {
+		this.normalCodes = normalCodes;
+	}
+
+	public Set<String> getSpecialCodes() {
+		return specialCodes;
+	}
+
+	public void setSpecialCodes(Set<String> specialCodes) {
+		this.specialCodes = specialCodes;
+	}
+
+	public Set<String> getNormalPersons() {
+		return normalPersons;
+	}
+
+	public void setNormalPersons(Set<String> normalPersons) {
+		this.normalPersons = normalPersons;
+	}
+
+	public Set<String> getSpecialPersons() {
+		return specialPersons;
+	}
+
+	public void setSpecialPersons(Set<String> specialPersons) {
+		this.specialPersons = specialPersons;
 	}
 	// #RUU End
 }
