@@ -20,7 +20,7 @@
 		<div class="ppRightBtn">
 			<h:panelGroup id="bsvattandanceBtns">
 
-				<ui:remove>#34444 Start Ann</ui:remove>
+				<ui:remove>#34444 Start</ui:remove>
 				<ui:repeat var="bpmAction"
 					value="#{bsvAttendanceBackingBean.managedBean.outComes}">
 					<ui:param name="buttonLabel"
@@ -39,7 +39,7 @@
 						update="@form"
 						oncompleteOk="confirmSubmit.show();" />
 					<!-- action="#{bsvAttendanceBackingBean.submitBsvDetails(bpmAction)}" -->
-			   <ui:remove>#34444 End Ann</ui:remove>
+			   <ui:remove>#34444 End</ui:remove>
 
 					<p:confirmDialog id="confirmSubmit"
 						header="#{lbl['lbl.sc.dialog.cofirm.header']}"
@@ -184,7 +184,7 @@
 							
 							onclick="confirmSubmit.hide();" style="float:right;"/>
 						<p:commandButton id="conf" value="#{lbl['lbl.cm.dialog.cofirm.yes']}"						 
-						action="#{bsvAttendanceBackingBean.submitBsvDetails(bpmAction)}"						
+						action="#{bsvAttendanceBackingBean.submitBsvDetails(bpmAction)}"
 						process="@form" update="@form"
 							onstart="confirmSubmit.hide(); blockWidget.show();" oncomplete="blockWidget.hide();" style="float:right"/>
 					
@@ -193,6 +193,8 @@
 
 			</h:panelGroup>
 		</div>
+
+
 		<div align="left" class="header-info header-spacing">
 			<table style="width: 100%">
 				<tr>

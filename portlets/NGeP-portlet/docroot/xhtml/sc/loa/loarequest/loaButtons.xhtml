@@ -44,14 +44,12 @@
 				<ui:param name="popupMsgActionBtn"
 					value="#{lOADetailBackingBean.submitConformationForLampiranA3()}" />
 					<ui:remove>#34444 END</ui:remove>
-				<p:commandButton
-					value="#{lbl['lbl.btn.submit']}"
+				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt and isSqStillValid and qtLOABackingBean.managedBean.ableToSubmitLOA}"
-					process="@form"
+					 process="@form"
 					action="#{lOADetailBackingBean.constructSubmitDialogMesssageLoa()}"
 					update="@form" onstart="blockWidget.show();"
-					oncomplete="blockWidget.hide();" />
-				<ui:remove>#21692</ui:remove>
+					oncomplete="blockWidget.hide();" /><ui:remove>#21692</ui:remove>
 				<ui:remove>START - #33639 (by include another checking by LOA Doc Type during render the cancel button)</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					rendered="#{!lOADetailBackingBean.managedBean.scLoa.brandNew and isPendingSubmissionStatus and !isSqStillValid and isDocTypePurchaseRequest}"
@@ -190,7 +188,6 @@
 									action="#{lOADetailBackingBean.approveBeforeupdateBpmTaskAction(bpmAction)}"
 									partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
 									update="#{isReject ? '@this' : '@form'}" /><ui:remove>21692</ui:remove>
-								
 								<ui:remove>#34444 START</ui:remove>
 								<ui:param name="popupMsgActionBtn"
 									value="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}" />

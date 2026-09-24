@@ -5,7 +5,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:ac="http://ac.my/jsf/composite/cc"> <ui:remove>34444</ui:remove>
+	xmlns:ac="http://ac.my/jsf/composite/cc"> <ui:remove>34444 start</ui:remove>
+	<ui:remove>34444 end</ui:remove>
 
 	<p:blockUI block=":form" widgetVar="blockWidget">
 		<p:graphicImage value="#{CommonUIConstant.imagePath}/ajax-loader.gif" />
@@ -176,13 +177,13 @@
 	</p:dialog>
 	<ui:remove> #29766 End Vinod </ui:remove>
 
-	<ui:remove>#34444 Start Ann</ui:remove>
+	<ui:remove>#34444 Start</ui:remove>
 	<ac:confirmationPopupQT id="popupConfirmInfoDlg"
 		widget="popupConfirmInfoDlg"
 		okAction="#{directLOABackingBean.updateBpmTaskAction(directLOABackingBean.managedBean.action)}"
 		title="#{directLOABackingBean.managedBean.confirmTitle}"
 		content="#{directLOABackingBean.managedBean.confirmContent}"
 		update="@all" okProcess="@all" />
-	<ui:remove>#34444 End Ann</ui:remove>
+	<ui:remove>#34444 End</ui:remove>
 
 </ui:composition>

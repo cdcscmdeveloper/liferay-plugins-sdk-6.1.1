@@ -211,7 +211,7 @@
 			src="/xhtml/sc/supplierFinalization/supplierFinalization/boardofDirectorsDetails.xhtml" />
 		<ui:include
 			src="/xhtml/sc/supplierFinalization/committeeEndorsement/signOff.xhtml" />
-		<ui:remove>#34444 Start Ann</ui:remove>
+		<!-- ***#34444 start -->
 		<p:dialog id="reviseSuppFinalizationDlgs"
 			widgetVar="reviseSuppFinalizationDlgs"
 			header="#{lbl['lbl.sc.popup.confirm.revise.header']}"
@@ -231,7 +231,7 @@
 					onclick="reviseSuppFinalizationDlgs.hide();" type="button" />
 			</div>
 		</p:dialog>
-
+		<!-- ***#34444 end -->
 		<!-- ***28834 start -->
 		<p:dialog id="submitConfirmId2" widgetVar="confirmBriefPopup"
 			header="#{lbl['lbl.sc.confirmation']}" resizable="false" width="30%"
@@ -243,8 +243,8 @@
 				</tr>
 			</table>
 			<p:spacer height="1" />
-
 			<div class="ppRightBtn">
+			<!-- ***#34444 start -->
 				<ui:param name="actionProcess"
 					value="#{suppFinalizationBackingBean.submitBrief(suppFinalizationBackingBean.managedBean.action)}" />
 				<p:commandButton value="#{lbl['lbl.btn.yes']}"
@@ -252,7 +252,7 @@
 					oncomplete="confirmBriefPopup.hide(); popupConfirmInfoDlg.show();"
 					partialSubmit="true" 
 					actionListener="#{suppFinalizationBackingBean.managedBean.prepareAction(suppFinalizationBackingBean.managedBean.action)}" 
-					process="@form" update="@form" /><ui:remove>#34444 Start END</ui:remove>
+					process="@form" update="@form" /><!-- ***#34444 end -->
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					onclick="confirmBriefPopup.hide();" type="button"
 					partialSubmit="true" process="@this" />
@@ -262,7 +262,7 @@
 
 		<!-- ***28834 start  new ***-->
 		<p:dialog id="submitConfirmId3" widgetVar="confirmBriefPopup1"
-			header="#{lbl['lbl.sc.confirmation']}" resizable="false" width="30%"
+		header="#{lbl['lbl.sc.confirmation']}" resizable="false" width="30%"
 			height="100" closable="false">
 			<table>
 				<tr>
@@ -318,13 +318,13 @@
 
 			</div>
 		</p:dialog>
-
+		
 		<ui:remove>
 		#27502 - New DO MOF Role and Process - Start
 		</ui:remove>
 		<p:dialog id="submitConfirmId4" widgetVar="confirmBriefPopup2"
-			header="#{lbl['lbl.sc.confirmation']}" resizable="false" width="30%"
-			height="100" closable="false">
+			header="#{lbl['lbl.sc.confirmation']}" resizable="false"
+			width="30%" height="100" closable="false">
 			<table>
 				<tr>
 					<td align="center"><p:outputLabel

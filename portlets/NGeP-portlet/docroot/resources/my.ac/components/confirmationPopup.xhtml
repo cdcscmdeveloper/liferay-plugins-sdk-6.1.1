@@ -80,14 +80,14 @@
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
 				<c:choose>
-					<!-- #34445 start / 34444 -->
+					<!-- #34445 start / 34444 start -->
 				    <c:when test="#{cc.attrs.hasParam}">
 						<p:commandButton id="yesWithParamId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
 							partialSubmit="true" onstart="#{cc.attrs.widget}.hide();#{cc.attrs.loadingWidget}.show();"
 							action="#{cc.attrs.okParam}"
 							oncomplete="#{cc.attrs.loadingWidget}.hide(); #{cc.attrs.oncompleteOk}" update="#{cc.attrs.update}" />
 					</c:when>
-				    <!-- #34445 end / 34444 -->
+				    <!-- #34445 end -->
 					<c:when test="#{not empty cc.attrs.loadingWidget}">
 						<ui:remove><!--trigger external blockwidget, TODO: maybe refactor this conditional fragment --></ui:remove>
 						<p:commandButton id="yesWithLoadId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
@@ -102,7 +102,7 @@
 							onstart="confirmPopupBlockWidget.show();"
 							action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
 							oncomplete="confirmPopupBlockWidget.hide(); #{cc.attrs.widget}.hide(); #{cc.attrs.oncompleteOk}" update="#{cc.attrs.update}" />
-				    </c:when>
+				    </c:when><!-- #34444 end -->
 						<!-- #34444 start -->
 						<c:when test="#{empty cc.attrs.okAction}">
 							<p:commandButton id="yesWithoutActionId"

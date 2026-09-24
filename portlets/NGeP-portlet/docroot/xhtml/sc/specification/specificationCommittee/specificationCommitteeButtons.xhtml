@@ -56,7 +56,8 @@
 								update="@([id$=#{submitConfirmId2}])" 
 								rendered="#{isClone}" />
 							<ui:remove><!-- Add Disable #29732 below--></ui:remove>
-								<ui:remove>#10141 Added disableButtonForInactiveChecklist Vinod / #34444 Endorsement Btn : Added popup Confirmation Message - Ann</ui:remove>
+							<ui:remove>#10141 Added disableButtonForInactiveChecklist Vinod</ui:remove>
+								<ui:remove>#34444 Start</ui:remove>
 								<p:commandButton value="#{lbl[buttonLabel]}"
 									onstart="blockWidget.show();" styleClass="ui-button"
 									style="float:right;" rendered="#{!isClone}"
@@ -64,8 +65,8 @@
 									oncomplete="blockWidget.hide(); popupConfirmInfoDlg.show();"
 									actionListener="#{specificationBackingBean.managedBean.prepareAction(bpmAction)}"
 									process="@form" update="@form">
-								</p:commandButton><ui:remove>#34444 Start END</ui:remove>
-							</ui:fragment>
+								</p:commandButton><ui:remove>#34444 End</ui:remove>
+						</ui:fragment>
 					</ui:repeat>
 					<ui:fragment
 						rendered="#{!specificationBackingBean.managedBean.readOnly}">

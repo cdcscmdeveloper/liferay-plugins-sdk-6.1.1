@@ -1039,7 +1039,7 @@ public class SupplierFinalizationBackingBean extends
 		List<ScQtFinalJustification> finalJustificationList = CollectionUtils.isNotEmpty(this.getManagedBean().getFinalJustificationList())
 				? this.getManagedBean().getFinalJustificationList() : new ArrayList<ScQtFinalJustification>();
 		for (ScQtFinalJustification finalJustification: finalJustificationList){
-			if(finalJustification.getJustification() != null && JUSTIFICATION_OTHERS.equalsIgnoreCase(finalJustification.getJustification().getReasonCode())){
+			if(JUSTIFICATION_OTHERS.equalsIgnoreCase(finalJustification.getJustification().getReasonCode())){
 				this.getManagedBean().setRenderjustificationTextbox(true);
 				this.getManagedBean().setJustificationText(finalJustification.getJustificationText());
 			}
