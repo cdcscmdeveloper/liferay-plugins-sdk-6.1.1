@@ -189,7 +189,7 @@
 
 			<ac:paginator for="evaluationreportdetail" />
 			
-			<p:column style="width:2%" >
+			<p:column style="width:2%">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllChk" value="#{suppFinalizationBackingBean.managedBean.templateSpecBean.selectAll}" disabled="true">
 						<p:ajax partialSubmit="true" process="@this" update="@this" listener="#{suppFinalizationBackingBean.selectAll(suppFinalizationBackingBean.managedBean.templateSpecBean.selectAll, suppFinalizationBackingBean.managedBean.scQtFinalizationReportDetail)}"/>

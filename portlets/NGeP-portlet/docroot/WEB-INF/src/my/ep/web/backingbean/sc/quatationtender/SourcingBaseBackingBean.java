@@ -1866,6 +1866,31 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				ParameterTypeConst.COMMITTEE_ROLE, searchBean);
 
 	}
+	
+	// #30447 - start
+	/**
+	 * To retrieve salutation + name with salutation duplication checking
+	 * 
+	 * @param salutation, name
+	 * @return String salutation+name | name
+	 */
+	public String getFormattedSalutationName(String salutation, String name ) {
+		name = StringUtils.trimToEmpty(name);
+
+		salutation = StringUtils.trimToEmpty(salutation);
+		
+        if (name.isEmpty() || salutation.isEmpty()) {
+            return name;
+        }
+        if (StringUtils.startsWithIgnoreCase(name, salutation)) {
+            return name;
+        }
+        if (name.equals(name.toUpperCase())) {
+            salutation = salutation.toUpperCase();
+        }
+        return salutation + " " + name;
+	}
+	// #30447 - end
 
 	/**
 	 * Retrive mof account by supplier.
@@ -5410,6 +5435,84 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 	
+	// #25651 - Start
+	/**
+	 * Populate evaluation report detail
+	 * 
+	 * @param finalizationReportDetails
+	 * @param scQt
+	 */
+	public void populateEvaluationReportDetails(List<ScQtFinalizationReportDetail> finalizationReportDetails, ScQt scQt) {
+		if (null != scQt) {
+			String evaluationType = scQt.getEvaluationType();
+			if (StringUtils.isNotEmpty(evaluationType)) {
+				Iterator<ScQtFinalizationReportDetail> iterator = finalizationReportDetails.iterator();
+				while (iterator.hasNext()) {
+					ScQtFinalizationReportDetail reportDetail = iterator.next();
+					if (null != reportDetail) {
+
+						if (getManagedBean().getEvaluationReportDetailList() == null) {
+							List<ScQtFinalizationReportDetail> erList = new ArrayList<>();
+							getManagedBean().setEvaluationReportDetailList(erList);
+						}
+						boolean isDemoRequired = reportDetail.getTitle().equalsIgnoreCase(
+								SourcingConstants.DEMO_EVALUATION_REPORT)
+								&& !checkDemoWIP(scQt);
+
+						if (null != reportDetail.getPmDocument() || isDemoRequired) {
+							if (SourcingConstants.EVALUATION_TYPE_TIER1.equals(evaluationType)) {
+								if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(reportDetail.getPmDocument()
+										.getDocDefinitionKey())) {
+									getManagedBean().getEvaluationReportDetailList().add(reportDetail);
+
+								}
+							} else if (SourcingConstants.EVALUATION_TYPE_TIER2.equals(evaluationType)) {
+								if (SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT.equals(reportDetail.getPmDocument()
+										.getDocDefinitionKey())
+										|| SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT
+												.equals(reportDetail.getPmDocument().getDocDefinitionKey())
+										|| SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT
+												.equals(reportDetail.getPmDocument().getDocDefinitionKey())
+										|| SourcingConstants.DEMO_EVALUATION_REPORT.equalsIgnoreCase(reportDetail
+												.getTitle())) {
+									getManagedBean().getEvaluationReportDetailList().add(reportDetail);
+								}
+							}
+
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// #25651 - End
+
+	// #25651 - Start
+	/**
+	 * Populate briefing report detail
+	 * 
+	 * @param finalizationReportDetails
+	 */
+	public void populateBriefingReportDetails(List<ScQtFinalizationReportDetail> finalizationReportDetails) {
+		List<ScQtFinalizationReportDetail> finalizationReportDetail = new ArrayList<>();
+		Iterator<ScQtFinalizationReportDetail> iterator = finalizationReportDetails.iterator();
+		while (iterator.hasNext()) {
+			ScQtFinalizationReportDetail reportDetail = iterator.next();
+			if (null != reportDetail) {
+				if (null != reportDetail && reportDetail.getPmDocument() != null) {
+					String docDefinitionKey = reportDetail.getPmDocument().getDocDefinitionKey();
+					if (!documentBriefingPaperOnly(docDefinitionKey)) {
+						finalizationReportDetail.add(reportDetail);
+					}
+				}
+			}
+		}
+		this.getManagedBean().setScQtFinalizationReportDetail(finalizationReportDetail);
+	}
+
+	// #25651 - End
+	
 	/**
 	 * @param taskType 
 	 * 
@@ -8411,6 +8514,23 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	// 29661 -end-
 	
+	// 41312 -start-
+	/**
+	 * check estimated amount is null fetched amount from templatespec.
+	 * 
+	 * @param scQt
+	 * @return BigDecimal
+	 */
+	protected BigDecimal checkEstimatedAmount(ScQt scQt) {
+		SpecificationReqDTO estimatedReqDTo = new SpecificationReqDTO();
+		estimatedReqDTo.setQtId(scQt.getQtId());
+		return getQTSpecSO().calCulateTemplateSpecEstimations(estimatedReqDTo)
+				.getTotalSpecEstimatedAmount();
+
+	}
+
+	// 41312 -end-
+
 	//#28784 - Start
 	private boolean checkDemoWIP(ScQt scQt) {
 		try {
@@ -8979,6 +9099,189 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		newBPReportDetailList.add(report);
 	}
+	// #25651 - End
+	
+	// #25651 - Start
+	/**
+	 * To get report title detail for object ScQtFinalizationReport and
+	 * ScQtFinalizationReportDetail
+	 * 
+	 * @param report
+	 */
+	public String getReportTitle(Object report) {
+
+		if (report instanceof ScQtFinalizationReport) {
+			return ((ScQtFinalizationReport) report).getTitle();
+
+		} else if (report instanceof ScQtFinalizationReportDetail) {
+			return ((ScQtFinalizationReportDetail) report).getTitle();
+		}
+
+		return null;
+	}
+
+	// #25651 - End
+
+	// #25651 - Start
+	/**
+	 * To get report defination type detail for object ScQtFinalizationReport
+	 * and ScQtFinalizationReportDetail
+	 * 
+	 * @param report
+	 */
+	public PmParameter getReportDefinationType(Object report) {
+
+		if (report instanceof ScQtFinalizationReport) {
+			return ((ScQtFinalizationReport) report).getDefinationType();
+
+		} else if (report instanceof ScQtFinalizationReportDetail) {
+			return ((ScQtFinalizationReportDetail) report).getDefinationType();
+		}
+
+		return null;
+	}
+
+	// #25651 - End
+
+	// #25651 - Start
+	/**
+	 * To get report document detail for object ScQtFinalizationReport and
+	 * ScQtFinalizationReportDetail
+	 * 
+	 * @param report
+	 */
+	public PmDocument getReportPmDocument(Object report) {
+
+		if (report instanceof ScQtFinalizationReport) {
+			return ((ScQtFinalizationReport) report).getPmDocument();
+
+		} else if (report instanceof ScQtFinalizationReportDetail) {
+			return ((ScQtFinalizationReportDetail) report).getPmDocument();
+		}
+
+		return null;
+	}
+
+	// #25651 - End
+
+	// #25651 - Start
+	/**
+	 * To check whether evaluation report existing or new
+	 * 
+	 * @param docDefinitionKey
+	 * @param qtId
+	 */
+	public boolean isWipEvaluationReportExisting(String docDefinitionKey, Long qtId) {
+
+		if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(docDefinitionKey)) {
+			return checkWipExistingECReports(qtId);
+		}
+
+		if (SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT.equals(docDefinitionKey)) {
+			return checkWipExistingOCReports(qtId);
+		}
+
+		if (SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT.equals(docDefinitionKey)) {
+			return checkWipExistingTECReports(qtId);
+		}
+
+		if (SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT.equals(docDefinitionKey)) {
+			return checkWipExistingFECReports(qtId);
+		}
+
+		return false;
+	}
+
+	// #25651 - End
+	
+	// #25651 - Start
+	/**
+	 * To check wip existing for evaluation report.
+	 * 
+	 * @param qtId
+	 * @return true or false
+	 */
+	public Boolean checkWipExistingECReports(Long qtId) {
+		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+		return qtSuppFinalizationSO.checkWipExistingECReports(qtId);
+	}
+
+	// #25651 - End
+
+	// #25651 - Start
+	/**
+	 * To check wip existing for opening report.
+	 * 
+	 * @param qtId
+	 * @return true or false
+	 */
+	public Boolean checkWipExistingOCReports(Long qtId) {
+		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+		return qtSuppFinalizationSO.checkWipExistingTECReports(qtId);
+	}
+
+	// #25651 - End
+
+	// #25651 - Start
+	/**
+	 * To check wip existing for techniqal report.
+	 * 
+	 * @param qtId
+	 * @return true or false
+	 */
+	public Boolean checkWipExistingTECReports(Long qtId) {
+		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+		return qtSuppFinalizationSO.checkWipExistingTECReports(qtId);
+	}
+
+	// #25651 - End
+
+	// #25651 - Start
+	/**
+	 * To check wip existing for financial report.
+	 * 
+	 * @param qtId
+	 * @return true or false
+	 */
+	public Boolean checkWipExistingFECReports(Long qtId) {
+		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+		return qtSuppFinalizationSO.checkWipExistingFECReports(qtId);
+	}
+
+	// #25651 - End
+
+	// #25651 - Start
+	/**
+	 * To filter except others document briefing paper report detail.
+	 * 
+	 * @param docDefinitionKey
+	 * @return true or false
+	 */
+	public Boolean documentBriefingPaperOnly(String docDefinitionKey) {
+
+		if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(docDefinitionKey)) {
+			return true;
+		}
+
+		if (SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT.equals(docDefinitionKey)) {
+			return true;
+		}
+
+		if (SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT.equals(docDefinitionKey)) {
+			return true;
+		}
+
+		if (SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT.equals(docDefinitionKey)) {
+			return true;
+		}
+
+		return false;
+	}
+
 	// #25651 - End
 	
 	// #28188 - Start

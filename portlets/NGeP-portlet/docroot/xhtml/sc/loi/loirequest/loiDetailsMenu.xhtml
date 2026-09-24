@@ -270,12 +270,14 @@
 
 					<c:if test="#{isEditableStatus and (isPendingSubmissionStatus or isPendingApprovalStatus or isPendingRevisionStatus)}">
 						<p:outputPanel id="opPtjOrgCode" >
+						<!-- #30447 start -->
 							<p:inputText 
 								size="106"
 								id="itSelectedUserPtj" 
-								value="#{lOIDetailBackingBean.managedBean.contractSignerUser.salutationCode.salutationName.concat(' ').concat(lOIDetailBackingBean.managedBean.contractSignerUser.userName)}" 
+								value="#{lOIDetailBackingBean.formattedContractSignerUserName}" 
 								readonly="true"
 								/>
+						<!-- #30447 end -->
 							&#160;
 							<p:commandLink id="ptjSearchCL" partialSubmit="true"
 								process="@this" update=":form:userPtjOrg:userPtjPopup"
