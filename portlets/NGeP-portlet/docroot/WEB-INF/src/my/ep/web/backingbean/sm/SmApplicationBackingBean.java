@@ -18766,14 +18766,14 @@ public class SmApplicationBackingBean extends
 								}
 							}
 						}
+						// #36718 - Start
+						getManagedBean().setReassignAddress(false);
+						// #36718 - End
 					}
 				}
 				getManagedBean().setSelectedShareHolder(this.getManagedBean().getSelectedShareHolder());
 			}
 		}
-		// #36718 - Start
-		getManagedBean().setReassignAddress(false);
-		// #36718 - End
 	}
 	//#32014 - END
 	//30766 START
