@@ -77,7 +77,7 @@ public final class AiDocSupport {
 	public static final class AiUserEdit {
 
 		public static final String KEY_TENANCY = "hq";
-		// #40112 - never an NRIC: marks the applicant's EPF tick/untick decision as recorded
+		// never an NRIC: marks the applicant's EPF tick/untick decision as recorded
 		public static final String KEY_EPF_DECIDED = "_decided";
 		public static final String F_DECIDED = "decided";
 		public static final String F_EPF_NO = "epf_no";
@@ -381,7 +381,8 @@ public final class AiDocSupport {
 				if ("KWSP_number".equals(type)) {
 					emp.setKwspNumber(value);
 				} else if ("NRIC_number".equals(type)) {
-					emp.setNricNumber(value);
+					// the statement prints the NRIC dashed or spaced; eP stores the 12 digits
+					emp.setNricNumber(AiDocValidator.normalizeNric(value));
 				} else if ("employee_name".equals(type)) {
 					emp.setEmployeeName(value);
 				}
@@ -655,7 +656,7 @@ public final class AiDocSupport {
 			if (serviceTypes.isEmpty()) {
 				addBankServiceTypes(serviceTypes, null);
 			}
-			// #40112 - keyed by canonical name, not id: PM_FINANCIAL_ORG holds the same bank under several ids,
+			// keyed by canonical name, not id: PM_FINANCIAL_ORG holds the same bank under several ids,
 			// and identical names would otherwise cancel each other out on the runner-up margin below
 			Map<String, PmFinancialOrg> candidates = new HashMap<>();
 			for (String serviceType : serviceTypes) {
@@ -761,6 +762,19 @@ public final class AiDocSupport {
 				return "";
 			}
 			return accountNo.replaceAll("[^0-9]", "");
+		}
+
+		/**
+		 * A Malaysian NRIC is 12 digits; the dashes and spaces are only how it gets printed on
+		 * the statement, so match on the digits alone.
+		 * @param nric
+		 * @return digits only, empty when there are none
+		 */
+		public static String normalizeNric(String nric) {
+			if (StringUtils.isBlank(nric)) {
+				return "";
+			}
+			return nric.replaceAll("[^0-9]", "");
 		}
 
 		public static List<String> tokenize(String name) {
@@ -999,6 +1013,10 @@ public final class AiDocSupport {
 		 * employee rows carry no verdict of their own and are not rendered here.
 		 */
 		public String getLabel() {
+			// nothing mapped out of this file, same verdict as Bank and Tenancy report
+			if (employerName == null && getEmployees().isEmpty()) {
+				return AiDocParser.label("lbl.sm.ai.doc.invalid");
+			}
 			StringBuilder sb = new StringBuilder();
 			if (employerName != null) {
 				String s = AiDocParser.label("lbl.cm.company.name") + ": " + employerName + BR;

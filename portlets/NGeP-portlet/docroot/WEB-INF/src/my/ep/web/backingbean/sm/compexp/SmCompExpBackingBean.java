@@ -1590,6 +1590,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		SmCompExpMaster selectedMaster = this.getManagedBean().getSelectedMaster();
 		SmCompExpResDTO resDTO1 = new SmCompExpResDTO();
 		if (delete) {
+			resolveMasterCategoryDetails(selectedMaster); // 9299 - #41238
 			delSmCompExpMaster(resDTO1);
 		} else {
 			//9299 - 40788 Start
@@ -1751,6 +1752,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 					}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 
 			// #9299 - #40789 End
 			// #9299 - #40660
+			this.getManagedBean().setHistMaster((SmCompExpMaster) CustomUtils.getInstance().deepCopy(this.getManagedBean().getSelectedMaster()));
 			resDTO1.setSuccessful(true);
 		}
 	}
