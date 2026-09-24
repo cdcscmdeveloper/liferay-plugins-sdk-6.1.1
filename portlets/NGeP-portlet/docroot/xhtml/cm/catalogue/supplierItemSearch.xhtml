@@ -319,7 +319,7 @@
 									<p:ajax event="toggleSelect"
 										update="@(.ui-button[id$=compareButton])" />
 								</ui:remove>
-						<!-- # 2020/05/05 - 27626 - start -->
+								<!-- # 2020/05/05 - 27626 - start -->
 								<p:column headerText="#{lbl['lbl.cm.item.code']}" width="8%">
 									<h:panelGroup rendered="#{supplierItem.imagePath == null}">
 
@@ -396,8 +396,8 @@
 
 								<p:column width="5%" headerText="#{lbl['lbl.cm.uom']}"
 									style="white-space: normal">
-							   #{supplierItem.uomName}
-							</p:column>
+									#{supplierItem.uomName}
+								</p:column>
 
 								<p:column width="9%">
 									<f:facet name="header">
@@ -467,7 +467,7 @@
 											rendered="#{supplierItem.contractNo != null}"
 											onstart="blockWidget.show();"
 											oncomplete="blockWidget.hide();" />
-										<!-- #34579 - add new parameter on simpleQuoteAction-->		
+										<!-- #34579 - add new parameter on simpleQuoteAction-->
 										<p:menuitem value="#{lbl['lbl.cm.add.to.simple.qoute']}"
 											action="#{simpleQuoteBackingBean.simpleQuoteAction(supplierItem.supplierId, supplierItem.docId, supplierItem.circularNo != null , null)}"
 											update="@form" icon="ui-icon-plus"
@@ -613,7 +613,7 @@
 			btnView="true"
 			dialogHeader="" /> <ui:remove>set null value for title at popup DA history</ui:remove>
 		<!-- [#26282] - end -->
-
+		
 		<!-- #27654 start -->
 		<p:dialog id="dlItemSuspended" header="#{lbl['lbl.cm.alert.message']}" 
 			widgetVar="dlItemSuspendedWv" dynamic="true" width="500" height="100" closable="true">

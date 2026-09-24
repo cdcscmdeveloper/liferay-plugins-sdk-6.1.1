@@ -4325,101 +4325,101 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	//26284, #26282 - End
 
 	//20200929@akmal - Enhancement27627 - Start
-		public boolean isSavedFirst() {
-			return isSavedFirst;
-		}
+	public boolean isSavedFirst() {
+		return isSavedFirst;
+	}
 
-		public void setSavedFirst(boolean isSavedFirst) {
-			this.isSavedFirst = isSavedFirst;
-		}
-		//20200929@akmal - Enhancement27627 - End
+	public void setSavedFirst(boolean isSavedFirst) {
+		this.isSavedFirst = isSavedFirst;
+	}
+	//20200929@akmal - Enhancement27627 - End
 
-		//201002@akmal - Bug29265 - Start
-		public boolean isPromoPriceExist() {
-			return isPromoPriceExist;
-		}
+	//201002@akmal - Bug29265 - Start
+	public boolean isPromoPriceExist() {
+		return isPromoPriceExist;
+	}
 
-		public void setPromoPriceExist(boolean isPromoPriceExist) {
-			this.isPromoPriceExist = isPromoPriceExist;
-		}
-		//201002@akmal - Bug29265 - End
-		
-		//#30457-start
-		public int getItemSelectedIndex() {
-			return itemSelectedIndex;
-		}
+	public void setPromoPriceExist(boolean isPromoPriceExist) {
+		this.isPromoPriceExist = isPromoPriceExist;
+	}
+	//201002@akmal - Bug29265 - End
+	
+	//#30457-start
+	public int getItemSelectedIndex() {
+		return itemSelectedIndex;
+	}
 
-		public void setItemSelectedIndex(int itemSelectedIndex) {
-			this.itemSelectedIndex = itemSelectedIndex;
-		}
-		
-		public boolean isViewOnlyBasicPopup() {
-			return viewOnlyBasicPopup;
-		}
+	public void setItemSelectedIndex(int itemSelectedIndex) {
+		this.itemSelectedIndex = itemSelectedIndex;
+	}
 
-		public void setViewOnlyBasicPopup(boolean viewOnlyBasicPopup) {
-			this.viewOnlyBasicPopup = viewOnlyBasicPopup;
-		}
-		
-		public boolean isYesEnable() {
-			return yesEnable;
-		}
+	public boolean isViewOnlyBasicPopup() {
+		return viewOnlyBasicPopup;
+	}
 
-		public void setYesEnable(boolean yesEnable) {
-			this.yesEnable = yesEnable;
-		}
-		//#30457-end
-		
-		// #30457 - start
-		public List<CmImage> getDeleteImage() {
-			if (deleteImage == null) {
-				deleteImage = new ArrayList<CmImage>();
-			}
-			return deleteImage;
-		}
+	public void setViewOnlyBasicPopup(boolean viewOnlyBasicPopup) {
+		this.viewOnlyBasicPopup = viewOnlyBasicPopup;
+	}
+	
+	public boolean isYesEnable() {
+		return yesEnable;
+	}
 
-		public void setDeleteImage(List<CmImage> deleteImage) {
-			this.deleteImage = deleteImage;
+	public void setYesEnable(boolean yesEnable) {
+		this.yesEnable = yesEnable;
+	}
+	//#30457-end
+	
+	// #30457 - start
+	public List<CmImage> getDeleteImage() {
+		if (deleteImage == null) {
+			deleteImage = new ArrayList<CmImage>();
 		}
+		return deleteImage;
+	}
 
-		public String getItemStatus() {
-			return itemStatus;
-		}
+	public void setDeleteImage(List<CmImage> deleteImage) {
+		this.deleteImage = deleteImage;
+	}
 
-		public void setItemStatus(String itemStatus) {
-			this.itemStatus = itemStatus;
-		}
-		// #30457 - end
+	public String getItemStatus() {
+		return itemStatus;
+	}
 
-		// #30457 - Start
-		public boolean isCatDPScreen() {
-			return catDPScreen;
-		}
+	public void setItemStatus(String itemStatus) {
+		this.itemStatus = itemStatus;
+	}
+	// #30457 - end
 
-		public void setCatDPScreen(boolean catDPScreen) {
-			this.catDPScreen = catDPScreen;
-		}
-		
-		public boolean isAddPromotion() {
-			return addPromotion;
-		}
+	// #30457 - Start
+	public boolean isCatDPScreen() {
+		return catDPScreen;
+	}
 
-		public void setAddPromotion(boolean addPromotion) {
-			this.addPromotion = addPromotion;
-		}
-		// #30457 - End
-		
-		//38255-Start
-		public List<ScheduleInfo> getSchInfo() {
-			if (schInfo == null)
-				schInfo = new ArrayList<>();
-			return schInfo;
-		}
+	public void setCatDPScreen(boolean catDPScreen) {
+		this.catDPScreen = catDPScreen;
+	}
+	
+	public boolean isAddPromotion() {
+		return addPromotion;
+	}
 
-		public void setSchInfo(List<ScheduleInfo> schInfo) {
-			this.schInfo = schInfo;
-		}
-		//38255-End
+	public void setAddPromotion(boolean addPromotion) {
+		this.addPromotion = addPromotion;
+	}
+	// #30457 - End
+	
+	//38255-Start
+	public List<ScheduleInfo> getSchInfo() {
+		if (schInfo == null)
+			schInfo = new ArrayList<>();
+		return schInfo;
+	}
+
+	public void setSchInfo(List<ScheduleInfo> schInfo) {
+		this.schInfo = schInfo;
+	}
+	//38255-End
 		
 	// 26284 - Start
 	public String getDisciplinaryActionStartDate() {
