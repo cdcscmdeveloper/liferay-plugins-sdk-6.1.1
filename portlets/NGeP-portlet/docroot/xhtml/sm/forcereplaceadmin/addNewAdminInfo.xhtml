@@ -200,7 +200,20 @@
 							size="40" required="true"><!-- #28765 Added <p:ajax event --><p:ajax event="change" partialSubmit="true" process="@this" />
 							<f:validateRegex 
 						pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+						<ui:remove>#28720 Start</ui:remove>
+						<p:ajax event="change" process="@this"
+									listener="#{forceReplaceSuppAdminBackingBean.onChangeEmail()}"
+									update="newAdminEmail" />
+						<ui:remove>#28720 End</ui:remove>
 							</p:inputText>
+						<ui:remove>#28720 Start</ui:remove>
+						<p:graphicImage id="toolTipIcon"
+							value="/css/images/design/tooltips.png" />
+						<p:tooltip id="sourceTooltip" for="toolTipIcon">
+							<h:outputText id="sourceLabel" escape="false"
+								value="#{lbl['lbl.sm.email.change.tooltip']}" />
+						</p:tooltip>
+						<ui:remove>#28720 End</ui:remove>
 						<p:message id="newAdminEmailMsg" for="newAdminEmail"
 							showSummary="true" showDetail="false" display="icon" /></td>
 	
@@ -235,9 +248,9 @@
 							countryCode="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.mobileCountry}" 
 							areaCode="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.mobileArea}" 
 							number="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.mobileNo}" 
-							isMobile="true" required="true"
-							validatorMessage="#{lbl['lbl.sm.mobileNo']} - #{lbl['lbl.sm.invalidNo']}"
-							telcoId="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.mobileTelcoId}" />
+							isMobile="true" hideTelco="true" required="true"
+							validatorMessage="#{lbl['lbl.sm.mobileNo']} - #{lbl['lbl.sm.invalidNo']}" /> 
+							<!-- telcoId="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.mobileTelcoId}" /> --> <!-- 40200 -->
 					</td>
 				</tr>
 				<h:panelGroup layout="block" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.displayRolePanel}">
@@ -340,6 +353,11 @@
 				</tr>
 	
 			</table>
+			<ui:remove>#28720 Start</ui:remove>
+			<ac:smEmailAlertPopup bBean="#{backingBean}"
+					title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp"
+					btnOkLabel="#{lbl['lbl.btn.ok']}" />
+			<ui:remove>#28720 End</ui:remove>
 		</p:panel>
 		
 		<ui:include src="/xhtml/sm/shared/forcereplaceadmin/addInfoAddress.xhtml" />

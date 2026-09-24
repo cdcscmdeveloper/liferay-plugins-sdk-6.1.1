@@ -63,6 +63,15 @@
 					</f:facet>
 					<h:outputText value="#{upload.personnel.name}" />
 				</p:column>
+		
+				<!-- #10729 start -->
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sm.soft.cert.idno']}" />
+					</f:facet>
+					<h:outputText value="#{upload.personnel.identificationNo}" />
+				</p:column>
+				<!-- #10729 end -->
 
 				<p:column>
 					<f:facet name="header">
@@ -78,12 +87,14 @@
 					<ac:smRoleDesc backingBean="#{softCertBackingBean}" roleCode="#{upload.personnel.epRole}" />
 				</p:column>
 				
-				<p:column>
+				<!-- #10729 start -->
+				<p:column rendered="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.smAppl.smSupplier.recordStatusFlg ne 5}">
 					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.sm.userprofile.accountstatus']}" />
+					<h:outputText value="#{lbl['lbl.sm.userprofile.accountstatus']}" />
 					</f:facet>
 					<h:outputText value="#{lbl['lbl.sm.accountstatus.active']}" rendered="#{upload.personnel.recordStatusFlg eq '1'}" />
 				</p:column>
+				<!-- #10729 end -->
 				
 				<p:column style="width : 35%;white-space: normal !important;">
 					<f:facet name="header">
@@ -152,6 +163,15 @@
 					</f:facet>
 					<h:outputText value="#{offline.personnel.name}" />
 				</p:column>
+				
+				<!-- #10729 start -->
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sm.soft.cert.idno']}" />
+					</f:facet>
+					<h:outputText value="#{offline.personnel.identificationNo}" />
+				</p:column>
+				<!-- #10729 end -->
 
 				<p:column>
 					<f:facet name="header">
@@ -167,12 +187,14 @@
 					<ac:smRoleDesc backingBean="#{softCertBackingBean}" roleCode="#{offline.personnel.epRole}" />
 				</p:column>
 				
-				<p:column>
+				<!-- #10729 start -->
+				<p:column rendered="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.smAppl.smSupplier.recordStatusFlg ne 5}">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sm.userprofile.accountstatus']}" />
 					</f:facet>
 					<h:outputText value="#{lbl['lbl.sm.accountstatus.active']}" rendered="#{offline.personnel.recordStatusFlg eq '1'}" />
 				</p:column>
+				<!-- #10729 end -->
 				
 				<p:column>
 					<f:facet name="header">

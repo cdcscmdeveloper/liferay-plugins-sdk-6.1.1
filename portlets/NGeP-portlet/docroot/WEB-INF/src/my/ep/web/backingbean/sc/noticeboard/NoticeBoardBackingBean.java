@@ -9,6 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -90,9 +92,11 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -142,6 +146,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.primefaces.component.autocomplete.AutoComplete;
 import org.primefaces.component.menuitem.MenuItem;
@@ -292,16 +297,16 @@ public class NoticeBoardBackingBean extends
 										.constuctTreeNode(
 												specZoneDtl,specZoneDtl.getTplSpecZoneLocs()));
 						}
-						BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
-						briefingReqDTO.setQtId(scQt.getQtId());
-						briefingReqDTO.setSpecZoneId(specZoneDtl
-								.getSpecZoneId());
-						IQTBriefingSO briefingSO = EpEjbBusinessDelegate
-								.getInstance().getServiceObject(
-										ModuleCodeConst.SUPPLIER_SELECTION,
-										IQTBriefingSO.class);
-						BriefingResDTO briefingResDTO = briefingSO
-								.retrieveBriefingSiteVisitDtls(briefingReqDTO);
+						
+						// 28188 -start-
+						NoticeBoardReqDTO noticeBoardReqDTO = new NoticeBoardReqDTO();
+						noticeBoardReqDTO.setQtId(scQt.getQtId());
+						noticeBoardReqDTO
+								.setZoneId(specZoneDtl.getSpecZoneId());
+						NoticeBoardResDTO noticeBoardResDTO = qtNoticeBoardSO
+								.retrieveBriefingSiteVisitZoneDtls(noticeBoardReqDTO);
+						// 28188 -end-
+
 						ScQtSampleSubmission sampleAddress = null; 
 						for (ScQtSampleSubmission sampleaddr : sampleAddrList) {
 							TplSpecZoneDtl addrZoneDtl = sampleaddr.getTplSpecZoneDtl();
@@ -310,10 +315,15 @@ public class NoticeBoardBackingBean extends
 								sampleAddress = sampleaddr;
 							}
 						}
+						
+						// 28188 -start-
 						BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
-								specZoneDtl, briefingResDTO.getBriefingList(),
-								briefingResDTO.getSiteVisitList(),
-								briefingResDTO.getScQtBsv(),sampleAddress);
+								specZoneDtl,
+								noticeBoardResDTO.getBriefingResultBean(),
+								noticeBoardResDTO.getSiteVisitResultBean(),
+								noticeBoardResDTO.getScQtBsv(), sampleAddress);
+						// 28188 -end-
+						
 						bsvZoneBeans.add(briefingZoneBean);
 					}
 					this.getManagedBean().setLocationNodes(
@@ -1624,8 +1634,10 @@ public class NoticeBoardBackingBean extends
 				
 				if (ParameterConst.NOTICE_BOARD_STATUS_CHANGES.equals(selectedTab)) {
 					populateClosingQtAmendIntoAmendmentBeanMap(resDTO.getQtAmendMentBeans());
+					populateBsvQtAmendIntoAmendmentBeanMap(resDTO.getQtAmendMentBSVBeans());//#28188
 				} else {
 					getManagedBean().setAmendmentClosingDateMap(null);
+					getManagedBean().setAmendmentBSVDateMap(null);//#28188
 				}
 				getManagedBean().setCommitteeFormed(resDTO.getCommitteeFormed());
 				return resDTO.getQtResultBean();
@@ -1641,15 +1653,16 @@ public class NoticeBoardBackingBean extends
 		if (CollectionUtils.isNotEmpty(qtAmendMentBeans)) {
 			for (QtAmendMentBean amendMentBean : qtAmendMentBeans) {
 				if (amendMentBean.getValueMap() != null) {
+					BigDecimal qtId=BigDecimal.valueOf(amendMentBean.getQtId());//28188
 					for (Entry<String, QtAmendMentValueBean> amendMentBeanValue : amendMentBean.getValueMap().entrySet()) {
 						QtAmendMentValueBean valueBean = amendMentBeanValue.getValue();
 						Date approvalDate = valueBean.getApprovalDate();
 						if (approvalDate != null && BooleanUtils.isTrue(valueBean.getIsApproved())) {
-							Date prevApprovalDate = amendmentClosingDateMap.get(amendMentBeanValue.getKey());
+							Date prevApprovalDate = amendmentClosingDateMap.get(qtId);//28188
 							if (prevApprovalDate != null && prevApprovalDate.after(approvalDate)) {
 								continue;
 							}
-							amendmentClosingDateMap.put(BigDecimal.valueOf(amendMentBean.getQtId()), approvalDate);	
+							amendmentClosingDateMap.put(qtId, approvalDate);//28188	
 						}
 					}
 					
@@ -2313,12 +2326,19 @@ public class NoticeBoardBackingBean extends
 			// Need to construct tab bean for zone
 			MenuModel zoneMenuModel = new DefaultMenuModel();
 			List<BriefingZoneBean> bsvZoneBeans = new ArrayList<BriefingZoneBean>();
-
+			
+			// 28188 -start-
+			if (CollectionUtils.isNotEmpty(zoneDtls)) {
+				zoneDtlsSorting(zoneDtls);
+			}
+			// 28188 -end-
+			
 			if (null != zoneDtls) {
 				int zoneTabIndex = 0;
 
 				for (TplSpecZoneDtl specZoneDtl : zoneDtls) {
 
+					// 28188 -start-
 					BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
 					briefingReqDTO.setQtId(scQt.getQtId());
 					briefingReqDTO.setSpecZoneId(specZoneDtl.getSpecZoneId());
@@ -2332,9 +2352,10 @@ public class NoticeBoardBackingBean extends
 							.retrieveSupplierBriefingSiteVisitDtls(briefingReqDTO);
 
 					BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
-							specZoneDtl, briefingResDTO.getBriefingList(),
-							briefingResDTO.getSiteVisitList(),
+							specZoneDtl, checkRequestRejectBSVDtls(briefingResDTO.getBriefingList()),
+							checkRequestRejectBSVDtls(briefingResDTO.getSiteVisitList()),
 							briefingResDTO.getScQtBsv(),null);
+					// 28188 -end-
 					
 					// #28777 & #29729 - Start
 					briefingZoneBean.setBranchDeactivated(specZoneDtl.isBranchDeactivated() == DbValueConst.FLAG_YES);
@@ -3044,6 +3065,7 @@ public class NoticeBoardBackingBean extends
 		boolean isRefinalized = getQTAwardSO().isQtRefinalized(awardReqDTO).isRefinalized();
 		
 		List<AwardedItemsBean> awardedItemList = new ArrayList<>();
+		List<ScLoa> tempScLoaList = new ArrayList<>(); // #29624
 		//Bug #32512 start
 		boolean isLoaRejected = false; 
 		this.getManagedBean().setSupplierName(null);
@@ -3060,8 +3082,19 @@ public class NoticeBoardBackingBean extends
 			if (!isLoaRejected){
 				if (ParameterConst.RECOMMEND_TYPE_PACKAGE
 						.equalsIgnoreCase(pmParameter.getParameterCode())) {
-					this.getManagedBean().setSupplierName(
-							scLoa.getScLoiLoa().getSupplierName());
+					// #29624 - start
+					if (CollectionUtils.isEmpty(tempScLoaList)) {
+						ScLoa tempScLoa = new ScLoa();
+						ScLoiLoa tempScLoiLoa = new ScLoiLoa();
+						tempScLoiLoa.setSupplierName(scLoa.getScLoiLoa().getSupplierName());
+						tempScLoa.setLoaAmt(scLoa.getLoaAmt());
+						tempScLoa.setScLoiLoa(tempScLoiLoa);
+
+						tempScLoaList.add(tempScLoa);
+						this.getManagedBean().setScLoaList(tempScLoaList);
+					}
+					// #29624 end
+
 					
 				} else {
 					for (ScLoiLoaItem scLoiLoaItem : scLoa.getScLoiLoaItems()) {
@@ -3069,6 +3102,7 @@ public class NoticeBoardBackingBean extends
 						ScRequestItem reqItem = scLoiLoaItem.getScRequestItem();
 						awardedItem.setItemName(reqItem.getItemName());
 						awardedItem.setSupplierName(scLoiLoaItem.getScLoa().getScLoiLoa().getSupplierName());
+						awardedItem.setLoaAmount(scLoiLoaItem.getScLoa().getLoaAmt()); // #29624
 						// By Loa
 						awardedItem.setPriceByLoa(TemplateSpecHelper.getInstance()
 								.calcTotalAmount(reqItem.getTplSpecQuestion(),
@@ -3645,4 +3679,82 @@ public class NoticeBoardBackingBean extends
 		}
 	}
 	// #29732 end
+	
+	// 28188 -start-
+	/**
+	 * check any bsvDetail Rejected after postpone.
+	 * 
+	 * @param bsvDtls
+	 * @return List<ScQtBsvDtl>
+	 */
+	private List<ScQtBsvDtl> checkRequestRejectBSVDtls(List<ScQtBsvDtl> bsvDtls) {
+		List<ScQtBsvDtl> noticeBoardBSVDtls = new ArrayList<>();
+		if (CollectionUtils.isNotEmpty(bsvDtls)) {
+
+			for (ScQtBsvDtl bsvDtl : bsvDtls) {
+				PmStatus bsvStatus = bsvDtl.getBsvStatus();
+				List<Long> statusList = Arrays.asList(
+						QTStatusConst.BSV_PENDING, QTStatusConst.BSV_COMPLETED);
+				if (null != bsvStatus
+						&& statusList.contains(bsvStatus.getStatusId())) {
+					// 28188 -end-
+					noticeBoardBSVDtls.add(bsvDtl);
+				}
+			}
+		}
+		return noticeBoardBSVDtls;
+	}
+	
+	// 28188 -end-
+	
+	// 28188 -start-
+	/**
+	 * sorting zoneDetails duringBsv self register.
+	 * 
+	 * @param zoneDtls
+	 */
+	private void zoneDtlsSorting(List<TplSpecZoneDtl> zoneDtls) {
+		Collections.sort(zoneDtls, new Comparator<TplSpecZoneDtl>() {
+			public int compare(TplSpecZoneDtl zoneDtl1, TplSpecZoneDtl zoneDtl2) {
+
+				return new CompareToBuilder()
+
+				.append(zoneDtl1.getSpecZoneId(), zoneDtl2.getSpecZoneId())
+						.toComparison();
+			}
+		});
+	}
+
+	// 28188 -end-
+
+	// 28188 -end-
+	
+	//#28188 - Start
+	private void populateBsvQtAmendIntoAmendmentBeanMap(List<QtAmendMentBean> qtAmendMentBeans) {
+		Map<BigDecimal, Date> amendmentBSVDateMap = new HashMap<BigDecimal, Date>();
+		
+		if (CollectionUtils.isNotEmpty(qtAmendMentBeans)) {
+			for (QtAmendMentBean amendMentBean : qtAmendMentBeans) {
+				if (amendMentBean.getValueMap() != null) {
+					BigDecimal qtId=BigDecimal.valueOf(amendMentBean.getQtId());//28188
+					for (Entry<String, QtAmendMentValueBean> amendMentBeanValue : amendMentBean.getValueMap().entrySet()) {
+						QtAmendMentValueBean valueBean = amendMentBeanValue.getValue();
+					
+						Date approvalDate = valueBean.getApprovalDate();
+						if (valueBean != null && amendMentBeanValue.getKey().contains(QTFieldConst.FIELD_QT_BSV)
+								&& approvalDate != null && BooleanUtils.isTrue(valueBean.getIsApproved())) {
+							
+							Date prevApprovalDate = amendmentBSVDateMap.get(qtId);//28188
+							if (prevApprovalDate != null && prevApprovalDate.after(approvalDate)) {
+								continue;
+							}
+							amendmentBSVDateMap.put(qtId, approvalDate);//28188
+						}
+					}
+				}
+			}	
+		}
+		this.getManagedBean().setAmendmentBSVDateMap(amendmentBSVDateMap);
+	}	
+	//#28188 - End
 }

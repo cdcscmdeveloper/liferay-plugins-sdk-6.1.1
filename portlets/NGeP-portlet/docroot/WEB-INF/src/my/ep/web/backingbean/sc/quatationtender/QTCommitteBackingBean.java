@@ -1530,6 +1530,12 @@ public class QTCommitteBackingBean extends SourcingBaseBackingBean<QTDetailManag
 		scCommittee.getScCommitteeMembers().addAll(toBeAddedList);
 		Collections.sort(scCommittee.getScCommitteeMembers(),new MemberRoleComparator());
 		selectedCommitteTabBean.getScQtCommittee().setScCommittee(scCommittee);
+		// 28895-35500 start
+		List<ScCommitteeMember> newScCommitteeMemberAuditTrailList = CollectionUtils.isNotEmpty(this.getManagedBean().getNewScCommitteeMemberAuditTrailList()) 
+				? this.getManagedBean().getNewScCommitteeMemberAuditTrailList(): new ArrayList<ScCommitteeMember>();
+		newScCommitteeMemberAuditTrailList.addAll(toBeAddedList);
+		this.getManagedBean().setNewScCommitteeMemberAuditTrailList(newScCommitteeMemberAuditTrailList);
+		// 28885-35500 end
 		}
 		setQtMaintencesChanges();
 		getManagedBean().setNameRequired(false);
@@ -1694,6 +1700,12 @@ public class QTCommitteBackingBean extends SourcingBaseBackingBean<QTDetailManag
 		}
 
 		List<ScCommitteeMember> committeeMembers = getManagedBean().getToBeDelCommitteMemebers();
+		//28895 - 35500 start
+		List<ScCommitteeMember> newScCommitteeMemberList = CollectionUtils.isNotEmpty(this.getManagedBean().getNewScCommitteeMemberAuditTrailList())
+				? this.getManagedBean().getNewScCommitteeMemberAuditTrailList() : new ArrayList<ScCommitteeMember>();	
+		List<ScCommitteeMember> deletedCommitteeMembers = CollectionUtils.isNotEmpty(this.getManagedBean().getDeletedScCommitteeMemberAuditTrailList())
+				? this.getManagedBean().getDeletedScCommitteeMemberAuditTrailList() : new ArrayList<ScCommitteeMember>();//#35500 fix 15th May
+		//28895 - 35500 end
 		
 		if (committeeMembers == null) {
 			committeeMembers = new ArrayList<>();	
@@ -1725,10 +1737,22 @@ public class QTCommitteBackingBean extends SourcingBaseBackingBean<QTDetailManag
 				selectedList.get(i).setRepresentativeType(null);
 				selectedList.get(i).setRepresentativeTypeId(null);
 				committeeMembers.add(selectedList.get(i));
+				//#28895 - 35500 start
+				if (CollectionUtils.isNotEmpty(deletedCommitteeMembers) && !deletedCommitteeMembers.contains(selectedList.get(i))){//#35500 Fix Reopen 27th Nov
+					deletedCommitteeMembers.add(selectedList.get(i));
+				}else if (CollectionUtils.isEmpty(deletedCommitteeMembers)) {
+					deletedCommitteeMembers.add(selectedList.get(i));
+				}
+				if (!(newScCommitteeMemberList == null || newScCommitteeMemberList.isEmpty())) {
+					newScCommitteeMemberList.remove(selectedList.get(i));
+				}				
 			}
 			
-		}
-
+		}		
+		
+		this.getManagedBean().setNewScCommitteeMemberAuditTrailList(newScCommitteeMemberList);
+		this.getManagedBean().setDeletedScCommitteeMemberAuditTrailList(deletedCommitteeMembers);
+		//#28895 - 35500 end
 		this.getManagedBean().setToBeDelCommitteMemebers(committeeMembers);
 		this.getManagedBean().setCommitteMember(null);
 		this.getManagedBean().setExtraDeleteComitteeSelection(null);
@@ -2117,6 +2141,14 @@ public class QTCommitteBackingBean extends SourcingBaseBackingBean<QTDetailManag
 							.getScCommitteeMembers())) {
 					
 						String committeeType = committee.getCommitteeType().getParameterCode();
+						
+						// #35320 - Set QCA, QCB to QQC - Start						
+						if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType)
+								|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType)) {
+							committeeType = ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE;
+						}						
+						// #35320 - End
+						
 						committeeType=retrieveCommitteeDescription(committeeType,new FacesScopes().getUserLocale());
 						isChairpersonRequired(committee.getScCommitteeMembers(),committeeType);
 						isSecretaryRequired(committee.getScCommitteeMembers(),committeeType);
@@ -2153,14 +2185,18 @@ public class QTCommitteBackingBean extends SourcingBaseBackingBean<QTDetailManag
 				}
 				count++;
 				if (count >= 2) {
-					throw new EpException(MessageConst.ERROR_760123,new String[]{committeeType});
+					//#35320 - Start
+					throw new EpException(MessageConst.ERROR_760712,new String[]{committeeType});
+					//#35320 - End
 					// Only required to have 1 chairperson for appoint committee
 				}
 			}
 		}
 
 		if (count == 0) {
-			throw new EpException(MessageConst.ERROR_760047,new String[]{committeeType});
+			//#35320 - Start
+			throw new EpException(MessageConst.ERROR_760711,new String[]{committeeType});
+			//#35320 - End
 			// At least one chairperson are required for appoint committee
 		}
 	}
@@ -2405,6 +2441,62 @@ public class QTCommitteBackingBean extends SourcingBaseBackingBean<QTDetailManag
 	private void setQtMaintencesChanges() {
 		this.getManagedBean().setChangesOnQTMaintenance(
 				this.getManagedBean().isMaintanceFlow());
+	}
+	
+	/**
+	 * #35500 issue fix 4-9
+	 * Capture the modified role values
+	 * @param member
+	 */
+	public void onChangeRole(ScCommitteeMember member){
+		//#35500 Fix Reopen 6th Jan Start issue 1
+		List<ScCommitteeMember>	newScCommitteeMemberAuditTrailList = this.getManagedBean().getNewScCommitteeMemberAuditTrailList() != null
+				? this.getManagedBean().getNewScCommitteeMemberAuditTrailList() : new ArrayList<ScCommitteeMember>();
+		HashMap<PmUser, List<String>> mapModifiedRole = this.getManagedBean().getMapModifiedRole() != null ? 
+				this.getManagedBean().getMapModifiedRole() : new HashMap<PmUser, List<String>>();
+		List<String> userRoles = new ArrayList<>();
+			
+		if (member.getMemberRoleId() == null || newScCommitteeMemberAuditTrailList.contains(member)){
+			this.roleChangedListener(member);
+			return;
+		}
+		//#35500 Fix Reopen 6th Jan End
+		
+		PmParameter changedRolePmParameter = ParameterHelper.getInstance().getPmParameterById(member.getMemberRoleId());		
+		String changedRole = ParameterHelper.getInstance().getParameterDesc(
+				ParameterTypeConst.COMMITTEE_ROLE, changedRolePmParameter.getParameterCode(),
+				SourcingConstants.MY_LOCALE);
+		String previousRole = ParameterHelper.getInstance().getParameterDesc(
+				ParameterTypeConst.COMMITTEE_ROLE, member.getMemberRole().getParameterCode(),
+				SourcingConstants.MY_LOCALE);
+				
+		if (!mapModifiedRole.isEmpty()) {
+			if (mapModifiedRole.containsKey(member.getPmUser())) {
+				userRoles = mapModifiedRole.get(member.getPmUser());
+				if (userRoles.get(1).equals(changedRole)){
+					mapModifiedRole.remove(member.getPmUser());
+				} else {
+					userRoles.add(0, changedRole);
+					mapModifiedRole.remove(member.getPmUser());
+					mapModifiedRole.put(member.getPmUser(),userRoles);					
+				}
+			} else {
+				userRoles.add(changedRole);
+				userRoles.add(previousRole);
+				userRoles.add(member.getScCommittee().getCommitteeType().getParameterCode());
+				mapModifiedRole.put(member.getPmUser(),userRoles);
+			}
+		} else {
+			userRoles.add(changedRole);
+			userRoles.add(previousRole);
+			userRoles.add(member.getScCommittee().getCommitteeType().getParameterCode());
+			mapModifiedRole.put(member.getPmUser(),userRoles);
+		}
+
+		this.getManagedBean().setMapModifiedRole(mapModifiedRole);
+		
+		super.roleChangedListener(member);	
+		setQtMaintencesChanges();
 	}
 	
 	/*

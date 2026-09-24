@@ -18,6 +18,7 @@ public class SLALogConstant {
 	 */
 	public static final String QT_LOA_DETAIL_BACKINGBEAN = "LOADetailBackingBean"; // #29007
 	public static final String QT_DIRECT_LOA_DETAIL_BACKINGBEAN = "DirectLOABackingBean"; // #29007
+	public static final String QT_SUPPLIER_FINALIZATION_MEETING_BACKINGBEAN = "SupplierFinalizationMeetingBackingBean"; //#12471 commited under #35500
 	public static final String QT_EVALUATION_BACKINGBEAN = "EvaluationBackingBean";
 	// 25037 - start
 	public static final String QT_APPROVAL_BACKINGBEAN = "ApprovalBackingBean";

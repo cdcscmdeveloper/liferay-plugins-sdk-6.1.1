@@ -12,6 +12,7 @@ package my.ep.web.backingbean.sc.specification;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.Timestamp; //#38151
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -29,6 +30,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTSpecSO;//#38151
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.constant.CompositeValidityConst;
 import my.ep.constant.ModuleCodeConst;
@@ -38,6 +40,7 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.common.PmAppVersion; //#38151
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -637,7 +640,7 @@ private class SpecMaintenanceSearchQtDataModel extends
 			}
 		}
 		// #29732 @idham 25/07/2023 - End
-		
+		checkWeightage35384WIP();// #38151
 		// 29464-start
 		String renderPage = QTConstants.SPECIFICICATON_COMM_PREPARATION;
 		
@@ -803,4 +806,33 @@ private class SpecMaintenanceSearchQtDataModel extends
 				|| facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value());
 	}
 	//29732 -End
+	
+	//#38151 Start
+	private void checkWeightage35384WIP() {
+		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTDetailSO.class);
+		ScQt qt = this.getManagedBean().getQt();
+		Date createdDate = qt.getCreatedDate();
+
+		QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+		qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
+		qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
+
+		PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
+
+		Date effDate = appVerDtls.getEffDate();
+		Timestamp effTimestamp = new Timestamp(effDate.getTime());
+		boolean checkStatusWip =(checkWipScoreSettingFlag(qt.getQtId()));
+
+		if ((createdDate.before(effTimestamp) && !checkStatusWip)) {
+			this.getManagedBean().setWeightage35384WIP(true);
+		}
+	}
+	
+	private boolean checkWipScoreSettingFlag(Long qtId) {
+	    IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+	            IQTSpecSO.class);
+	    return specSo.checkWipScoreFlag(qtId);
+	}
+	//#38151 End
 }
