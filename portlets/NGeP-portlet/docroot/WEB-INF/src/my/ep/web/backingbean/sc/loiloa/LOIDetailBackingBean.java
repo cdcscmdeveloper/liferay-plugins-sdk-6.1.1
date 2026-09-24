@@ -7884,10 +7884,6 @@ public class LOIDetailBackingBean extends
 	public void validateNegoDecisionAction(String outcome) {
 		try {
 			/*#34444 Start*/
-			System.out.println("Received = " + outcome);
-			if (outcome == null) {
-				throw new EpException("TEST TEST TEST ::::: ");
-			}
 			this.getManagedBean().setAction(outcome);
 			log.info("validateNegoDecisionAction(String outcome ::>:: " + outcome);
 			/*#34444 End*/
