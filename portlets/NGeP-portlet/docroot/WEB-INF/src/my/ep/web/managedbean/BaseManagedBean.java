@@ -237,7 +237,7 @@ public abstract class BaseManagedBean implements Serializable {
 		private String btnAction;
 		
 		@javax.faces.bean.ManagedProperty("#{lbl}")
-		private ResourceBundle lbl;
+		private ResourceBundle resourceBundle;
 		// #34444 END
 	
 	public boolean isShowDetailSSM() {
@@ -1338,26 +1338,26 @@ public abstract class BaseManagedBean implements Serializable {
 			this.btnAction = btnAction;
 		}
 
-		public ResourceBundle getLbl() {
-			return lbl;
+		public ResourceBundle getResourceBundle() {
+			return resourceBundle;
 		}
 
-		public void setLbl(ResourceBundle lbl) {
-			this.lbl = lbl;
+		public void setResourceBundle(ResourceBundle lbl) {
+			this.resourceBundle = lbl;
 		}
 
 		public String getConfirmTitle() {
-			if (lbl == null || btnAction == null) {
+			if (resourceBundle == null || btnAction == null) {
 				return "";
 			}
-			return my.ep.web.util.sc.ActionPopupMessageKeys.getTitleMessage(btnAction, lbl);
+			return my.ep.web.util.sc.ActionPopupMessageKeys.getTitleMessage(btnAction, resourceBundle);
 		}
 
 		public String getConfirmContent() {
-			if (lbl == null || btnAction == null) {
+			if (resourceBundle == null || btnAction == null) {
 				return "";
 			}
-			return my.ep.web.util.sc.ActionPopupMessageKeys.getContentMessage(btnAction, lbl);
+			return my.ep.web.util.sc.ActionPopupMessageKeys.getContentMessage(btnAction, resourceBundle);
 		}
 
 		public void prepareAction(String action) {
