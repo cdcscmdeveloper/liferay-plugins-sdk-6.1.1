@@ -24,10 +24,7 @@
 		<ui:param name="btnAction" value="SUBMIT" />
 		<p:commandButton value="#{lbl['lbl.btn.submit']}"
 			onstart="blockWidget.show();" styleClass="ui-button"
-			oncomplete="blockWidget.hide(); #{evaluationMeetingBackingBean.isCommitteeModified(evaluationMeetingBackingBean.managedBean.committeeMemberActivity)
-    and evaluationMeetingBackingBean.managedBean.validFor25037
-    ? 'confirmSubmitToApproverPopup.show();'
-    : 'confirmSubmitMeetingPopup.show();'}"
+			oncomplete="blockWidget.hide(); #{evaluationMeetingBackingBean.committeeModified and evaluationMeetingBackingBean.managedBean.validFor25037 ? 'confirmSubmitToApproverPopup.show();' : 'confirmSubmitMeetingPopup.show();'}"
 			style="float:right;"
 			actionListener="#{evaluationMeetingBackingBean.managedBean.prepareAction(btnAction)}"
 			process="@form" update="@form">
