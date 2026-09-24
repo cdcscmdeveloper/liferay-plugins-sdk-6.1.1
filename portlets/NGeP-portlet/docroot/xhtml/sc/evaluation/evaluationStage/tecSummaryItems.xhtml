@@ -173,6 +173,14 @@
 					<h:outputText
 						value="#{empty disQualifiedSupplier.totalRating? 0: disQualifiedSupplier.totalRating}" />
 				</p:column>
+				<ui:remove>#29187 Start Vinod</ui:remove>	
+				<p:column style="width:30%;white-space: normal;text-align:center;" rendered="#{isDisqualified}">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.eva.disqualified.supplier.disqualified']}" />
+					</f:facet>
+					<h:outputText value="#{evaluationBackingBean.isDisqualifiedByCompliance(disQualifiedSupplier) ? lbl['lbl.sc.eva.disqualified.supplier.disqualified.message'] : ''}"/>
+				</p:column>
+				<ui:remove>#29187 End Vinod</ui:remove>
 
 			</p:dataTable>
 			<p:spacer height="10px" />
