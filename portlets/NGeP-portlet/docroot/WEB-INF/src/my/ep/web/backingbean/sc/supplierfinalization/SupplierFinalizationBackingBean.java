@@ -768,9 +768,12 @@ public class SupplierFinalizationBackingBean extends
 		List<ScQtFinalJustification> scQtFinalJustificationList = CollectionUtils.isNotEmpty(this.getManagedBean().getFinalJustificationList())
 				? this.getManagedBean().getFinalJustificationList() : new ArrayList<ScQtFinalJustification>();
 		for (ScQtFinalJustification finalJustification : scQtFinalJustificationList){
-			if(finalJustification.getJustification() != null){
-			justificationReasonList.add(finalJustification.getJustification(). getReasonCode());
+			//#34444 Start - This code was added for handling the NPE  effect 34444 process flow/
+			PmReason justification = finalJustification.getJustification();
+			if (justification != null) {
+			justificationReasonList.add(justification.getReasonCode());
 			}
+			//#34444 End/
 		}
 		this.getManagedBean().setJustificationReasonList(justificationReasonList);
 		//#34860 end
@@ -3384,7 +3387,6 @@ public class SupplierFinalizationBackingBean extends
 		} else {
 			/*#34444 - Start*/
 			RequestContext.getCurrentInstance().execute("popupConfirmInfoDlg.show()");
-			//this.submitSuppFinalization();
 			/*#34444 - End*/
 		}
 	}

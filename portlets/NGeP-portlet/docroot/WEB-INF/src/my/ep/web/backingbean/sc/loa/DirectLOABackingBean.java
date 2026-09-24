@@ -5826,9 +5826,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				RequestContext.getCurrentInstance().execute("popupConfirmInfoDlg.show()");
 				RequestContext.getCurrentInstance().execute("blockWidget.hide();");
 				//34444 END
-				
-				// #29007 End Vinod
-				//updateBpmTaskAction(outcome);
 			}
 		}
 		//20190405@asyrafhaziq - CR25062 - End

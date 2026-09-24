@@ -4377,11 +4377,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
         		// 27868 - start
         		validateReasonStatus(scLoa);
         		// 27868 - end
-//				RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
         		//34444 - START
         		getManagedBean().setBtnAction("APPROVELOA");
         		RequestContext.getCurrentInstance().execute("popupConfirmInfoDlg.show()");
-        		//RequestContext.getCurrentInstance().execute("blockWidget.hide();");
         		//34444 -  END
 		}else if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
 			// Enhancement #21694 START
