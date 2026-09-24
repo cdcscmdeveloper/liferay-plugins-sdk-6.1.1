@@ -192,4 +192,22 @@ public class CommonUtils {
 	}
 	// #31503, #26059, #27868 -end-
 	
+	// #31344 start
+	/**
+	 * Filter item name to remove "N/A" or “N A”.
+	 * 
+	 * @param itemName
+	 * @return itemName
+	 */
+	public String filterItemNameNA(String itemName) {
+		if (itemName != null && !itemName.isEmpty()) {
+            // Only remove N/A and N A
+            String cleaned = itemName.replaceAll("\\bN\\s*/\\s*A\\b|\\bN\\s+A\\b", "");
+            cleaned = cleaned.replaceAll("\\s+", " ").trim();
+            return cleaned;
+        }
+        return itemName;
+	}
+	// #31344 end
+	
 }
