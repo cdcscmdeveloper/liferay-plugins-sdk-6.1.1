@@ -89,7 +89,8 @@
 				</p:outputLabel>
 				<!-- 30865,32298 End -->
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" style="white-space: pre-line;vertical-align: top;">  <!-- 36504 -->
+			<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" 
+					style="white-space: pre-line;vertical-align: top; width: 350px;">  <!-- 36504 -->
 				<h:outputText value="#{lbl['lbl.sm.no.available']}"
 					rendered="#{empty aprvdCatBean.otherDesc}" />
 				<h:outputText value="#{aprvdCatBean.otherDesc}"

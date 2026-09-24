@@ -1232,6 +1232,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setAckBy(supplierSigner);
 			}
 
+			ctBackingBean.getManagedBean().setDirectPurchase(isDirectPurchase());//#40005
+
 			getManagedBean().setSecretaryId(null);
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary() != null) {
 				getManagedBean().setSecretaryId(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary().getUserId());
@@ -9327,4 +9329,32 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		return getAmendmentCommitteeHelper().isQuotationCommitteeType();
 	}
 	//#35238 end
+	
+	//#40005 start
+	/**
+	 * Method to check contract is from direct purchase or not.
+	 * 
+	 * @return true if contract is from direct purchase, otherwise return false.
+	 */
+	public boolean isDirectPurchase() {
+		if (ctBackingBean.getManagedBean().getContractVer() == null
+				|| ctBackingBean.getManagedBean().getContractVer().getCtContract() == null
+				|| ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode() == null
+				|| ctBackingBean.getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode() == null) {
+			return false;
+		}
+
+		if (ctBackingBean
+				.getManagedBean()
+				.getContractVer()
+				.getCtContract()
+				.getProcurementMode()
+				.getParameterCode()
+				.equalsIgnoreCase(
+						ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+			return true;
+		}
+		return false;
+	}
+	//#40005 end
 }

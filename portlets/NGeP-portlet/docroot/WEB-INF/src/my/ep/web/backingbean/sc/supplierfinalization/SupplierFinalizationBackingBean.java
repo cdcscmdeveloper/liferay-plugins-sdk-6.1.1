@@ -6961,7 +6961,7 @@ public class SupplierFinalizationBackingBean extends
 		boolean multipleLOIandRefinalized = ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(getManagedBean()
 				.getFinalizationMethod()) && this.getManagedBean().getQtRefinalized();
 
-		if (CollectionUtils.isNotEmpty(scQtRecommend.getRecommendDtls()) && multipleLOIandRefinalized) {
+		if (CollectionUtils.isNotEmpty(scQtRecommend.getRecommendDtls()) && multipleLOIandRefinalized && !isQTCancelledBidSchedule()) {//#40396
 			for (ScQtRecommendDtl recommendDtl : scQtRecommend.getRecommendDtls()) {
 				boolean isLoiAwarded = recommendDtl.getLoiAwarded() == null ? false : recommendDtl.getLoiAwarded();
 			
@@ -10678,7 +10678,7 @@ public class SupplierFinalizationBackingBean extends
 					CommitteReqDTO commReqDTO = new CommitteReqDTO();
 					commReqDTO.setSupplierFinalization(true);
 					commReqDTO.setQtId(getManagedBean().getScQt().getQtId());
-					commReqDTO.setTotalAwardedPrice(totalIntendedPrice);
+					commReqDTO.setTotalAwardedPrice(BigDecimal.ZERO.compareTo(totalIntendedPrice) == 0 ? null : totalIntendedPrice);//#39077
 
 					CommitteResDTO commResDTO = committeeSO.retrieveFinalizationCommitteeType(commReqDTO);
 
