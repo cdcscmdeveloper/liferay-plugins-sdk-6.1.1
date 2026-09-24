@@ -81,6 +81,7 @@
 			<p:tab title="#{lbl['lbl.cm.pub.catalog.keyword.search']}">
 				<table style="width: 100%; margin-top: 8px;">
 					<tr>
+						<!-- #10747 - Start  -->
 						<td style="width: 70%;"><p:inputText
 								style="height: 33px !important; width: 98%;font-size: 18px;"
 								id="itemNameId"
@@ -88,17 +89,19 @@
 							<p:watermark for="itemNameId"
 								value="#{lbl['lbl.cm.pub.catalog.search.filed.watermark']}"></p:watermark></td>
 						<td style="padding-left: 5px; vertical-align: middle;"><p:commandLink
-								title="#{lbl['lbl.cm.search']}" id="searchBtnId" update="@form"
-								action="#{pCatalogueBackingBean.searchCatalogue}">
+								title="#{lbl['lbl.cm.search']}" id="searchBtnId"
+								action="#{pCatalogueBackingBean.searchCatalogue}"
+								process="itemNameId, @this" update=":form">
 								<p:graphicImage value="/css/images/design/search.png"
 									style="20px;"></p:graphicImage>
 							</p:commandLink> <p:defaultCommand target="searchBtnId" /> <p:spacer
 								width="10px;" /> <p:commandLink title="#{lbl['lbl.cm.clear']}"
-								update=":form" action="#{pCatalogueBackingBean.clearSerach}">
+								action="#{pCatalogueBackingBean.clearSerach}"
+								process="itemNameId, @this" update=":form">
 								<p:graphicImage value="/css/images/design/reject.png"
 									style="20px;"></p:graphicImage>
 							</p:commandLink></td>
-
+						<!-- #10747 - End  -->
 					</tr>
 				</table>
 

@@ -23563,6 +23563,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 					QTConstants.INACTIVE_CHECKLIST_NOTIFICATION_HIDE);
 			this.getManagedBean().setPreRenderInactiveChecklist(
 					checkInactiveChecklistForPopup(this.getManagedBean().isShowInactiveChecklistPopup(), bpAction));
+			deleteConfirmedInactiveChecklists();	//#41026/#10141
 		} else {// #40998/#10141 - Start
 			Long currentStatusId = this.getManagedBean().getCurrentStatusId();
 			if (currentStatusId.equals(QTStatusConst.SE_PENDING_REVISION)) {
@@ -23680,6 +23681,42 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				}
 			}
 		}
+	}
+
+	/**
+	 * Deletes the confirmed inactive checklists from the database so the
+	 * popup is not shown again on the next visit.
+	 */
+	private void deleteConfirmedInactiveChecklists() {
+		List<ScQtCheckList> inActiveChecklist = this.getManagedBean().getInActiveChecklist();
+		if (CollectionUtils.isEmpty(inActiveChecklist)) {
+			return;
+		}
+		List<ScQtCheckList> specCheckLists = new ArrayList<>();
+		List<ScQtCheckList> otherCheckLists = new ArrayList<>();
+		for (ScQtCheckList checklist : inActiveChecklist) {
+			if (null == checklist.getQtChecklistId()) {
+				continue;
+			}
+			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION.equalsIgnoreCase(checklist
+					.getDefinationType().getParameterCode())) {
+				specCheckLists.add(checklist);
+			} else {
+				otherCheckLists.add(checklist);
+			}
+		}
+		if (specCheckLists.isEmpty() && otherCheckLists.isEmpty()) {
+			return;
+		}
+		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+		reqDTO.setScQt(this.getManagedBean().getQt());
+		reqDTO.setCheckLists(specCheckLists);
+		reqDTO.setTobeRemoveList(otherCheckLists);
+		getSpecSO().deleteInactiveChecklists(reqDTO);
+
+		// already deleted, so the later save must not delete them again
+		removeMarkedDeletedChecklists(this.getManagedBean().getMarkDeletedTechChecklist(), inActiveChecklist);
+		removeMarkedDeletedChecklists(this.getManagedBean().getMarkDeletedFinChecklist(), inActiveChecklist);
 	}
 	//#41026/#10141 - End
 

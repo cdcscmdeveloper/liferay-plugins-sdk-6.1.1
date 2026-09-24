@@ -4698,9 +4698,10 @@ return	remarksNotFound;
 			// #25651 - Start
 			reqDTO.setDocumentCategory(ParameterConst.DOCUMENT_CATEGORY_BRIEFING_PAPER);
 			reqDTO.setExcludedDocNames(SupplierFinalizationManagedBean.getDirectdownloaddocdefkeys());
-			List<ScQtFinalizationReportDetail> finalizationReportsDetail = qtSuppFinalizationSO.retriveFinalizationReportDetail(reqDTO).getScQtFinalizationReportDetails();
+			List<ScQtFinalizationReportDetail> finalizationReportsDetail = qtSuppFinalizationSO
+					.retriveFinalizationReportDetail(reqDTO).getScQtFinalizationReportDetails();
 			populateEvaluationReportDetails(finalizationReportsDetail, this.getManagedBean().getScQt());
-			this.getManagedBean().setScQtFinalizationReportDetail(finalizationReportsDetail);
+			populateBriefingReportDetails(finalizationReportsDetail);
 			// #25651 - End
 			
 		} finally {
@@ -9168,7 +9169,8 @@ return	remarksNotFound;
 		TplSpecZoneDtl zoneDtl = scQtRecommend.getTplSpecZoneDtl();
 		PmParameter finalizationMethod = getManagedBean().getScQtFinalization()
 											.getFinalizationMethod();
-		isAward = isRecommendByAward();
+		isAward = isRecommendByAward() && !ParameterConst.RECOMMEND_BY_MULTIPLE_LOI
+					.equals(finalizationMethod.getParameterCode());//#40396
 		
 		int activeSupplierCount = 0;
 		if (CollectionUtils.isNotEmpty(
@@ -9249,7 +9251,8 @@ return	remarksNotFound;
 			}
 		}
 		String finalizationMethodStr = null;
-		if (isQTRefinalized()) {
+		if (isQTRefinalized() && !ParameterConst.RECOMMEND_BY_MULTIPLE_LOI
+					.equals(finalizationMethod.getParameterCode())) {//#40396
 			finalizationMethodStr = ParameterConst.RECOMMEND_BY_AWARD;
 		} else {
 			finalizationMethodStr = finalizationMethod.getParameterCode();
