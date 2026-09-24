@@ -403,6 +403,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	private List<ScLoaRemark> supplierRemarks;
 	//#11134/#41092 -end-	
 	
+	private boolean isSaveTemplate = true; // Bug #40798@Syazani 21/09/2026
+	
 	/**
 	 * Gets the spki backing bean.
 	 * 
@@ -2303,5 +2305,15 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 		this.supplierRemarks = supplierRemarks;
 	}
 	// #11134/#41092 -end-
+	
+	// Bug #40798@Syazani 21/09/2026 -- Start
+	public boolean isSaveTemplate() {
+		return isSaveTemplate;
+	}
+
+	public void setSaveTemplate(boolean isSaveTemplate) {
+		this.isSaveTemplate = isSaveTemplate;
+	}
+	// Bug #40798@Syazani 21/09/2026 -- End
 
 }
