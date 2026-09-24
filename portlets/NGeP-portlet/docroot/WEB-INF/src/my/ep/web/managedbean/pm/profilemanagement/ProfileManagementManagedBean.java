@@ -107,7 +107,7 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private List<PmAddressType> newAuditPmAddressTypes;
 	private boolean userGrpBrandNew = false; // #40810
 	/************ AUDIT #28895-35509 *************/
-	
+
 	//#33867 - START
 	private Map<String, Integer> currentPmUserRoles  = new HashMap<String, Integer>();
 	private String attentionMsg;
@@ -986,20 +986,20 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	}
 	// #40810 - end
 	/************ AUDIT *************/
-	
+
 	//#33867 - START
 	public void setCurrentPmUserRoles(Map<String, Integer> currentPmUserRoles) {
 		this.currentPmUserRoles = currentPmUserRoles;
 	}
-	
+
 	public Map<String, Integer> getCurrentPmUserRoles() {
 		return currentPmUserRoles;
 	}
-	
+
 	public String getAttentionMsg() {
 		return attentionMsg;
 	}
-	
+
 	public void setAttentionMsg(String attentionMsg) {
 		this.attentionMsg = attentionMsg;
 	}

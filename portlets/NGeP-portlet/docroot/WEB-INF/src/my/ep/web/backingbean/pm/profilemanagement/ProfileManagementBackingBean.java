@@ -4613,7 +4613,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 	}
 	//#36489 and SonarLint Fixing - End
-	
+
 	//#33867 - START
 	/**
 	 * Retrieves the current user roles and their record status.
@@ -4631,7 +4631,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		return userRoleMap;
 	}
 	//#33867 - END
-	
+
 	//#33867 - START
 	/**
 	 * Validates the selected user's status and roles before updating the user information.
@@ -4685,7 +4685,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 	}
 	//#33867 - END
-	
+
 	//#33867 - START
 	/**
 	 * Checks for roles assigned to the selected user that do not have active users.
@@ -4721,7 +4721,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		return roles;
 	}
 	//#33867 - END
-	
+
 	//#33867 - START
 	/**
 	 * Returns a comma-separated string of roles.
