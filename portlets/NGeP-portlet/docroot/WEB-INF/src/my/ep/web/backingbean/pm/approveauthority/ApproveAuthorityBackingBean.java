@@ -53,11 +53,9 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 	private static final long serialVersionUID = 1L;
 
 	private static final String NAV_TO_MAIN = "approveAuthorityMain";
-	
-	// #27827 - START
+
 	private static final String APPROVE_AUTHORITY_BACKING_BEAN = "ApproveAuthorityBackingBean";
-	// #27827 - END
-	
+
 	//Tab values
 	public static final int TAB_JAWATANKUASA_PEROLEHAN = 0;
 	public static final int TAB_PENGURUSAN_TERTINGGI = 1;
