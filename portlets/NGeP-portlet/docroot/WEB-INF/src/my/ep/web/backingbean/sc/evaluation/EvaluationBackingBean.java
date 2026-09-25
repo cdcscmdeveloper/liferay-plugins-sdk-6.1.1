@@ -6299,9 +6299,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			resDTO = evaluationSo.retrieveAllTechnicalChecklist(reqDTO);
 			if (CollectionUtils.isNotEmpty(resDTO.getQtChecklists())) {
 				retrieveMaxTechnicalScoreAndOtherElementsScore(resDTO.getQtChecklists());
-				/** Use in 4ser
 				retrieveMaxTechnicalScoreAndOtherElementsPercentage(this.getManagedBean().getScQt().getQtId());
-				 */
 			}
 			// #28784 - End
 		} finally {
@@ -7391,17 +7389,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 								if (this.getManagedBean().getNoSupplierPackageExist()) {
 									retriveSummaryEvaluationStage();
 									this.getManagedBean().setEvaluatioStageActiveIndex(2);
-									this.getManagedBean().setTabTechnicalIndex(3);// #28784
-																					// fixed
-																					// for
-																					// Technical
-																					// (Item),
-																					// no
-																					// Package
-																					// //#25138
-																					// also
-																					// use
-																					// this
+									this.getManagedBean().setTabTechnicalIndex(3);// #28784 fixed for Technical (Item), no Package #25138 also use this
 								}
 								// #33187 End - fix next skip if disable
 								// Technical
@@ -7422,10 +7410,32 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 								} else {
 									outputTab = 2;
 								}
+								
+								
+							//#28784 - Start
+							}else if( this.getManagedBean()
+									.getPresentationDemoActiveIndex() < 0 ||
+									this.getManagedBean().getTabTechnicalIndex() == 3 && this.getManagedBean().getScQt().isDemoRequired()){
+								//#28784 WIP @idham - Start
+								if (this.getManagedBean().isDemoWip()) {
+									retrieveDemoDetails();
+									
+									outputTab = 3;
+								}
+								else {
+									retrivePresentationOrDemoEvaluationStage();
+									outputTab = 2;
+								}
+								//#28784 WIP @idham - End
 
+							} else if (this.getManagedBean().getScQt().isDemoRequired()) {
+								retrieveDemoDetails();
+								outputTab = 3;
 							}
-
+						} else if (this.getManagedBean().getScQt().isDemoRequired()) {
+							retrieveDemoDetails();
 						}
+						//#28784 - End
 					}
 					// #28784, #34748 - End
 					/** retrivePresentationDemo(); */
@@ -7435,11 +7445,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 							&& this.getManagedBean().getCurrentStatusId()
 									.equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL)
 							&& !this.getManagedBean().isReadOnly() && this.getManagedBean().getScQt().isDemoRequired()) {
-						if (null == this.getManagedBean().getScQt().getDemoNotificationCheck() && checkDemoWIP()) {// #28784
-																													// enable
-																													// notification
-																													// for
-																													// WIP
+						if (null == this.getManagedBean().getScQt().getDemoNotificationCheck() && checkDemoWIP()) {// #28784 enable notification for WIP
 							EvaluationReqDTO demoReqDTO = new EvaluationReqDTO();
 							demoReqDTO.setScQt(this.getManagedBean().getScQt());
 							demoReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
@@ -8055,22 +8061,35 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 					// #28784 - End
 
 					if (!this.getManagedBean().getScQt().isDemoRequired()) {
+						
 						if (currentTab == 2) {
 
-							if (this.getManagedBean().getEvaluatioStageActiveIndex() < 1) {
+							if (this.getManagedBean()
+									.getEvaluatioStageActiveIndex() == 1) {
 								retriveSummaryEvaluationStage();
-								// this.getManagedBean().setComplianceActiveIndex(2);
+								this.getManagedBean().setTabTechnicalIndex(2);
 								outputTab = 2;
 
 							}
 
+							if (this.getManagedBean().getEvaluatioStageActiveIndex() == 0
+									&& ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this.getManagedBean()
+											.getScQt().getEvaluationType())) {
+								retriveTechnicalEvaluationStagePackage();
+								this.getManagedBean().setTabTechnicalIndex(1);
+								outputTab = 2;
+
+							}
 						}
+						// #25138, #21695 -start-
 					} else {
 						if (currentTab == 3) {
 							if (this.getManagedBean().getPresentationDemoActiveIndex() < 1) {
+								demoAttachmentChecking(); // #28784
 								retrivePresentationDemoSummary();
-								checkDemoStatusForQtCheckList(); // #25138,
-																	// #21695
+
+								checkDemoStatusForQtCheckList(); // #25138, #21695
+
 								outputTab = 3;
 							}
 						}
@@ -8197,6 +8216,8 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			} else if (outputTab == 6) {
 
 			} else if (outputTab == 0) {
+				afterDemoInv(false); // #28784
+				setDemoReadOnlyFalse();//#28784
 				this.getManagedBean().setCheckReportDownload(false);
 				this.getManagedBean().setDemo(false);
 				retriveMeetingDtls(this.getManagedBean().getScQt().getQtId(), this.getManagedBean().getCommitteeType(),
@@ -14063,10 +14084,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 				.getCommitteeType())
 				|| ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equalsIgnoreCase(this.getManagedBean()
 						.getCommitteeType())) {
-			this.getManagedBean().setEvaluatioStageActiveIndex(2);// 4ser,
-																	// change to
-																	// 3 after
-																	// 4ser
+			this.getManagedBean().setEvaluatioStageActiveIndex(3);// 4ser, change to 3 after 4ser
 			/** this.getManagedBean().setTabTechnicalIndex(4); */
 			// #34748
 		}
@@ -14783,43 +14801,6 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 	// #28784 add demo condition - End
 
 	// #28784 - Start
-	/**
-	 * Get Total Max score of Template Specifications
-	 * 
-	 * @return
-	 */
-	/*
-	 * use in 4ser public String maxTsItemScore() { String score =
-	 * SourcingConstants.NO_TS_DEMO_DATA_EXIST; if
-	 * (this.getManagedBean().getSinglesummaryItemList() != null) {
-	 * ITemplateSpecSO templateSpecSO =
-	 * BusinessDelegate.getInstance().getServiceObject(
-	 * QTConstants.SERVICE_OBJECT_CC, ITemplateSpecSO.class); score =
-	 * templateSpecSO
-	 * .getSumOfTsSpecMaxScore(this.getManagedBean().getSinglesummaryItemList
-	 * ().getTplSpecQuestion().getSpecQuestionId());
-	 * this.getManagedBean().setMaxItemTsScore(new BigDecimal(score)); } return
-	 * score; }
-	 */
-	// #28784 - End
-
-	// #28784 - Start
-	/*
-	 * use in 4ser private void
-	 * retrieveMaxTechnicalScoreAndOtherElementsPercentage(Long qtId) {
-	 * IQTEvaluationSO evaluationSO =
-	 * BusinessDelegate.getInstance().getServiceObject(
-	 * ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-	 * ScQtScoreSetting scoreSetting =
-	 * evaluationSO.getTechnicalItemScoreSetting(qtId);
-	 * this.getManagedBean().setMaxItemTsPercentage
-	 * (scoreSetting.getOverallTechnical());
-	 * this.getManagedBean().setMaxItemAllOtherElementsPercentage
-	 * (scoreSetting.getOverallOtherTechnical()); }
-	 */
-	// #28784 - End
-
-	// #28784 - Start
 	public void checkingForBeforeDemoMeetingDetails() {
 		if (!this.getManagedBean().isReadOnly()) {
 			checkMeetingDetailsAndStatus(this.getManagedBean().getScQtMeetings());
@@ -15180,8 +15161,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 	
 	//#28784 - Start
 	private void checkMeetingDoneNormalTEC() {
-		//remove comment for 4serangkai checking meeting details wip n non wip - Start
-		/*IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 		EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 		reqDTO.setScQt(this.getManagedBean().getScQt());
@@ -15190,11 +15170,9 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 		boolean wipTEC = wipStatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE
 				&& this.getManagedBean().getEvaluatioStageActiveIndex() == SourcingConstants.TAB_TECHNICAL_SUMMARY_BEFORE;
 		boolean nonWIPTEC = wipStatus >= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_CURRENT
-				&& this.getManagedBean().getEvaluatioStageActiveIndex() == SourcingConstants.TAB_TECHNICAL_SUMMARY_CURRENT;*/
-		//remove comment for 4serangkai checking meeting details wip n non wip - End
+				&& this.getManagedBean().getEvaluatioStageActiveIndex() == SourcingConstants.TAB_TECHNICAL_SUMMARY_CURRENT;
 
-//		if (wipTEC || nonWIPTEC) {//open for 4ser
-		if (this.getManagedBean().getEvaluatioStageActiveIndex() == SourcingConstants.TAB_TECHNICAL_SUMMARY_BEFORE) {//delete this after 4ser
+		if (wipTEC || nonWIPTEC) {
 			checkMeetingDetailsAndStatus(this.getManagedBean().getScQtMeetings());
 			checkCommitteeMembersAttendance(this.getManagedBean().getCommitteeMemberList());
 		}

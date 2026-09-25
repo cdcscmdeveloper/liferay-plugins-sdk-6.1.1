@@ -11273,6 +11273,36 @@ public class SpecificationBackingBean extends
 			scoreSetting.add(itemScoreSetting);
 			scQt.setScQtScoreSettings(scoreSetting);
 		}
+		
+		// #21695 START FARID
+		ScQtScoreSetting technicalItemScoreSetting = this.getManagedBean().getTechnicalItemScoreSetting();
+	
+		if (null != technicalItemScoreSetting && technicalItemScoreSetting.getSettingType() == 7) {
+			/*
+			 * #28784,  Checking if score setting already created or not
+			 * Start
+			 */
+			SpecificationReqDTO reqTempDTO = new SpecificationReqDTO();
+			List<Integer> settinglist = new ArrayList<>();
+			reqTempDTO.setScQt(scQt);
+			settinglist.add(technicalItemScoreSetting.getSettingType());
+			reqTempDTO.setSettingTypes(settinglist);
+			ScQtScoreSetting newTechnicalItemScoreSetting = checkScoreSetting(reqTempDTO);
+			if(newTechnicalItemScoreSetting != null && newTechnicalItemScoreSetting.getQtScoreSettingId() != null
+					&& !this.getManagedBean().getQt().isCloned()){//#28784 cloning error
+				newTechnicalItemScoreSetting.setWeightageReq(technicalItemScoreSetting.isWeightageReq());//Bug #34744 under 28784
+				newTechnicalItemScoreSetting.setPassingScore(technicalItemScoreSetting.getPassingScore());
+				newTechnicalItemScoreSetting.setOverallTechnical(technicalItemScoreSetting.getOverallTechnical());
+				newTechnicalItemScoreSetting.setOverallOtherTechnical(technicalItemScoreSetting.getOverallOtherTechnical());
+				newTechnicalItemScoreSetting.setOverallFin(technicalItemScoreSetting.getOverallFin());
+				newTechnicalItemScoreSetting.setOverallOtherFin(technicalItemScoreSetting.getOverallOtherFin());
+				
+				technicalItemScoreSetting = newTechnicalItemScoreSetting;
+			}//#28784 - end
+			scoreSetting.add(technicalItemScoreSetting);
+			scQt.setScQtScoreSettings(scoreSetting);
+		}
+		// #21695 END FARID
 
 		List<ScQtDeliveryLoc> localDeliveryList = new ArrayList<ScQtDeliveryLoc>();
 		// List<BriefingZoneBean> deliveryList=
