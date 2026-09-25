@@ -98,7 +98,7 @@
 
 			<ac:paginator for="evaluationreportdetail" />
 			
-			<p:column style="width:2%" rendered="#{!suppFinalBiddingBackingBean.documentBriefingPaperOnly(scQtFinalizationReportDetail.pmDocument.docDefinitionKey)}">
+			<p:column style="width:2%">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllChk" value="#{suppFinalBiddingBackingBean.managedBean.templateSpecBean.selectAll}" disabled="true">
 						<p:ajax partialSubmit="true" process="@this" update="@this" listener="#{suppFinalBiddingBackingBean.selectAll(suppFinalBiddingBackingBean.managedBean.templateSpecBean.selectAll, suppFinalBiddingBackingBean.managedBean.newBriefingPaperReportList)}"/>
@@ -118,12 +118,12 @@
 				</p:selectBooleanCheckbox>
 			</p:column>
 			
-			<p:column style="width:5%;white-space: normal;" styleClass="center-column" rendered="#{!suppFinalBiddingBackingBean.documentBriefingPaperOnly(scQtFinalizationReportDetail.pmDocument.docDefinitionKey)}">
+			<p:column style="width:5%;white-space: normal;" styleClass="center-column">
 			   <h:graphicImage value="/css/images/icon-expand.png" rendered="#{scQtFinalizationReportDetail.definationType.parameterCode eq 'SD' and scQtFinalizationReportDetail.pmDocument.docDefinitionKey ne 'KTU'}" styleClass="arrow-img" onclick="toggleRow(this)" />
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.report']}"
-				style="width:58%;white-space: normal;" rendered="#{!suppFinalBiddingBackingBean.documentBriefingPaperOnly(scQtFinalizationReportDetail.pmDocument.docDefinitionKey)}">
+				style="width:58%;white-space: normal;">
 				<h:inputText  value="#{scQtFinalizationReportDetail.title}" required="true" style="width:500px;"
 				disabled="#{suppFinalBiddingBackingBean.managedBean.readOnly}" label="#{lbl['lbl.sc.content']}"
 					rendered="#{empty scQtFinalizationReportDetail.pmDocument}" >
@@ -147,7 +147,7 @@
 			</p:column>
 
 			<p:column style="width:20%;text-align: center;"
-				headerText="#{lbl['lbl.sc.action']}" rendered="#{!suppFinalBiddingBackingBean.documentBriefingPaperOnly(scQtFinalizationReportDetail.pmDocument.docDefinitionKey)}">
+				headerText="#{lbl['lbl.sc.action']}">
 					<ui:fragment
 						rendered="#{scQtFinalizationReportDetail.definationType.parameterCode eq 'SD'}">
                      		

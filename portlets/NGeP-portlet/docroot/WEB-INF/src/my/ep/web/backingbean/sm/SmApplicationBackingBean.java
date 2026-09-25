@@ -6238,6 +6238,14 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * of the application.
 	 */
 	public void addOrUpdateEquityCompanyToSmAppl() {
+		// #36718 - Start
+		if (getManagedBean().getSelectedEquityCompany() != null) {
+			SmAddress addr = getManagedBean().getSelectedEquityCompany().getSmAddress();
+			if (addr != null && addr.getPostcode() != null) {
+				checkPostcode(addr.getPostcode());
+			}
+		}
+		// #36718 - End
 		SmCommonUtil.getInstance().setUserDetails(
 				getManagedBean().getSelectedEquityCompany());
 		EntityHelper.addOrUpdateEntityToList(getManagedBean()
@@ -15168,6 +15176,14 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					.setMandatoryDocs(new ArrayList<SmApplSupportDoc>());
 			for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
 					.getSmApplSupportDocs()) {
+				//#40112 - start
+				doc.setSmAppl(getManagedBean().getSmAppl());
+				if (!EntityHelper.isCollectionEmpty(doc.getSmApplDocFiles())) {
+					for (SmApplDocFile docFile : doc.getSmApplDocFiles()) {
+						docFile.setSmApplSupportDoc(doc);
+					}
+				}
+				//#40112 - end
 				if (doc.getPmDocument() != null) {
 					if (doc.getPmDocument().isMandatory()) {
 						if (doc.getPmDocument().isLicenseReq()
@@ -18613,14 +18629,14 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 								}
 							}
 						}
+						// #36718 - Start
+						getManagedBean().setReassignAddress(false);
+						// #36718 - End
 					}
 				}
 				getManagedBean().setSelectedShareHolder(this.getManagedBean().getSelectedShareHolder());
 			}
 		}
-		// #36718 - Start
-		getManagedBean().setReassignAddress(false);
-		// #36718 - End
 	}
 	//#32014 - END
 	//30766 START
@@ -20081,7 +20097,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		if (te == null){
 			return;
 		}
-		SmAIDocBackingBean.clearTenancyUserEdit(getManagedBean().getSmAppl());
+		SmAIDocBackingBean.acceptTenancyUserEdit(getManagedBean().getSmAppl());	//#40112
 		SmFacility fac = getManagedBean().getBasicCompanyFacility();
 		fac.setRentalRate(te.getMonthlyRental());
 		fac.setOwnerName(te.getLandlordsName());
