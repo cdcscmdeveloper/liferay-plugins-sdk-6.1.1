@@ -109,7 +109,7 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	/************ AUDIT #28895-35509 *************/
 
 	//#33867 - START
-	private Map<String, Integer> currentPmUserRoles  = new HashMap<String, Integer>();
+	private Map<String, Integer> currentPmUserRoles  = new HashMap<>();
 	private String attentionMsg;
 	//#33867 - END
 
