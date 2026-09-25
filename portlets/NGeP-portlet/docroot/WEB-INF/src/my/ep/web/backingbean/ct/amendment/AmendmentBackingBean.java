@@ -6310,16 +6310,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							|| pm.getPmRole().getRoleCode().equalsIgnoreCase(RoleCode.PPB_CHAIRPERSON.value())){
 						allowChairpersonRole = true;
 						continue;
-						
 					}
 				}
 			}
 			/*end*/
 			
-			// #35238 start
-			allowChairpersonRole = getAmendmentCommitteeHelper().determineChairpersonAccessForQuotationCommmittee(
-					orgProfileId, ctOwnerOrgProfileId, userResDTO, allowChairpersonRole);
-			// #35238 end
+			// #35238, #41383 start
+			allowChairpersonRole = allowChairpersonRole ? getAmendmentCommitteeHelper()
+					.determineChairpersonAccessForQuotationCommmittee(orgProfileId, ctOwnerOrgProfileId, userResDTO,
+							allowChairpersonRole) : false;
+			// #35238, #41383 end
 			
 			//Bug #26520 - start
 			if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)

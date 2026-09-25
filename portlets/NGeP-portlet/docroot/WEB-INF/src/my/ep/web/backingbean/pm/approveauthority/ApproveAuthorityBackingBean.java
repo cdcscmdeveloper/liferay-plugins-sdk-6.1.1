@@ -21,7 +21,6 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.approveauthority.AuthorityCommitteeReqDTO;
 import my.ep.dto.pm.common.approveauthority.AuthorityCommitteeResDTO;
 import my.ep.exception.EpException;
-import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAuthority;
 import my.ep.persistence.entity.pm.common.PmAuthorityCommittee;
@@ -38,7 +37,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.TabChangeEvent;
 
