@@ -1260,15 +1260,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 			/*Setting extension history list for amendment*/
 			getManagedBean().setAmendHistoryList(contractAmendmentSO.retrieveExtensionHistory(reqDTO).getExtensionHistoryList());
+			getManagedBean().setNewAmendmentEffDate(retrieveNewEffDate());
 			
 			//#24336 - Start
+			//Initialize NewAmtEffDate
 			CtAmendment ctAmendment = resDTO.getCtContractVer().getCtAmendment();
 			if(ctAmendment != null && ctAmendment.getNewAmtEffDate() != null){
-				//Store newAmtEffDate from DB
-				getManagedBean().setNewAmendmentEffDate(ctAmendment.getNewAmtEffDate());
-			}
-			else{
-				getManagedBean().setNewAmendmentEffDate(retrieveNewEffDate());
+				getManagedBean().setInitialNewAmtEffDate(ctAmendment.getNewAmtEffDate());
+			}else{
+				getManagedBean().setInitialNewAmtEffDate(retrieveNewEffDate());
 			}
 			//#24336 - End
 
@@ -9558,17 +9558,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    ContractManagedBean contractManagedBean = ctBackingBean.getManagedBean();
 	    CtContractVer ctContractVer = contractManagedBean.getContractVer();
 	    CtAmendment ctAmendment = ctContractVer.getCtAmendment();
-
+	    
 	    Date newAmtEffDate = ctAmendment.getNewAmtEffDate();
 
+	    // Original overall contract amount not same as new overall contract amount
 	    if (isNewOverallCtAmountDifferent(newOverallCtAmount)) {
-	        newAmtEffDate = getNewAmountEffectiveDate(
+	    	newAmtEffDate = getNewAmountEffDateForChangedAmount(
 	                newAmtEffDate,
 	                contractManagedBean.isDisableNewCtAmountEffDate()
 	        );
 	        contractManagedBean.setDisableNewCtAmountEffDate(false);
 	    } else {
-	        newAmtEffDate = getExistingAmountEffectiveDate(
+	    	// Both overall amount is same
+	    	newAmtEffDate = getNewAmountEffDateForUnchangedAmount(
 	                newAmtEffDate,
 	                ctAmendment
 	        );
@@ -9578,9 +9580,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	/**
-	 * Determines the new effective date when the overall contract amount is changed.
+	 * Determines the effective date when the overall contract amount has changed.
 	 */
-	private Date getNewAmountEffectiveDate(Date newAmtEffDate, boolean isDisableNewCtAmountEffDate) {
+	private Date getNewAmountEffDateForChangedAmount(Date newAmtEffDate, boolean isDisableNewCtAmountEffDate) {
 		
 	    if (newAmtEffDate != null && !isDisableNewCtAmountEffDate) {
 	        return newAmtEffDate;
@@ -9589,19 +9591,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	/**
-	 * Determines the new effective date when the overall contract amount remains unchanged.
+	 * Determines the effective date when the overall contract amount remains unchanged.
 	 */
-	private Date getExistingAmountEffectiveDate(Date newAmtEffDate, CtAmendment ctAmendment) {
+	private Date getNewAmountEffDateForUnchangedAmount(Date newAmtEffDate, CtAmendment ctAmendment) {
+		// Saved record
 	    if (newAmtEffDate != null && getManagedBean().getTaskName() != null) {
-	        return getManagedBean().getNewAmendmentEffDate();
+	        return getManagedBean().getInitialNewAmtEffDate();
 	    }
-	    return getDefaultAmountEffectiveDate(ctAmendment, getManagedBean().getNewAmendmentEffDate());
+	    return getDefaultAmountEffectiveDate(ctAmendment, getManagedBean().getInitialNewAmtEffDate());
 	}
 	
 	/**
 	 * Determines the default effective date based on the contract amendment details.
 	 */
-	private Date getDefaultAmountEffectiveDate(CtAmendment ctAmendment, Date storedNewAmendmentEffDate) {
+	private Date getDefaultAmountEffectiveDate(CtAmendment ctAmendment, Date initialNewAmtEffDate) {
 
 	    if (ctAmendment.isContractExtend()) {
 	        return ctAmendment.getExtendStartDate();
@@ -9611,7 +9614,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    if (amendmentEffDate != null) {
 	        return amendmentEffDate;
 	    }
-	    return storedNewAmendmentEffDate != null ? storedNewAmendmentEffDate : new Date();
+	    return initialNewAmtEffDate != null ? initialNewAmtEffDate : new Date();
 	}
 
 	/**
