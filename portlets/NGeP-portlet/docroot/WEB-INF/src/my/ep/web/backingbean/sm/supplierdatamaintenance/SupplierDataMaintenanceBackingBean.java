@@ -852,12 +852,22 @@ public class SupplierDataMaintenanceBackingBean extends
 		reqDTO.setSelectedCategories(checkCatCodeSubmit());
 		//28147: Disciplinary Action - start -
 		if (!EntityHelper.isCollectionEmpty(getManagedBean().getOwnerAndDirectorList())) {
-			reqDTO.setSelectedOwnerAndDirector(getManagedBean().getOwnerAndDirectorList());
-			
+			List<SmPersonnel> owners = getManagedBean().getOwnerAndDirectorList();//DA-show-banned-per
+
 			List<SmPersonnel> selectedOwners = getManagedBean().getSelectedOwnerAndDirectorList();
 			if (getManagedBean().isBlacklistOwnerOrDirector() && !EntityHelper.isCollectionEmpty(selectedOwners)) {
-				reqDTO.setSelectedOwnerAndDirector(selectedOwners);
-			} 
+				owners = selectedOwners;//DA-show-banned-per
+			}
+			//DA-show-banned-per - start
+			// banned rows are display-only, never re-imposed
+			List<SmPersonnel> activeOwners = new ArrayList<>();
+			for (SmPersonnel per : owners) {
+				if (per.getRecordStatusFlg().equals(SupplierManagementConst.APPROVED_RECORD_STATUS)) {
+					activeOwners.add(per);
+				}
+			}
+			reqDTO.setSelectedOwnerAndDirector(activeOwners);
+			//DA-show-banned-per - end
 		}
 		//28147: Disciplinary Action - end -
 		SmDisciplinaryAction da = getManagedBean().getDisciplineVO().getSmDiscplinaryAction();
@@ -2542,7 +2552,8 @@ public class SupplierDataMaintenanceBackingBean extends
 		List<SmPersonnel> perList = new ArrayList<>();
 		for (SmPersonnel per : getManagedBean().getSmAppl().getSmPersonnels()) {
 			boolean isOwnerDirector = per.isEquityOwner() || per.isDirector();
-			if (per.getRecordStatusFlg().equals(SupplierManagementConst.APPROVED_RECORD_STATUS)
+			if ((per.getRecordStatusFlg().equals(SupplierManagementConst.APPROVED_RECORD_STATUS)
+					|| per.isBlacklisted() || per.isSuspendRegistration() || per.isCancelRegistration())//DA-show-banned-per
 					&& isOwnerDirector){
 				perList.add(per);
 			}

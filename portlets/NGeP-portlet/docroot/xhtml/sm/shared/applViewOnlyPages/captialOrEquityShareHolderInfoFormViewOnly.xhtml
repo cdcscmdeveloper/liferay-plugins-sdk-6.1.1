@@ -21,6 +21,10 @@
 					<!-- 29659 START -->
 					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.name']}">
 						<h:outputText value="#{shareBean.title.salutationName} #{shareBean.name}" />
+						<!-- DA-show-banned-per -->
+						<h:graphicImage value="/css/images/design/icon_alert.png" style="margin-left: 5px"
+							rendered="#{shareBean.blacklisted or shareBean.suspendRegistration or shareBean.cancelRegistration}"
+							title="#{shareBean.suspendRegistration ? lbl['lbl.sm.disciplinary.jktt.suspend.registration'].concat('&#10;') : ''}#{shareBean.cancelRegistration ? lbl['lbl.sm.disciplinary.jktt.cancel.registration'].concat('&#10;') : ''}#{shareBean.blacklisted ? lbl['lbl.sm.disciplinary.jktt.blacklist.owner'] : ''}" />
 					</p:column>
 					<!-- 29659 END -->
 					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.idNo']}">

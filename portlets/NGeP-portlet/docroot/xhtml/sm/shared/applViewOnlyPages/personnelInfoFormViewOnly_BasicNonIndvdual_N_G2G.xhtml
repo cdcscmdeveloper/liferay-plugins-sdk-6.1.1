@@ -26,6 +26,10 @@
 					<ac:paginator for="personDtlTbl" />
 					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.name']}">
 						<h:outputText value="#{personBean.name}" />
+						<!-- DA-show-banned-per -->
+						<h:graphicImage value="/css/images/design/icon_alert.png" style="margin-left: 5px"
+							rendered="#{personBean.blacklisted or personBean.suspendRegistration or personBean.cancelRegistration}"
+							title="#{personBean.suspendRegistration ? lbl['lbl.sm.disciplinary.jktt.suspend.registration'].concat('&#10;') : ''}#{personBean.cancelRegistration ? lbl['lbl.sm.disciplinary.jktt.cancel.registration'].concat('&#10;') : ''}#{personBean.blacklisted ? lbl['lbl.sm.disciplinary.jktt.blacklist.owner'] : ''}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.idNo']}">
 						<h:outputText value="#{personBean.identificationNo}" />

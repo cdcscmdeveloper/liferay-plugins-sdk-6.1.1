@@ -24,11 +24,14 @@
 						<h:graphicImage value="/css/images/design/ico-disabled-chckbx.png"
 							rendered="#{!supplierDataMaintenanceBackingBean.managedBean.suspendRegistration and
  						!supplierDataMaintenanceBackingBean.managedBean.cancelRegistration 
- 						and !supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirector}" />
+ 						and !supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirector and !(person.blacklisted or person.suspendRegistration or person.cancelRegistration)}" /><!-- DA-show-banned-per -->
 						<h:graphicImage value="/css/images/design/ico-tick-checkbox.png"
-							rendered="#{supplierDataMaintenanceBackingBean.managedBean.suspendRegistration  or
+							rendered="#{(supplierDataMaintenanceBackingBean.managedBean.suspendRegistration  or
  						supplierDataMaintenanceBackingBean.managedBean.cancelRegistration
- 						or supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirector}" />
+ 						or supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirector) and !(person.blacklisted or person.suspendRegistration or person.cancelRegistration)}" /><!-- DA-show-banned-per -->
+						<!-- DA-show-banned-per -->
+						<h:graphicImage value="/css/images/design/icon_alert.png" rendered="#{(person.blacklisted or person.suspendRegistration or person.cancelRegistration)}"
+							title="#{person.suspendRegistration ? lbl['lbl.sm.disciplinary.jktt.suspend.registration'].concat('&#10;') : ''}#{person.cancelRegistration ? lbl['lbl.sm.disciplinary.jktt.cancel.registration'].concat('&#10;') : ''}#{person.blacklisted ? lbl['lbl.sm.disciplinary.jktt.blacklist.owner'] : ''}" />
 					</p:column>
 					
 					<!-- 39293, 39636 - START -->
@@ -39,8 +42,10 @@
 						rendered="#{!person.suspendRegistration and !person.cancelRegistration and !person.blacklisted
 						and !person.futureDA}"/>
 						<h:graphicImage value="/css/images/design/ico-tick-checkbox.png"
-						rendered="#{person.suspendRegistration or person.cancelRegistration or person.blacklisted
-						or person.futureDA}"/>
+						rendered="#{person.futureDA and !(person.blacklisted or person.suspendRegistration or person.cancelRegistration)}"/><!-- DA-show-banned-per -->
+						<!-- DA-show-banned-per -->
+						<h:graphicImage value="/css/images/design/icon_alert.png" rendered="#{(person.blacklisted or person.suspendRegistration or person.cancelRegistration)}"
+							title="#{person.suspendRegistration ? lbl['lbl.sm.disciplinary.jktt.suspend.registration'].concat('&#10;') : ''}#{person.cancelRegistration ? lbl['lbl.sm.disciplinary.jktt.cancel.registration'].concat('&#10;') : ''}#{person.blacklisted ? lbl['lbl.sm.disciplinary.jktt.blacklist.owner'] : ''}" />
 						<!-- 39293, 39636 - END -->
 					</p:column>
 					
@@ -63,7 +68,14 @@
 					
 					<p:column selectionMode="multiple"
 						rendered="#{supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirector
-						and !(supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirectorExist)}">
+						and !(supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirectorExist) and !(person.blacklisted or person.suspendRegistration or person.cancelRegistration)}"><!-- DA-show-banned-per -->
+					</p:column>
+					<!-- DA-show-banned-per -->
+					<p:column
+						rendered="#{supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirector
+						and !(supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirectorExist) and (person.blacklisted or person.suspendRegistration or person.cancelRegistration)}">
+						<h:graphicImage value="/css/images/design/icon_alert.png"
+							title="#{person.suspendRegistration ? lbl['lbl.sm.disciplinary.jktt.suspend.registration'].concat('&#10;') : ''}#{person.cancelRegistration ? lbl['lbl.sm.disciplinary.jktt.cancel.registration'].concat('&#10;') : ''}#{person.blacklisted ? lbl['lbl.sm.disciplinary.jktt.blacklist.owner'] : ''}" />
 					</p:column>
 <!-- 					28147: Disciplinary Action - end - -->
 					<!-- 29659 START -->

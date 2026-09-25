@@ -1163,7 +1163,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					.getSmPersonnels()) {
 
 				if (smPersonnel.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE
-						&& smPersonnel.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) {
+						&& smPersonnel.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
+						&& !(smPersonnel.isBlacklisted() || smPersonnel.isSuspendRegistration() || smPersonnel.isCancelRegistration())) {//DA-show-banned-per
 					deletedPersonnels.add(smPersonnel);
 				}
 
@@ -2457,7 +2458,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		for (SmPersonnel per : perList) {
 
 			if (per.isEquityOwner()) {
-				if (per.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
+				if (per.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
+						|| per.isBlacklisted() || per.isSuspendRegistration() || per.isCancelRegistration()) {//DA-show-banned-per
 					getManagedBean().getSmapplShareHolders().add(per);
 				}
 			}
@@ -4690,7 +4692,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				}
 				//25792 - reopen (modified if)
 				if (smPersonnel.getRecordStatusFlg().intValue() != DbValueConst.RECORD_STATUS_ACTIVE
-						&& smPersonnel.getRecordStatusFlg().intValue() != DbValueConst.RECORD_STATUS_PENDING_ACTIVATION) {
+						&& smPersonnel.getRecordStatusFlg().intValue() != DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
+						&& !(smPersonnel.isBlacklisted() || smPersonnel.isSuspendRegistration() || smPersonnel.isCancelRegistration())) {//DA-show-banned-per
 					deletedPersonnels.add(smPersonnel);
 				}
 
