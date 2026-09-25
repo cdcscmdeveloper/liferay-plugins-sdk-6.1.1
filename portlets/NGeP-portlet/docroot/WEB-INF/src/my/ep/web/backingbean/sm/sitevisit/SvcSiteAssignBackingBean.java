@@ -79,6 +79,7 @@ public class SvcSiteAssignBackingBean extends
 		//26238 -  Start Disciplinary Action - 28496
 		ProfilePersonalizationBackingBean profilepersonalization = new  ProfilePersonalizationBackingBean();
 		profilepersonalization.getManagedBean().setSmSupplier(resDTO.getSmAppl().getSmSupplier());
+		profilepersonalization.preRenderDisciplinaryAction(); 
 		//26238 -  End Disciplinary Action - 28496
 		constructSvTaskWithSVOList(resDTO.getSmAppl());	
 		/*if(resDTO.getSmAppl().getSmApplSectionReviews() != null){
