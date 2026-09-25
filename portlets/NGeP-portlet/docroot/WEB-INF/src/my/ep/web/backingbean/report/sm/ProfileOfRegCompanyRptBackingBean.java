@@ -6,14 +6,11 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sm.SupplierManagementConst;
-import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.sm.SmMofAccount;
-import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.OrganizationType;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.ProfileOfRegCompanyRptManagedBean;
@@ -39,21 +36,6 @@ public class ProfileOfRegCompanyRptBackingBean extends
 		validateParameterValue(getManagedBean().getReportCode());
 		// #29712, #32564 - end
 		
-		/*
-		// #27544 : Disciplinary Action - start #23080
-		if(getManagedBean().getRegType() != null ){
-			if( getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_MOF) ){
-				// #27397 - start
-				validateMofRegNo(getManagedBean().getMofNo());
-				// #27397 - end
-			}else if(getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_BASIC) ){
-				if (getManagedBean().getSelectedOrgProfile() == null ) {
-					throw new EpException(MessageConst.ERROR_REPORT_780044);
-				}
-			}
-		}
-		// #27544 : Disciplinary Action - end #23080
-		*/
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 
 		log.info("********Report Code*************" + getManagedBean().getReportCode());

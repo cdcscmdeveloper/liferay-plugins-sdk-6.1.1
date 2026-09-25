@@ -8,8 +8,6 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-
-
 	<ui:define name="contentSection">
 		<p:messages showDetail="true" autoUpdate="true" closable="true"
 			showSummary="true"></p:messages>
@@ -228,10 +226,6 @@
 						</f:facet>
 						#{obj[7]}
 					</p:column>
-
-
-
-
 				</p:dataTable>
 
 				<div class="clear"></div>
@@ -241,18 +235,14 @@
 						action="#{unspscCodeBackingBean.requestExtensionCode}" />
 					<p:commandButton value="#{lbl['lbl.cm.add.to.catalogue']}"
 						rendered="#{unspscCodeBackingBean.allSupplier}"
-						action="#{catalogueBackingBean.addToMaintain()}" />
+						action="#{catalogueBackingBean.addToMaintain()}"
+						disabled="#{codificationBackingBean.managedBean.daCancelReg or codificationBackingBean.managedBean.daBlacklistOwner}" /> <!-- [#26282] -->
 				</div>
 
 			</p:panel>
 
-
 		</h:panelGroup>
 
-
 	</ui:define>
-
-
-
 
 </ui:composition>

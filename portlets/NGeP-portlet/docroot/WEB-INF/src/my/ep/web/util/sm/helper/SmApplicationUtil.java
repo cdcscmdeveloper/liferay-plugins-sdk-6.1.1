@@ -46,6 +46,7 @@ import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
+import my.ep.biz.service.sm.search.ISupplierCategorySO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
 import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
@@ -99,6 +100,8 @@ import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionResDTO;
+import my.ep.dto.sm.search.SupplierCategoryReqDTO;
+import my.ep.dto.sm.search.SupplierCategoryResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignReqDTO;
@@ -106,6 +109,8 @@ import my.ep.dto.sm.siteVisit.SiteAssignResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.dto.sm.sst.SupplierSstReqDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertResDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
@@ -157,6 +162,8 @@ import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmDisciplinaryActionRemarks;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -193,6 +200,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.pm.cc.CategoryCodeSearchBackingBean;
+import my.ep.web.backingbean.sm.registration.RegistrationBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.DateUtils;
@@ -200,6 +208,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.vo.DisciplinaryActionCategoryVO;
 import my.ep.web.vo.SmApplStatusInfoVO;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 import my.ep.web.vo.SmLicenseInfoVO;
@@ -458,17 +467,19 @@ public class SmApplicationUtil {
 		return invalidCatCodes;
 	}
 	// 25996 end
+	//#26238 (39072)
 	/**
 	 * Retrieve unverified category codes by PO or Approver
-	 * 
-	 * @param managedBean
+	 * @param catList
+	 * @param applType
 	 * @return
 	 */
-	public static List<String> getUnverifiedCatCodes(List<SmSupplierCategory> catList, String applType,
-			boolean isApprover) {
+	public static List<String> getUnverifiedCatCodes(List<SmSupplierCategory> catList, String applType) {
 
 		List<String> applTypes = Arrays.asList(ParameterConst.NEW_SM_APPLN_FOR_MOF,
 				ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES, ParameterConst.NEW_SM_APPLN_FOR_RENEW);
+		List<Integer> validStatus = Arrays.asList(DbValueConst.RECORD_STATUS_ACTIVE, 
+				DbValueConst.RECORD_STATUS_DELETED, DbValueConst.RECORD_STATUS_SUSPENDED);
 		List<String> invalidCatCodes = new ArrayList<>();
 
 		if (applTypes.contains(applType)) {
@@ -477,7 +488,7 @@ public class SmApplicationUtil {
 			for (SmSupplierCategory cat : catList) {
 				// //Bug #25676 : SM Showstopper - No Categories Appear in Processing Officer Screen{
 				//#30766 & #34209 - START
-				if (cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE && cat.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED && cat.getPoDecFlg() == null) {
+				if (!validStatus.contains(cat.getRecordStatusFlg()) && cat.getPoDecFlg() == null) {
 				//#30766 & #34209 - END
 					//Enhancement #11765
 					invalidCatCodes.add(cat.getPmCategoryL1().getCategoryL1Code()+cat.getPmCategoryL2().getCategoryL2Code()+cat.getPmCategoryL3().getCategoryL3Code());
@@ -1128,6 +1139,11 @@ public class SmApplicationUtil {
 	public static void validateCoordinate(SmApplicationManagedBean managedBean){
 		SmCompanyBasic companyBasic = managedBean.getSmAppl().getSmCompanyBasic();
 		List<SmFacility> facility =managedBean.getSmAppl().getSmFacilities();
+		//START 27748 -  SM Disciplinary Action - 26238
+		if(managedBean.getEditVO()!=null && managedBean.getEditVO().isDisciplinary()){
+			return;
+		}
+		//END 27748 -  SM Disciplinary Action - 26238 
 		if (companyBasic != null) {
 			if (StringUtils.isBlank(companyBasic.getSmCompanyAddresses().get(0)
 					.getSmAddress().getMapLatitude())
@@ -4516,9 +4532,14 @@ public class SmApplicationUtil {
 						apprvList.add(cat);
 					}
 					//29823 - end
-
+					//30865, 30921 - Starts
+				} else if (cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_CANCELLED) == 0){
+					addValidCategoryWithDAType(cat, apprvList);	//#38984
+					//#32298, #32810, #32298 DA cancel manufacture alert warning - end - <26238>
 				}
+				//30865, 30921  - Ends
 			}
+			setCancelCategoryCatCodes(managedBean.getSmAppl().getSmSupplier(), catList);
 			if (managedBean.getActiveCategoryList() != null
 					&& !managedBean.getActiveCategoryList().isEmpty()) {
 				managedBean.getActiveCategoryList().clear();
@@ -4531,6 +4552,49 @@ public class SmApplicationUtil {
 			sortSupplierCategory(catList);
 			managedBean.setActiveCategoryList(catList);
 			managedBean.setApprovedCategoryList(apprvList);
+		}
+	}
+	//#26238 - 38984
+	private static void addValidCategoryWithDAType(SmSupplierCategory cat, List<SmSupplierCategory> catList){
+		if (cat == null || cat.getDisciplinaryActionId() == null){
+			return;
+		}
+		SmDisciplinaryAction da = retrieveActiveSmDisciplinaryActionByDisciplinaryId(cat.getDisciplinaryActionId());
+		if(da == null || da.getRecordStatusFlg() == null || 
+				da.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE){
+			return;
+		}
+		
+		cat.setCancelCategory(true);
+		if(da.isCancelCategory() || da.isBumiputeraCancel()){
+			cat.setTypeDisciplinaryAction(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG);
+		}else if(da.isManufacturerCancel()){
+			cat.setTypeDisciplinaryAction(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_MANUFACTURE);
+		}
+		catList.add(cat);
+	}
+	
+	//#26238
+	private static void setCancelCategoryCatCodes(SmSupplier supplier, 
+			List<SmSupplierCategory> suppCategories){
+		if(supplier == null || EntityHelper.isCollectionEmpty(supplier.getSmDisciplinaryActions())
+				|| EntityHelper.isCollectionEmpty(suppCategories)){
+			return;
+		}
+		List<Object[]> cancelCat = SmApplicationUtil.retrieveCancelCategoryBySupplier(supplier);
+		if(cancelCat == null){
+			return;
+		}
+		Date currentDate = new Date();
+		boolean isAfterToday = currentDate.after(supplier.getSmDisciplinaryActions().get(0).getEndDate());
+		for(SmSupplierCategory cat : suppCategories){
+			for(Object[] arr : cancelCat){
+				if(!arr[2].toString().equals(cat.getPmCategoryL3().getCategoryL3Id().toString())){
+					continue;
+				}
+				//29952 
+				cat.setCancelCategory(!isAfterToday);
+			}
 		}
 	}
 
@@ -4979,6 +5043,9 @@ public class SmApplicationUtil {
 						.getEntityBySinglePropertyFromList(userId, smSupplier
 								.getSmAppl().getSmPersonnels(), "pmUser");
 			}
+			//#26238
+			validateBeforeProceedDA(suppAdmin, applicationType);
+			validateBumiDA(smSupplier, applicationType);
 			if (smSupplier.getSmAppl() != null
 					&& !smSupplier.getSmAppl().isQuestionnaire()
 					&& !StringUtils.isBlank(smSupplier.getSmAppl()
@@ -5095,7 +5162,38 @@ public class SmApplicationUtil {
 		}
 		return result;
 	}
-
+	//#26238 - start
+	private static void validateBeforeProceedDA(SmPersonnel suppAdmin, String applType){
+		if(suppAdmin == null){
+			return;
+		}
+		boolean types = applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
+				|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
+				|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW);
+		boolean cancelAdmin = suppAdmin.isSuspendRegistration() 
+				|| suppAdmin.isCancelRegistration() || suppAdmin.isBlacklisted();
+		if(types && cancelAdmin){
+			throw new EpException(SmCommonUtil.getMessage(
+					"lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action", null));
+		}
+	}
+	
+	private static void validateBumiDA(SmSupplier supplier, String applType){
+		if(!applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)){
+			return;
+		}
+		List<SmDisciplinaryAction> daList = retrieveActiveSmDisciplinaryActionBySupplier(supplier);
+		if(EntityHelper.isCollectionEmpty(daList)){
+			return;
+		}
+		for(SmDisciplinaryAction disc : daList){
+			if(disc.isBumiputeraCancel()){
+				throw new EpException(SmCommonUtil.getMessage(
+						"lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action", null));
+			}
+		}
+	}
+	//#26238 - end
 	private static void validateDontHaveSuppAdmin(SmAppl appl) {
 		boolean valid = false;
 		//#34483 START
@@ -5225,7 +5323,20 @@ public class SmApplicationUtil {
 		resDTO = mofRegistrationSO.checkActiveApplicationBySupplierId(reqDTO);
 		return resDTO.isHasActiveTransaction();
 	}
-
+	//26238 - start
+	/**
+	 * 
+	 * @param smSupplier
+	 * @return
+	 */
+	public static boolean checkActiveSmApplForSuppDA(SmSupplier smSupplier) {
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setSupplierId(smSupplier.getSupplierId());
+		MofRegistrationResDTO resDTO = SmServiceLookup.getMofRegistrationSO().
+				checkActiveApplicationBySupplierIdDA(reqDTO);
+		return resDTO.isHasActiveTransaction();
+	}
+	//26238 - end
 	/**
 	 * Check if there is any active Cancel MOF appl for supplier.
 	 * 
@@ -14689,7 +14800,148 @@ public class SmApplicationUtil {
 			}
 		}
 	}
+	//26238 - start
+	/**
+	 * Retrieve sm disciplinary action
+	 *
+	 * @param supplier
+	 * @return SmDisciplinaryAction
+	 */
+	public static List<SmDisciplinaryAction> retrieveSmDisciplinaryActionBySupplier(SmSupplier supplier) {
+		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+		reqDTO.setSupplier(supplier);
+		SupplierDataMaintenanceResDTO resDTO = SmServiceLookup.getSupplierDataMaintenanceSO().
+				retrieveDisciplinaryActionBySupplier(reqDTO);
+
+		return resDTO.getSmDisciplinaryActions();
+	} 
 	
+	/**
+	 * 
+	 * @param supplier
+	 * @return
+	 */
+	public static List<SmDisciplinaryAction> retrieveActiveSmDisciplinaryActionBySupplier(SmSupplier supplier) {
+		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+		reqDTO.setSupplier(supplier);
+		
+		SupplierDataMaintenanceResDTO resDTO = SmServiceLookup.getSupplierDataMaintenanceSO().
+				retrieveActiveDisciplinaryActionBySupplier(reqDTO);
+
+		return resDTO.getSmDisciplinaryActions();
+	} 
+	
+	//30865 - Start
+	/**
+	 * 
+	 * @param disciplinaryId
+	 * @return
+	 */
+	public static SmDisciplinaryAction retrieveActiveSmDisciplinaryActionByDisciplinaryId(Long disciplinaryId) {
+		if (disciplinaryId == null) {
+			return null;
+		}
+		
+		return SmServiceLookup.getSupplierDataMaintenanceSO()
+				.retrieveActiveDisciplinaryActionByDisciplinaryId(disciplinaryId);
+	}  
+	//30865 - End
+	
+	
+	/**
+	 * Get supplier category by supplierId and isCancelCategory
+	 * 
+	 * @return List<SmSupplierCategory>
+	 */
+	public static List<SmSupplierCategory> retrieveSmSupplierCategory() {
+		ISupplierCategorySO supplierCategorySO = (ISupplierCategorySO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierCategorySO.class);
+		
+		SupplierCategoryReqDTO reqDTO = new SupplierCategoryReqDTO();
+		SupplierCategoryResDTO resDTO = new SupplierCategoryResDTO();
+		Long supplierId = getCurrentSupplier().getSupplierId();
+		
+//		reqDTO.setApplId(getCurrentSupplier().getSmAppl().getApplId());
+		reqDTO.setSupplierId(supplierId);
+		
+		resDTO = supplierCategorySO.retrieveCategoryBySupplierId(reqDTO);
+		return resDTO.getSupplierCategoryList();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static List<Object[]> retrieveCancelCategory() {
+		ISupplierCategorySO supplierCategorySO = (ISupplierCategorySO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierCategorySO.class);
+		
+		SupplierCategoryReqDTO reqDTO = new SupplierCategoryReqDTO();
+		SupplierCategoryResDTO resDTO = new SupplierCategoryResDTO();
+		Long supplierId = getCurrentSupplier().getSupplierId();
+		
+		reqDTO.setSupplierId(supplierId);
+		
+		resDTO = supplierCategorySO.retrieveCancelCategoryDetails(reqDTO);
+		return resDTO.getResultList();
+	}
+	
+	/**
+	 * 
+	 * @param supplier
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static List<Object[]> retrieveCancelCategoryBySupplier(SmSupplier supplier) {
+		SupplierCategoryReqDTO reqDTO = new SupplierCategoryReqDTO();
+		Long supplierId = supplier.getSupplierId();
+		
+		reqDTO.setSupplierId(supplierId);
+		
+		SupplierCategoryResDTO resDTO = SmServiceLookup.getSupplierCategorySO().
+				retrieveCancelCategoryDetails(reqDTO);
+		return resDTO.getResultList();
+	}
+	//26238 - end
+	
+	//27617 : Disciplinary Action - 26238 - start
+	/**
+	 * Retrieve Cancel Category
+	 * @param disciplinaryActionId
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static List<Object[]> retrieveCancelCategoryByDisciplinaryActionId(Long disciplinaryActionId) {
+		SupplierCategoryReqDTO reqDTO = new SupplierCategoryReqDTO();
+		
+		reqDTO.setDisciplinaryActionId(disciplinaryActionId);
+		
+		SupplierCategoryResDTO resDTO = SmServiceLookup.getSupplierCategorySO().
+				retrieveCancelCategoryByDisciplinaryActionId(reqDTO);
+		return resDTO.getResultList();
+	} 
+	//27617 : Disciplinary Action - 26238 - end
+		
+	//28281 - start
+	public static List<Long> retrieveBumiCodeList(){
+		ISupplierCategorySO supplierCategorySO = (ISupplierCategorySO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierCategorySO.class);
+		return supplierCategorySO.retrieveBumiCodeList();
+	}
+	//28281 - end	
+	
+	//28198: Disciplinary Action - start - 26238
+	/**
+	 * Retrieve Active Disciplinary Action Remarks
+	 * @param da
+	 * @return
+	 */
+	public static List<SmDisciplinaryActionRemarks> retrieveActiveSmDisciplinaryActionRemarksByDA(SmDisciplinaryAction da){
+		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+		reqDTO.setSmDisciplinaryAction(da);
+		SupplierDataMaintenanceResDTO resDTO = SmServiceLookup.getSupplierDataMaintenanceSO().
+				retrieveDisciplinaryActionRemarksByDAId(reqDTO);
+		return resDTO.getSmDisciplinaryActionsRemarks();
+	}
+			
+	//28198: Disciplinary Action - end - 26238
 	//24964 - start 
 	public static void rejectSmMofCertForSupplier(SmSupplier supplier){
 		VirtualCertReqDTO reqDTO = new VirtualCertReqDTO();
@@ -15219,7 +15471,46 @@ public class SmApplicationUtil {
 		}
 	}
 	// #37779 - End
+	//#26238 - START
+	/**
+	 * Supplier with DA Suspend Registration / Cancel Registration / Blacklist Owner
+	 *  can edit Bank Information only
+	 * @param bean
+	 * @param daList
+	 */
+	public static void enableBankSectionOnly(SmApplicationManagedBean bean, List<SmDisciplinaryAction> daList){
+		if(bean.getEditVO() != null){
+			if(!bean.isSupplierUser() || bean.getSmSupplier() == null){
+				bean.getEditVO().setDisciplinary(false);
+				return;
+			}
+			//39061
+			List<SmDisciplinaryAction> activeDA = EntityHelper.isCollectionEmpty(daList) ?
+					retrieveActiveSmDisciplinaryActionBySupplierForCMCD(bean.getSmSupplier()) : daList;
+			
+			if(hasCannotLoginDA(activeDA)){
+				bean.getEditVO().setDisciplinary(true);
+				return;
+			}
+		}
+	}	
 	
+	/**
+	 * @param daList
+	 * @return true if suspend/cancel registration, blacklist owner DA exists
+	 */
+	public static boolean hasCannotLoginDA(List<SmDisciplinaryAction> daList){
+		if(EntityHelper.isCollectionEmpty(daList)){ //#39217
+			return false;
+		}
+		for(SmDisciplinaryAction da : daList){
+			if(da.isSuspendRegistration() || da.isBlacklistOwner() || da.isCancelRegistration()){
+				return true;
+			}
+		}
+		return false;
+	}
+	//#26238 - END
 	//#37605 START
 	/*
 	 * Validate string using ASCII character
@@ -15526,8 +15817,21 @@ public class SmApplicationUtil {
 		appl = null;
 		return validSave;
 		}
-	//#38991 -END	
-	
+	//#38991 -END
+	// 39392 - START
+	/**
+	 * Check Disciplinary Action for suspend reg, blacklisted owners/directors,
+	 * and cancel reg.
+	 * @param smAppl
+	 */
+	public static void checkOwnersDisciplinaryAction(SmAppl smAppl){
+		if (smAppl == null){
+			return;
+		}
+		
+		RegistrationBackingBean.checkBannedOwners(smAppl.getSmSupplier().getSmSupplierOwners());
+	}
+	// 39392 - END
 	//#40165 - START
 	public static void CheckAsciiValidation(Map<String, String> fields) throws EpException {
 	    for (Map.Entry<String, String> entry : fields.entrySet()) {
@@ -15542,4 +15846,46 @@ public class SmApplicationUtil {
 	    }
 	}
 	//#40165 - END
+	
+	//#26282 - Start
+	/**
+	 * 
+	 * @param supplier
+	 * @return resDTO
+	 */
+	public static List<SmDisciplinaryAction> retrieveActiveSmDisciplinaryActionBySupplierForCMCD(SmSupplier supplier) {
+		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+		reqDTO.setSupplier(supplier);
+
+		SupplierDataMaintenanceResDTO resDTO = SmServiceLookup.getSupplierDataMaintenanceSO()
+				.retrieveActiveDisciplinaryActionBySupplierForCMCD(reqDTO);
+
+		return resDTO.getSmDisciplinaryActions();
+	}
+	//#26282 - End
+	
+	//#33303 - START
+	/**
+	 * Sort SmSupplierCategory by category type and category level code
+	 * 
+	 * @param List DisciplinaryActionCategoryVO
+	 */
+	public static void sortSupplierCategoryDA(List<DisciplinaryActionCategoryVO> apprvList) {
+		// sort by code
+		Collections.sort(apprvList, new Comparator<DisciplinaryActionCategoryVO>() {
+			@Override
+			public int compare(final DisciplinaryActionCategoryVO s1,
+					final DisciplinaryActionCategoryVO s2) {
+				return (s1.getCategoryL1Code()
+						+ s1.getCategoryL2Code() + s1
+						.getCategoryL3Code()).compareTo(s2
+						.getCategoryL1Code()
+						+ s2.getCategoryL2Code()
+						+ s2.getCategoryL3Code());
+			}
+		});
+		
+		
+	}
+	//#33303 - END
 }

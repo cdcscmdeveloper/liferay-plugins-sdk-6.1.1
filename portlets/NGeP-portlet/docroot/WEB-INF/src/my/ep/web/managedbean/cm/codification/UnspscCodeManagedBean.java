@@ -127,7 +127,14 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	
 	private boolean disableRevise = false;
 	private boolean renderV2 = false;
-	
+
+	//[#26282] disciplinary action - start
+	private boolean daWarning;
+	private boolean daSuspendReg;
+	private boolean daCancelReg;
+	private boolean daBlacklistOwner;
+	//[#26282] disciplinary action - end
+
 	// 35503 start
 	private transient List<List<String>> auditCommodityList;
 	private transient List<List<String>> auditClassList;
@@ -141,22 +148,22 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 
 	public boolean isRecommendExtension(){
 		return this.recommendExtension;
-	};
+	}
 	public void setRecommendExtension(boolean recommendExtension){
 		this.recommendExtension = recommendExtension;
-	};
+	}
 	
 	public void toggleShowRecommend(){
 		this.showRecommend = !this.showRecommend;
-	};
+	}
 
 	public boolean isShowRecommend(){
 		return this.showRecommend;
-	};
+	}
 	
 	public boolean isCodeExtension(){
 		return this.requestCode.getDocNo().indexOf("RNE")>=0;
-	};
+	}
 	
 	
 	public CmBrand getSelectedBrand() {
@@ -823,6 +830,33 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	public void setShowRecommend(boolean showRecommend) {
 		this.showRecommend = showRecommend;
 	}
+
+	//[#26282] disciplinary action - start
+	public boolean isDaWarning() {
+		return daWarning;
+	}
+	public void setDaWarning(boolean daWarning) {
+		this.daWarning = daWarning;
+	}
+	public boolean isDaSuspendReg() {
+		return daSuspendReg;
+	}
+	public void setDaSuspendReg(boolean daSuspendReg) {
+		this.daSuspendReg = daSuspendReg;
+	}
+	public boolean isDaCancelReg() {
+		return daCancelReg;
+	}
+	public void setDaCancelReg(boolean daCancelReg) {
+		this.daCancelReg = daCancelReg;
+	}
+	public boolean isDaBlacklistOwner() {
+		return daBlacklistOwner;
+	}
+	public void setDaBlacklistOwner(boolean daBlacklistOwner) {
+		this.daBlacklistOwner = daBlacklistOwner;
+	}
+	//[#26282] disciplinary action - end
 
 	// 35503 start
 	public List<List<String>> getAuditCommodityList() {

@@ -49,6 +49,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -56,6 +57,7 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.vo.DisciplinaryActionVO;
 
 /**
  * Managed Bean for Fulfillment Order.
@@ -174,6 +176,11 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private boolean showCommitmentNo;
 	private String espkbCommitmentNo;
 	private boolean yep;
+	//26279 - start
+	private String disciplinaryActionMessage;
+	private List<DisciplinaryActionVO> disciplinaryActionVO;
+	private SmDisciplinaryAction smDisciplinaryAction;
+	//26279 - end
 	//28377 - start
 	private String FileDirectory;
 	private FlAttachment attachment;
@@ -1470,6 +1477,31 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 		this.toDate = toDate;
 	}
 
+	//26279 - start
+	public String getDisciplinaryActionMessage() {
+		return disciplinaryActionMessage;
+	}
+
+	public void setDisciplinaryActionMessage(String disciplinaryActionMessage) {
+		this.disciplinaryActionMessage = disciplinaryActionMessage;
+	}	
+
+	public List<DisciplinaryActionVO> getDisciplinaryActionVO() {
+		return disciplinaryActionVO;
+	}
+
+	public void setDisciplinaryActionVO(List<DisciplinaryActionVO> disciplinaryActionVO) {
+		this.disciplinaryActionVO = disciplinaryActionVO;
+	}
+
+	public SmDisciplinaryAction getSmDisciplinaryAction() {
+		return smDisciplinaryAction;
+	}
+
+	public void setSmDisciplinaryAction(SmDisciplinaryAction smDisciplinaryAction) {
+		this.smDisciplinaryAction = smDisciplinaryAction;
+	}
+	//26279 - end
 	public boolean isYep() {
 		return yep;
 	}

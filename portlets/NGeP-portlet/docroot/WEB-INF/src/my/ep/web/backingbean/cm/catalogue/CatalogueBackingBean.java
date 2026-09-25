@@ -72,6 +72,7 @@ import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 //29961, #30457 - end
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -118,7 +119,9 @@ import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper;
 import my.ep.helper.Paginator;
 import my.ep.persistence.entity.cm.catalog.CmBrand;
 import my.ep.persistence.entity.cm.catalog.CmColor;
@@ -150,13 +153,11 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelItemSpec;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
-import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
-import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDistrict;
-import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmUom;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
@@ -165,6 +166,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -174,6 +176,7 @@ import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
 import my.ep.web.backingbean.sc.purchaseinquiry.PurchaseInquiryBackingBean;
 import my.ep.web.backingbean.sc.requestnote.RequestNoteBackingBean;
 import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
+import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.constant.cm.CmHelper;
 import my.ep.web.managedbean.cm.catalogue.CatalogueManagedBean;
@@ -181,10 +184,10 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.cm.helper.CmApplicationUtil;
 import my.ep.web.util.cm.helper.CmSupplierZoneSingleton;
-import my.ep.web.util.cm.helper.CmSupplierZoneStateDistrictDTO;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.vo.AdvanceSearchVO;
+import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.ExtensionCodeVO;
 import my.ep.web.vo.PricingVO;
 
@@ -283,6 +286,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	
 	/*13984 schNo for table*/
 	private String schno;
+
+	// Navigation Details
+	private static final String NAV_TO_DA = "/xhtml/cm/shared/applicationView/cmDisciplinaryActionViewOnly.xhtml"; //#26282
 
 	private boolean declareChecked; //#30457
 	
@@ -6501,7 +6507,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			}
 			
-			String nextNavigation = naviToMaintenancePage(false);
+			//[#26282 - start]
+			String nextNavigation;
+			checkForDisciplinaryAction(smResDTO.getResultBean().getResultList().get(0).getSupplierId());
+
+			if(this.getManagedBean().isDaCancelReg() || this.getManagedBean().isDaBlacklistOwner()) {
+				//disciplinary action page
+				nextNavigation = NAV_TO_DA;
+			} else {
+				nextNavigation = naviToMaintenancePage(false);
+			}
+			//[#26282 - end]
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
@@ -11560,7 +11576,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	//end
 	
 	public String getschno() {
-		
 		String schNoSelected= "";
 		
 		if (null != getManagedBean().getAvailableNoList()) {
@@ -11573,12 +11588,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return schno;
 	}
 
-
 	public void setschno(String schNo) {
 		log.info("schno in setSchno(String schno) is : " +schno);
 		this.schno = schNo;
-		
-		
 	}
 
 	//SSM INTEGRATION #27089
@@ -11596,6 +11608,98 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 	}
 	
+	// [#26282] check for Disciplinary Action - Start
+	/**
+	 * The popup view for Disciplinary Action list either for Basic Supplier or
+	 * MOF Supplier
+	 * 
+	 * @param supplierId
+	 * @param mofNo
+	 */
+	public void onViewDisciplinaryAction(Long supplierId, String mofNo) {
+		log.info("[#26282] onViewDisciplinaryAction");
+
+		SmSupplier smSupplier;
+		DisciplinaryActionVO voObj;
+		String daMsg;
+		FacesScopes facesScopes = new FacesScopes();
+
+		if (facesScopes.hasRoleUser(RoleCode.REQUISITIONER.value())) {
+			log.info("[#26282] is REQUISITIONER user...");
+
+			log.info("[#26282] Supplier Id: " + supplierId + ", MOF No: " + mofNo);
+			if (supplierId != null) {
+				smSupplier = new SmSupplier();
+				// set supplier id
+				smSupplier.setSupplierId(supplierId);
+			} else {
+				log.info("Invalid supplier id!!!");
+				throw new EpException(MessageConst.ERROR_760041);
+			}
+
+			// get disicplinary action history
+			List<DisciplinaryActionVO> voList = ViewSuppProfileBackingBean.getActiveDisciplinaryActionVO(smSupplier);
+
+			if (!EntityHelper.isCollectionEmpty(voList)) {
+				voObj = voList.get(0);
+				log.info("[#26282] DA effective date: " + voObj.getStartDate());
+				log.info("[#26282] DA expire date: " + voObj.getEndDate());
+				daMsg = ResourceBundleUtils.getMessage("lbl.cm.supplier.disciplinaryAction.warnmessage", new String[] {
+						voObj.getStartDate(), voObj.getEndDate() }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						facesScopes.getUserLocale());
+				log.info("[#26282] DA message: " + daMsg);
+				// set disciplinary action message
+				getManagedBean().setDisciplinaryMsg(daMsg);
+				// set disicplinary action history
+				getManagedBean().setDisciplineVOs(voList);
+			} else {
+				getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
+			}
+
+			// show pop-up dialog
+			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show()");
+		}
+	}
+
+	/**
+	 * To check what DA the supplier involve
+	 * 
+	 * @param supplierId
+	 */
+	public void checkForDisciplinaryAction(Long supplierId) {
+		log.info("[#26282] checkForDisciplinaryAction");
+
+		// check for disciplinary action (DA)
+		List<SmDisciplinaryAction> disciplinaryActList = CmApplicationUtil.checkForDisciplinaryAction(supplierId);
+
+		if (disciplinaryActList != null && !disciplinaryActList.isEmpty()) {
+			SmDisciplinaryAction disciplinaryAct = disciplinaryActList.get(0);
+
+			log.info("[#26282] - DA - Warning: " + disciplinaryAct.isWarning());
+			log.info("[#26282] - DA - Suspend Registration: " + disciplinaryAct.isSuspendRegistration());
+			log.info("[#26282] - DA - Cancel Registration: " + disciplinaryAct.isCancelRegistration());
+			log.info("[#26282] - DA - Blacklist  Owner/Director of Company: " + disciplinaryAct.isBlacklistOwner());
+
+			// disciplinary action - Warning
+			if (disciplinaryAct.isWarning()) {
+				this.getManagedBean().setDaWarning(disciplinaryAct.isWarning());
+			}
+			// disciplinary action - Suspend Registration
+			if (disciplinaryAct.isSuspendRegistration()) {
+				this.getManagedBean().setDaSuspendReg(disciplinaryAct.isSuspendRegistration());
+			}
+			// disciplinary action - Cancel Registration
+			if (disciplinaryAct.isCancelRegistration()) {
+				this.getManagedBean().setDaCancelReg(disciplinaryAct.isCancelRegistration());
+			}
+			// disciplinary action - Blacklist Owner/Director of Company
+			if (disciplinaryAct.isBlacklistOwner()) {
+				this.getManagedBean().setDaBlacklistOwner(disciplinaryAct.isBlacklistOwner());
+			}
+		}
+	}
+	// [#26282] check for Disciplinary Action - End
+
 	//30457 - START 27/7/2022
 	public Double getMinimumPrice(String RuleType) {
 		log.info("getMinimumPrice");
@@ -11762,4 +11866,67 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.declareChecked = declareChecked;
 	}
 	//#30457 - farid - end
+	
+	// 26284 - Start
+	/**
+	 * Retrieves and sets the disciplinary action details for the supplier
+	 * associated with the given quote supplier.
+	 * 
+	 * This method checks if the provided {@link ScQuoteSupplier} contains a
+	 * valid {@link SmSupplier}. If so, it retrieves the disciplinary action
+	 * details for the supplier using the
+	 * {@link #getDisciplinaryActionVO(SmSupplier)} method. If the disciplinary
+	 * action data exists, it sets the result into the managed bean. Otherwise,
+	 * it sets an empty list. It also triggers the display of the disciplinary
+	 * action history dialog.
+	 * 
+	 * @param scQuoteSupp
+	 *            the {@link ScQuoteSupplier} object that contains the supplier
+	 *            whose disciplinary actions need to be retrieved. If the
+	 *            supplier is null or there are no disciplinary actions, an
+	 *            empty list will be set in the managed bean.
+	 */
+	public void supplierDisciplinaryActionInfo(SmSupplier smSupplier) {
+		try {
+			SmSupplier currSupp = smSupplier;
+			if (currSupp != null) {
+				List<DisciplinaryActionVO> voList = onDisplayActiveDisciplinaryAction(currSupp);
+				if (!EntityHelper.isCollectionEmpty(voList)
+						&& voList.size() > 0) {
+					getManagedBean().setDisciplineVOs(voList);
+				} else {
+					getManagedBean().setDisciplineVOs(
+							new ArrayList<DisciplinaryActionVO>());
+				}
+			} else {
+				getManagedBean().setDisciplineVOs(
+						new ArrayList<DisciplinaryActionVO>());
+			}
+			// #32643,32642 - Start
+			RequestContext.getCurrentInstance().execute(
+					"disciplinaryActionHistoryDlg.show();");
+			// #32643,32642 - End
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.DIRECT_PURCHASE,
+					"supplierDisciplinaryActionInfo", StringUtils.EMPTY,
+					"supplierDisciplinaryActionInfo",
+					getUserIdSessionFromLoginId(), e);
+		}
+	}
+
+	public Boolean getDisciplinaryActionActive(SmSupplier supplier) {
+		ISupplierDataMaintenanceSO supplierDataMaintenanceSO = (ISupplierDataMaintenanceSO) BusinessDelegate
+				.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						ISupplierDataMaintenanceSO.class);
+
+		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+		reqDTO.setSupplier(supplier);
+		return supplierDataMaintenanceSO
+				.retrieveActiveDisciplinaryActionBySupplierDp(reqDTO)
+				.isDisciplinaryActionActiveDp();
+	}
+	// 26284 - End
+	
+	
 }
