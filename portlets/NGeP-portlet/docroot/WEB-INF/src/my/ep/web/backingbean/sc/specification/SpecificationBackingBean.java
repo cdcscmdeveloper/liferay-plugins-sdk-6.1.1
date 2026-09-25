@@ -8083,6 +8083,7 @@ public class SpecificationBackingBean extends
 			if (null == technical.getOverallFin()) {
 				technical.setOverallFin(new BigDecimal(0));
 			}
+			technical.setOverallOtherFlag(Boolean.TRUE);
 			BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_WEIGHTAGE);
 			if (null != passingScore
 					&& technical.getOverallTechnical().intValue() < passingScore
@@ -8110,6 +8111,7 @@ public class SpecificationBackingBean extends
 					.intValue();
 			technical.setOverallFin(new BigDecimal(financialScore));
 			this.getManagedBean().setRecommendationPackageScore(technical);
+			this.getManagedBean().getRecommendationPackageScore().setOverallOtherFlag(true);
 			int local = technical.getOverallTechnical().intValue()
 					+ technical.getOverallFin().intValue();
 
@@ -11267,6 +11269,13 @@ public class SpecificationBackingBean extends
 						        ? itemScoreSetting.getOverallFin()
 						        : packageScoreSetting.getOverallFin()
 						);
+				
+				//#38151 Apply a flag to recognize in specification maintenance data wip before and after revise.
+				newItemScoreSetting.setOverallOtherFlag(
+				        this.getManagedBean().isWeightage35384WIP()
+				            ? null
+				            : Boolean.TRUE
+				    );
 				newItemScoreSetting.setOverallOtherFin(itemScoreSetting.getOverallOtherFin());
 				itemScoreSetting = newItemScoreSetting;
 			}//#28784 - End
@@ -15759,6 +15768,7 @@ public class SpecificationBackingBean extends
 				recommendationItem.setOverallFin(recommendationPackage.getOverallFin());
 				recommendationItem.setPassingScore(recommendationPackage.getPassingScore());
 				//#38151 && 40044 -start-
+				recommendationItem.setOverallOtherFlag(true);
 				recommendationItem.setOverallOtherTechnical(BigDecimal.ZERO);
 				recommendationItem.setOverallOtherFin(BigDecimal.ZERO);
 				//#38151 && 40044 -end-
