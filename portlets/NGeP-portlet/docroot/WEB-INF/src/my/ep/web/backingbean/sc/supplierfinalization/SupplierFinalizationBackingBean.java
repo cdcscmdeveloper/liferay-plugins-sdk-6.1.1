@@ -768,7 +768,7 @@ public class SupplierFinalizationBackingBean extends
 		List<ScQtFinalJustification> scQtFinalJustificationList = CollectionUtils.isNotEmpty(this.getManagedBean().getFinalJustificationList())
 				? this.getManagedBean().getFinalJustificationList() : new ArrayList<ScQtFinalJustification>();
 		for (ScQtFinalJustification finalJustification : scQtFinalJustificationList){
-			//#34444 Start - This code was added for handling the NPE  effect 34444 process flow/
+			//#34444 Start - This code was added for handling the NPE  effect #34444 process flow/
 			PmReason justification = finalJustification.getJustification();
 			if (justification != null) {
 			justificationReasonList.add(justification.getReasonCode());
