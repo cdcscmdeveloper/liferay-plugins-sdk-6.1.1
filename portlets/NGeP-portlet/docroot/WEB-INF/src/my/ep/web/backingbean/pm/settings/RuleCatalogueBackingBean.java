@@ -1382,13 +1382,14 @@ public class RuleCatalogueBackingBean extends
 				if(RuleTypeConst.PTJ_CODE.equals(cfRule.getRuleType()) || RuleTypeConst.PTJ_AUTH_CC.equals(cfRule.getRuleType())){
 					for(PmConfigRuleValue cfRuleValue: cfRule.getConfigRuleValues()){
 						if(cfRuleValue.isBrandNew()){
+							boolean isPtjAuthCC = false;
 							orgProfileReqDTO.setOrgCode(cfRuleValue.getRuleValue());
 							PmOrgProfile orgValidity = orgProfileSO.retrieveOrgProfileByCode(orgProfileReqDTO).getPmOrgProfile();
 							orgProfileReqDTO.setOrgProfileId(orgValidity.getOrgProfileId());
 							OrgProfileResDTO orgProfId = orgProfileSO.retrieveOrgProfileDtlByProfileId(orgProfileReqDTO);
 							orgProfileReqDTO.setPmOrgProfile(orgProfId.getPmOrgProfile());
 						    if(RuleTypeConst.PTJ_AUTH_CC.equals(cfRuleValue.getRuleType().getRuleType())){
-						    	orgProfileReqDTO.getPmOrgProfile().setPtjAuthCC(false);
+						    	orgProfileReqDTO.getPmOrgProfile().setPtjAuthCC(isPtjAuthCC);
 						        orgProfileReqDTO.getPmOrgProfiles().add(orgProfileReqDTO.getPmOrgProfile());
 						    } else {
 						        updateOrgProfileZoneAndBpk(cfRuleValue, orgProfileReqDTO);
@@ -7045,9 +7046,10 @@ public class RuleCatalogueBackingBean extends
 	private void updateOrgProfileZoneAndBpk(PmConfigRuleValue cfRuleValue, OrgProfileReqDTO orgProfileReqDTO) {
 		for (PmZone zone : getManagedBean().getZoneList()) {
 			if (zone.getZoneId().equals(cfRuleValue.getZoneId())) {
+				boolean isBpk = false;
 				orgProfileReqDTO.getPmOrgProfile().getPmZone();
 				orgProfileReqDTO.getPmOrgProfile().setPmZone(zone);
-				orgProfileReqDTO.getPmOrgProfile().setBpk(false);
+				orgProfileReqDTO.getPmOrgProfile().setBpk(isBpk);
 				orgProfileReqDTO.getPmOrgProfiles().add(orgProfileReqDTO.getPmOrgProfile());
 			}
 		}
