@@ -51,10 +51,11 @@ import org.primefaces.event.TabChangeEvent;
 public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorityManagedBean> {
 
 	private static final long serialVersionUID = 1L;
-	private static final Logger log = EpLogger.getLogger(ApproveAuthorityBackingBean.class);
 
 	private static final String NAV_TO_MAIN = "approveAuthorityMain";
-	
+
+	private static final String APPROVE_AUTHORITY_BACKING_BEAN = "ApproveAuthorityBackingBean";
+
 	//Tab values
 	public static final int TAB_JAWATANKUASA_PEROLEHAN = 0;
 	public static final int TAB_PENGURUSAN_TERTINGGI = 1;
@@ -94,7 +95,7 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_MAIN);
 		} catch (Exception ex) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT,
-				ParameterConst.MOF_APPROVING_AUTHORITY, "ApproveAuthorityBackingBean",
+				ParameterConst.MOF_APPROVING_AUTHORITY, APPROVE_AUTHORITY_BACKING_BEAN,
 				"preLoadApproveAuthority", null, ex);
 		}
 	}
@@ -178,7 +179,7 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 			}
 		} catch (Exception ex){
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT,
-				ParameterConst.MOF_APPROVING_AUTHORITY, "ApproveAuthorityBackingBean",
+				ParameterConst.MOF_APPROVING_AUTHORITY, APPROVE_AUTHORITY_BACKING_BEAN,
 				"saveNewCommittee", null, ex);
 		}
 		return NAV_TO_MAIN;
@@ -248,7 +249,7 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 			}
 		} catch (Exception ex) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT,
-					ParameterConst.MOF_APPROVING_AUTHORITY, "ApproveAuthorityBackingBean",
+					ParameterConst.MOF_APPROVING_AUTHORITY, APPROVE_AUTHORITY_BACKING_BEAN,
 					"reloadApproveAuthority", authCommittee.getAuthCommitteeId(), ex);
 		}
 	}
@@ -368,7 +369,7 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 			}
 		} catch (Exception ex){
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT,
-				ParameterConst.MOF_APPROVING_AUTHORITY, "ApproveAuthorityBackingBean",
+				ParameterConst.MOF_APPROVING_AUTHORITY, APPROVE_AUTHORITY_BACKING_BEAN,
 				"updateAuthCommittee", popUpCommittee.getAuthCommitteeId(), ex);
 		}
 	}
