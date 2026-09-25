@@ -6493,7 +6493,7 @@ public class SmApplicationBackingBean extends
 			// 28391: Disciplinary Action - end - <28391>
 
 		} else {
-			throw new EpException(MessageConst.INFO_776044);
+			throw new EpException(MessageConst.ERROR_722534, new String[] { "Category Code" });
 		}
 	}
 
