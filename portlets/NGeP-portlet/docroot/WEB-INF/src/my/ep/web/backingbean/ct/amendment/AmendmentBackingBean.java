@@ -1260,7 +1260,17 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 			/*Setting extension history list for amendment*/
 			getManagedBean().setAmendHistoryList(contractAmendmentSO.retrieveExtensionHistory(reqDTO).getExtensionHistoryList());
-			getManagedBean().setNewAmendmentEffDate(retrieveNewEffDate());
+			
+			//#24336 - Start
+			CtAmendment ctAmendment = resDTO.getCtContractVer().getCtAmendment();
+			if(ctAmendment != null && ctAmendment.getNewAmtEffDate() != null){
+				//Store newAmtEffDate from DB
+				getManagedBean().setNewAmendmentEffDate(ctAmendment.getNewAmtEffDate());
+			}
+			else{
+				getManagedBean().setNewAmendmentEffDate(retrieveNewEffDate());
+			}
+			//#24336 - End
 
 			// Initialize new amendment details
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment() == null) {
@@ -5023,6 +5033,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			spToCheck = true;
 		}
 		changeAmendmentEffDate();
+		
+		//#24336
+		handleNewAmtEffDate();
 	}
 
 	/**
@@ -5291,6 +5304,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		//32418 End		
 
 		changeAmendmentEffDate();
+		
+		//#24336
+		handleNewAmtEffDate();
 	}
 
 	/**
@@ -9535,40 +9551,58 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * Updates the new contract amount effective date based on certain business rules.
 	 */
 	public void handleNewAmtEffDate() {
-		BigDecimal newOverallCtAmount = newOverallContractAmount().setScale(2, RoundingMode.HALF_UP);
-		ContractManagedBean contractManagedBean = ctBackingBean.getManagedBean();
-		CtContractVer ctContractVer = contractManagedBean.getContractVer();
-		CtAmendment ctAmendment = ctContractVer.getCtAmendment();
 
-		Date newAmtEffDate;
-		// new overall contract amount is different from overall contact amount
-		if (isNewOverallCtAmountDifferent(newOverallCtAmount)) {
-			
-			//get selected/updated value
-			newAmtEffDate = ctAmendment.getNewAmtEffDate();
-			
-			boolean isDisableNewCtAmountEffDate = contractManagedBean.isDisableNewCtAmountEffDate();
-			if(newAmtEffDate == null || isDisableNewCtAmountEffDate){
-				newAmtEffDate = new Date();
-			}
-			
-			// Enable date input
-			contractManagedBean.setDisableNewCtAmountEffDate(false);
+	    BigDecimal newOverallCtAmount = newOverallContractAmount()
+	    		.setScale(2, RoundingMode.HALF_UP);
+
+	    ContractManagedBean contractManagedBean = ctBackingBean.getManagedBean();
+	    CtContractVer ctContractVer = contractManagedBean.getContractVer();
+	    CtAmendment ctAmendment = ctContractVer.getCtAmendment();
+
+	    Date newAmtEffDate = ctAmendment.getNewAmtEffDate();
+
+	    if (isNewOverallCtAmountDifferent(newOverallCtAmount)) {
+	        newAmtEffDate = getNewAmountEffectiveDate(
+	                newAmtEffDate,
+	                contractManagedBean.isDisableNewCtAmountEffDate()
+	        );
+	        contractManagedBean.setDisableNewCtAmountEffDate(false);
+	    } else {
+	        newAmtEffDate = getExistingAmountEffectiveDate(
+	                newAmtEffDate,
+	                ctAmendment
+	        );
+	        contractManagedBean.setDisableNewCtAmountEffDate(true);
+	    }
+	    ctAmendment.setNewAmtEffDate(newAmtEffDate);
+	}
+	
+	private Date getNewAmountEffectiveDate(Date newAmtEffDate, boolean isDisableNewCtAmountEffDate) {
 		
-		// same as overall contract amount	
-		} else {
-			
-			Date effDate = ctAmendment.getAmendmentEffDate();
-			if(effDate != null){
-				newAmtEffDate = effDate;
-			} else {
-				newAmtEffDate = new Date();
-			}
-			
-			// Disable date input
-			contractManagedBean.setDisableNewCtAmountEffDate(true);
-		}
-		ctAmendment.setNewAmtEffDate(newAmtEffDate);
+	    if (newAmtEffDate != null && !isDisableNewCtAmountEffDate) {
+	        return newAmtEffDate;
+	    }
+	    return new Date();
+	}
+	
+	private Date getExistingAmountEffectiveDate(Date newAmtEffDate, CtAmendment ctAmendment) {
+	    if (newAmtEffDate != null && getManagedBean().getTaskName() != null) {
+	        return getManagedBean().getNewAmendmentEffDate();
+	    }
+	    return getDefaultAmountEffectiveDate(ctAmendment, getManagedBean().getNewAmendmentEffDate());
+	}
+	
+	private Date getDefaultAmountEffectiveDate(CtAmendment ctAmendment, Date storedNewAmendmentEffDate) {
+
+	    if (ctAmendment.isContractExtend()) {
+	        return ctAmendment.getExtendStartDate();
+	    }
+
+	    Date amendmentEffDate = ctAmendment.getAmendmentEffDate();
+	    if (amendmentEffDate != null) {
+	        return amendmentEffDate;
+	    }
+	    return storedNewAmendmentEffDate != null ? storedNewAmendmentEffDate : new Date();
 	}
 
 	/**
