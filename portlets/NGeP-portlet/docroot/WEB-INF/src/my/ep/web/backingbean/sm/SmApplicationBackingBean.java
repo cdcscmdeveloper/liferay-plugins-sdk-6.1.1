@@ -9218,6 +9218,7 @@ public class SmApplicationBackingBean extends
 						.getSelectedShareHolders()) {
 					getManagedBean().getSmAppl().getSmPersonnels().remove(shr);
 					getManagedBean().getSmapplShareHolders().remove(shr);
+					SmAIDocBackingBean.forgetEpfUserEdit(getManagedBean().getSmAppl(), shr.getIdentificationNo());	//#40112
 				}
 				saveOrUpdateAppl();
 				SmApplicationUtil.setPrevApprovedPersonnelNoneEditable(
