@@ -1364,13 +1364,9 @@ public class SupplierFinalizationBackingBean extends
 						boolean isItemize = getManagedBean().isItemize();
 						boolean isItemRowSelected = getManagedBean().isItemRowSelect();
 						ScQtRecommend selectedItem = getManagedBean().getSelectedItem();
-						/** Use in 4ser
-						if (!isItemize || !isQtNewVersion) {*/
+						if (!isItemize || !isQtNewVersion) {
 				    		evaluationStage = SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO;
-				    	/** Use in 4ser
-				    	}
-						else {
-							
+						} else {
 				    		int wipStatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
 		
 				    		if (wipStatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
@@ -1386,7 +1382,7 @@ public class SupplierFinalizationBackingBean extends
 				            		return;
 				        		}
 				    		}
-						}*/
+						}
 						// Set evaluation header (always the same regardless of itemize/WIP status)
 						evaluationHeader = SourcingConstants.EVAL_QUALIFIED_SUP_LIST_DEMO_EVAL_STAGE;
 						//#28784 - End
