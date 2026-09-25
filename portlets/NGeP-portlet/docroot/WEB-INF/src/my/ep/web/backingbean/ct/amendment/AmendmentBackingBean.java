@@ -9577,6 +9577,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    ctAmendment.setNewAmtEffDate(newAmtEffDate);
 	}
 	
+	/**
+	 * Determines the new effective date when the overall contract amount is changed.
+	 */
 	private Date getNewAmountEffectiveDate(Date newAmtEffDate, boolean isDisableNewCtAmountEffDate) {
 		
 	    if (newAmtEffDate != null && !isDisableNewCtAmountEffDate) {
@@ -9585,6 +9588,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    return new Date();
 	}
 	
+	/**
+	 * Determines the new effective date when the overall contract amount remains unchanged.
+	 */
 	private Date getExistingAmountEffectiveDate(Date newAmtEffDate, CtAmendment ctAmendment) {
 	    if (newAmtEffDate != null && getManagedBean().getTaskName() != null) {
 	        return getManagedBean().getNewAmendmentEffDate();
@@ -9592,6 +9598,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    return getDefaultAmountEffectiveDate(ctAmendment, getManagedBean().getNewAmendmentEffDate());
 	}
 	
+	/**
+	 * Determines the default effective date based on the contract amendment details.
+	 */
 	private Date getDefaultAmountEffectiveDate(CtAmendment ctAmendment, Date storedNewAmendmentEffDate) {
 
 	    if (ctAmendment.isContractExtend()) {
