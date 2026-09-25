@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletResponse;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sm.supportingdocinquiry.ISupportingDocInquirySO;
-import my.ep.biz.service.sm.vendorcode.IVendorCodeSO;
 import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -46,9 +45,9 @@ import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
-import my.ep.dto.sm.personnel.PersonnelReqDTO;
-import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
@@ -60,7 +59,6 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -76,11 +74,11 @@ import my.ep.persistence.entity.sm.SmApplInquiryDocFile;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
-import my.ep.persistence.entity.sm.SmSapVendorCode;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
@@ -95,8 +93,6 @@ import my.ep.web.backingbean.sm.registration.RegistrationBackingBean;
 import my.ep.web.backingbean.sm.sitevisit.SvoSiteVisitBackingBean;
 import my.ep.web.backingbean.sm.virtualcert.VirtualCertBackingBean;
 import my.ep.web.backingbean.trackingdiary.PmTrackingDiaryBackingBean;
-import my.ep.web.constant.CommonUIConst;
-import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.managedbean.sm.applicationView.ViewApplHistoryManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -104,6 +100,7 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.SmVirtualCertHelper;
+import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.SmOverlapCategoryVO;
 
 import org.apache.commons.lang3.StringUtils;
@@ -257,6 +254,13 @@ public class ViewApplHistoryBackingBean extends
 				getManagedBean().searchSupplier();
 			}
 		}
+		// 26238 - start
+		else {
+			getManagedBean().setDisciplinaryAction(false);
+			SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
+			List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
+			getManagedBean().setDisciplinaryAction(!EntityHelper.isCollectionEmpty(resultList));
+		} // 26238 - end
 
 		SmCommonUtil
 				.redirectToPage(
@@ -346,6 +350,10 @@ public class ViewApplHistoryBackingBean extends
 				//END 27951
 			}
 		} else {			
+			// 39392 - START
+			SmApplicationUtil.checkOwnersDisciplinaryAction(getManagedBean().getSmAppl());
+			// 39392 - END
+
 			//#27232 - END SSM CHANGES FOR RESUBMIT
 			if (SmApplicationUtil
 					.isRejectedApplValidForResubmission(getManagedBean()
@@ -539,6 +547,13 @@ public class ViewApplHistoryBackingBean extends
 		reqDTO.setApplId(applId);
 		SmAppl smAppl = SmServiceLookup.getMofRegistrationSO()
 				.retrieveSmApplicationDetailsById(reqDTO).getSmAppl();
+		//26238 - start
+		SmSupplier supplier = smAppl.getSmSupplier();
+		//28237
+		retrieveActiveDisciplinaryAction(supplier);
+		getManagedBean().setDisciplinaryAction(!getManagedBean().isNoDisciplinary());
+		//26238 - end
+
 		// 25792 - start
 		log.info("Init Sm Appl");
 		log.info("Appl Id: " + smAppl.getApplId());		
@@ -1371,22 +1386,79 @@ public class ViewApplHistoryBackingBean extends
 		}
 		return page;
 	}
+	// 40121, 26238 - START
+	/**
+	 * Retrieves the MOF (Ministry of Finance) number from an application record.
+	 *
+	 * @param appl
+	 * @return mofNo
+	 *
+	 */
+	public String getMofNo(Object[] appl) {
+		
+		String mofNo = appl[8] != null ? String.valueOf(appl[8]) : "";
+		String recordStatus = appl[12] != null ?  String.valueOf(appl[12]) : "";
+		Long supplierId = appl[11] != null ? Long.valueOf(appl[11].toString()) : 0L;
+		String latestAppl = null;
+		String noAvailable = ResourceBundleUtils.getMessage("lbl.sm.no.available",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		
+		if (appl.length > 16) {
+			latestAppl = String.valueOf(appl[16]);
+		} else {
+			latestAppl =String.valueOf(appl[15]);
+		}
+		
+		if (mofNo.equalsIgnoreCase(noAvailable) && recordStatus.equals(String.valueOf(DbValueConst.RECORD_STATUS_CANCELLED))) {
+			MofAccountReqDTO reqMofDTO = new MofAccountReqDTO();
+			reqMofDTO.setSupplierId(supplierId);
+			reqMofDTO.setApplId(Long.parseLong(latestAppl));
+			MofAccountResDTO mofAccount = SmCommonUtil.getMofAccountBySuppIdAndApplId(reqMofDTO);
+			
+			if (mofAccount.getMofAccount() != null) {
+				mofNo = mofAccount.getMofAccount().getMofNo();
+			}
+		}
+		
+		return mofNo;
+	}
+	// 40121, 26238 - END
+	
 	public String getStatusDescription(Object[] appl) {
 		BigDecimal suppStatDec = appl[12] != null ? (BigDecimal) appl[12]
 				: new BigDecimal(0);
 		String applType = appl[1] != null ? (String) appl[1] : "";
 		String suppType = appl[2] != null ? (String) appl[2] : "";
-
+		String deletedStatus = appl[6] != null ? (String) appl[6] : "";
+		// 40110, 26238 - START
+		String recordStatus = appl[12] != null ?  String.valueOf(appl[12]) : "";
+		String applId = appl[10] != null ? String.valueOf(appl[10]) : "";
+		String latestAppl = null;
+		
+		if (appl.length > 16) {
+			latestAppl = String.valueOf(appl[16]);
+		} else {
+			latestAppl =String.valueOf(appl[15]);
+		}
+		
 		Locale locale = new FacesScopes().getUserLocale();
-		if (suppStatDec.toString().equals("5") && applType.equals("O")
+		 String notAvailable = ResourceBundleUtils.getMessage("lbl.sm.no.available",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+		 String deletedStatusLbl = ResourceBundleUtils.getMessage("lbl.sm.deleted.by.disciplinary.action",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		 
+		if (recordStatus.equals(String.valueOf(DbValueConst.RECORD_STATUS_CANCELLED)) && latestAppl.equals(applId) &&
+				!deletedStatusLbl.equalsIgnoreCase(deletedStatus)){
+			return notAvailable;
+		} else if (suppStatDec.toString().equals("5") && applType.equals("O")
 				&& suppType.equals("B")) {
 			return ResourceBundleUtils.getMessage("lbl.sm.in.progress",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 		} else if (StringUtils.isNotBlank((String) appl[6])) {
 			return (String) appl[6];
 		}
-		return ResourceBundleUtils.getMessage("lbl.sm.no.available",
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+		return notAvailable;
+		// 40110, 26238 - END
 	}
 
 	// 25792 - start
@@ -1915,4 +1987,31 @@ public class ViewApplHistoryBackingBean extends
 				new FacesScopes().getUserLocale())));
 	}
 	// #35336 - END
+	
+	// 26238 - start
+	public void onViewDisciplinaryAction() {
+		// 28237 - start
+		SmSupplier currSupp = getManagedBean().getSmSupplier();
+		getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
+		if (currSupp != null) {
+
+			// 27876: Disciplinary Action - start - <27876>
+			SmSupplier newCurrSupp = currSupp;
+			newCurrSupp.setFlagSupplier(true);
+			// 27876: Disciplinary Action - end - <27876>
+
+			// 30872: Disciplinary Action - start - <30872>
+			newCurrSupp.setFlagDASuppProfile(false);
+			// 30872: Disciplinary Action - end - <30872>
+
+			List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(newCurrSupp);
+			if (!EntityHelper.isCollectionEmpty(voList)) {
+				getManagedBean().setDisciplineVOs(voList);
+			}
+		}
+		// 28237 - end
+		RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
+	}
+	// 26238 - end
+	
 }

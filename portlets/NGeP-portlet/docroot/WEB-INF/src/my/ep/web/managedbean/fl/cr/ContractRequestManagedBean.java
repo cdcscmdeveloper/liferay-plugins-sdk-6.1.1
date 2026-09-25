@@ -65,6 +65,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.cm.catalogue.ScheduleInfo;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -73,6 +74,7 @@ import my.ep.web.bean.pm.GlAccountSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.FLCtSupplierItemVO;
 
 import org.apache.commons.lang.StringUtils;
@@ -312,6 +314,11 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	/** The active contract list document data model. */
 	private IPagingDataModel<VCtActiveContract> activeContractDataModel = new ActiveContractPagingDataModel();
 	private List<String> availableNoList;
+	//26279 - start
+	private String disciplinaryActionMessage;
+	private List<DisciplinaryActionVO> disciplinaryActionVO;
+	private SmDisciplinaryAction smDisciplinaryAction;
+	//26279 - end
 	//13984-start
 	private static String orgCode;
     private static String orgName;
@@ -3097,6 +3104,31 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.scheduleNo = scheduleNo;
 	}
 	
+	//26279 - start
+	public String getDisciplinaryActionMessage() {
+		return disciplinaryActionMessage;
+	}
+
+	public void setDisciplinaryActionMessage(String disciplinaryActionMessage) {
+		this.disciplinaryActionMessage = disciplinaryActionMessage;
+	}	
+
+	public List<DisciplinaryActionVO> getDisciplinaryActionVO() {
+		return disciplinaryActionVO;
+	}
+
+	public void setDisciplinaryActionVO(List<DisciplinaryActionVO> disciplinaryActionVO) {
+		this.disciplinaryActionVO = disciplinaryActionVO;
+	}
+
+	public SmDisciplinaryAction getSmDisciplinaryAction() {
+		return smDisciplinaryAction;
+	}
+
+	public void setSmDisciplinaryAction(SmDisciplinaryAction smDisciplinaryAction) {
+		this.smDisciplinaryAction = smDisciplinaryAction;
+	}
+	//26279 - end
 	//24893 - start
 	public PmOrgProfile getChargePTJOrg() {
 		return chargePTJOrg;

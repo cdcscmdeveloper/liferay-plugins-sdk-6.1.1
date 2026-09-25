@@ -14,13 +14,16 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import javax.faces.application.FacesMessage;
@@ -33,6 +36,7 @@ import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
@@ -99,6 +103,8 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
@@ -110,6 +116,7 @@ import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
 import my.ep.web.backingbean.fl.cr.ContractRequestBackingBean;
 import my.ep.web.backingbean.fl.deliveryorder.DeliveryOrderBackingBean;
 import my.ep.web.backingbean.fl.pr.PurchaseRequestBackingBean;
+import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.format.AttachmentDateFormat;
@@ -120,6 +127,7 @@ import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.vo.DisciplinaryActionVO;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
@@ -607,6 +615,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				flBB.initializeRemarkAndAttachement(resDTO.getFlOrder().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
 			}  
 			getManagedBean().setSelectedTabIndex(0);
+			checkDisciplinaryAction();//26279
 		}else{
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
@@ -753,6 +762,8 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				flBB.initializeRemarkAndAttachement(resDTO.getFlOrder().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 			}  
 			getManagedBean().setSelectedTabIndex(0);
+			
+			checkDisciplinaryAction();//26279
 		}else{
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			if(null == getManagedBean().getButtonVal() || !getManagedBean().getButtonVal().equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
@@ -774,6 +785,40 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		
 	}
 	
+	// 26279 - start
+	/**
+	 * Checks Disciplinary Action
+	 * 
+	 * if true will display Disciplinary Action
+	 * 
+	 */
+	private void checkDisciplinaryAction() {
+		if (isDisciplinaryActionPOCOPendingStatus()) {
+			SmSupplier smSupplier = getManagedBean().getFlRequest().getSmSupplier();
+			SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
+			if (smDisciplinaryAction != null) {
+				getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
+				getManagedBean().setDisciplinaryActionMessage(getDisciplinaryActionMsg(smDisciplinaryAction));
+			} else {
+				getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
+			}
+		}
+	}
+
+	/**
+	 * Checks if the current POCO's status is one of the pending statuses
+	 * 
+	 * @return true if the POCO's status is one of the pending statuses,
+	 *         false for otherwise statuses
+	 */
+	private boolean isDisciplinaryActionPOCOPendingStatus() {
+		Long statusId = getManagedBean().getFulfilmentOrder().getStatus().getStatusId();
+		Set<Long> pendingStatusIds = new HashSet<>(Arrays.asList(
+				FulfilmentStatusConst.PO_PENDING_CANCELLATION_SUBMISSION,
+				FulfilmentStatusConst.CO_PENDING_CANCELLATION_SUBMISSION));
+		return pendingStatusIds.contains(statusId);
+	}
+	// 26279 - End
 	/**
 	 * if Factored checked,get Factoring company details
 	 *
@@ -2159,6 +2204,26 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		
 	}
 	
+	// 26279 - start
+	/**
+	 * View list of Disciplinary Action
+	 */
+	public void viewDisciplinaryAction() {
+		SmSupplier supplier;
+
+		if (getManagedBean().getFlRequest().getSmSupplier() != null) {
+			supplier = getManagedBean().getFlRequest().getSmSupplier();
+			supplier.setFlagSupplier(true);
+			supplier.setFlagDASuppProfile(true);
+
+			List<DisciplinaryActionVO> disciplinaryActionVO = ViewSuppProfileBackingBean
+					.getDisciplinaryActionVO(supplier);
+			getManagedBean().setDisciplinaryActionVO(disciplinaryActionVO);
+			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
+		}
+	}
+
+	// 26279 - end      
 	//#28374	Vinod Start
 	public String cancelCarryForwardAction(String action) throws IOException {
 		log.debug("FulfilmentOrderBackingBean.cancelCarryForwardAction()");

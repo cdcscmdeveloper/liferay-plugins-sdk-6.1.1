@@ -1093,6 +1093,9 @@ public class NoticeBoardBackingBean extends
 		}
 		ScQt scQt = this.getManagedBean().getScQt();
 		final Long qtId = scQt.getQtId();
+		// #27575, #26247 -start-
+		getManagedBean().setQtId(qtId);
+		// #27575, #26247 -end-
 		Long currentStatus = scQt.getQtStatus().getStatusId();
 		try {
 			
