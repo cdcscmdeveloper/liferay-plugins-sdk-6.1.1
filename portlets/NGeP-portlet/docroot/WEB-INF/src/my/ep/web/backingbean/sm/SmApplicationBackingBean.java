@@ -15179,8 +15179,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				//#40112 - start
 				doc.setSmAppl(getManagedBean().getSmAppl());
 				if (!EntityHelper.isCollectionEmpty(doc.getSmApplDocFiles())) {
-					for (SmApplDocFile file : doc.getSmApplDocFiles()) {
-						file.setSmApplSupportDoc(doc);
+					for (SmApplDocFile docFile : doc.getSmApplDocFiles()) {
+						docFile.setSmApplSupportDoc(doc);
 					}
 				}
 				//#40112 - end
@@ -18629,14 +18629,14 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 								}
 							}
 						}
+						// #36718 - Start
+						getManagedBean().setReassignAddress(false);
+						// #36718 - End
 					}
 				}
 				getManagedBean().setSelectedShareHolder(this.getManagedBean().getSelectedShareHolder());
 			}
 		}
-		// #36718 - Start
-		getManagedBean().setReassignAddress(false);
-		// #36718 - End
 	}
 	//#32014 - END
 	//30766 START

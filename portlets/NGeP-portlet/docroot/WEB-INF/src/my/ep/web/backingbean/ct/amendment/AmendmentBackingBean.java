@@ -6278,13 +6278,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			PmOrgProfile contractMinistry = retrieveMinistryOrgProfile(ctOwnerOrgProfileId);
 			PmOrgProfile committeeMinistry = retrieveMinistryOrgProfile(orgProfileId);
 			
-			log.info(":::allowChairpersonRole() orgProfileId: "+ orgProfileId);
-			
 			if (contractMinistry != null && committeeMinistry != null
-					&& contractMinistry.getOrgProfileId().longValue() == committeeMinistry.getOrgProfileId().longValue()) {	
-				log.info(":::allowChairpersonRole() "+ orgProfileId +". contract ministryOrgProfileId: "+ contractMinistry.getOrgProfileId());
-				log.info(":::allowChairpersonRole() "+ orgProfileId +". committee ministryOrgProfileId: "+ committeeMinistry.getOrgProfileId());
-				
+					&& contractMinistry.getOrgProfileId().longValue() == committeeMinistry.getOrgProfileId().longValue()) {					
 				allowChairpersonRole = true;
 			}
 			
@@ -6303,12 +6298,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}
 				}
 			}
-			
 			/*end*/
 			
-			log.info(":::allowChairpersonRole() "+ orgProfileId +". committee type: "+ getManagedBean().getCommitteeType());
-
-			// QCA/QCB, need to be same PTJ
 			// #35238 start
 			allowChairpersonRole = getAmendmentCommitteeHelper().determineChairpersonAccessForQuotationCommmittee(
 					orgProfileId, ctOwnerOrgProfileId, userResDTO, allowChairpersonRole);
