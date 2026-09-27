@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import javax.faces.bean.ManagedProperty;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.constant.sc.SourcingConstants;
@@ -34,6 +36,7 @@ import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.sc.ActionPopupMessageKeys;
 import my.ep.web.vo.DisciplinaryActionVO;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -234,11 +237,10 @@ public abstract class BaseManagedBean implements Serializable {
 	// #25651 - End
 	
 	// #34444 START
-		private String btnAction;
-		
-		@javax.faces.bean.ManagedProperty("#{lbl}")
-		private ResourceBundle resourceBundle;
-		// #34444 END
+	@ManagedProperty("#{lbl}")
+	private ResourceBundle resourceBundle;
+
+	// #34444 END
 	
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
@@ -1330,38 +1332,40 @@ public abstract class BaseManagedBean implements Serializable {
 	// #25651 - End
 	
 	// #34444 START
-		public String getBtnAction() {
-			return btnAction;
+	public String getBtnAction() {
+		Object value = FacesContext.getCurrentInstance().getViewRoot().getViewMap().get("btnAction");
+
+		return value == null ? null : value.toString();
+	}
+
+	public void setBtnAction(String btnAction) {
+		FacesContext.getCurrentInstance().getViewRoot().getViewMap().put("btnAction", btnAction);
+	}
+
+	public void prepareAction(String action) {
+		setBtnAction(action);
+	}
+
+	public String getConfirmTitle() {
+
+		String btnAction = getBtnAction();
+
+		if (resourceBundle == null || btnAction == null) {
+			return "";
 		}
 
-		public void setBtnAction(String btnAction) {
-			this.btnAction = btnAction;
+		return ActionPopupMessageKeys.getTitleMessage(btnAction, resourceBundle);
+	}
+
+	public String getConfirmContent() {
+
+		String btnAction = getBtnAction();
+
+		if (resourceBundle == null || btnAction == null) {
+			return "";
 		}
 
-		public ResourceBundle getResourceBundle() {
-			return resourceBundle;
-		}
-
-		public void setResourceBundle(ResourceBundle lbl) {
-			this.resourceBundle = lbl;
-		}
-
-		public String getConfirmTitle() {
-			if (resourceBundle == null || btnAction == null) {
-				return "";
-			}
-			return my.ep.web.util.sc.ActionPopupMessageKeys.getTitleMessage(btnAction, resourceBundle);
-		}
-
-		public String getConfirmContent() {
-			if (resourceBundle == null || btnAction == null) {
-				return "";
-			}
-			return my.ep.web.util.sc.ActionPopupMessageKeys.getContentMessage(btnAction, resourceBundle);
-		}
-
-		public void prepareAction(String action) {
-			this.btnAction = action;
-		}
-		// #34444 END
+		return ActionPopupMessageKeys.getContentMessage(btnAction, resourceBundle);
+	}
+	// #34444 END
 }
