@@ -3732,6 +3732,13 @@ public class SupplierDataMaintenanceBackingBean extends
 			roleDesc = epRoleName(SupplierManagementConst.APPROVER_HQ);
 		} else if (roleSupplier || roleSupplierData) {
 			roleDesc = epRoleName(history.getRoleCode());
+			PmRoleDesc role = SmApplicationUtil.epRoleNameByUserId(history.getCreatedBy());
+			
+			if (role == null) {
+				roleDesc = epRoleName(history.getRoleCode());
+			} else {
+				roleDesc = role.getRoleName();			
+			}
 		}
 		
 		return roleDesc;
