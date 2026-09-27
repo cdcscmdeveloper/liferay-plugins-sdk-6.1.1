@@ -3700,7 +3700,6 @@ public class SupplierDataMaintenanceBackingBean extends
 		} else if (roleApprover || roleSupApprover || roleApproverSDMA || roleApproverSDM) {
 			roleDesc = epRoleName(SupplierManagementConst.APPROVER_HQ);
 		} else if (roleSupplier || roleSupplierData) {
-			roleDesc = epRoleName(history.getRoleCode());
 			PmRoleDesc role = SmApplicationUtil.epRoleNameByUserId(history.getCreatedBy());
 			
 			if (role == null) {
