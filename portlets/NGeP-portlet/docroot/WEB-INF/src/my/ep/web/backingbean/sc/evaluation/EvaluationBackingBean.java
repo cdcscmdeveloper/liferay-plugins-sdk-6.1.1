@@ -10206,11 +10206,10 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 		Long proposalSubmitted = proposalSO.getTotalSubmittedProposal(reqDTO).getTotalSubmitted();
 		this.getManagedBean().setNoProposalSubmitted(proposalSubmitted.compareTo(new Long(0)) == 0);
 		// 6906 - end
-		checkWeightage35384WIP();//#38151
 
 		retriveMeetingDtls(evaluationDataType.getQtId().longValue(), evaluationDataType.getCommitteeType(), 1);
-		evaluateWIP(this.getManagedBean().getScQt());// 34865,34866,34867 -
-														// 29021 WIP
+		evaluateWIP(this.getManagedBean().getScQt());// 34865,34866,34867 -29021 WIP
+		checkWeightage35384WIP();//#38151
 		String taskName = this.getManagedBean().getTaskName();
 		PmUser curLogedInUser = facesScopes.getUserSessionBean();
 		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
