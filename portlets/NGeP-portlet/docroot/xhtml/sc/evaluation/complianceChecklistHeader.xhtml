@@ -1,0 +1,21 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<div  class="header-info header-spacing">
+		<p:panel>				
+			<table border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td><h:outputLabel
+							value="#{lbl['lbl.sc.spec.checklist.title']}" /></td>
+					<td style="font-size: 12px;">:
+					#{evaluationBackingBean.managedBean.scQtChecklist.title}</td>				
+				</tr>
+				
+			</table>
+		</p:panel>
+	</div>
+</ui:composition>

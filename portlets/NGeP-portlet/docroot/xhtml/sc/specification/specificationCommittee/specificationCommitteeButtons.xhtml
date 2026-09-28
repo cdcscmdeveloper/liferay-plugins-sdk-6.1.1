@@ -7,6 +7,11 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	<!-- #25635 -start- -->
+	<ui:param name="isClone"
+		value="#{specificationBackingBean.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING or specificationBackingBean.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION}" />
+	<!-- #25635 -end- -->
+	
 	<h:panelGroup>
 		<ac:gpkiPopup
 			textBeforeSign="#{specificationBackingBean.textBeforeSign}"
@@ -39,19 +44,34 @@
 						</c:when>
 					</c:choose> 
 					<!-- 25692#95 - end --> 
-			<ui:fragment rendered="#{specificationBackingBean.managedBean.specMaintenanceScreen ne specificationBackingBean.getSpecMaintenance()}">
+					<!-- #25635 -start- --> <p:commandButton
+						value="#{lbl['lbl.sc.clone.specification']}" style="float:right;"
+						id="cloneButton" process="@this" partialSubmit="true"
+						update="pnlid2"
+						rendered="#{isClone and !specificationBackingBean.managedBean.readOnly}"
+						action="#{qtSpecCloneBackingBean.cloneCommitteePopupAction()}"
+						title="#{lbl['lbl.sc.qt.create.btn.clone.tooltip']}" /> 
+					<!-- #25635 -end- -->
+					<ui:fragment rendered="#{specificationBackingBean.managedBean.specMaintenanceScreen ne specificationBackingBean.getSpecMaintenance()}">
 				<ui:repeat var="bpmAction"
 						value="#{specificationBackingBean.managedBean.outComes}">
 						<ui:fragment rendered="#{bpmAction ne '~'}">
 							<ui:param name="buttonLabel"
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-							
-							<ui:remove><!-- #29732 add disable--></ui:remove>
-							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
-								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-								styleClass="ui-button" style="float:right;"
-								disabled ="#{specificationBackingBean.managedBean.checkUserCanRevise and ((bpmAction eq BpmOutcomeConstant.bpmEndorse) or (bpmAction eq BpmOutcomeConstant.bpmSignOff))}"
-								action="#{specificationBackingBean.submitAction(bpmAction)}"/>
+								<!-- #25635 -start- -->
+								<ui:param name="bpAction" value="SUBMIT" />
+								<p:commandButton value="#{lbl[buttonLabel]}"
+									styleClass="ui-button"
+									action="#{specificationBackingBean.submitAction(bpmAction)}"
+									update="@([id$=#{submitConfirmId2}])" rendered="#{isClone}" />
+
+								<ui:remove><!-- #29732 add disable--></ui:remove>
+								<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
+									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+									styleClass="ui-button" style="float:right;" rendered="#{!isClone}"
+									disabled ="#{specificationBackingBean.managedBean.checkUserCanRevise and ((bpmAction eq BpmOutcomeConstant.bpmEndorse) or (bpmAction eq BpmOutcomeConstant.bpmSignOff))}"
+									action="#{specificationBackingBean.submitAction(bpmAction)}" />
+								<!-- #25635 -end- -->
 						</ui:fragment>
 					</ui:repeat>
 					<ui:fragment
@@ -94,6 +114,32 @@
 					</td>
 			</tr>
 		</table>
+
+		<!-- #25635 -start- -->
+		<p:dialog id="submitConfirmId2" widgetVar="submitConfirmPopUp2"
+			header="#{lbl['lbl.sc.approval.confirm']}" resizable="false"
+			width="30%" height="100" closable="false">
+			<table>
+				<tr>
+					<td align="center">
+						<p:outputLabel
+							value="#{lbl['lbl.sc.approval.dialog.confirm']}" />
+					</td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					onclick="blockWidget.show();"
+					oncomplete="submitConfirmPopUp2.hide(); blockWidget.hide();"
+					partialSubmit="true" process="@form" update="@form"
+					action="#{specificationBackingBean.specCommitteBpmTask(bpAction)}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="submitConfirmPopUp2.hide();" type="button"
+					partialSubmit="true" process="@this" />
+			</div>
+		</p:dialog>
+		<!-- #25635 -end- -->
 
 		<!-- 25638 start -->
 		<p:dialog id="reviseSCDlgs" widgetVar="reviseSCDlgs"

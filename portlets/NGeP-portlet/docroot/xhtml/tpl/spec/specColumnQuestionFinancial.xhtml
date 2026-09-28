@@ -27,13 +27,15 @@
 	</p:column>
 	<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:115px;white-space:normal;" rendered="#{isEstCostReq}">
 		<f:facet name="header">
-			<h:outputText value="* " styleClass="mandatory" />
+<!-- 		<h:outputText value="* " styleClass="mandatory" /> #21695-->	
+			<h:outputText value="* " styleClass="" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.estimate.cost']}"/>
 		</f:facet>
 		</p:column>
 		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:125px;">
 		<f:facet name="header">
-			<h:outputText value="* " styleClass="mandatory" rendered="#{isScoringReq}"/>
+<!-- 		<h:outputText value="* " styleClass="mandatory" rendered="#{isScoringReq}"/> #21695-->
+			<h:outputText value="* " styleClass="" rendered="#{isScoringReq}"/>	
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.total.amount']}" />
 		</f:facet>
 		</p:column>
@@ -91,7 +93,7 @@
  				style="background-color:transparent !important; border:0px none;"  
 				action="#{templateSpecBackingBean.zoneEstimationPopupAction(templateSpecBean)}"
 				oncomplete="#{zoneEstimationPopup}.show();"
-				partialSubmit="true" process="@this" update="@([id$=zoneEstimationPopup])"
+				partialSubmit="true" process="@this" update="@([id$=zoneEstimationPopup], [id$=scoringSetPopup])"
 				title="#{lbl['lbl.tpl.spec.content.estimate.cost.tooltip']}">
 				<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
 			</p:commandButton>
