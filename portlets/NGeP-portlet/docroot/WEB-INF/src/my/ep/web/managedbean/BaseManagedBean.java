@@ -236,10 +236,9 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 	// #25651 - End
 	
-	// #34444 START
+	// #34444 START	
 	@ManagedProperty("#{lbl}")
 	private ResourceBundle resourceBundle;
-
 	// #34444 END
 	
 	public boolean isShowDetailSSM() {
@@ -1332,6 +1331,14 @@ public abstract class BaseManagedBean implements Serializable {
 	// #25651 - End
 	
 	// #34444 START
+	public ResourceBundle getResourceBundle() {
+	    return resourceBundle;
+	}
+
+	public void setResourceBundle(ResourceBundle resourceBundle) {
+	    this.resourceBundle = resourceBundle;
+	}
+	
 	public String getBtnAction() {
 		Object value = FacesContext.getCurrentInstance().getViewRoot().getViewMap().get("btnAction");
 
