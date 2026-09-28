@@ -3003,13 +3003,6 @@ public class LOIDetailBackingBean extends
 		}
 	}
 	
-//	/*#34444 start*/
-//	public AwardSupplierResDTO updateBPMTask(String outcome,
-//			PmDigiSign digiSign) {
-//		return isCommitteeModified(
-//				this.getManagedBean().getCommitteeMemberActivity());
-//		}/*#34444 end*/
-	
 	/**
 	 * Update bpm task. update bpm - save data into database and BPM process
 	 * will route to the next respective user.
