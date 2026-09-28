@@ -2716,6 +2716,7 @@ public class ConsolidationReportBackingBean extends
 	}
 	// 26247 - end
 	
+	
 	//#38151 - Start
 	public void qualifiedSupplierListPopupScore(Long supplierId) {
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
@@ -2777,7 +2778,7 @@ public class ConsolidationReportBackingBean extends
 
 			}
 		}else{
-			List<Object[]> findListT = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageT, qtId, null);
+			List<Object[]> findListT = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageT, qtId, null,null);
 			for (Object[] row : findListT) {
 				BigDecimal suppId = (BigDecimal) row[0];
 				//BigDecimal supplierNo = (BigDecimal) row[1];
@@ -2831,7 +2832,7 @@ public class ConsolidationReportBackingBean extends
 
 		retrieveQualifiedSuppliersInfoByEvalStage("2");
 		List<Object[]> findListF = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageF, qtId,
-				selectedZoneId);
+				selectedZoneId,null);
 
 		for (Object[] row : findListF) {
 			BigDecimal suppId = (BigDecimal) row[0];
@@ -2868,7 +2869,7 @@ public class ConsolidationReportBackingBean extends
 		RequestContext.getCurrentInstance().execute("preferenceMarginSuppDetailstestPopup.show()");
 
 	}
-	
+		
 	public void retrievescoresettings(ScQt scqt) {
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 		reqDTO.setScQt(scqt);

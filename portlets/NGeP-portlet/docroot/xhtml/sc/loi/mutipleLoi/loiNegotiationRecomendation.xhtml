@@ -140,7 +140,7 @@
 							<p:column headerText="#{lbl['lbl.sc.mloi.overall.score']}"
 								style="text-align: right;">
 								<ui:remove><!-- #38151 datatable value popup--></ui:remove>
-								<p:commandLink action ="#{lOIDetailBackingBean.qualifiedSupplierListPopupScore(supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}" 
+								<p:commandLink action ="#{lOIDetailBackingBean.qualifiedSupplierListPopupScore(supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId, null)}" 
 	 											  rendered="#{!lOIDetailBackingBean.managedBean.weightage35384WIP}" process="@this" update="@([id$=SuppScoreDetailsPopupId])" styleClass="commandLink" >
 							
 								<h:outputText value="#{supplierDtl.totalScore}">
@@ -390,9 +390,9 @@
 							<p:column headerText="#{lbl['lbl.sc.total.overall.score']}"
 								style="text-align: right;">
 							<p:dataList var="recommendedSuppl" value="#{item.awardSupplierList}" type="none"
-							rendered ="#{lOIDetailBackingBean.managedBean.weightageReq and !lOIDetailBackingBean.managedBean.weightage35384WIP}">
+								rendered="#{!lOIDetailBackingBean.managedBean.weightage35384WIP}">
 									<p:commandLink
-										action="#{lOIDetailBackingBean.qualifiedSupplierListPopupScore(recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}"
+										action="#{lOIDetailBackingBean.qualifiedSupplierListPopupScore(recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId,item.requestItem.requestNoteItemId)}"
 										process="@this" update="@([id$=SuppScoreDetailsPopupId])"
 										rendered="#{!lOIDetailBackingBean.managedBean.weightage35384WIP}"
 										styleClass="commandLink">
