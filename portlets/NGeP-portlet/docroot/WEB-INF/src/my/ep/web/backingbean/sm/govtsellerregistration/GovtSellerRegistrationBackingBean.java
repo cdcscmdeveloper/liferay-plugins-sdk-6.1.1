@@ -1041,11 +1041,11 @@ public class GovtSellerRegistrationBackingBean extends
 		setSmApplBeforeSubmit();
 		if (SmServiceLookup.getRegistrationSO()
 				.createSupplier(getRegistrationReqDTO()).isSuccessful()) {
-			SmCommonUtil.redirectToPage("/xhtml/sm/onlinereg/outputMsg",
-					MessageConst.INFO_721012, new String[] {
-							getManagedBean().getSmPersonnel().getEmail(),
-							SmRuleHelper.getInstance().getEmailActivationDays()
-									+ "" }, null);
+			// 14623 - start : tukar ayat
+			SmCommonUtil.redirectToPage("/xhtml/sm/onlinereg/outputMsg", MessageConst.INFO_722685, new String[] {
+					getManagedBean().getSmPersonnel().getEmail(),
+					SmRuleHelper.getInstance().getEmailActivationDays() + "" }, null);
+			// 14623 - end
 		} else {
 			throw new EpException(MessageConst.ERROR_721006);
 		}
