@@ -5,6 +5,10 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.MissingResourceException;
 
+import my.ep.factory.EpLogger;
+
+import org.apache.log4j.Logger;
+
 /**
  * Utility class for managing action popup confirmation message keys. This class
  * provides centralized access to title and content keys for various action
@@ -13,6 +17,9 @@ import java.util.MissingResourceException;
  * Issue #34444
  */
 public class ActionPopupMessageKeys {
+	
+	private static final Logger log = EpLogger
+			.getLogger(ActionPopupMessageKeys.class);
 
 	/** Action â† title key */
 	private static final Map<String, String> TITLE_KEYS = new HashMap<String, String>();
@@ -117,8 +124,9 @@ public class ActionPopupMessageKeys {
 		if (key != null && resourceBundle != null) {
 			try {
 				return resourceBundle.getString(key);
-			} catch (MissingResourceException e) {
-				return key;
+			}catch (MissingResourceException e) {
+			    log.warn("Missing resource bundle key:"  + key);
+			    return "Message unavailable";
 			}
 		}
 
@@ -142,9 +150,10 @@ public class ActionPopupMessageKeys {
 		if (key != null && resourceBundle != null) {
 			try {
 				return resourceBundle.getString(key);
-			} catch (MissingResourceException e) {
+				} catch (MissingResourceException e) {
+				log.warn("Missing resource bundle key: " + key, e);
 				return key;
-			}
+				}
 		}
 
 		return key;
