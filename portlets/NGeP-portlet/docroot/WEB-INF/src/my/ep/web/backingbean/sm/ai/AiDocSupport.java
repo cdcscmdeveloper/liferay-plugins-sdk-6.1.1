@@ -163,6 +163,12 @@ public final class AiDocSupport {
 			return entityKey != null && edits.remove(entityKey) != null;
 		}
 
+		// drops both the edit marks and the accepted set, as if the entity was never submitted
+		public static boolean forget(Map<String, Set<String>> edits, String entityKey) {
+			return clear(edits, entityKey)
+					| clear(edits, entityKey == null ? null : ACCEPTED_PREFIX + entityKey);
+		}
+
 		/**
 		 * Fields the applicant applied by submitting the AI Assistant dialog. Nothing outside this
 		 * set ever carries an AI icon, whatever the typed value happens to be.
