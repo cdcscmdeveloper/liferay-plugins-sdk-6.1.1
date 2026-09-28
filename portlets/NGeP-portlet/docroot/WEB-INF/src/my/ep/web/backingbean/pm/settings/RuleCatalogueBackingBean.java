@@ -5432,8 +5432,7 @@ public class RuleCatalogueBackingBean extends
 	/**
 	 * Adds the selected PTJ configuration rule values to the current rule.
 	 *
-	 * @throws EpException if no PTJ is selected or if the selected PTJ
-	 *                     has already been added
+	 * @throws EpException if no PTJ is selected or if the selected PTJ has already been added
 	 */
 	public void addPTJCRValues(){
 		log.info("addPTJCRValues");
@@ -6964,13 +6963,11 @@ public class RuleCatalogueBackingBean extends
 	        return true;
 	    }
 
-	    return configRuleType.getConfigRuleValues() == null
-	            || orgProfile.getOrgCode() == null;
+	    return configRuleType.getConfigRuleValues() == null || orgProfile.getOrgCode() == null;
 	}
 
 	/**
-	 * Checks whether the existing rule value belongs to the specified PTJ
-	 * and is still active.
+	 * Checks whether the existing rule value belongs to the specified PTJ and is still active.
 	 *
 	 * @param existingValue the existing configuration rule value
 	 * @param orgCodeDecimal the PTJ organisation code
@@ -6985,8 +6982,7 @@ public class RuleCatalogueBackingBean extends
 	        return false;
 	    }
 
-	    return existingValue.getExpDate() == null
-	            || existingValue.getExpDate().compareTo(new Date()) > 0;
+		return existingValue.getExpDate() == null || existingValue.getExpDate().compareTo(new Date()) > 0;
 	}
 
 	/**
@@ -7001,7 +6997,6 @@ public class RuleCatalogueBackingBean extends
 	 * @throws EpException if no PTJ is selected or the selected PTJ has already been added
 	 */
 	public void setPTJCC(PmConfigRule configRuleType) {
-
 	    boolean hasSelectedPtj = false;
 
 	    for (PmOrgProfile orgProfile : getManagedBean().getPtjList()) {
