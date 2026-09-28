@@ -2221,10 +2221,10 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
 			reqDTO.setCompliance(null);
-			evaluationSO.preInitializeChecklist(reqDTO); // 34496 4serangkai
-			// #21692 - Start
 			reqDTO.setScQt(this.getManagedBean().getScQt());//#29187 Added Vinod
 			reqDTO.setComingFromNextButton(this.getManagedBean().isComingFromNextButton()); //#38151
+			evaluationSO.preInitializeChecklist(reqDTO); // 34496 4serangkai
+			// #21692 - Start
 			//#21692 - Start
 			if (!new ApprovalBackingBean().isEPVWorkflowStatusNull(this.getManagedBean().getScQt().getQtId())) {
 				this.getManagedBean().setAllSupplierRejectEpv(
