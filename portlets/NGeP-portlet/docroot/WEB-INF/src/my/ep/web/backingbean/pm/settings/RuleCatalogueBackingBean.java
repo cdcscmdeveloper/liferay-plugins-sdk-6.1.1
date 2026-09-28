@@ -247,16 +247,11 @@ public class RuleCatalogueBackingBean extends
 				.getSelectedCategoryL3());
 
 		if (configRuleType.getRangeType() == 1) {
-
-			if (configRuleType.getConfigRuleValues() != null
-					&& configRuleType.getConfigRuleValues().size() > 0) {
+			//#29166 CR 27827: Static Code Analysis Use isEmpty() to check whether the collection is empty or not
+			if (configRuleType.getConfigRuleValues() != null && !configRuleType.getConfigRuleValues().isEmpty()) {
 				int size = configRuleType.getConfigRuleValues().size();
-				newRuleValue
-						.setGroupValueId(configRuleType.getConfigRuleValues()
-								.get(size - 1).getGroupValueId() + 1);
-
+				newRuleValue.setGroupValueId(configRuleType.getConfigRuleValues().get(size - 1).getGroupValueId() + 1);
 			} else {
-
 				newRuleValue.setGroupValueId(1);
 			}
 			newRuleValue.setFromValue(new BigDecimal(1));
@@ -328,10 +323,11 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	private ISearchBean<PmParameterDesc> getOrgTypeSearchBean(String componentId) {
-		log.info(".......componentId=" + componentId);
-		ISearchBean<PmParameterDesc> orgTypeSearchBean = super
-				.createSearchBean(PmParameterDesc.class, componentId);
-		return orgTypeSearchBean;
+		//#29166 CR 27827: Static Code Analysis Immediately return this expression instead of assigning it to the temporary variable "orgTypeSearchBean".
+		//ISearchBean<PmParameterDesc> orgTypeSearchBean = super.createSearchBean(PmParameterDesc.class, componentId);
+		//return orgTypeSearchBean;
+		return super.createSearchBean(PmParameterDesc.class, componentId);
+		//#29166 CR 27827: Static Code Analysis End
 	}
 
 	// public List<SortMeta> getPreSortOrder() {
@@ -339,11 +335,13 @@ public class RuleCatalogueBackingBean extends
 	// }
 
 	public boolean isValidDateRange(Date effDate, Date ExpDate) {
-		log.info("...............isValidDateRange...............");
-		if (ExpDate != null && (ExpDate.getTime() < effDate.getTime())) {
+		//#29166 CR 27827: Static Code Analysis Replace this if-then-else statement by a single return statement.
+		/*if (ExpDate != null && (ExpDate.getTime() < effDate.getTime())) {
 			return false;
 		}
-		return true;
+		return true;*/ 
+		return ExpDate != null && (ExpDate.getTime() < effDate.getTime()) ? false : true;
+		//#29166 CR 27827: Static Code Analysis End
 	}
 
 	public void setInactivePopUpMsg(String inactivePopUpMsg) {
@@ -2294,8 +2292,8 @@ public class RuleCatalogueBackingBean extends
 
 				}
 				log.info("....result=" + result);
-
-				if (result == true) {
+				//#29166 - CR 27827: Static Code Analysis Start - Remove the literal "true" boolean value
+				if (result) {
 					// hit error and return
 					throw new EpException(MessageConst.ERROR_770211,
 							new String[] { da.getDesignatedArea()
@@ -4652,14 +4650,16 @@ public class RuleCatalogueBackingBean extends
 			// log.info("....selectedValue.getRuleValue()="+selectedValue.getRuleValue());
 			// log.info(".................selectedValue.getRecordStatusFlg()="+selectedValue.getRecordStatusFlg());
 			if (selectedValue != null) {
-
-				// log.info("....selectedValue="+selectedValue);
-
+				//#29166 CR 27827: Static Code Analysis Start = Replace this if-then-else statement by a single method invocation.
+				/*
 				if (!selectedValue.isModified()) {
 					selectedValue.setModified(true);
 				} else {
 					selectedValue.setModified(false);
 				}
+				*/
+				selectedValue.setModified(!selectedValue.isModified() ? true : false);
+				//#29166 CR 27827: Static Code Analysis End
 			}
 		}
 	}
@@ -4779,11 +4779,16 @@ public class RuleCatalogueBackingBean extends
 					.get(this.getCurrentIndexVal());
 			log.info(".............selectedFee=" + selectedFee);
 			if (selectedFee != null) {
+				//#29166 CR 27827: Static Code Analysis Start = Replace this if-then-else statement by a single method invocation.
+				/*
 				if (!selectedFee.isModified()) {
 					selectedFee.setModified(true);
 				} else {
 					selectedFee.setModified(false);
 				}
+				*/
+				selectedFee.setModified(!selectedFee.isModified() ? true : false );
+				//#29166 CR 27827: Static Code Analysis End
 			}
 		}
 
@@ -4797,11 +4802,16 @@ public class RuleCatalogueBackingBean extends
 					.get(this.getCurrentIndexVal());
 
 			if (selectedFee != null) {
+				//#29166 CR 27827: Static Code Analysis Start = Replace this if-then-else statement by a single method invocation.
+				/*
 				if (!selectedFee.isModified()) {
 					selectedFee.setModified(true);
 				} else {
 					selectedFee.setModified(false);
 				}
+				*/
+				selectedFee.setModified(!selectedFee.isModified() ? true : false );
+				//#29166 CR 27827: Static Code Analysis End
 			}
 		}
 
@@ -4815,11 +4825,16 @@ public class RuleCatalogueBackingBean extends
 					.get(this.getCurrentIndexVal());
 			// log.info(".............selectedFee=" + selectedFee);
 			if (selectedFee != null) {
+				//#29166 CR 27827: Static Code Analysis Start = Replace this if-then-else statement by a single method invocation.
+				/*
 				if (!selectedFee.isModified()) {
 					selectedFee.setModified(true);
 				} else {
 					selectedFee.setModified(false);
 				}
+				*/
+				selectedFee.setModified(!selectedFee.isModified() ? true : false );
+				//#29166 CR 27827: Static Code Analysis End
 			}
 		}
 
@@ -4832,13 +4847,16 @@ public class RuleCatalogueBackingBean extends
 	 */
 	public void gstStatusChange(PmDesignatedArea designatedArea) {
 		log.info("gstStatusChange");
-
+		//#29166 CR 27827: Static Code Analysis Start = Replace this if-then-else statement by a single method invocation.
+		/*
 		if (!designatedArea.isModified()) {
 			designatedArea.setModified(true);
 		} else {
 			designatedArea.setModified(false);
 		}
-
+		*/
+		designatedArea.setModified(!designatedArea.isModified() ? true : false);
+		//#29166 CR 27827: Static Code Analysis End
 	}
 
 	public Integer getCurrentIndexVal() {
@@ -5465,8 +5483,9 @@ public class RuleCatalogueBackingBean extends
 							addTrackingDiaryIntoList(messageId, params, approval, reqDTO);		
 						}
 						
-						if(approval.getExpDate() !=null && clone.getExpDate() !=null 
-								&& !approval.getExpDate().equals(clone.getExpDate())){
+						//#29166 - CR 27827: Static Code Analysis Start - This branch's code block is the same as the block.
+						if( (approval.getExpDate() !=null && clone.getExpDate() !=null && !approval.getExpDate().equals(clone.getExpDate())) 
+								|| (clone.getExpDate() == null && approval.getExpDate() !=null) ){
 							messageId = MessageConst.TD_80218;
 							params= new String[]{
 									approval.getPmOrgProfile().getPmOrgValidity().getOrgCode(),
@@ -5480,7 +5499,9 @@ public class RuleCatalogueBackingBean extends
 							auditMatchedIdUpdateList(clone, 2);
 							/************ END AUDIT #28895_35509 *************/
 							addTrackingDiaryIntoList(messageId, params, approval, reqDTO);		
-						}else if(clone.getExpDate() == null && approval.getExpDate() !=null){
+						}
+						/*
+						else if(clone.getExpDate() == null && approval.getExpDate() !=null){
 							messageId = MessageConst.TD_80218;
 							params= new String[]{
 									approval.getPmOrgProfile().getPmOrgValidity().getOrgCode(),
@@ -5492,6 +5513,8 @@ public class RuleCatalogueBackingBean extends
 							};
 							addTrackingDiaryIntoList(messageId, params, approval, reqDTO);		
 						}
+						*/
+						//#29166 - CR 27827: Static Code Analysis End - This branch's code block is the same as the block.
 						
 						if(!nf.format(approval.getProcureAmt()).equals(nf.format(clone.getProcureAmt()))){
 							messageId = MessageConst.TD_80219;
@@ -5858,7 +5881,9 @@ public class RuleCatalogueBackingBean extends
 			log.info("[#22119] P5 date is equal or greater than P2 and P3 date");
 			isValid = true;
 			
-			if(isValid && (p6_PATperiod != null && p6_PATperiod.getEffDate() != null && p6_PATperiod.getExpDate() != null)) {
+			//#29166 CR 27827: Static Code Analysis - Remove "isValid" expression which always evaluates to "true" 
+			//if(isValid && (p6_PATperiod != null && p6_PATperiod.getEffDate() != null && p6_PATperiod.getExpDate() != null)) { // original
+			if((p6_PATperiod != null && p6_PATperiod.getEffDate() != null && p6_PATperiod.getExpDate() != null)) {
 				//if(p5_expDt.before(p6_effDt) || p5_effDt.after(p6_expDt)) {
 				if(p5_expDt.before(p6_effDt)) {
 					log.info("[#22119] P5 date not overlap with P6 date");
@@ -5921,6 +5946,7 @@ public class RuleCatalogueBackingBean extends
 				newRuleValue.setRuleValue(newRuleValue.getPmOrgProfile().getOrgCode());
 				newRuleValue.setRuleDescription(newRuleValue.getPmOrgProfile().getOrgName());
 				newRuleValue.setZoneId(getManagedBean().getSelectedZoneId());
+				newRuleValue.setPtjId(orgProfile); //#27827
 				index = configRuleType.getConfigRuleValues().size();
 				configRuleType.getConfigRuleValues().add(index, newRuleValue);
 			}
