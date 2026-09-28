@@ -2221,10 +2221,10 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
 			reqDTO.setCompliance(null);
-			evaluationSO.preInitializeChecklist(reqDTO); // 34496 4serangkai
-			// #21692 - Start
 			reqDTO.setScQt(this.getManagedBean().getScQt());//#29187 Added Vinod
 			reqDTO.setComingFromNextButton(this.getManagedBean().isComingFromNextButton()); //#38151
+			evaluationSO.preInitializeChecklist(reqDTO); // 34496 4serangkai
+			// #21692 - Start
 			//#21692 - Start
 			if (!new ApprovalBackingBean().isEPVWorkflowStatusNull(this.getManagedBean().getScQt().getQtId())) {
 				this.getManagedBean().setAllSupplierRejectEpv(
@@ -10206,11 +10206,10 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 		Long proposalSubmitted = proposalSO.getTotalSubmittedProposal(reqDTO).getTotalSubmitted();
 		this.getManagedBean().setNoProposalSubmitted(proposalSubmitted.compareTo(new Long(0)) == 0);
 		// 6906 - end
-		checkWeightage35384WIP();//#38151
 
 		retriveMeetingDtls(evaluationDataType.getQtId().longValue(), evaluationDataType.getCommitteeType(), 1);
-		evaluateWIP(this.getManagedBean().getScQt());// 34865,34866,34867 -
-														// 29021 WIP
+		evaluateWIP(this.getManagedBean().getScQt());// 34865,34866,34867 -29021 WIP
+		checkWeightage35384WIP();//#38151
 		String taskName = this.getManagedBean().getTaskName();
 		PmUser curLogedInUser = facesScopes.getUserSessionBean();
 		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
