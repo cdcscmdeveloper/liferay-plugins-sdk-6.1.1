@@ -23,10 +23,13 @@
 		toggleable="true">
 		<ui:include src="/xhtml/sc/evaluation/checklistHeader.xhtml" />
 	</p:panel>
-
-	
-	<h:panelGroup>
+	<!-- #25138-ahmaa-start -->
+	<c:if test="#{evaluationBackingBean.managedBean.evaluationTechnicalFinancialType eq 'ET' and evaluationBackingBean.managedBean.scQt.techEvaluationReq and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '0'}">
 		<ui:include src="technicalSpecEvaluationStageSupplierList.xhtml" />
-	</h:panelGroup>
-
+	</c:if> 
+	
+	<c:if test="#{evaluationBackingBean.managedBean.evaluationTechnicalFinancialType eq 'ET' and evaluationBackingBean.managedBean.scQt.techEvaluationReq and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'}">
+		<ui:include src="technicalSpecEvaluationStageSupplierListPackage.xhtml" />
+	</c:if>
+	<!-- #25138-ahmaa-end -->
 </ui:composition>

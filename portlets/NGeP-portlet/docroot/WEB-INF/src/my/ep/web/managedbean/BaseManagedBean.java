@@ -149,6 +149,8 @@ public abstract class BaseManagedBean implements Serializable {
 	private String inactiveSCMemberStr;
 	// 25037 - end
 	
+	private Integer wipStatusMax;//34865,34866,34867 - 29021 WIP
+
 	//27346-start
 	// start #29956
 	private String termAndConditionCheckOwner;
@@ -1030,7 +1032,17 @@ public abstract class BaseManagedBean implements Serializable {
 		this.outputPage = outputPage;
 	}
 	//#32236 - end
+	
+	//#29021 - start
+	public Integer getWipStatusMax() {
+		return wipStatusMax;
+	}
 
+	public void setWipStatusMax(Integer wipStatusMax) {
+		this.wipStatusMax = wipStatusMax;
+	}	
+	//#29021 - end
+	
 	// #29007 Start
 	public String getBpmVersionNo() {
 		return bpmVersionNo;
