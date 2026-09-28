@@ -54,8 +54,7 @@
 				styleClass="instruction" escape="false"/>
 			<br/><br/>
 			<p:dataTable id="docs#{cc.attrs.aiDlg}" var="doc" value="#{ai.getDocs()}" emptyMessage="">
-				<p:column style="width:5%;text-align:center;"
-					rendered="#{cc.attrs.docType eq 'epf'}">
+				<p:column style="width:5%;text-align:center;">
 					<p:outputPanel rendered="#{ai.getDocVerdict(doc) eq 1}">
 						<p:graphicImage id="imgAiEpf1" value="/css/images/ai/yes.png" />
 						<p:tooltip for="imgAiEpf1" rendered="#{not empty ai.getDocLabel(doc)}">
