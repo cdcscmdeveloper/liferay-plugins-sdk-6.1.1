@@ -426,7 +426,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			//26646-end
 			
 			// #31788 - Update reqDTO if new user to be reassigned
-			if(getManagedBean().isAssignNewUser()){
+			if (getManagedBean().isAssignNewUser()) {
 				reqDTO.setAssignNewUser(Boolean.TRUE);
 				reqDTO.setNewUser(getManagedBean().getNewUser());
 			}
@@ -443,7 +443,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					messageId = MessageConst.INFO_745004;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 					// #31788 - Message ID for reassign new user
-					if(getManagedBean().isAssignNewUser()) {
+					if (getManagedBean().isAssignNewUser()) {
 						messageId = MessageConst.INFO_700128;
 					} else {
 						messageId = MessageConst.INFO_700009;
@@ -5394,26 +5394,26 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 					}
 				} else {
 					//#31788 - validate selected fl approver active/inactive.
-					if (getManagedBean().getFlRequest().getApproverId() != null) {
-						userSO = BusinessDelegate.getInstance().getServiceObject(
-								ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+					if (flRequest.getApproverId() != null) {
+						userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IUserSO.class);
 						UserReqDTO userReqDTO = new UserReqDTO();
-						userReqDTO.setUserId(getManagedBean().getFlRequest().getApproverId());
-						userReqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
-						userReqDTO.setGroupId(getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId());
+						userReqDTO.setUserId(flRequest.getApproverId());
+						userReqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
+						userReqDTO.setGroupId(flRequest.getPmUserGroup().getUserGroupId());
 						userReqDTO.setRoleCode(RoleCode.FL_APPROVER.value());
 						userReqDTO.setNotify(Boolean.TRUE);
 						userReqDTO.setApprovalLimit(calculatesTotalOrderedAmt());
-						userReqDTO.setDocType(getManagedBean().getFlRequest().getDocType());
-						userReqDTO.setDocNo(getManagedBean().getFlRequest().getDocNo());
-						UserResDTO resDTO = userSO.validateUserAlt(userReqDTO);
-						if (resDTO.getUserStatus().equals(2)) {
+						userReqDTO.setDocType(flRequest.getDocType());
+						userReqDTO.setDocNo(flRequest.getDocNo());
+						UserResDTO resDTO = userSO.validateUserByRoleCode(userReqDTO);
+						if (resDTO.getUserStatus().equals(FulfilmentConst.REPLACE_USER)) {
 							throw new EpException(MessageConst.ERROR_740129, new String[] { resDTO.getPmUser()
 									.getUserName() });
-						} else if (resDTO.getUserStatus().equals(0)) {
-							// Send notification PTJ Admin
-							throw new EpException(MessageConst.ERROR_700128, new String[] { getEpRoleDescByRoleCode(RoleCode.FL_APPROVER.value()),
-									getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgValidity().getOrgName() });
+						} else if (resDTO.getUserStatus().equals(FulfilmentConst.INACTIVE_USER)) {
+							throw new EpException(MessageConst.ERROR_700128, new String[] {
+									getEpRoleDescByRoleCode(RoleCode.FL_APPROVER.value()),
+									flRequest.getPreparedOrgProfile().getOrgValidity().getOrgName() });
 						}
 					}
 					if(getManagedBean().getSelectedApprover() == null){
@@ -5440,24 +5440,24 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				}
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)){
 					// #31788 - validate requisitioner active/inactive
-					userSO = BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+					userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IUserSO.class);
 					UserReqDTO userReqDTO = new UserReqDTO();
-					userReqDTO.setUserId(getManagedBean().getFlRequest().getRequistioner().getUser().getUserId());
-					userReqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile()
-							.getOrgProfileId());
+					userReqDTO.setUserId(flRequest.getRequistioner().getUser().getUserId());
+					userReqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
 					userReqDTO.setRoleCode(RoleCode.REQUISITIONER.value());
-					userReqDTO.setDocType(getManagedBean().getFlRequest().getDocType());
-					userReqDTO.setDocNo(getManagedBean().getFlRequest().getDocNo());
+					userReqDTO.setDocType(flRequest.getDocType());
+					userReqDTO.setDocNo(flRequest.getDocNo());
 					userReqDTO.setNotify(Boolean.TRUE);
-					UserResDTO resDTO = userSO.validateUserAlt(userReqDTO);
-					if (resDTO.getUserStatus().equals(2)) {
+					UserResDTO resDTO = userSO.validateUserByRoleCode(userReqDTO);
+					if (resDTO.getUserStatus().equals(FulfilmentConst.REPLACE_USER)) {
 						getManagedBean().setAssignNewUser(Boolean.TRUE);
 						UserResDTO availableUser = userSO.retrieveUserByRoleWithLoginHistory(userReqDTO);
 						getManagedBean().setNewUser(availableUser.getPmUser());
-					} else if (resDTO.getUserStatus().equals(0)) {
-						throw new EpException(MessageConst.ERROR_700128, new String[] { getEpRoleDescByRoleCode(RoleCode.REQUISITIONER.value()),
-								getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgValidity().getOrgName() });
+					} else if (resDTO.getUserStatus().equals(FulfilmentConst.INACTIVE_USER)) {
+						throw new EpException(MessageConst.ERROR_700128, new String[] {
+								getEpRoleDescByRoleCode(RoleCode.REQUISITIONER.value()),
+								flRequest.getPreparedOrgProfile().getOrgValidity().getOrgName() });
 					}
 				}
 			}
@@ -5995,7 +5995,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			AddressResDTO resDTO = addressSO.retrieveReceivingOfficerList(reqDTO);
 			if(resDTO.getAddressTypeList().isEmpty()){
 				// #31788 - Update alert message when receiving officer is not exist
-				throw new EpException(MessageConst.ERROR_745077, new String[]{delAddr.getFlAddress().getAddressName()});
+				throw new EpException(MessageConst.ERROR_745077,
+						new String[] { delAddr.getFlAddress().getAddressName() });
 			}
 		}
 		

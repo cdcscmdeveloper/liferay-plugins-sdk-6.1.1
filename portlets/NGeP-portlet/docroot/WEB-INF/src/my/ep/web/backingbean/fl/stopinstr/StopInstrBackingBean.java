@@ -81,6 +81,7 @@ import my.ep.persistence.entity.fl.order.FlStopInstrItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
+import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
@@ -1157,26 +1158,25 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		
 		// #31788 - Start validate fl approver status
 		if (hasSupplierRole() && outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)) {
-			FlStopInstr stopInstr = getManagedBean().getStopInstr();
+			FlFulfilmentRequest flRequest = getManagedBean().getStopInstr().getFlRequest();
 			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IUserSO.class);
 			IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
-			FlActor flApprover = fulfilmentSO.retrieveFlActors(stopInstr.getFlRequest().getDocType(), stopInstr
-					.getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
-			BigDecimal sumItemAmt = fulfilmentSO.getSumTotalItemsAmtByReqId(stopInstr.getFlRequest()
-					.getFulfilmentReqId());
+			FlActor flApprover = fulfilmentSO.retrieveFlActors(flRequest.getDocType(), flRequest.getFulfilmentReqId(),
+					RoleCode.FL_APPROVER.value());
+			BigDecimal sumItemAmt = fulfilmentSO.getSumTotalItemsAmtByReqId(flRequest.getFulfilmentReqId());
 			UserReqDTO userReqDTO = new UserReqDTO();
 			userReqDTO.setUserId(flApprover.getUser().getUserId());
-			userReqDTO.setOrgProfileId(stopInstr.getFlRequest().getPreparedOrgProfile().getOrgProfileId());
-			userReqDTO.setGroupId(stopInstr.getFlRequest().getPmUserGroup().getUserGroupId());
+			userReqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
+			userReqDTO.setGroupId(flRequest.getPmUserGroup().getUserGroupId());
 			userReqDTO.setRoleCode(RoleCode.FL_APPROVER.value());
 			userReqDTO.setApprovalLimit(sumItemAmt);
-			UserResDTO resDTO = userSO.validateUserAlt(userReqDTO);
-			if (resDTO.getUserStatus().equals(2)) {
+			UserResDTO resDTO = userSO.validateUserByRoleCode(userReqDTO);
+			if (resDTO.getUserStatus().equals(FulfilmentConst.REPLACE_USER)) {
 				getManagedBean().setAssignNewUser(Boolean.TRUE);
-			} else if (resDTO.getUserStatus().equals(0)) {
-				PmOrgProfile orgProfile = stopInstr.getFlRequest().getPreparedOrgProfile();
+			} else if (resDTO.getUserStatus().equals(FulfilmentConst.INACTIVE_USER)) {
+				PmOrgProfile orgProfile = flRequest.getPreparedOrgProfile();
 				throw new EpException(MessageConst.ERROR_740130,
 						new String[] { orgProfile.getOrgValidity().getOrgName(),
 								getEpRoleDescByRoleCode(RoleCode.FL_APPROVER.value()) });

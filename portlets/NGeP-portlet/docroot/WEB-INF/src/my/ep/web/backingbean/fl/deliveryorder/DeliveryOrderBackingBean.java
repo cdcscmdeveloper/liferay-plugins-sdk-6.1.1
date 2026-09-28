@@ -378,8 +378,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				reqDTO.setApproverUserList(approverUserList);
 				
 				// 31788 - Check new user need to be assigned
-				// Noted: Payload use approverlist index, get the first index for new assign user.
-				if(getManagedBean().isAssignNewUser()){
+				if (getManagedBean().isAssignNewUser()) {
 					reqDTO.setAssignNewUser(Boolean.TRUE);
 					reqDTO.setNewUser(approverUserList.get(0));
 				}
@@ -1182,18 +1181,17 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 					IUserSO.class);
 			FlActor flApprover = fulfilmentSO.retrieveFlActors(flRequest.getDocType(), flRequest.getFulfilmentReqId(),
 					RoleCode.FL_APPROVER.value());
-			BigDecimal sumItemAmt = fulfilmentSO.getSumTotalItemsAmtByReqId(getManagedBean().getFulfilmentRequest()
-					.getFulfilmentReqId());
+			BigDecimal sumItemAmt = fulfilmentSO.getSumTotalItemsAmtByReqId(flRequest.getFulfilmentReqId());
 			UserReqDTO userReqDTO = new UserReqDTO();
 			userReqDTO.setUserId(flApprover.getUser().getUserId());
 			userReqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
 			userReqDTO.setGroupId(flRequest.getPmUserGroup().getUserGroupId());
 			userReqDTO.setRoleCode(RoleCode.FL_APPROVER.value());
 			userReqDTO.setApprovalLimit(sumItemAmt);
-			UserResDTO userResDTO = userSO.validateUserAlt(userReqDTO);
-			if (userResDTO.getUserStatus().equals(2)) {
+			UserResDTO userResDTO = userSO.validateUserByRoleCode(userReqDTO);
+			if (userResDTO.getUserStatus().equals(FulfilmentConst.REPLACE_USER)) {
 				getManagedBean().setAssignNewUser(Boolean.TRUE);
-			} else if (userResDTO.getUserStatus().equals(0)) {
+			} else if (userResDTO.getUserStatus().equals(FulfilmentConst.INACTIVE_USER)) {
 				PmOrgProfile orgProfile = flRequest.getPreparedOrgProfile();
 				throw new EpException(MessageConst.ERROR_740130,
 						new String[] { orgProfile.getOrgValidity().getOrgName(),

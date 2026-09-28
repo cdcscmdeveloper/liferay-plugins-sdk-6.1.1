@@ -689,12 +689,12 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 			if(userResDTO.getUserList() == null || userResDTO.getUserList().isEmpty()){
 				// 31788 - Update alert message and send notification
-				userSO.sendNotifyToPtjAdminInactive(flRequest.getPreparedOrgProfile().getOrgProfileId(),
-						RoleCode.PAY_OFFICER.value(), ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE, getManagedBean()
-								.getAdjustment().getDocNo());
-				throw new EpException(MessageConst.ERROR_700128, new String[] { getEpRoleDescByRoleCode(RoleCode.PAY_OFFICER.value()),
+				userReqDTO.setDocNo(getManagedBean().getAdjustment().getDocNo());
+				userReqDTO.setDocType(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
+				userSO.sendNotifyToPtjAdminInactive(userReqDTO);
+				throw new EpException(MessageConst.ERROR_700128, new String[] {
+						getEpRoleDescByRoleCode(RoleCode.PAY_OFFICER.value()),
 						flRequest.getPreparedOrgProfile().getOrgValidity().getOrgName() });
-				//throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.paymentMatchOfficer",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 			}
 			// Temp setTextBeforeSign : DocNo+Type
 			StringBuilder sb = new StringBuilder();
