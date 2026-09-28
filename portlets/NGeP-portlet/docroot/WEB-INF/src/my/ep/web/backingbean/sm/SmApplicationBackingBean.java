@@ -4259,6 +4259,11 @@ public class SmApplicationBackingBean extends
 					log.info("******* This is facility for special category page ********");
 					SmApplicationUtil
 							.handleShowOrHideFacilityPanels(getManagedBean());
+					//#28775 - start
+					if (getManagedBean().isSupplierUser()) {
+						getManagedBean().getSmAppl().setSiteVisitGroup(true);
+					}
+					//#28775 - end
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP:
 					getManagedBean().setMachineCategoryVOList(
@@ -9218,6 +9223,7 @@ public class SmApplicationBackingBean extends
 						.getSelectedShareHolders()) {
 					getManagedBean().getSmAppl().getSmPersonnels().remove(shr);
 					getManagedBean().getSmapplShareHolders().remove(shr);
+					SmAIDocBackingBean.forgetEpfUserEdit(getManagedBean().getSmAppl(), shr.getIdentificationNo());	//#40112
 				}
 				saveOrUpdateAppl();
 				SmApplicationUtil.setPrevApprovedPersonnelNoneEditable(
@@ -18766,14 +18772,14 @@ public class SmApplicationBackingBean extends
 								}
 							}
 						}
+						// #36718 - Start
+						getManagedBean().setReassignAddress(false);
+						// #36718 - End
 					}
 				}
 				getManagedBean().setSelectedShareHolder(this.getManagedBean().getSelectedShareHolder());
 			}
 		}
-		// #36718 - Start
-		getManagedBean().setReassignAddress(false);
-		// #36718 - End
 	}
 	//#32014 - END
 	//30766 START
