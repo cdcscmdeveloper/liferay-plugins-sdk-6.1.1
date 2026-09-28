@@ -13709,6 +13709,7 @@ public class SmApplicationBackingBean extends
 		//#40112 - start
 		addr.clearCountryAI();
 		addr.clearStateAI();
+		addr.clearDivisionAI();
 		addr.clearDistrictAI();
 		addr.clearCityAI();
 		//#40112 - end
@@ -13764,6 +13765,7 @@ public class SmApplicationBackingBean extends
 	public void onChangeState(SmAddress addr, String panelName) {
 		//#40112 - start
 		addr.clearStateAI();
+		addr.clearDivisionAI();
 		addr.clearDistrictAI();
 		addr.clearCityAI();
 		//#40112 - end
@@ -17638,6 +17640,7 @@ public class SmApplicationBackingBean extends
 	
 	public void onChangeDistrictByDivision(SmAddress addr, String panelName) {
 		//#40112 - start
+		addr.clearDivisionAI();
 		addr.clearDistrictAI();
 		addr.clearCityAI();
 		//#40112 - end
@@ -20156,13 +20159,21 @@ public class SmApplicationBackingBean extends
 		fac.setOwnerName(te.getLandlordsName());
 		
 		SmAddress addr = fac.getSmAddress();
-		PmCity city = te.getPmCity();
-		if (city != null){
-			addr.setStateId(city.getPmDistrict().getPmState().getStateId());
+		// a level AI did not resolve stays as the applicant left it
+		if (te.getPmState() != null){
+			addr.setStateId(te.getPmState().getStateId());
 			onChangeState(addr, SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
-			addr.setDistrictId(city.getPmDistrict().getDistrictId());
+		}
+		if (te.getPmDivision() != null){
+			addr.setDivisionId(te.getPmDivision().getDivisionId());
+			onChangeDistrictByDivision(addr, SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
+		}
+		if (te.getPmDistrict() != null){
+			addr.setDistrictId(te.getPmDistrict().getDistrictId());
 			onChangeDistrict(addr, SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
-			addr.setCityId(city.getCityId());
+		}
+		if (te.getPmCity() != null){
+			addr.setCityId(te.getPmCity().getCityId());
 			onChangeCity(addr, SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
 		}
 		addr.setPostcode(te.getPostcode());
@@ -20176,11 +20187,18 @@ public class SmApplicationBackingBean extends
 		addr.setAddress2AI(te.getAddr2());
 		addr.setAddress3AI(te.getAddr3());
 		addr.setPostcodeAI(te.getPostcode());
-		if (city != null){
-			addr.setCityIdAI(city.getCityId());
-			addr.setDistrictIdAI(city.getPmDistrict().getDistrictId());
-			addr.setStateIdAI(city.getPmDistrict().getPmState().getStateId());
+		if (te.getPmState() != null){
+			addr.setStateIdAI(te.getPmState().getStateId());
 			addr.setCountryIdAI(SmCommonUtil.getMyCountryId());
+		}
+		if (te.getPmDivision() != null){
+			addr.setDivisionIdAI(te.getPmDivision().getDivisionId());
+		}
+		if (te.getPmDistrict() != null){
+			addr.setDistrictIdAI(te.getPmDistrict().getDistrictId());
+		}
+		if (te.getPmCity() != null){
+			addr.setCityIdAI(te.getPmCity().getCityId());
 		}
 	}
 	
