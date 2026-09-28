@@ -21,6 +21,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
@@ -209,14 +210,23 @@ public abstract class BaseManagedBean implements Serializable {
 	private boolean displayLabelRegistrationStatus;
 	private boolean displayDropdownRegStatus;
 //	37925 END
-	
+
 	// #25651 - Start
 	List<ScQtFinalizationReportDetail> scQtFinalizationReportDetail; 
 	private List<ScQtFinalizationReportDetail> removeFinalizationReportDetails;
 	private ScQtFinalizationReportDetail selectedBriefingReportDetail;
 	private List<ScQtFinalizationReportDetail> evaluationReportDetailList;
-	
 	private List<Map.Entry<String, String>> reportDetail = new ArrayList<>();
+	
+	// 31788 - start
+    private boolean assignNewUser = false;
+    private PmUser newUser;
+    // 31788 - end
+    
+    // #34444 START
+ 	@ManagedProperty("#{lbl}")
+ 	private ResourceBundle resourceBundle;
+ 	// #34444 END
 	
 	public BaseManagedBean(){
 		reportDetail.add(new AbstractMap.SimpleEntry<>(SourcingConstants.DOC_DEF_KEY_LAPORAN_KERTAS_TAKLIMAT_UMUM,
@@ -231,16 +241,19 @@ public abstract class BaseManagedBean implements Serializable {
 				SourcingConstants.LAPORAN_KERTAS_TAKLIMAT_PERTIMBANGAN_ANALISIS));
 	}
 	
+	public List<ScQtFinalizationReportDetail> getScQtFinalizationReportDetail() {
+		return scQtFinalizationReportDetail;
+	}
+
+	public void setScQtFinalizationReportDetail(List<ScQtFinalizationReportDetail> scQtFinalizationReportDetail) {
+		this.scQtFinalizationReportDetail = scQtFinalizationReportDetail;
+	}
+	
 	public List<Map.Entry<String, String>> getReportDetail() {
 	    return reportDetail;
 	}
 	// #25651 - End
-	
-	// #34444 START	
-	@ManagedProperty("#{lbl}")
-	private ResourceBundle resourceBundle;
-	// #34444 END
-	
+		
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
 	}
@@ -1295,16 +1308,8 @@ public abstract class BaseManagedBean implements Serializable {
 		this.displayDropdownRegStatus = displayDropdownRegStatus;
 	}
 //	37925 END
-	
-	// #25651 - Start
-	public List<ScQtFinalizationReportDetail> getScQtFinalizationReportDetail() {
-		return scQtFinalizationReportDetail;
-	}
 
-	public void setScQtFinalizationReportDetail(List<ScQtFinalizationReportDetail> scQtFinalizationReportDetail) {
-		this.scQtFinalizationReportDetail = scQtFinalizationReportDetail;
-	}
-	
+	// #25651 - Start
 	public List<ScQtFinalizationReportDetail> getRemoveFinalizationReportDetails() {
 		return removeFinalizationReportDetails;
 	}
@@ -1330,15 +1335,33 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 	// #25651 - End
 	
+	//31788 - start
+	public boolean isAssignNewUser() {
+		return assignNewUser;
+	}
+
+	public void setAssignNewUser(boolean assignNewUser) {
+		this.assignNewUser = assignNewUser;
+	}
+
+	public PmUser getNewUser() {
+		return newUser;
+	}
+
+	public void setNewUser(PmUser newUser) {
+		this.newUser = newUser;
+	}
+	//31788 end
+	
 	// #34444 START
 	public ResourceBundle getResourceBundle() {
-	    return resourceBundle;
+		return resourceBundle;
 	}
 
 	public void setResourceBundle(ResourceBundle resourceBundle) {
-	    this.resourceBundle = resourceBundle;
+		this.resourceBundle = resourceBundle;
 	}
-	
+
 	public String getBtnAction() {
 		Object value = FacesContext.getCurrentInstance().getViewRoot().getViewMap().get("btnAction");
 
