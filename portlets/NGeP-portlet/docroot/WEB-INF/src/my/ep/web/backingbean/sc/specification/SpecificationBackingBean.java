@@ -21156,7 +21156,7 @@ public class SpecificationBackingBean extends
 		Date effDate = appVerDtls.getEffDate();
 		Timestamp effTimestamp = new Timestamp(effDate.getTime());
 
-		if ((createdDate.before(effTimestamp) && !checkStatusWip)) {
+		if ((createdDate.before(effTimestamp) && !checkStatusWip && this.getManagedBean().getWipStatusMax() <= SourcingConstants.SCORE_SETTING_TYPE_FINANCIAL_BY_ITEM)) {
 			//null != publishDate && publishDate.before(effDate)
 			this.getManagedBean().setWeightage35384WIP(true);
 		}

@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  */
 
 package my.ep.web.backingbean.sc.loiloa;
@@ -7767,6 +7767,7 @@ public class LOIDetailBackingBean extends
 		if (currentEvalStage.equalsIgnoreCase(SourcingConstants.EVAL_STAGE_RECOMMENDATION_PKG)) {
 			evalstageT = SourcingConstants.EVAL_STAGE_TECHNICAL;
 			evalstageF = SourcingConstants.EVAL_STAGE_FINANCIAL_PKG;
+			requestItemID = null;
 		} else if (currentEvalStage.equalsIgnoreCase(SourcingConstants.EVAL_STAGE_RECOMMENDATION_ITM)) {
 			//if WIP cannot use Evalstage TI have to change T, 4serangkai deployment only can use TI
 			//evalstageT = SourcingConstants.EVAL_STAGE_TECHNICAL;
