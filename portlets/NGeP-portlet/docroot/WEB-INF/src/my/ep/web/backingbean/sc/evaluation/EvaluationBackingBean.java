@@ -2858,6 +2858,8 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 					 * );
 					 */
 					evaluationStageStatusCheck();
+					checkWeightage35384WIP(); //#38151
+					summaryReqDTO.setWeightage35384WIP(this.getManagedBean().isWeightage35384WIP());//#38151
 					evaluationSo.prepareFinancialEvaluationSummary(summaryReqDTO);
 					getManagedBean().setFinancialSummaryGenerated(true);
 				} else {
@@ -2878,6 +2880,8 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 					}
 					// #25138 - end
 
+					checkWeightage35384WIP(); //#38151
+					summaryReqDTO.setWeightage35384WIP(this.getManagedBean().isWeightage35384WIP());//#38151
 					evaluationSo.prepareFinancialEvaluationSummary(summaryReqDTO);
 					getManagedBean().setFinancialSummaryGenerated(true);
 				}
