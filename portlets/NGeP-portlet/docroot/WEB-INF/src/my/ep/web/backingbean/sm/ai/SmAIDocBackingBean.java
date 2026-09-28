@@ -1081,6 +1081,20 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	/**
+	 * A deleted personnel takes its accepted and edited fields with it, so the same IC added back
+	 * by hand carries no AI icon.
+	 * @param appl
+	 * @param identificationNo
+	 */
+	public static void forgetEpfUserEdit(SmAppl appl, String identificationNo){
+		String nric = AiDocValidator.normalizeNric(identificationNo);
+		for (AIApiResponse response : findResponses(appl, TYPE_EPF)){
+			Map<String, Set<String>> edits = AiUserEdit.parse(response.getUserEdit());
+			persistUserEdit(response, edits, AiUserEdit.forget(edits, nric));
+		}
+	}
+
+	/**
 	 * Applying an extracted tenancy statement accepts every field it carries, and re-applying makes
 	 * fields edited since AI-populated again.
 	 * @param appl
