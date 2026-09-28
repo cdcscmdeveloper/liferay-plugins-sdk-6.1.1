@@ -36,28 +36,28 @@
 			title="#{lbl['lbl.sc.confirmation']}"
 			okAction="evaluationMeetingBackingBean.submitMettingDetails()"
 			content="#{lbl['lbl.sc.popup.sendproposaleval']}" />
-		<ui:remove>#34444 Start</ui:remove>
+		<!-- #34444 -  start -->
 		<ac:confirmationPopup id="confirmUpdateAsAttendId"
 			widget="confirmUpdateAsAttendPopup" loadingWidget="blockWidget"
 			title="#{lbl['lbl.sc.confirmation']}"
 			okAction=""
 			content="#{lbl['lbl.sc.popup.updateasattended']}"
 			oncompleteOk="popupConfirmInfoDlg.show();" />
-		<ui:remove>#34444 End</ui:remove>
+		<!-- #34444 -  end-->
 		<ac:confirmationPopup id="confirmUpdatePresentationDemoId"
 			widget="confirmUpdatePresentationDemoPopup" loadingWidget="blockWidget"
 			title="#{lbl['lbl.sc.eva.technical.presentation.demo.submit.message1']}"
 			okAction="evaluationBackingBean.submitPrepareEvaluationDetails('SUBMIT')"
 			content="#{lbl['lbl.sc.eva.technical.presentation.demo.submit.message1']} #{evaluationBackingBean.managedBean.scQt.qtNo} #{lbl['lbl.sc.eva.technical.presentation.demo.submit.message2']} #{evaluationBackingBean.managedBean.passingScore}% #{lbl['lbl.sc.eva.technical.presentation.demo.submit.message3']}" />
 
-		<ui:remove>#34444 Start</ui:remove>
+		<!-- #34444 -  start -->
 		<ac:confirmationPopupQT id="popupConfirmInfoDlg"
 			widget="popupConfirmInfoDlg"
 			okAction="evaluationBackingBean.submitPrepareEvaluationDetails(evaluationBackingBean.managedBean.btnAction)"
 			title="#{evaluationBackingBean.managedBean.confirmTitle}"
 			content="#{evaluationBackingBean.managedBean.confirmContent}"
 			update="@all" okProcess="@all" oncompleteOk="" />
-		<ui:remove>#34444 End</ui:remove>
+		<!-- #34444 -  end-->
 
 		<ui:fragment
 			rendered="#{evaluationBackingBean.managedBean.tabActiveIndex eq 5}">
@@ -67,7 +67,7 @@
 					value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 				<ui:param name="validityDaysExpiredQt"
 					value="#{evaluationBackingBean.checkProposalValidityDateReach(evaluationBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
-				<ui:remove><!-- #34444 -  start --></ui:remove>
+				<!-- #34444 -  start -->
 				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 					rendered="#{validityDaysExpiredQt and bpmAction != 'SUBMIT' and bpmAction != 'REVISEBP'}" onstart="blockWidget.show();"
 					oncomplete ="blockWidget.hide(); popupConfirmInfoDlg.show();" style="float:right;"
@@ -85,7 +85,8 @@
 					oncomplete="blockWidget.hide(); confirmUpdateAsAttendPopup.show();" style="float:right;" 
 					actionListener="#{evaluationBackingBean.managedBean.prepareAction(bpmAction)}" 
 					process="@form" update="@form"/>
-				<ui:remove><!-- 6906 end - #34444 end --></ui:remove> 
+					<!-- #34444 -  end-->
+				<ui:remove><!-- 6906 --></ui:remove> 
 			</ui:repeat>
 		</ui:fragment>
 		<ui:fragment
@@ -97,14 +98,15 @@
 					value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 				<ui:param name="validityDaysExpiredQt"
 					value="#{evaluationBackingBean.checkProposalValidityDateReach(evaluationBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
-				 <ui:remove><!--#34444 start--></ui:remove>
+				 <!-- #34444 -  start -->
 				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 					rendered="#{validityDaysExpiredQt and bpmAction != 'SUBMIT' and bpmAction != 'REVISEBP'}" onstart="blockWidget.show();"
 					disabled="#{evaluationBackingBean.managedBean.isEvalStatusComp()}"
 					oncomplete="blockWidget.hide(); confirmUpdateAsAttendPopup.show();" style="float:right;" 
 					actionListener="#{evaluationBackingBean.managedBean.prepareAction(bpmAction)}" 
-					process="@form" update="@form" /> 
-					<ui:remove><!--  #28784 end / #34444 end --></ui:remove>
+					process="@form" update="@form" />
+					<!-- #34444 -  end-->
+					<ui:remove><!--  #28784 --></ui:remove>
 				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button" rendered="#{validityDaysExpiredQt and bpmAction == 'SUBMIT'}"
 					disabled="#{evaluationBackingBean.managedBean.isEvalStatusComp()}" action="#{evaluationBackingBean.checkingForBeforeDemoMeetingDetails()}"
 					style="float:right;"/>

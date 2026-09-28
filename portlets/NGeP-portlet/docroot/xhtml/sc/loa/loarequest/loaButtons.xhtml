@@ -40,10 +40,10 @@
 					and !(!qtLOABackingBean.managedBean.ableToSubmitLOA and lOADetailBackingBean.isApproverAbleToSave())}" process="@form" update="@form"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" /><ui:remove>#21692</ui:remove>
 
-				<ui:remove>#34444 START</ui:remove>
+				<!-- #34444 -  start -->
 				<ui:param name="popupMsgActionBtn"
 					value="#{lOADetailBackingBean.submitConformationForLampiranA3()}" />
-					<ui:remove>#34444 END</ui:remove>
+					<!-- #34444 -  end-->
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt and isSqStillValid and qtLOABackingBean.managedBean.ableToSubmitLOA}"
 					 process="@form"
@@ -188,10 +188,10 @@
 									action="#{lOADetailBackingBean.approveBeforeupdateBpmTaskAction(bpmAction)}"
 									partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
 									update="#{isReject ? '@this' : '@form'}" /><ui:remove>21692</ui:remove>
-								<ui:remove>#34444 START</ui:remove>
+								<!-- #34444 -  start -->
 								<ui:param name="popupMsgActionBtn"
 									value="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}" />
-								<ui:remove>#34444 END</ui:remove>
+								<!-- #34444 -  end-->
 								<ui:remove>21692 - Start</ui:remove>
 								<p:commandButton value="#{lbl[buttonLabel]}"
 									styleClass="ui-button" onstart="blockWidget.show();"
@@ -383,11 +383,11 @@
 		content="#{lbl['lbl.sc.loa.cancel.dialog.confirm.reject.message']}" update="@form" />				
 	<ui:remove>34449 - end</ui:remove>
 
-	<ui:remove>#34444 Start Ann</ui:remove>
+	<!-- #34444 -  start -->
 	<ac:confirmationPopupQT id="popupConfirmInfoDlg"
 		widget="popupConfirmInfoDlg"		
 		title="#{lOADetailBackingBean.managedBean.confirmTitle}"
 		content="#{lOADetailBackingBean.managedBean.confirmContent}"
 		update="@form" okProcess="@form" okAction= "#{popupMsgActionBtn}" />
-	<ui:remove>#34444 End Ann</ui:remove>
+	<!-- #34444 -  end-->
 </ui:composition>

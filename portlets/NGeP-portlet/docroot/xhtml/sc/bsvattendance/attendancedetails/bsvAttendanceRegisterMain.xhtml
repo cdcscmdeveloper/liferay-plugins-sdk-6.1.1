@@ -20,7 +20,7 @@
 		<div class="ppRightBtn">
 			<h:panelGroup id="bsvattandanceBtns">
 
-				<ui:remove>#34444 Start</ui:remove>
+				<!-- #34444 -  start -->
 				<ui:repeat var="bpmAction"
 					value="#{bsvAttendanceBackingBean.managedBean.outComes}">
 					<ui:param name="buttonLabel"
@@ -38,8 +38,7 @@
 						content="#{bsvAttendanceBackingBean.managedBean.confirmContent}"
 						update="@form"
 						oncompleteOk="confirmSubmit.show();" />
-					<!-- action="#{bsvAttendanceBackingBean.submitBsvDetails(bpmAction)}" -->
-			   <ui:remove>#34444 End</ui:remove>
+			   <!-- #34444 -  end-->
 
 					<p:confirmDialog id="confirmSubmit"
 						header="#{lbl['lbl.sc.dialog.cofirm.header']}"
