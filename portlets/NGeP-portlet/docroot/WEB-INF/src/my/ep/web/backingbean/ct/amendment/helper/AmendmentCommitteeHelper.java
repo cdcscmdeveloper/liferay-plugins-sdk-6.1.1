@@ -3,23 +3,23 @@
  */
 package my.ep.web.backingbean.ct.amendment.helper;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.ArrayList; //#24336
+import java.util.Arrays; //#24336
+import java.util.Collections; //#24336
+import java.util.Comparator; //#24336
 import java.util.List;
 
-import javax.faces.model.SelectItem;
+import javax.faces.model.SelectItem; //#24336
 
 import org.primefaces.context.RequestContext;
 
-import my.ep.biz.bean.search.SearchBean;
-import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
+import my.ep.biz.bean.search.SearchBean; //#24336
+import my.ep.biz.bean.search.SearchFilterBean; //#24336
+import my.ep.biz.service.ct.maintain.IContractAmendmentSO; //#24336
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.ct.ContractConst;
+import my.ep.constant.ct.ContractConst; //#24336
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -31,16 +31,16 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmParameter;
-import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.type.aut.SearchOperator;
+import my.ep.persistence.entity.pm.common.PmParameterDesc; //#24336
+import my.ep.type.aut.SearchOperator; //#24336
 import my.ep.type.pm.RoleCode;
-import my.ep.util.SLAUtils;
+import my.ep.util.SLAUtils; //#24336
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.constant.ct.ContractHashSetConst;
 import my.ep.web.managedbean.ct.amendment.AmendmentManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.ParameterHelper; //#24336
 
 /**
  * CommitteeHelper is a domain-specific helper class responsible for
@@ -458,6 +458,7 @@ public class AmendmentCommitteeHelper {
 		}
 	}
 	
+	//#41383 start
 	/**
 	 * Determines whether the user is allowed to access chairperson
 	 * functionality for a quotation committee. When the committee type is QCA
@@ -476,17 +477,19 @@ public class AmendmentCommitteeHelper {
 		boolean allow = allowChairpersonRole;
 
 		if (isQuotationCommitteeTypeAC() || isQCBCommitteeWIP()) {
-			allow = false;
 			for (PmRoleDesc pmRoleDesc : userResDTO.getRoleDescList()) {
 				String roleCode = pmRoleDesc.getPmRole().getRoleCode();
-				if (isValidChairpersonRole(roleCode) && orgProfileId.equals(ctOwnerOrgProfileId)) {
+				if (isValidChairpersonRole(roleCode)) {
 					allow = true;
 					break;
+				} else {
+					allow = false;
 				}
 			}
 		}
 		return allow;
 	}
+	//#41383 end
 	
 	/**
 	 * Validates whether the given role code matches the chairperson role
