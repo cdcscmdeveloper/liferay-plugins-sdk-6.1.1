@@ -38,13 +38,13 @@
 				</table>
 			</p:column>
 			<ui:remove><!-- 6906 - end --></ui:remove>
-
-			<p:column headerText="#{lbl['lbl.sc.total.score']}"
+			<ui:remove><!-- 21695 & 25138 --></ui:remove>
+			<p:column headerText="#{lbl['lbl.sc.total.score']}" rendered="#{evaluationBackingBean.managedBean.isScoringReq}"
 				style="width:25%;text-align:right;">
 				<h:outputText value="#{othersFinList.totalScore}"></h:outputText>
 			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.evalvation.status']}"
+			<ui:remove><!-- 21695 & 25138 --></ui:remove>
+			<p:column headerText="#{lbl['lbl.sc.evalvation.status']}" rendered="#{evaluationBackingBean.managedBean.isScoringReq}"
 				style="width:25%">
 
 
