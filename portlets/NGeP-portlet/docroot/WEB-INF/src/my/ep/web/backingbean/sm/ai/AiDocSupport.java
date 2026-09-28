@@ -26,11 +26,17 @@ import org.primefaces.json.JSONObject;
 
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.pm.common.city.CityReqDTO;
+import my.ep.dto.pm.common.district.DistrictReqDTO;
+import my.ep.dto.pm.common.division.DivisionReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.common.PmCity;
+import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
+import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmFacility;
@@ -92,11 +98,12 @@ public final class AiDocSupport {
 		public static final String F_POSTCODE = "postcode";
 		public static final String F_COUNTRY = "country";
 		public static final String F_STATE = "state";
+		public static final String F_DIVISION = "division";
 		public static final String F_DISTRICT = "district";
 		public static final String F_CITY = "city";
 		// submitting the dialog applies the whole extracted statement, so all of these are accepted at once
 		static final String[] F_TENANCY_ALL = { F_OWNER_NAME, F_RENTAL_RATE, F_ADDRESS1,
-				F_ADDRESS2, F_ADDRESS3, F_POSTCODE, F_COUNTRY, F_STATE, F_DISTRICT, F_CITY };
+				F_ADDRESS2, F_ADDRESS3, F_POSTCODE, F_COUNTRY, F_STATE, F_DIVISION, F_DISTRICT, F_CITY };
 
 		private static final Logger log = Logger.getLogger(AiUserEdit.class);
 
@@ -322,11 +329,65 @@ public final class AiDocSupport {
 				String fullAddr = addr.optString("normalized_Address", "").trim();
 				truncateAddressAtPostcode(dto, fullAddr, dto.getPostcode());
 				dto.setCodeCity(addr.optString("city_code", "").trim());
+				setTenancyArea(dto, addr.optString("state_code", "").trim(),
+						addr.optString("district_code", "").trim());
 			}
-			if (!StringUtils.isEmpty(dto.getCodeCity())) {
-				PmCity city = SmServiceLookup.getCitySO().getCityByCode(dto.getCodeCity()).getPmCity();
-				dto.setPmCity(city);
+		}
+
+		// Each code must exist under its resolved parent; a null or unknown code is not extracted.
+		private static void setTenancyArea(AiTenancyDTO dto, String stateCode, String districtCode) {
+			PmState state = StringUtils.isEmpty(stateCode) ? null
+					: SmCommonUtil.getInstance().retrieveStateByCountryCodeAndStateCode(stateCode);
+			if (state == null) {
+				return;
 			}
+			dto.setPmState(state);
+			PmDistrict district = null;
+			if (state.getAdoptDivision()) {
+				// AI sends no division code: take the division whose district list holds the district
+				DivisionReqDTO divReq = new DivisionReqDTO();
+				divReq.setStateId(state.getStateId());
+				for (PmDivision div : SmServiceLookup.getDivisionSO().retriveDivisionListByState(divReq)
+						.getDivisionList()) {
+					DistrictReqDTO distReq = new DistrictReqDTO();
+					distReq.setDivisionId(div.getDivisionId());
+					district = findDistrict(SmServiceLookup.getDistrictSO()
+							.retriveDistrictListByDivision(distReq).getDistrictList(), districtCode);
+					if (district != null) {
+						dto.setPmDivision(div);
+						break;
+					}
+				}
+			} else {
+				DistrictReqDTO distReq = new DistrictReqDTO();
+				distReq.setStateId(state.getStateId());
+				district = findDistrict(SmServiceLookup.getDistrictSO()
+						.retriveDistrictListByStateID(distReq).getDistrictList(), districtCode);
+			}
+			if (district == null) {
+				return;
+			}
+			dto.setPmDistrict(district);
+			CityReqDTO cityReq = new CityReqDTO();
+			cityReq.setDistrictId(district.getDistrictId());
+			for (PmCity c : SmServiceLookup.getCitySO().retriveCityListByDistrictId(cityReq).getCityList()) {
+				if (StringUtils.isNotEmpty(dto.getCodeCity()) && dto.getCodeCity().equals(c.getCityCode())) {
+					dto.setPmCity(c);
+					return;
+				}
+			}
+		}
+
+		private static PmDistrict findDistrict(List<PmDistrict> districts, String districtCode) {
+			if (StringUtils.isEmpty(districtCode) || districts == null) {
+				return null;
+			}
+			for (PmDistrict d : districts) {
+				if (districtCode.equals(d.getDistrictCode())) {
+					return d;
+				}
+			}
+			return null;
 		}
 
 		// Truncate the normalized address at the postcode and split into addr1/2/3.
@@ -1021,6 +1082,7 @@ public final class AiDocSupport {
 				addr.setAddress3AI(null);
 				addr.setPostcodeAI(null);
 				addr.setStateIdAI(null);
+				addr.setDivisionIdAI(null);
 				addr.setDistrictIdAI(null);
 				addr.setCityIdAI(null);
 				addr.setCountryIdAI(null);
@@ -1059,29 +1121,28 @@ public final class AiDocSupport {
 			if (accepted.contains(AiUserEdit.F_POSTCODE)) {
 				addr.setPostcodeAI(te.getPostcode());
 			}
-			setTenancyCityAiFields(addr, te.getPmCity(), accepted);
+			setTenancyAreaAiFields(addr, te, accepted);
 		}
 
-		private static void setTenancyCityAiFields(SmAddress addr, PmCity city,
+		private static void setTenancyAreaAiFields(SmAddress addr, AiTenancyDTO te,
 				Set<String> accepted) {
-			if (city == null) {
+			if (te.getPmState() == null) {
 				return;
-			}
-			if (accepted.contains(AiUserEdit.F_CITY)) {
-				addr.setCityIdAI(city.getCityId());
 			}
 			if (accepted.contains(AiUserEdit.F_COUNTRY)) {
 				addr.setCountryIdAI(SmCommonUtil.getMyCountryId());
 			}
-			if (city.getPmDistrict() == null) {
-				return;
+			if (accepted.contains(AiUserEdit.F_STATE)) {
+				addr.setStateIdAI(te.getPmState().getStateId());
 			}
-			if (accepted.contains(AiUserEdit.F_DISTRICT)) {
-				addr.setDistrictIdAI(city.getPmDistrict().getDistrictId());
+			if (te.getPmDivision() != null && accepted.contains(AiUserEdit.F_DIVISION)) {
+				addr.setDivisionIdAI(te.getPmDivision().getDivisionId());
 			}
-			if (city.getPmDistrict().getPmState() != null
-					&& accepted.contains(AiUserEdit.F_STATE)) {
-				addr.setStateIdAI(city.getPmDistrict().getPmState().getStateId());
+			if (te.getPmDistrict() != null && accepted.contains(AiUserEdit.F_DISTRICT)) {
+				addr.setDistrictIdAI(te.getPmDistrict().getDistrictId());
+			}
+			if (te.getPmCity() != null && accepted.contains(AiUserEdit.F_CITY)) {
+				addr.setCityIdAI(te.getPmCity().getCityId());
 			}
 		}
 	}
@@ -1206,6 +1267,9 @@ public final class AiDocSupport {
 		private String addr2;
 		private String addr3;
 		private String codeCity;
+		private PmState pmState;
+		private PmDivision pmDivision;
+		private PmDistrict pmDistrict;
 		private PmCity pmCity;
 
 		private boolean validLandlordsName;
@@ -1316,6 +1380,30 @@ public final class AiDocSupport {
 
 		public void setCodeCity(String codeCity) {
 			this.codeCity = codeCity;
+		}
+
+		public PmState getPmState() {
+			return pmState;
+		}
+
+		public void setPmState(PmState pmState) {
+			this.pmState = pmState;
+		}
+
+		public PmDivision getPmDivision() {
+			return pmDivision;
+		}
+
+		public void setPmDivision(PmDivision pmDivision) {
+			this.pmDivision = pmDivision;
+		}
+
+		public PmDistrict getPmDistrict() {
+			return pmDistrict;
+		}
+
+		public void setPmDistrict(PmDistrict pmDistrict) {
+			this.pmDistrict = pmDistrict;
 		}
 
 		public PmCity getPmCity() {

@@ -1051,6 +1051,9 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			if (addr.getStateIdAI() != null && !addr.isStateFromAI()){
 				changed |= AiUserEdit.add(edits, AiUserEdit.KEY_TENANCY, AiUserEdit.F_STATE);
 			}
+			if (addr.getDivisionIdAI() != null && !addr.isDivisionFromAI()){
+				changed |= AiUserEdit.add(edits, AiUserEdit.KEY_TENANCY, AiUserEdit.F_DIVISION);
+			}
 			if (addr.getDistrictIdAI() != null && !addr.isDistrictFromAI()){
 				changed |= AiUserEdit.add(edits, AiUserEdit.KEY_TENANCY, AiUserEdit.F_DISTRICT);
 			}
@@ -1447,6 +1450,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			}
 		}
 		appl.setAiStatus(state);
+		// the task list reads the column, and tenancy submit does not save the appl
+		SmServiceLookup.getAIApiProcessSO().updateAiStatus(appl.getApplId(), state);
 	}
 	
 	private static boolean showErrorMessage(String docType, List<JsonWrapper> jsonWrappers){
