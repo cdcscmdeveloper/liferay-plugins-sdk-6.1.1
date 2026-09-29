@@ -277,7 +277,8 @@ public class TemplateSpecBackingBean extends
 				}//32453-End
 				templateSpecBean.setSelectedSpecQuestion(null);
 				templateSpecBean.setSpecAnswersToDelete(null);
-				
+
+				this.getManagedBean().setTemplateSpecBean(templateSpecBean);
 				templateSpecBean.setWordBreakForQT(true);//#29007 Added Vinod
 				checkWeightage35384WIP(); //#38151
 
@@ -3980,6 +3981,12 @@ public class TemplateSpecBackingBean extends
 	
 	// #38151 Start
 	private void checkWeightage35384WIP() {
+		//#30432 - Start
+		//Fix return null during Template Specification Maintenance.
+		if (this.getManagedBean().getTemplateSpecBean().getSpecMaster().getScQtDoc() == null){
+			return;
+		}
+		//#30432 - End
 		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTDetailSO.class);
 		ScQt qt = this.getManagedBean().getTemplateSpecBean().getSpecMaster().getScQtDoc().getScQt();

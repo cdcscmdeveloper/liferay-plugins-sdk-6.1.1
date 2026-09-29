@@ -178,6 +178,21 @@
 				</ui:fragment>
 				</c:if>
 				<!-- #38679 end. new requirement-->
+				<!-- #21695 non-4ser (old) layout: show Total Weightage when weightage = Yes (as release-prd / technicalScoring) -->
+				<c:if test="#{specificationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
+				<ui:fragment
+					rendered="#{specificationBackingBean.managedBean.financialScoreSetting.weightageReq ne 'false'}">
+					<tr>
+						<td><p:outputLabel
+								value="#{lbl['lbl.sc.spec.total.weightage']}" /></td>
+						<td><p:inputText readonly="true" disabled="true"
+								style="text-align:right"
+								value="#{specificationBackingBean.managedBean.financialWeightageScore}" />
+							<ac:iconTooltip
+								value="#{lbl['lbl.sc.spec.total.weightage.tooltip']}" /></td>
+					</tr>
+				</ui:fragment>
+				</c:if>
 			</table>
 		</h:panelGroup>
 	</p:panel>

@@ -63,8 +63,9 @@
 						<ui:remove>#29187 Vinod Added Compliance checking</ui:remove>
 						<p:inputText id="sampleaddressmanualScoreEvaluation"
 							rendered="#{sampleItem.scRequestItem.tplSpecQuestion.parentSpecQuestion.sampleReq}"
-							label="#{lbl['lbl.tpl.spec.content.user.score']}" 
-							disabled="#{(sampleItem.compliance ne null and !sampleItem.compliance) or evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}"
+							label="#{lbl['lbl.tpl.spec.content.user.score']}"
+							disabled="#{(sampleItem.compliance ne null and !sampleItem.compliance) or evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
+								or evaluationBackingBean.managedBean.tabTechnicalIndex eq SourcingConstants.TECHNICAL_TAB_ACTIVE_INDEX}"
 							size="15" value="#{sampleItem.userScore}" maxlength="3"
 							style="text-align:right">
 							<ui:remove>#29187 Vinod Added Compliance checking</ui:remove>
@@ -135,22 +136,25 @@
 							<p:outputLabel value="* " styleClass="mandatory"
 								rendered="#{!evaluationBackingBean.managedBean.itemSampleReq}" /><ui:remove> #11104 - end </ui:remove>
 						</td>
-						<td><p:inputText id="sampleaddressUserScoreId"
-								rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}"
-								label="#{lbl['lbl.tpl.spec.content.user.score']}"
-								disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
-								or evaluationBackingBean.managedBean.itemSampleReq}"
-								required="#{!evaluationBackingBean.managedBean.itemSampleReq}"
-								value="#{evaluationBackingBean.managedBean.noOfContractsProposalScore.userScore}"
-								maxlength="18" style="text-align:right"><ui:remove> #11104 - start </ui:remove>
-								<ac:validateNumber
-									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
-									maxIntegerDigits="14" integerOnly="true" />
-								<f:attribute name="min" value="0" />
-								<f:attribute name="max"
-									value="#{evaluationBackingBean.managedBean.userScores}" />
-								<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
-							</p:inputText> <p:spacer width="5"></p:spacer> <h:outputText
+						<td>
+							<p:inputText id="sampleaddressUserScoreId"
+									rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}"
+									label="#{lbl['lbl.tpl.spec.content.user.score']}"
+									disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
+								or evaluationBackingBean.managedBean.itemSampleReq
+								or evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'}"
+									required="#{!evaluationBackingBean.managedBean.itemSampleReq}"
+									value="#{evaluationBackingBean.managedBean.noOfContractsProposalScore.userScore}"
+									maxlength="18" style="text-align:right">
+									<ac:validateNumber
+										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+										maxIntegerDigits="14" integerOnly="true" />
+									<f:attribute name="min" value="0" />
+									<f:attribute name="max"
+										value="#{evaluationBackingBean.managedBean.userScores}" />
+									<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
+							</p:inputText>
+								<p:spacer width="5"></p:spacer> <h:outputText
 								rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}"
 								value="/#{evaluationBackingBean.managedBean.userScores}" /> <p:message
 								id="sampleaddressUserScoreMessage"
