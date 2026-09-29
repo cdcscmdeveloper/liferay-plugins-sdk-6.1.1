@@ -2112,6 +2112,15 @@ public class SpecificationBackingBean extends
 				// Collections.sort(this.getManagedBean()
 				// .getScQtCheckSt2financeProposalList());
 				localcheckList = null;
+				//#41441 - #10141 Start Vinod
+				Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+				if (Arrays.asList(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
+						QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION,
+						QTStatusConst.SE_PENDING_SUBMISSION,
+						QTStatusConst.SE_PENDING_REVISION).contains(currentStatusId)) {
+					checkAndUpdateNewMandatoryChecklist(this.getManagedBean().getQt(), SourcingConstants.TECHNICAL_DOCTYPE);
+				}
+				//#41441 - #10141 End Vinod
 			}
 			// #40138 Start Vinod
 			else {
