@@ -107,8 +107,6 @@ import my.ep.web.vo.SoftcertUploadSuppDocVO;
 import org.apache.commons.lang3.StringUtils;
 
 import com.liferay.portal.model.Role;
-// #RUU
-import java.util.Set;
 
 @ManagedBean(name = "smApplMB")
 @SessionScoped
@@ -701,17 +699,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	// #36718 - Start
 	private boolean reassignAddress = true;
 	// #36718 - End
-	// #RUU Start
-	private boolean lateRenewFee;
-	private int normalCodeCount;
-	private int specialCodeCount;
-	private int cancelledCount;
-	private BigDecimal overlapPrice;
-	private Set<String> normalCodes;
-	private Set<String> specialCodes;
-	private Set<String> normalPersons;
-	private Set<String> specialPersons;
-	// #RUU End
 
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
@@ -4959,77 +4946,4 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.reassignAddress = reassignAddress;
 	}
 	// #36718 - End
-    // #RUU Start
-	public boolean isLateRenewFee() {
-		return lateRenewFee;
-	}
-
-	public void setLateRenewFee(boolean lateRenewFee) {
-		this.lateRenewFee = lateRenewFee;
-	}
-
-	public int getNormalCodeCount() {
-		return normalCodeCount;
-	}
-
-	public void setNormalCodeCount(int normalCodeCount) {
-		this.normalCodeCount = normalCodeCount;
-	}
-
-	public int getSpecialCodeCount() {
-		return specialCodeCount;
-	}
-
-	public void setSpecialCodeCount(int specialCodeCount) {
-		this.specialCodeCount = specialCodeCount;
-	}
-
-	public int getCancelledCount() {
-		return cancelledCount;
-	}
-
-	public void setCancelledCount(int cancelledCount) {
-		this.cancelledCount = cancelledCount;
-	}
-
-	public BigDecimal getOverlapPrice() {
-		return overlapPrice;
-	}
-
-	public void setOverlapPrice(BigDecimal overlapPrice) {
-		this.overlapPrice = overlapPrice;
-	}
-
-	public Set<String> getNormalCodes() {
-		return normalCodes;
-	}
-
-	public void setNormalCodes(Set<String> normalCodes) {
-		this.normalCodes = normalCodes;
-	}
-
-	public Set<String> getSpecialCodes() {
-		return specialCodes;
-	}
-
-	public void setSpecialCodes(Set<String> specialCodes) {
-		this.specialCodes = specialCodes;
-	}
-
-	public Set<String> getNormalPersons() {
-		return normalPersons;
-	}
-
-	public void setNormalPersons(Set<String> normalPersons) {
-		this.normalPersons = normalPersons;
-	}
-
-	public Set<String> getSpecialPersons() {
-		return specialPersons;
-	}
-
-	public void setSpecialPersons(Set<String> specialPersons) {
-		this.specialPersons = specialPersons;
-	}
-	// #RUU End
 }
