@@ -186,12 +186,14 @@ public class TemplateSpecHelper {
 								newSpecQuestion.setTplSpecEstimations(null);
 								newSpecQuestion.setTplSpecScorings(null);
 
-								// 11104-start
-								newSpecQuestion.setSampleQuantity(null);
-								newSpecQuestion.setSampleScoreTypeCode(null);
-								newSpecQuestion.setSampleScore(null);
-								newSpecQuestion.setSampleReq(Boolean.FALSE);
-								// 11104-End
+								if (newSpecMaster.isSampleReq()) { // 33858, #25635
+									// 11104-start
+									newSpecQuestion.setSampleQuantity(null);
+									newSpecQuestion.setSampleScoreTypeCode(null);
+									newSpecQuestion.setSampleScore(null);
+									newSpecQuestion.setSampleReq(Boolean.FALSE);
+									// 11104-End
+								} // 33858, #25635
 
 								// #28784 Reset clone value for demo -start-
 								if(demoSpecClone) {
@@ -451,6 +453,7 @@ public class TemplateSpecHelper {
 							newSpecZoneQty.setSpecZoneQtyId(null);
 							newSpecZoneQty.setBrandNew(true);
 							newSpecZoneQty.setTplSpecQuestion(newSpecQuestion);
+							newSpecZoneQty.setTplSpecZoneOffer(null);
 							setUserDetails(newSpecZoneQty);
 							newSpecZoneQties.add(newSpecZoneQty);
 
