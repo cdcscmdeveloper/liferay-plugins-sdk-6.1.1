@@ -2221,6 +2221,15 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setDemoScoreSetting(demoScoresetting);
 			}
 
+			// #21695 default technical item score setting when by-item panel is shown (mirrors #35113 clone flow)
+			if (this.getManagedBean().getWipStatusMax() > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE
+					&& null == this.getManagedBean().getTechnicalItemScoreSetting()) {
+				ScQtScoreSetting technicalItemScoresetting = constructScoreSetting(SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM);
+				technicalItemScoresetting.setOverallTechnical(new BigDecimal(50));
+				technicalItemScoresetting.setPassingScore(new BigDecimal(50));
+				this.getManagedBean().setTechnicalItemScoreSetting(technicalItemScoresetting);
+			}
+
 			if (this.getManagedBean().getQt().isPartial()) {
 				this.getManagedBean().getTechnicalScoreSetting().setWeightageReq(false);
 			}
@@ -21156,8 +21165,11 @@ public class SpecificationBackingBean extends
 		Date effDate = appVerDtls.getEffDate();
 		Timestamp effTimestamp = new Timestamp(effDate.getTime());
 
-		if ((createdDate.before(effTimestamp) && !checkStatusWip && this.getManagedBean().getWipStatusMax() <= SourcingConstants.SCORE_SETTING_TYPE_FINANCIAL_BY_ITEM)) {
-			//null != publishDate && publishDate.before(effDate)
+		// for wip PROD usage only -start-
+		if ((createdDate.before(effTimestamp) && !checkStatusWip && this.getManagedBean().getWipStatusMax() <= SourcingConstants.SCORE_SETTING_TYPE_FINANCIAL_BY_ITEM)
+				&& !checkbyStatus())
+		// for wip PROD usage only -end-
+		{
 			this.getManagedBean().setWeightage35384WIP(true);
 		}
 	}
@@ -21167,5 +21179,15 @@ public class SpecificationBackingBean extends
 				IQTSpecSO.class);
 		return specSo.checkWipScoreFlag(qtId);
 	}
-	// #38151 End
+
+	// #38151 -for wip PROD usage only- start
+	public boolean checkbyStatus() { 
+		Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+		if (QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(currentStatusId)) {
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
+	// #38151 -for wip PROD usage only- end
+
 }
