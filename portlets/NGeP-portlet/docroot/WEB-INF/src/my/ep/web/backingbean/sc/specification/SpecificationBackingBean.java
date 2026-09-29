@@ -21183,7 +21183,8 @@ public class SpecificationBackingBean extends
 	// #38151 -for wip PROD usage only- start
 	public boolean checkbyStatus() { 
 		Long currentStatusId = this.getManagedBean().getCurrentStatusId();
-		if (QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(currentStatusId)) {
+		if (QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(currentStatusId)
+				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION.equals(currentStatusId)) {
 			return Boolean.TRUE;
 		}
 		return Boolean.FALSE;
