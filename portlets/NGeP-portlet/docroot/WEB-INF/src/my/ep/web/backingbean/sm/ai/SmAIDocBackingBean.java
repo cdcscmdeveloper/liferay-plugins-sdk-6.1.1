@@ -1140,9 +1140,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			return;
 		}
 		for (AiEpfResultDTO.AiEmployeeDTO emp : ee.getEmployees()){
-			if (emp.getNricNumber() != null && !emp.getNricNumber().trim().isEmpty()){
-				nrics.add(emp.getNricNumber().trim());
-			}
+			nrics.add(emp.getNricNumber());
 		}
 	}
 
@@ -1667,12 +1665,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				continue;
 			}
 			for (AiEpfResultDTO.AiEmployeeDTO emp : epf.getEmployees()){
-				String key = emp.getNricNumber();
-				if (StringUtils.isEmpty(key)){
-					key = emp.getKwspNumber() + "|" + emp.getEmployeeName();
-				}
-				if (!unique.containsKey(key)){
-					unique.put(key, emp);
+				if (!unique.containsKey(emp.getNricNumber())){
+					unique.put(emp.getNricNumber(), emp);
 				}
 			}
 		}
