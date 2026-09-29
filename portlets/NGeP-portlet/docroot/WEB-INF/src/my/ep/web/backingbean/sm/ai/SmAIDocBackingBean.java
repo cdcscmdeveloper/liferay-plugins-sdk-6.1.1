@@ -125,6 +125,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		SmAIDocBackingBean bean = fc.getApplication()
 				.evaluateExpressionGet(fc, "#{smAIDocBackingBean}", SmAIDocBackingBean.class);
 		if (bean != null) {
+			bean.tenancies.clear();
 			bean.initContext(docType, appl);
 		}
 	}
