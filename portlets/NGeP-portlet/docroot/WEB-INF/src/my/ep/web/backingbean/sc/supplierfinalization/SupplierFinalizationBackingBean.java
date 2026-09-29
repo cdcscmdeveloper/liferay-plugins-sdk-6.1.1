@@ -14300,7 +14300,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	
 	// #34860 start
 	/**
-	 * #34869
+	 * #34860
 	 * Initialize Justification Reason List 
 	 */
 	public void initializeJustificationReasonList() {		
