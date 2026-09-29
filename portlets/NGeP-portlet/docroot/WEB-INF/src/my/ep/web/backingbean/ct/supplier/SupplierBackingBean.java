@@ -42,8 +42,8 @@ import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.audit.AuditContractReqDTO; //35506
 import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
-import my.ep.dto.pm.authorization.user.UserStatusCheckReqDTO; //#30737
-import my.ep.dto.pm.authorization.user.UserStatusCheckResDTO; //#30737
+import my.ep.dto.pm.authorization.user.InactiveUserReqDTO; //#30737
+import my.ep.dto.pm.authorization.user.InactiveUserResDTO; //#30737
 import my.ep.dto.pm.authorization.user.UserStatusCheckDTO; //#30737
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
@@ -909,7 +909,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
   		
   	    IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 
-  	    UserStatusCheckReqDTO inactiveDto = new UserStatusCheckReqDTO();
+  	    InactiveUserReqDTO inactiveDto = new InactiveUserReqDTO();
   	    inactiveDto.setUserIds(buildUserIdString(users));
   	    inactiveDto.setUserRoleCode(roleCode);
   	    inactiveDto.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
@@ -919,7 +919,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
   	    
   	    log.info("xoxoxoxoxo getInactiveUsers docType : "+docType);
   	    
-  	    UserStatusCheckResDTO resDto = userSO.checkInactiveUserBySP(inactiveDto);
+  	    InactiveUserResDTO resDto = userSO.checkInactiveUserBySP(inactiveDto);
   	    resDto.setRoleCode(roleCode);
   	    
   	    log.info("xoxoxo getStatus "+resDto.getStatus());
@@ -941,7 +941,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
   		return sb.toString();
   	}
   	
-  	private List<UserStatusCheckDTO> buildUserStatusCheckResults(List<PmUser> users, UserStatusCheckResDTO resDto) {
+  	private List<UserStatusCheckDTO> buildUserStatusCheckResults(List<PmUser> users, InactiveUserResDTO resDto) {
 
   	    List<UserStatusCheckDTO> selectedUsers = new ArrayList<UserStatusCheckDTO>();
   	    if (!users.isEmpty()) {

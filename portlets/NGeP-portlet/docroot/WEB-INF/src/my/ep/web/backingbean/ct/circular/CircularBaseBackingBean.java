@@ -28,8 +28,8 @@ import my.ep.dto.ct.actor.CtActorReqDTO; //#30737 add import
 import my.ep.dto.ct.actor.CtActorResDTO; //#30737 add import
 import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
-import my.ep.dto.pm.authorization.user.UserStatusCheckReqDTO; //#30737
-import my.ep.dto.pm.authorization.user.UserStatusCheckResDTO; //#30737
+import my.ep.dto.pm.authorization.user.InactiveUserReqDTO; //#30737
+import my.ep.dto.pm.authorization.user.InactiveUserResDTO; //#30737
 import my.ep.dto.pm.authorization.user.UserStatusCheckDTO; //#30737 add import
 import my.ep.constant.ct.ContractStatusConst;//34442
 import my.ep.constant.pm.ParameterConst;
@@ -487,7 +487,7 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 
 		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-		UserStatusCheckReqDTO inactiveDto = new UserStatusCheckReqDTO();
+		InactiveUserReqDTO inactiveDto = new InactiveUserReqDTO();
 		String userlist = buildUserIdString(selectedUsers);
 		inactiveDto.setUserIds(userlist);
 		inactiveDto.setUserRoleCode(roleCode);
@@ -497,7 +497,7 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 		inactiveDto.setDocNo(ctCircular.getCircularNo());
 		inactiveDto.setNotifyAdmin(RoleCode.PTJ_ADMIN.value());
 
-		UserStatusCheckResDTO resDto = userSO
+		InactiveUserResDTO resDto = userSO
 				.checkInactiveUserBySP(inactiveDto);
 		resDto.setRoleCode(roleCode);
 		log.info("checkInactiveUserBySP STATUSSS : " + resDto.getStatus());
@@ -527,7 +527,7 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 
 		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-		UserStatusCheckReqDTO inactiveDto = new UserStatusCheckReqDTO();
+		InactiveUserReqDTO inactiveDto = new InactiveUserReqDTO();
 		String userlist = buildUserIdString(selectedUsers);
 		inactiveDto.setUserIds(userlist);
 		inactiveDto.setUserRoleCode(roleCode);
@@ -536,7 +536,7 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 		inactiveDto.setDocNo(cancelDocNo);
 		inactiveDto.setNotifyAdmin(RoleCode.PTJ_ADMIN.value());
 
-		UserStatusCheckResDTO resDto = userSO
+		InactiveUserResDTO resDto = userSO
 				.checkInactiveUserBySP(inactiveDto);
 		resDto.setRoleCode(roleCode);
 		log.info("getLoginStatusForCancelCircularFromSP STATUSSS : "
@@ -583,7 +583,7 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 	 *         description and parsed status; empty list if users is empty
 	 */
 	private List<UserStatusCheckDTO> buildUserStatusCheckResults(
-			List<PmUser> users, UserStatusCheckResDTO resDto) {
+			List<PmUser> users, InactiveUserResDTO resDto) {
 
 		List<UserStatusCheckDTO> selectedUsers = new ArrayList<UserStatusCheckDTO>();
 		if (!users.isEmpty()) {
