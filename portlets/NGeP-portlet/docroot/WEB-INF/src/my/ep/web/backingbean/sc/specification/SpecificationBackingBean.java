@@ -21164,10 +21164,12 @@ public class SpecificationBackingBean extends
 
 		Date effDate = appVerDtls.getEffDate();
 		Timestamp effTimestamp = new Timestamp(effDate.getTime());
-		//for wip PROD usage only
+
+		// for wip PROD usage only -start-
 		if ((createdDate.before(effTimestamp) && !checkStatusWip && this.getManagedBean().getWipStatusMax() <= SourcingConstants.SCORE_SETTING_TYPE_FINANCIAL_BY_ITEM)
-				&& !checkbyStatus()) {
-			//null != publishDate && publishDate.before(effDate)
+				&& !checkbyStatus())
+		// for wip PROD usage only -end-
+		{
 			this.getManagedBean().setWeightage35384WIP(true);
 		}
 	}
@@ -21177,15 +21179,15 @@ public class SpecificationBackingBean extends
 				IQTSpecSO.class);
 		return specSo.checkWipScoreFlag(qtId);
 	}
-	
-	// #38151 start
-	public boolean checkbyStatus() { //for wip PROD usage only
+
+	// #38151 -for wip PROD usage only- start
+	public boolean checkbyStatus() { 
 		Long currentStatusId = this.getManagedBean().getCurrentStatusId();
 		if (QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(currentStatusId)) {
 			return Boolean.TRUE;
 		}
 		return Boolean.FALSE;
 	}
-	// #38151 end
-	// #38151 End
+	// #38151 -for wip PROD usage only- end
+
 }
