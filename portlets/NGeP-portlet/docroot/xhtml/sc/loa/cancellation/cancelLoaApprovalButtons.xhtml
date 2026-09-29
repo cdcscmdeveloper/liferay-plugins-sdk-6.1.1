@@ -9,6 +9,20 @@
 
 	<ui:param name="bpmActionApprove" value="APPROVE" />
 	<ui:param name="bpmActionReject" value="REJECT" />
+
+	<ui:remove> 34449 - start</ui:remove>
+	<style type="text/css">
+	    .leftMsgConfirmDlg .ui-confirm-dialog-severity {
+	        display: none !important;
+	    }
+	    .leftMsgConfirmDlg .ui-dialog-content p {
+	        text-align: left !important;
+	        margin-left: 0 !important;
+	        padding-left: 0 !important;
+	    }
+	</style>
+	<ui:remove> 34449 - end</ui:remove>
+	
 	<div>
 		<p:commandButton value="#{lbl['lbl.btn.reject']}" onclick="rj.show()"
 			style="float:right;" />
@@ -19,6 +33,7 @@
 		<p:confirmDialog
 			message="#{lbl['lbl.sc.loa.cancel.dialog.confirm.reject.message']}"
 			header="#{lbl['lbl.sc.header.message.reject']}" severity="alert"
+			styleClass="leftMsgConfirmDlg"
 			widgetVar="rj">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}"
@@ -33,6 +48,7 @@
 		<p:confirmDialog
 			message="#{lbl['lbl.sc.loa.cancel.dialog.confirm.approval.message']}"
 			header="#{lbl['lbl.sc.header.message.approve']}" severity="alert"
+			styleClass="leftMsgConfirmDlg"
 			widgetVar="ap">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}"

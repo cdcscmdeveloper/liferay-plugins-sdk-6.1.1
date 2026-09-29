@@ -78,6 +78,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 
 	private List<AiEpfResultDTO> epfs;
 	private AiTenancyDTO tenancy;
+	private Map<Long, AiTenancyDTO> tenancies = new HashMap<>();
 	private List<AiEpfResultDTO.AiEmployeeDTO> selectedEmployees;
 	private boolean postAI = false;
 	private boolean blockSubmit = false;
@@ -99,6 +100,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		docs = new ArrayList<>();
 		epfs = null;
 		tenancy = null;
+		tenancies.clear();
 		postAI = false;
 		blockSubmit = false;
 
@@ -458,6 +460,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		blockSubmit = false;
 		epfs = null;
 		tenancy = null;
+		tenancies.clear();
 		if (EntityHelper.isCollectionEmpty(docs)){
 			return;
 		}
@@ -1051,6 +1054,9 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			if (addr.getStateIdAI() != null && !addr.isStateFromAI()){
 				changed |= AiUserEdit.add(edits, AiUserEdit.KEY_TENANCY, AiUserEdit.F_STATE);
 			}
+			if (addr.getDivisionIdAI() != null && !addr.isDivisionFromAI()){
+				changed |= AiUserEdit.add(edits, AiUserEdit.KEY_TENANCY, AiUserEdit.F_DIVISION);
+			}
 			if (addr.getDistrictIdAI() != null && !addr.isDistrictFromAI()){
 				changed |= AiUserEdit.add(edits, AiUserEdit.KEY_TENANCY, AiUserEdit.F_DISTRICT);
 			}
@@ -1447,6 +1453,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			}
 		}
 		appl.setAiStatus(state);
+		// the task list reads the column, and tenancy submit does not save the appl
+		SmServiceLookup.getAIApiProcessSO().updateAiStatus(appl.getApplId(), state);
 	}
 	
 	private static boolean showErrorMessage(String docType, List<JsonWrapper> jsonWrappers){
@@ -1574,14 +1582,18 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	/**
-	 * Verdict icon for one uploaded file. Tenancy carries no verdict of its own, per BA.
-	 * 1 = mapped, 2 = wrong company or nothing mappable, 0 = nothing to show.
+	 * Verdict icon for one uploaded file, scored the same way as its Supporting Documents row.
+	 * 1 = mapped, 2 = mismatch or nothing mappable, 0 = nothing to show.
 	 * @param doc
 	 * @return
 	 */
 	public int getDocVerdict(AIApiResponse doc){
 		if (TYPE_EPF.equals(docType)){
 			return getEpfDocVerdict(doc);
+		}
+		if (TYPE_TENANCY.equals(docType)){
+			AiTenancyDTO te = findTenancyResult(doc);
+			return te == null || te.hasError() ? 2 : 1;
 		}
 		return 0;
 	}
@@ -1595,6 +1607,10 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if (TYPE_EPF.equals(docType)){
 			return getEpfDocLabel(doc);
 		}
+		if (TYPE_TENANCY.equals(docType)){
+			AiTenancyDTO te = findTenancyResult(doc);
+			return te == null ? AiDocParser.label(LBL_DOC_INVALID) : te.getLabel();
+		}
 		return "";
 	}
 
@@ -1606,6 +1622,19 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	public String getEpfDocLabel(AIApiResponse doc){
 		AiEpfResultDTO ee = findEpfResult(doc);
 		return ee == null ? AiDocParser.label(LBL_DOC_INVALID) : ee.getLabel();
+	}
+
+	// scored once per file: the area lookups are EJB calls and EL asks for each row several times
+	private AiTenancyDTO findTenancyResult(AIApiResponse doc){
+		if (doc == null || doc.getApiResponseId() == null || smAppl == null || smAppl.getSmSupplier() == null){
+			return null;
+		}
+		if (!tenancies.containsKey(doc.getApiResponseId())){
+			JSONArray fields = AiDocParser.parseFields(doc.getJsonResponse());
+			tenancies.put(doc.getApiResponseId(), fields == null ? null
+					: validatedTenancy(smAppl, AiDocValidator.getHeadquartersFacility(smAppl), fields));
+		}
+		return tenancies.get(doc.getApiResponseId());
 	}
 
 	private AiEpfResultDTO findEpfResult(AIApiResponse doc){
