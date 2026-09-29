@@ -113,15 +113,19 @@
 									value="#{approvalBackingBean.managedBean.outComes}">
 									<ui:param name="buttonLabel"
 										value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-									
-									<ui:remove>#10141 Start Vinod added disable</ui:remove>
-									<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
-										styleClass="ui-button" onstart="blockWidget.show();"
-										oncomplete="blockWidget.hide();"
-										disabled="#{qTDetailBB.managedBean.showInactiveChecklistWarning}"
-										action="#{approvalBackingBean.approvalBpmTask(bpmAction)}" />
-									<ui:remove>#10141 End Vinod</ui:remove>
-								</ui:repeat>
+										<ui:remove>#10141 Start Vinod added disable</ui:remove>
+										<!-- #34444 -  start -->
+										<ui:param name="popupMsgActionBtn" value="approvalBackingBean.approvalBpmTask(approvalBackingBean.managedBean.btnAction)" />							
+										<p:commandButton value="#{lbl[buttonLabel]}"
+											styleClass="ui-button"
+											disabled="#{qTDetailBB.managedBean.showInactiveChecklistWarning}"
+											onstart="blockWidget.show();"
+											actionListener="#{approvalBackingBean.managedBean.prepareAction(bpmAction)}"
+											update="@form"
+											oncomplete="blockWidget.hide(); popupConfirmInfoDlg.show();" />
+										<ui:remove>#10141 End Vinod</ui:remove>
+										<!-- #34444 -  end-->
+									</ui:repeat>
 							</ui:define>
 						</ui:decorate>						
 						<ui:remove>
@@ -260,14 +264,21 @@
 								onclick="updateConfirmPopup.show();"
 								rendered="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION}"/>
 							<ui:remove>#29472 - end</ui:remove>
-							<p:commandButton value="#{lbl['lbl.btn.submit']}"
+							
+							<!-- #34444 -  start -->
+							<ui:param name="popupMsgActionBtn" value="qTDetailBB.submitQtDetailsFormMaintanace(isQTStatusPendingScoringEndorsement)" />
+							<ui:param name="btnAction" value="SUBMIT" />
+							<p:commandButton name="buttonLabel" value="#{lbl['lbl.btn.submit']}"
 								styleClass="amendButton"
-								action="#{qTDetailBB.submitQtDetailsFormMaintanace(isQTStatusPendingScoringEndorsement)}"
-								process="@form" update="@all" onclick="blockWidget.show();"
-								oncomplete="blockWidget.hide();"
+								process="@form" update="@all"
+								onstart="blockWidget.show();"
+								actionListener="#{approvalBackingBean.managedBean.prepareAction(btnAction)}"
+								oncomplete="blockWidget.hide(); popupConfirmInfoDlg.show();"
+								
 								rendered="#{(qTDetailBB.isQTStatusInBetween(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING, QTStatusConst.QT_PENDING_LOA))}"
 								disabled="#{qTDetailBB.isQTStatusEvaluation(qTDetailBB.managedBean.qt.qtStatus.statusId) and !(qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_RE_FINALIZATION or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_EVALUATION_PROPOSAL) and
 								(empty qTDetailBB.managedBean.amendMentBean or !qTDetailBB.managedBean.amendMentBean.brandNew) and !qTDetailBB.managedBean.changesOnQTMaintenance or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION}" /><ui:remove>#29472</ui:remove>
+						<!-- #34444 -  end-->
 						</c:otherwise>
 					</c:choose>
 					<!-- 26095@hatta - start -->
@@ -548,5 +559,14 @@
 			title="#{lbl['lbl.sc.confirmation']}"
 			okAction="qTDetailBB.submitQtDetailsFormMaintanace()"
 			content="#{lbl['lbl.sc.popup.confirmSpecMemberReendorse']}" />
-		
+
+	<!-- #34444 -  start -->
+	<ac:confirmationPopupQT id="popupConfirmInfoDlg"
+		widget="popupConfirmInfoDlg"
+		okAction="#{popupMsgActionBtn}"
+		title="#{approvalBackingBean.managedBean.confirmTitle}"
+		content="#{approvalBackingBean.managedBean.confirmContent}"
+		update="@form" />
+	<!-- #34444 -  end-->
+
 </ui:composition>

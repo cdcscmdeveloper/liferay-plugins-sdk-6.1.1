@@ -5819,8 +5819,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			else {
 				// #29007 Start Vinod
 				checkAndInsertItemSpecOffer();
-				// #29007 End Vinod
-				updateBpmTaskAction(outcome);
+				
+				//34444 START
+				this.getManagedBean().setAction(outcome);
+				getManagedBean().setBtnAction("SUBMISSIONLOA");
+				RequestContext.getCurrentInstance().execute("popupConfirmInfoDlg.show()");
+				RequestContext.getCurrentInstance().execute("blockWidget.hide();");
+				//34444 END
 			}
 		}
 		//20190405@asyrafhaziq - CR25062 - End
