@@ -6388,13 +6388,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			PmOrgProfile contractMinistry = retrieveMinistryOrgProfile(ctOwnerOrgProfileId);
 			PmOrgProfile committeeMinistry = retrieveMinistryOrgProfile(orgProfileId);
 			
-			log.info(":::allowChairpersonRole() orgProfileId: "+ orgProfileId);
-			
 			if (contractMinistry != null && committeeMinistry != null
-					&& contractMinistry.getOrgProfileId().longValue() == committeeMinistry.getOrgProfileId().longValue()) {	
-				log.info(":::allowChairpersonRole() "+ orgProfileId +". contract ministryOrgProfileId: "+ contractMinistry.getOrgProfileId());
-				log.info(":::allowChairpersonRole() "+ orgProfileId +". committee ministryOrgProfileId: "+ committeeMinistry.getOrgProfileId());
-				
+					&& contractMinistry.getOrgProfileId().longValue() == committeeMinistry.getOrgProfileId().longValue()) {
 				allowChairpersonRole = true;
 			}
 			
@@ -6409,20 +6404,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							|| pm.getPmRole().getRoleCode().equalsIgnoreCase(RoleCode.PPB_CHAIRPERSON.value())){
 						allowChairpersonRole = true;
 						continue;
-						
 					}
 				}
 			}
 			
 			/*end*/
 			
-			//log.info(":::allowChairpersonRole() "+ orgProfileId +". committee type: "+ getManagedBean().getCommitteeType());
-
-			// QCA/QCB, need to be same PTJ
-			// #35238 start
-			allowChairpersonRole = getAmendmentCommitteeHelper().determineChairpersonAccessForQuotationCommmittee(
-					orgProfileId, ctOwnerOrgProfileId, userResDTO, allowChairpersonRole);
-			// #35238 end
+			// #35238, #41383 start
+			if (allowChairpersonRole) {
+				allowChairpersonRole = getAmendmentCommitteeHelper().determineChairpersonAccessForQuotationCommmittee(
+						orgProfileId, ctOwnerOrgProfileId, userResDTO, allowChairpersonRole);
+			}
+			// #35238, #41383  end
 			
 			//Bug #26520 - start
 			if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)
