@@ -416,7 +416,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	/**
-	 * The Supporting Documents row an AI type projects onto; bank already has its own row.
+	 * The Supporting Documents row an AI type projects onto.
 	 * @param appl
 	 * @param ocrType
 	 * @return
@@ -428,7 +428,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		for (SmApplSupportDoc suppDoc : appl.getSmApplSupportDocs()){
 			PmDocument doc = suppDoc.getPmDocument();
 			if ((TYPE_EPF.equals(ocrType) && isEpfDoc(doc))
-					|| (TYPE_TENANCY.equals(ocrType) && isTenancyDoc(doc))){
+					|| (TYPE_TENANCY.equals(ocrType) && isTenancyDoc(doc))
+					|| (TYPE_BANK.equals(ocrType) && isBankDoc(doc))){
 				return suppDoc;
 			}
 		}
