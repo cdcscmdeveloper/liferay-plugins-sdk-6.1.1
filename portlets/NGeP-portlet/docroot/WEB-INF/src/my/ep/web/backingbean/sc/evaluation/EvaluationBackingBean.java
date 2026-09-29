@@ -2770,6 +2770,16 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 				 * evaluationSo.retrievePassingScoreByQT(reqDTO);
 				 */
 				// #25138, #21695 -end-
+
+				// #21695 TEC summary: load passing score benchmark (was 0 because the lookup above is commented out)
+				EvaluationReqDTO passingReqDTO = new EvaluationReqDTO();
+				passingReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+				if (this.getManagedBean().getScQt().isDemoRequired()) {
+					passingReqDTO.setSettingType(getSettingType(QTConstants.PRESENTATION_DEMO_EVALUATION));
+				} else {
+					passingReqDTO.setSettingType(getSettingType(QTConstants.TECHNICAL_EVALUATION));
+				}
+				resDTO = evaluationSo.retrievePassingScoreByQT(passingReqDTO);
 			}
 
 			else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(this
