@@ -198,48 +198,37 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	/**
-	 * 0 = AI off for this application, 1 = on, 2 = something has already been extracted.
-	 * @param appl
-	 * @return
-	 */
-	public static boolean isAIApplicable(SmAppl appl) {
-		return appl != null && appl.getAiStatus() >= 1;
-	}
-	
-	/**
 	 * Show the AI upload control on a Supporting Documents row.
-	 * @param appl
 	 * @param doc
 	 * @return
 	 */
-	public static boolean isAiUploadDocRow(SmAppl appl, PmDocument doc) {
-		return isAIApplicable(appl) && (isBankDoc(doc) || isTenancyDoc(doc));
+	public static boolean isAiUploadDocRow(PmDocument doc) {
+		return isBankDoc(doc) || isTenancyDoc(doc);
 	}
 
 	/**
-	 * Set aiStatus from the version gate and the AI toggle, then re-derive every verdict.
+	 * Decide from the version gate and the AI toggle whether AI is on, then re-derive every verdict.
 	 * @param appl
+	 * @return whether AI is on for this application
 	 */
-	public static void initAiState(SmAppl appl) {
+	public static boolean initAiState(SmAppl appl) {
 		if (appl == null) {
-			return;
+			return false;
 		}
 		if (SmApplicationUtil.getAppVersionDetailsWithRedmineNo(appl,
 				SupplierManagementConst.APP_VERSION_REDMINE_NO_40112, SupplierManagementConst.PHASE_1)) {
-			appl.setAiStatus(0);
-			return;
+			return false;
 		}
-		appl.setAiStatus(1);
-		recomputeAiStatus(appl);
-		// nothing extracted yet + AI off: hide everything. 2 = already extracted, ignores the toggle
-		if (appl.getAiStatus() == 1 && !AiDocSupport.isAiEnabled()) {
-			appl.setAiStatus(0);
-			return;
+		// nothing extracted yet + AI off: hide everything. Already extracted ignores the toggle
+		if (!AiDocSupport.isAiEnabled()
+				&& !SmServiceLookup.getAIApiProcessSO().hasExtraction(appl.getApplId())) {
+			return false;
 		}
 		validateBank(appl);
 		validateTenancy(appl);
 		validateEPF(appl);
 		markEpfAiDocs(appl);
+		return true;
 	}
 
 	/**
@@ -248,7 +237,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * @param suppDoc
 	 */
 	public static void processUploadedSupportDoc(SmAppl appl, SmApplSupportDoc suppDoc) {
-		if (!isAIApplicable(appl) || suppDoc == null || suppDoc.getPmDocument() == null) {
+		if (appl == null || suppDoc == null || suppDoc.getPmDocument() == null) {
 			return;
 		}
 		// the dialog fires close on dismiss too: nothing to OCR when no new file came in
@@ -260,7 +249,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		} else {
 			processBankStatement(appl, suppDoc);
 		}
-		recomputeAiStatus(appl);
 	}
 
 	// a file still without its AI_API_RESPONSE id is one this close event has to process
@@ -278,13 +266,12 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	public static void revalidateAfterDelete(SmAppl appl) {
-		if (!isAIApplicable(appl)) {
+		if (appl == null) {
 			return;
 		}
 		validateTenancy(appl);
 		validateEPF(appl);
 		markEpfAiDocs(appl);
-		recomputeAiStatus(appl);
 	}
 
 	/**
@@ -507,14 +494,14 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		
 		try {
 			String requestBody = AiDocParser.buildOcrRequestBody(docType, filepath, filename, clientRequestId);
-			String result = AiOcrClient.callDocumentOcr(requestBody, docType);
+			AiOcrClient.OcrResponse result = AiOcrClient.callDocumentOcr(requestBody, docType);
 			SLAUtils.getInstance().logSLASubInfo("SM", "AI", sessionId, "null",
 					"SmAIDocbackingBean.sendDocumentOCR", "1:"+filename, startTime);
 			if (result == null) {
 				addMessageOnce(FacesMessage.SEVERITY_WARN, LBL_AI_UNAVAILABLE);
 				return null;
 			}
-			return new JsonWrapper(startTime, result, docType);
+			return new JsonWrapper(startTime, result.body, docType, result.status);
 		} catch (IOException e) {
 			log.error("OCR call failed for " + filename, e);
 
@@ -617,8 +604,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			return;
 		}
 		log.info(docType+"\t"+appl.getApplNo());
-		// recompute the task-list AI flag before the save flow persists the appl graph
-		recomputeAiStatus(appl);
 		if (TYPE_EPF.equals(docType)){
 			if (!EntityHelper.isCollectionEmpty(selectedEmployees)){
 				submitEPF(appl);
@@ -787,9 +772,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 
 	// emitMessages: the submit-time re-check also raises the mismatch messages, the page-load pass stays silent
 	private static void validateBank(SmAppl appl, boolean emitMessages){
-		if (!isAIApplicable(appl)){
-			return;
-		}
 		if (appl == null || appl.getSmSupplier() == null || EntityHelper.isCollectionEmpty(appl.getSmApplSupportDocs())){
 			return;
 		}
@@ -832,7 +814,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 	
 	public static void validateTenancy(SmAppl appl){
-		if (!isAIApplicable(appl)){
+		if (appl == null){
 			return;
 		}
 		if (appl.getSmSupplier() == null){
@@ -887,7 +869,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	public static void validateEPF(SmAppl appl){
-		if (!isAIApplicable(appl)){
+		if (appl == null){
 			return;
 		}
 		clearPersonnelAiFields(appl);
@@ -975,7 +957,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * @param appl
 	 */
 	public static void latchUserEdit(SmAppl appl){
-		if (!isAIApplicable(appl)){
+		if (appl == null){
 			return;
 		}
 		for (AIApiResponse response : findResponses(appl, TYPE_EPF)){
@@ -1127,14 +1109,14 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	/**
-	 * Extracted employee IC Nos., empty when AI does not apply so the caller leaves manual adds
+	 * Extracted employee IC Nos., empty when nothing was extracted so the caller leaves manual adds
 	 * unrestricted. Wrong-company statements offer no one, the same set the AI Assistant table shows.
 	 * @param appl
 	 * @return
 	 */
 	public static Set<String> getAiEpfEmployeeNrics(SmAppl appl){
 		Set<String> nrics = new HashSet<>();
-		if (!isAIApplicable(appl)){
+		if (appl == null){
 			return nrics;
 		}
 		String companyName = appl.getSmSupplier() != null ? appl.getSmSupplier().getCompanyName() : null;
@@ -1172,7 +1154,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * @param personnel
 	 */
 	public static void validateManualPersonnelAgainstEpf(SmAppl appl, SmPersonnel personnel){
-		if (!isAIApplicable(appl) || personnel == null || personnel.getPersonnelId() != null){
+		if (appl == null || personnel == null || personnel.getPersonnelId() != null){
 			return;
 		}
 		if (personnel.getIdentificationType() == null || !ParameterConst.IDENTIFICATION_TYPES_IC
@@ -1226,7 +1208,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * @param appl
 	 */
 	public static void markEpfAiDocs(SmAppl appl){
-		if (!isAIApplicable(appl) || EntityHelper.isCollectionEmpty(appl.getSmApplSupportDocs())){
+		if (appl == null || EntityHelper.isCollectionEmpty(appl.getSmApplSupportDocs())){
 			return;
 		}
 		for (SmApplSupportDoc suppDoc : appl.getSmApplSupportDocs()){
@@ -1414,9 +1396,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * @return
 	 */
 	public static boolean isBankAiMismatch(SmAppl appl, boolean emitMessages) {
-		if (!isAIApplicable(appl)) {
-			return false;
-		}
 		if (appl == null || EntityHelper.isCollectionEmpty(appl.getSmApplSupportDocs())) {
 			return false;
 		}
@@ -1436,28 +1415,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		return false;
 	}
 
-	/**
-	 * Recompute the task-list AI flag: 2 once any document has a parsed AI response.
-	 * @param appl
-	 */
-	public static void recomputeAiStatus(SmAppl appl){
-		// 0 means the version gate turned AI off for this application, leave it alone
-		if (appl == null || appl.getApplId() == null || appl.getAiStatus() == 0){
-			return;
-		}
-		int state = 1;
-		for (AIApiResponse res : SmServiceLookup.getAIApiProcessSO().getByApplId(appl.getApplId())){
-			// a recorded OCR failure is not an extraction
-			if (AiDocParser.parseFields(res.getJsonResponse()) != null){
-				state = 2;
-				break;
-			}
-		}
-		appl.setAiStatus(state);
-		// the task list reads the column, and tenancy submit does not save the appl
-		SmServiceLookup.getAIApiProcessSO().updateAiStatus(appl.getApplId(), state);
-	}
-	
 	private static boolean showErrorMessage(String docType, List<JsonWrapper> jsonWrappers){
 		if (EntityHelper.isCollectionEmpty(jsonWrappers)){
 			return false;
@@ -1667,7 +1624,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		} else {
 			processDoc(docType, smAppl);
 		}
-		recomputeAiStatus(smAppl);
 	}
 
 	private void detachFromSupportDoc(AIApiResponse res){
@@ -1762,6 +1718,14 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			// nothing came back at all: the call never reached the service
 			this.statusCode = StringUtils.isEmpty(rawContent)
 					? SC_AI_UNAVAILABLE : AiDocParser.getStatusCode(rawContent);
+		}
+
+		private JsonWrapper(long startTime, String rawContent, String ocrType, int httpStatus) {
+			this(startTime, rawContent, ocrType);
+			// a gateway error page is not the service's JSON: keep the status the wire reported
+			if (httpStatus < 200 || httpStatus >= 300) {
+				this.statusCode = httpStatus;
+			}
 		}
 
 		private JsonWrapper(AIApiResponse res){
