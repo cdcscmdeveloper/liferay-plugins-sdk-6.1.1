@@ -471,9 +471,14 @@
 										<!-- #39097 & #36718 - add more id id ajax process -->
 										<p:ajax event="change" process="@this @([id$=compFacilityAddrPanel])"
 											listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.basicCompanyFacility.smAddress, SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
-											update="basicOffFacDist,basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId,basicOffFacDistAiIcon,basicOffFacCityAiIcon,companyPostMyCodeAiIcon" /><!-- #40112 -->
+											update="basicOffFacDist,basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId,basicOffFacDivisionAiIcon,basicOffFacDistAiIcon,basicOffFacCityAiIcon,companyPostMyCodeAiIcon" /><!-- #40112 -->
 										<!-- #39097 & #36718 - End  -->
 									</p:selectOneMenu>
+									<!-- #40112 -->
+									<p:outputPanel id="basicOffFacDivisionAiIcon" layout="inline">
+										<p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" 
+										rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.divisionFromAI}" />
+									</p:outputPanel>
 									<!-- #39097 & #34159 - End  -->
 									<!-- #35086 -->
 									<ac:smFieldChangeAlert isShow="#{backingBean.managedBean.showFieldChanges}"
