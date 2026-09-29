@@ -291,10 +291,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					e.printStackTrace();
 				}
 				// Skip this checking to allow save (this checking ady done in signaction
-//				if(resDTO.getApproverGroupUserList().isEmpty()){
-//					//#24764
-//					throw new EpException(MessageConst.ERROR_740058);
-//				}
 				FlActor actor = fulfilmentSO.retrieveFlActors(getManagedBean().getInvoice().getFlRequest().getDocType(), getManagedBean().getInvoice().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
 				listOfApprover = sortApproverUserList(resDTO.getApproverGroupUserList(),actor.getUser(),getManagedBean().getInvoice().getFlRequest().getPmUserGroup().getUserGroupId());
 				
@@ -2977,7 +2973,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				}
 				adjustedAmt = invItemSumm.getInvAmt().subtract(
 						receivedItemAmount.setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,
-								BigDecimal.ROUND_HALF_UP));
+								RoundingMode.HALF_UP));
 			}
 
 			if (adjustedAmt.doubleValue() > 0) {
