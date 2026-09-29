@@ -299,7 +299,7 @@ public final class AiDocSupport {
 					}
 					value = value.trim();
 					if ("landlords_name".equals(type)) {
-						dto.setLandlordsName(value);
+						dto.setLandlordsName(StringUtils.left(value, 50).trim());	// form maxlength; OWNER_NAME is 200
 					} else if ("tenants_name".equals(type)) {
 						dto.setTenantsName(value);
 					} else if ("monthly_rental".equals(type)) {
@@ -325,7 +325,8 @@ public final class AiDocSupport {
 
 		private static void setTenancyAddress(AiTenancyDTO dto, JSONObject addr) {
 			if (addr != null) {
-				dto.setPostcode(addr.optString("postcode", "").trim());
+				// form maxlength; POSTCODE is 10, ADDRESS_1/2/3 are 255
+				dto.setPostcode(StringUtils.left(addr.optString("postcode", "").trim(), 5).trim());
 				String fullAddr = addr.optString("normalized_Address", "").trim();
 				truncateAddressAtPostcode(dto, fullAddr, dto.getPostcode());
 				dto.setCodeCity(addr.optString("city_code", "").trim());
@@ -392,7 +393,7 @@ public final class AiDocSupport {
 
 		// Truncate the normalized address at the postcode and split into addr1/2/3.
 		private static void truncateAddressAtPostcode(AiTenancyDTO dto, String addr, String postcode) {
-			dto.setAddr1(addr);
+			dto.setAddr1(StringUtils.left(addr, 100).trim());
 			dto.setAddr2("");
 			dto.setAddr3("");
 			if (StringUtils.isEmpty(addr) || StringUtils.isEmpty(postcode)) {
@@ -410,13 +411,13 @@ public final class AiDocSupport {
 			String[] parts = pattern.split(result, 3);
 
 			if (parts.length > 0) {
-				dto.setAddr1(parts[0].trim());
+				dto.setAddr1(StringUtils.left(parts[0].trim(), 100).trim());
 			}
 			if (parts.length > 1) {
-				dto.setAddr2(parts[1].trim());
+				dto.setAddr2(StringUtils.left(parts[1].trim(), 100).trim());
 			}
 			if (parts.length > 2) {
-				dto.setAddr3(parts[2].trim());
+				dto.setAddr3(StringUtils.left(parts[2].trim(), 100).trim());
 			}
 		}
 		
@@ -435,7 +436,11 @@ public final class AiDocSupport {
 					JSONArray properties = entityObj.getJSONArray(PROPERTIES);
 
 					if (entityId.startsWith("employee-")) {
-						employees.add(toEmployee(properties));
+						AiEpfResultDTO.AiEmployeeDTO emp = toEmployee(properties);
+						// a row the AI could not read a name or IC for is dropped
+						if (StringUtils.isNotBlank(emp.getEmployeeName()) && StringUtils.isNotBlank(emp.getNricNumber())) {
+							employees.add(emp);
+						}
 					} else if (entityId.startsWith("employer-")) {
 						dto.setEmployerName(toEmployerName(properties));
 					}
@@ -462,13 +467,13 @@ public final class AiDocSupport {
 				}
 				value = value.trim();
 				if ("KWSP_number".equals(type)) {
-					emp.setKwspNumber(value);
+					emp.setKwspNumber(StringUtils.left(value, 10).trim());
 				} else if ("NRIC_number".equals(type)) {
 					// the statement prints the NRIC dashed or spaced; eP stores the 12 digits
-					emp.setNricNumber(AiDocValidator.normalizeNric(value));
+					emp.setNricNumber(StringUtils.left(AiDocValidator.normalizeNric(value), 20).trim());
 				} else if ("employee_name".equals(type)) {
 					// the OCR keeps the statement's own line breaks inside a name
-					emp.setEmployeeName(AiDocValidator.normalizePersonName(value));
+					emp.setEmployeeName(StringUtils.left(AiDocValidator.normalizePersonName(value), 80).trim());
 				}
 			}
 			return emp;
