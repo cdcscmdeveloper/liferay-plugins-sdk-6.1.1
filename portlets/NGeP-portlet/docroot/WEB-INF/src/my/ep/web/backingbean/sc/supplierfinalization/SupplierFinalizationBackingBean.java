@@ -14313,8 +14313,6 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				PmReason justification = finalJustification.getJustification();
 				if (justification != null) {
 					justificationReasonList.add(justification.getReasonCode());
-				} else {
-					log.warn("Justification is null for ScQtFinalJustification");
 				}
 			}
 			// #34444 End/
