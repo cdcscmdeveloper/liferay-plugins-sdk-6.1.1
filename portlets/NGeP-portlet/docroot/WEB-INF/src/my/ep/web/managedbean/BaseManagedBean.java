@@ -1398,4 +1398,10 @@ public abstract class BaseManagedBean implements Serializable {
 		return ActionPopupMessageKeys.getContentMessage(btnAction, resourceBundle);
 	}
 	// #34444 END
+
+	// #40112 - Start
+	public boolean isAiEnabled() {
+		return false;
+	}
+	// #40112 - End
 }
