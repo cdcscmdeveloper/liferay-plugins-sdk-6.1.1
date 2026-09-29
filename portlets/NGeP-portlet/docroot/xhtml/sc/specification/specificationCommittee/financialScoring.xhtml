@@ -22,7 +22,7 @@
 				<!-- #38151,#38679 start. new requirement-->
 				<c:if test="#{specificationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}">
 					<p:selectOneRadio id="finScoreWeight"
-						disabled="#{specificationBackingBean.managedBean.qt.partial or !specificationBackingBean.managedBean.qt.partial}"
+						disabled="#{true}"
 						label="#{lbl['lbl.sc.spec.weightage']}" required="true"
 						value="#{true}">
 						<f:selectItems
@@ -33,7 +33,7 @@
 				</c:if>
 				<c:if test="#{specificationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
 					<p:selectOneRadio id="finScoreWeight"
-						disabled="#{specificationBackingBean.managedBean.qt.partial}"
+						disabled="#{true}"
 						label="#{lbl['lbl.sc.spec.weightage']}" required="true"
 						value="#{specificationBackingBean.managedBean.financialScoreSetting.weightageReq}">
 						<f:selectItems
