@@ -97,9 +97,11 @@
 											rendered="#{notify.read eq '0'}" />
 									</p:column>
 
+									<ui:remove>38107 - Start</ui:remove>
 									<p:column
 										headerText="#{lbl['lbl.portal.notify.sender']}/#{lbl['lbl.portal.notify.subject']}">
-										#{notify.sender.userName} <br />
+										#{notifyBackingBean.retrieveeGPASender(notify)} <br />
+									<ui:remove>38107 - End</ui:remove>
 
 										<p:commandLink id="btnNotifyLink"
 											action="#{notifyBackingBean.selectedNotify}"
@@ -214,9 +216,11 @@
 															style="font-weight:bold;text-align: left"
 															value="#{lbl['lbl.portal.notify.sender']}"> : </h:outputText></td>
 											
+													<ui:remove>38107 - Start</ui:remove>
 													<td style="text-align: left"><h:outputText
-															value="#{notifyBackingBean.managedBean.selectedNotify.sender.userName}"></h:outputText>
+															value="#{notifyBackingBean.retrieveeGPASender(notifyBackingBean.managedBean.selectedNotify)}"></h:outputText>
 													</td>
+													<ui:remove>38107 - End</ui:remove>
 											
 													<td align="right"
 														style="width: 200px; text-align: right; font-size: 12px;">

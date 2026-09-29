@@ -210,9 +210,13 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		//initialized mandatory and non mandatory supporting documents
 		initNonMandatoryAndMandatoryDocs();
 		//#40112 - start
-		SmAIDocBackingBean.validateBank(getManagedBean().getSmAppl());
-		SmAIDocBackingBean.validateTenancy(getManagedBean().getSmAppl());
-		SmAIDocBackingBean.markEpfAiDocs(getManagedBean().getSmAppl());
+		getManagedBean().setAiExtracted(SmServiceLookup.getAIApiProcessSO()
+				.hasExtraction(getManagedBean().getSmAppl().getApplId()));
+		if (getManagedBean().isAiExtracted()){
+			SmAIDocBackingBean.validateBank(getManagedBean().getSmAppl());
+			SmAIDocBackingBean.validateTenancy(getManagedBean().getSmAppl());
+			SmAIDocBackingBean.markEpfAiDocs(getManagedBean().getSmAppl());
+		}
 		//#40112 - end
 	}
 

@@ -254,7 +254,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			}
 			
 			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
-			// FlFulfilmentNote fulfilmentNote = getManagedBean().getFulfilmentNote();
 			receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IReceivedNoteSO.class);
 			//31546-Start
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
@@ -954,8 +953,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		if(getManagedBean().getFulfilmentNote().getReceivedDate().after(today)){
 			throw new EpException(MessageConst.ERROR_740012);
 		}
-		
-		// FlFulfilmentNote fulfilmentNote = getManagedBean().getFulfilmentNote();
 		
 		if(outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_APPROVE)) {
 			checkLastTaxFRN();
