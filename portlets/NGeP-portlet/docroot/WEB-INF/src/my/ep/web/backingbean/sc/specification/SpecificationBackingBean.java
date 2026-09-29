@@ -10644,10 +10644,15 @@ public class SpecificationBackingBean extends
 						new SearchFilterBean("qt",
 								SearchOperator.OPERATOR_EQUALS.value(), true));
 
+				//#34923 - start
+				List<String> docTypeList = new ArrayList<String>();
+				docTypeList.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+				docTypeList.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY);
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("docType",
-								SearchOperator.OPERATOR_EQUALS.value(),
-								ParameterConst.DOCTYPE_PANEL_CIRCULAR));
+								SearchOperator.OPERATOR_IN.value(),
+								docTypeList));
+				//#34923 - end
 
 				circularReqDTO.setCircularVerSearchBean(searchBean);
 
