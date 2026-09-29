@@ -7356,11 +7356,6 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 				// retrivePresetationDemoCheckList();
 				if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equalsIgnoreCase(this.getManagedBean()
 						.getCommitteeType())) {
-					if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equalsIgnoreCase(this
-							.getManagedBean().getCommitteeType())
-							&& this.getManagedBean().getCurrentStatusId()
-									.equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL)
-							&& !this.getManagedBean().isReadOnly()) {
 						if (currentTab == 2) {
 							IQTEvaluationSO evaluationSO = null;
 							evaluationSO = BusinessDelegate.getInstance().getServiceObject(
@@ -7450,7 +7445,6 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 							retrieveDemoDetails();
 						}
 						//#28784 - End
-					}
 					// #28784, #34748 - End
 					/** retrivePresentationDemo(); */
 					// #28784 delete
