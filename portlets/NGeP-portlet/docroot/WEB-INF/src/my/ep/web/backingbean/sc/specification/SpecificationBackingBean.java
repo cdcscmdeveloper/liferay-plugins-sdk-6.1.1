@@ -3068,13 +3068,15 @@ public class SpecificationBackingBean extends
 							if (this.getManagedBean().isWeightage35384WIP()) {
 								calculateRecommendtechnicalScore(this.getManagedBean().getRecommendationScore());
 								calculateRecommendFinancialScore(this.getManagedBean().getRecommendationScore());
-
-							} else {
-								calculateonesetscoring(this.getManagedBean().getRecommendationPackageScore(), false);
 							}
 							// #38151 end Wip
 						}
-
+					}
+					// #38151 non-WIP: run after the loop so the package setting is loaded regardless of row order
+					if (!this.getManagedBean().isWeightage35384WIP()
+							&& null != this.getManagedBean().getRecommendationScore()
+							&& null != this.getManagedBean().getRecommendationPackageScore()) {
+						calculateonesetscoring(this.getManagedBean().getRecommendationPackageScore(), false);
 					}
 
 				}
