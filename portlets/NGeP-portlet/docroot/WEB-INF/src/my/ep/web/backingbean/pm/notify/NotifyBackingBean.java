@@ -651,12 +651,15 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 	 * @return
 	 */
 	public String retrieveeGPASender(PmNotifyUser notify) {
-		//Convert notification id (long) to String
-		String notificationId = String.valueOf(notify.getPmNotification().getNotificationId());
-		
-		//Compare notification id with eGPA notification, if true return eGPA
-		return notificationId.equals(NotificationTextConst.TEMPLATE_ID_401223) ? SourcingConstants.ROLE_CODE_EGPA
-				: notify.getSender().getUserName();
+		if (notify.getPmNotification() != null) {
+			//Convert notification id (long) to String
+			String notificationId = String.valueOf(notify.getPmNotification().getNotificationId());
+			
+			//Compare notification id with eGPA notification, if true return eGPA
+			return notificationId.equals(NotificationTextConst.TEMPLATE_ID_401223) ? SourcingConstants.ROLE_CODE_EGPA
+					: notify.getSender().getUserName();
+		}
+		return "";
 	}
 	//#38107 - End
 }
