@@ -12,8 +12,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 
+import javax.faces.bean.ManagedProperty;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.constant.sc.SourcingConstants;
@@ -34,6 +37,7 @@ import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.sc.ActionPopupMessageKeys;
 import my.ep.web.vo.DisciplinaryActionVO;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -218,6 +222,11 @@ public abstract class BaseManagedBean implements Serializable {
     private boolean assignNewUser = false;
     private PmUser newUser;
     // 31788 - end
+    
+    // #34444 START
+ 	@ManagedProperty("#{lbl}")
+ 	private ResourceBundle resourceBundle;
+ 	// #34444 END
 	
 	public BaseManagedBean(){
 		reportDetail.add(new AbstractMap.SimpleEntry<>(SourcingConstants.DOC_DEF_KEY_LAPORAN_KERTAS_TAKLIMAT_UMUM,
@@ -244,7 +253,7 @@ public abstract class BaseManagedBean implements Serializable {
 	    return reportDetail;
 	}
 	// #25651 - End
-	
+		
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
 	}
@@ -1343,4 +1352,50 @@ public abstract class BaseManagedBean implements Serializable {
 		this.newUser = newUser;
 	}
 	//31788 end
+	
+	// #34444 START
+	public ResourceBundle getResourceBundle() {
+		return resourceBundle;
+	}
+
+	public void setResourceBundle(ResourceBundle resourceBundle) {
+		this.resourceBundle = resourceBundle;
+	}
+
+	public String getBtnAction() {
+		Object value = FacesContext.getCurrentInstance().getViewRoot().getViewMap().get("btnAction");
+
+		return value == null ? null : value.toString();
+	}
+
+	public void setBtnAction(String btnAction) {
+		FacesContext.getCurrentInstance().getViewRoot().getViewMap().put("btnAction", btnAction);
+	}
+
+	public void prepareAction(String action) {
+		setBtnAction(action);
+	}
+
+	public String getConfirmTitle() {
+
+		String btnAction = getBtnAction();
+
+		if (resourceBundle == null || btnAction == null) {
+			return "";
+		}
+
+		return ActionPopupMessageKeys.getTitleMessage(btnAction, resourceBundle);
+	}
+
+	public String getConfirmContent() {
+
+		String btnAction = getBtnAction();
+
+		if (resourceBundle == null || btnAction == null) {
+			return "";
+		}
+
+		return ActionPopupMessageKeys.getContentMessage(btnAction, resourceBundle);
+	}
+	// #34444 END
 }
