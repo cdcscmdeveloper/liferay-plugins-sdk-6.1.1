@@ -116,7 +116,8 @@
 						readonlyInput="true" size="30" showOn="button" yearRange="-99"  maxdate="#{CommonConstants.CURRENT_DATE}">
 					</p:calendar></td>
 			</tr>
-
+			<!-- #36718, #36717 - START - add panel for refresh -->
+			<p:panel id="individualAddrPanel" style="border: none;">
 			<tr>
 				<td class="tdTitle">
 					<p:outputLabel value="#{lbl['lbl.sm.ic.address']}" />
@@ -142,9 +143,10 @@
 						<f:selectItems var="state"
 							value="#{registrationBackingBean.managedBean.permenantStateLs}"
 							itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
-						<p:ajax event="change" process="@this"
-							listener="#{registrationBackingBean.populateDistrictByAddType('permenant', false)}"
-							update="divisionIndiLabelPanelId,divisionIndiDropdownPanelId,cmbPermDistrict,cmbPermCity" />
+						<!-- #36718, #36717 - START - process panel when change dropdown value, reset value, change parameter value to true, update postcode -->
+						<p:ajax event="change" process="@this @([id$=individualAddrPanel])"
+							listener="#{registrationBackingBean.populateDistrictByAddType('permenant', true)}"
+							update="divisionIndiLabelPanelId,divisionIndiDropdownPanelId,cmbPermDistrict,cmbPermCity,txtPermPostcodeMy" />
 					</p:selectOneMenu> <p:message id="cmbPermStateMsg" for="cmbPermState" display="icon" /></td>
 			</tr>
 			
@@ -163,7 +165,8 @@
 				<td class="tdContent">
 				<p:outputPanel id="divisionIndiDropdownPanelId">
 					<ui:fragment rendered="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.adoptDivision}">
-						<p:selectOneMenu id="cmbPermDivision"
+						<!-- #36717 - ADD REQUIRED -->
+						<p:selectOneMenu id="cmbPermDivision" required="#{!empty param['disableValidation']}"
 						label="#{lbl['lbl.sm.division']}"
 						value="#{registrationBackingBean.managedBean.smPermenantAdd.pmDivision.divisionId}"
 						style="width:80%">
@@ -172,10 +175,13 @@
 							value="#{registrationBackingBean.managedBean.permenantDivisionLs}"
 							itemValue="#{division.divisionId}"
 							itemLabel="#{division.divisionName}" />
-						<p:ajax event="change"
-							listener="#{registrationBackingBean.populateDivisionByAddType('permenant',false)}"
-							update="cmbPermDistrict,cmbPermCity" />
+						<!-- #36718, #36717 - START - process panel when change dropdown value, reset value, change parameer value to true, update postcode, add pmessage -->
+						<p:ajax event="change" process="@([id$=individualAddrPanel])"
+							listener="#{registrationBackingBean.populateDivisionByAddType('permenant',true)}"
+							update="cmbPermDistrict,cmbPermCity,txtPermPostcodeMy" />
 					</p:selectOneMenu>
+					<p:message id="cmbPermDivisionMsg" for="cmbPermDivision" display="icon" />
+					<!-- #36717 - END -->
 					</ui:fragment>
 				</p:outputPanel>
 				</td>
@@ -202,9 +208,10 @@
 						<f:selectItems var="dist"
 							value="#{registrationBackingBean.managedBean.permenantDistrictLs}"
 							itemValue="#{dist.districtId}" itemLabel="#{dist.districtName}" />
-						<p:ajax event="change"
-							listener="#{registrationBackingBean.populateCityByAddType('permenant',false)}"
-							update="cmbPermCity" />
+						<!-- #36718, #36717 - START - process panel when change dropdown value, reset value, change parameer value to true, updte postcode -->
+						<p:ajax event="change" process="@([id$=individualAddrPanel])"
+							listener="#{registrationBackingBean.populateCityByAddType('permenant',true)}"
+							update="cmbPermCity,txtPermPostcodeMy" />
 					</p:selectOneMenu> <p:message id="cmbPermDistrictMsg" for="cmbPermDistrict"
 						display="icon" /></td>
 			</tr>
@@ -227,9 +234,14 @@
 						<f:selectItems var="pcity"
 							value="#{registrationBackingBean.managedBean.permenantCityLs}"
 							itemValue="#{pcity.cityId}" itemLabel="#{pcity.cityName}" />
+						<!-- #36718, #36717 - START - add ajax -->
+						<p:ajax event="change" process="@([id$=individualAddrPanel])"
+							listener="#{registrationBackingBean.onSelectCity('permenant')}"
+							update="txtPermPostcodeMy" />
 					</p:selectOneMenu> <p:message id="cmbPermCityMsg" for="cmbPermCity" display="icon" /></td>
 			</tr>
-
+			</p:panel>
+			<!-- #36718, #36717 - END -->
 			<tr>
 				<td></td>
 				<td class="tdContent"></td>
@@ -244,6 +256,8 @@
 								value="#{registrationBackingBean.managedBean.smPermenantAdd.postcode}"
 								validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
 								size="40" disabled="#{registrationBackingBean.managedBean.viewMode}">
+								<!-- #36717 - ADD AJAX -->
+								<p:ajax event="blur" partialSubmit="true"></p:ajax>
 								<f:validator validatorId="postcodeValidator" />
 							</p:inputText>
 							<p:message id="txtPermPostcodeMyMsg" for="txtPermPostcodeMy"
