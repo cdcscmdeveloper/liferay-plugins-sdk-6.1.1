@@ -764,13 +764,7 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setJustification(
 				scQtFinalization.getJustification());
 		//#34860 start
-		List<String> justificationReasonList = new ArrayList<>();
-		List<ScQtFinalJustification> scQtFinalJustificationList = CollectionUtils.isNotEmpty(this.getManagedBean().getFinalJustificationList())
-				? this.getManagedBean().getFinalJustificationList() : new ArrayList<ScQtFinalJustification>();
-		for (ScQtFinalJustification finalJustification : scQtFinalJustificationList){
-			justificationReasonList.add(finalJustification.getJustification(). getReasonCode());
-		}
-		this.getManagedBean().setJustificationReasonList(justificationReasonList);
+		initializeJustificationReasonList();
 		//#34860 end
 		decisionEvent(null);
 		//#26169 #38 - START Added by Haidah
@@ -3319,6 +3313,11 @@ public class SupplierFinalizationBackingBean extends
 				  .getParameterCode();
 	log.info("decisionTypeCode"+decisionTypeCode);
 		this.checkIfLoggedinUserIsSecretary();
+		
+		/*#34444 - Start*/
+		String outcome = this.getManagedBean().getOutcome();
+		this.getManagedBean().setAction(outcome);
+		/*#34444 -  End*/
 				
 		if (this.getManagedBean().isSecretaryUser()) {
 			if (this.getManagedBean().getOutcome().equalsIgnoreCase("REVISEBP")) {
@@ -3375,7 +3374,9 @@ public class SupplierFinalizationBackingBean extends
 
 			}
 		} else {
-			this.submitSuppFinalization();
+			/*#34444 - Start*/
+			RequestContext.getCurrentInstance().execute("popupConfirmInfoDlg.show()");
+			/*#34444 - End*/
 		}
 	}
 	//28834 end new
@@ -9169,7 +9170,8 @@ return	remarksNotFound;
 		TplSpecZoneDtl zoneDtl = scQtRecommend.getTplSpecZoneDtl();
 		PmParameter finalizationMethod = getManagedBean().getScQtFinalization()
 											.getFinalizationMethod();
-		isAward = isRecommendByAward();
+		isAward = isRecommendByAward() && !ParameterConst.RECOMMEND_BY_MULTIPLE_LOI
+					.equals(finalizationMethod.getParameterCode());//#40396
 		
 		int activeSupplierCount = 0;
 		if (CollectionUtils.isNotEmpty(
@@ -9250,7 +9252,8 @@ return	remarksNotFound;
 			}
 		}
 		String finalizationMethodStr = null;
-		if (isQTRefinalized()) {
+		if (isQTRefinalized() && !ParameterConst.RECOMMEND_BY_MULTIPLE_LOI
+					.equals(finalizationMethod.getParameterCode())) {//#40396
 			finalizationMethodStr = ParameterConst.RECOMMEND_BY_AWARD;
 		} else {
 			finalizationMethodStr = finalizationMethod.getParameterCode();
@@ -14294,5 +14297,27 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		}
 	}
 	//#40396 - End
+	
+	// #34860 start
+	/**
+	 * #34860
+	 * Initialize Justification Reason List 
+	 */
+	public void initializeJustificationReasonList() {		
+		List<String> justificationReasonList = new ArrayList<>();
+		List<ScQtFinalJustification> scQtFinalJustificationList = CollectionUtils.isNotEmpty(this.getManagedBean().getFinalJustificationList()) 
+				? this.getManagedBean().getFinalJustificationList() : new ArrayList<ScQtFinalJustification>();
+		for (ScQtFinalJustification finalJustification : scQtFinalJustificationList) {
+			if (finalJustification != null) {
+				PmReason justification = finalJustification.getJustification();
+				if (justification != null) {
+					justificationReasonList.add(justification.getReasonCode());
+				}
+			}
+		}
+
+		this.getManagedBean().setJustificationReasonList(justificationReasonList);
+	}
+	// #34860 end
 }
 // ***19336
