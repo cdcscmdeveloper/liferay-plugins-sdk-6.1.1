@@ -206,6 +206,11 @@ public final class AiDocSupport {
 		private static final String PROPERTIES = "properties";
 		private static final String NORM_VALUE = "normalizedValue";
 
+		private static String optString(JSONObject obj, String key, String defaultValue) {
+			Object o = obj.opt(key);
+			return o == null || JSONObject.NULL.equals(o) ? defaultValue : o.toString();
+		}
+
 		private static final double DEFAULT_MIN_CONFIDENCE = 0.8;
 		public static final double MIN_CONFIDENCE = resolveMinConfidence();
 
@@ -290,8 +295,8 @@ public final class AiDocSupport {
 				for (int i = 0; i < entities.length(); i++) {
 					JSONObject entity = entities.getJSONObject(i);
 					String type = entity.optString("type", "");
-					String text = entity.optString(VALUE, "");
-					String value = entity.optString(NORM_VALUE, text);
+					String text = optString(entity, VALUE, "");
+					String value = optString(entity, NORM_VALUE, text);
 					double conf = entity.optDouble(CONFIDENCE, 0.0);
 
 					if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text) || conf < MIN_CONFIDENCE) {
@@ -303,13 +308,17 @@ public final class AiDocSupport {
 					} else if ("tenants_name".equals(type)) {
 						dto.setTenantsName(value);
 					} else if ("monthly_rental".equals(type)) {
-						dto.setMonthlyRental(new BigDecimal(value));
+						try {
+							dto.setMonthlyRental(new BigDecimal(value));
+						} catch (NumberFormatException e) {
+							log.error("Error TenancyEntity monthly_rental '" + value + "'");
+						}
 					} else if ("premises_address".equals(type)) {
 						dto.setPremisesAddress(value);
 						setTenancyAddress(dto, entity.optJSONObject("addressComponents"));
 					}
 				}
-			} catch (JSONException | NumberFormatException e) {
+			} catch (JSONException e) {
 				log.error("Error TenancyEntity", e);
 				dto.setError(true);
 			} catch (NullPointerException e) {
@@ -326,12 +335,12 @@ public final class AiDocSupport {
 		private static void setTenancyAddress(AiTenancyDTO dto, JSONObject addr) {
 			if (addr != null) {
 				// form maxlength; POSTCODE is 10, ADDRESS_1/2/3 are 255
-				dto.setPostcode(StringUtils.left(addr.optString("postcode", "").trim(), 5).trim());
-				String fullAddr = addr.optString("normalized_Address", "").trim();
+				dto.setPostcode(StringUtils.left(optString(addr, "postcode", "").trim(), 5).trim());
+				String fullAddr = optString(addr, "normalized_Address", "").trim();
 				truncateAddressAtPostcode(dto, fullAddr, dto.getPostcode());
-				dto.setCodeCity(addr.optString("city_code", "").trim());
-				setTenancyArea(dto, addr.optString("state_code", "").trim(),
-						addr.optString("district_code", "").trim());
+				dto.setCodeCity(optString(addr, "city_code", "").trim());
+				setTenancyArea(dto, optString(addr, "state_code", "").trim(),
+						optString(addr, "district_code", "").trim());
 			}
 		}
 
@@ -459,8 +468,8 @@ public final class AiDocSupport {
 			for (int i = 0; i < properties.length(); i++) {
 				JSONObject property = properties.getJSONObject(i);
 				String type = property.optString("type", "");
-				String text = property.optString(VALUE, "");
-				String value = property.optString(NORM_VALUE, text);
+				String text = optString(property, VALUE, "");
+				String value = optString(property, NORM_VALUE, text);
 				double conf = property.optDouble(CONFIDENCE, 0.0);
 				if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text) || conf < MIN_CONFIDENCE) {
 					continue;
@@ -484,8 +493,8 @@ public final class AiDocSupport {
 			for (int i = 0; i < properties.length(); i++) {
 				JSONObject property = properties.getJSONObject(i);
 				String type = property.optString("type", "");
-				String text = property.optString(VALUE, "");
-				String value = property.optString(NORM_VALUE, text);
+				String text = optString(property, VALUE, "");
+				String value = optString(property, NORM_VALUE, text);
 				double conf = property.optDouble(CONFIDENCE, 0.0);
 				if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text) || conf < MIN_CONFIDENCE) {
 					continue;
@@ -532,8 +541,8 @@ public final class AiDocSupport {
 			for (int i = 0; i < properties.length(); i++) {
 				JSONObject property = properties.getJSONObject(i);
 				String type = property.optString("type", "");
-				String text = property.optString(VALUE, "");
-				String value = property.optString(NORM_VALUE, text);
+				String text = optString(property, VALUE, "");
+				String value = optString(property, NORM_VALUE, text);
 				double conf = property.optDouble(CONFIDENCE, 0.0);
 				if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text) || conf < MIN_CONFIDENCE) {
 					continue;

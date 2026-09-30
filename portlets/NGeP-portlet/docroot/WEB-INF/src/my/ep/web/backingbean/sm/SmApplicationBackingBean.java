@@ -1840,6 +1840,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			
 			getManagedBean().setCurrentPageType(
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
+			getManagedBean().setTabActiveIndex(getManagedBean().getEditVO().isDisciplinary() ? 4 : 0);	//#40112
 			if (SmCommonUtil.isCollectionEmpty(smAppl.getSmFacilities())
 					&& !smAppl.getApplType().equalsIgnoreCase(
 							ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
@@ -8543,8 +8544,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 
 	//#40112 - start
-	// retriveLatestApplAfterUpdate() swaps in a fresh appl graph, so every @Transient AI field is
-	// null again; re-derive them here so no caller has to remember.
+	// retriveLatestApplAfterUpdate() swaps in a fresh appl graph, so need to set AI fields again
 	private void reseedAiState() {
 		String pageType = getManagedBean().getCurrentPageType();
 		if (!getManagedBean().isSupplierUser() || pageType == null) {
@@ -8557,17 +8557,17 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			}
 		} else if (SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL.equalsIgnoreCase(pageType)) {
 			SmAIDocBackingBean.loadEpfDocs(getManagedBean().getSmAppl());
-			if (getManagedBean().isAiEnabled()){
-				SmAIDocBackingBean.validateEPF(getManagedBean().getSmAppl());
-			}
 		} else if (SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS.equalsIgnoreCase(pageType)) {
 			SmAIDocBackingBean.attachPendingAiFiles(getManagedBean().getSmAppl());
 			getManagedBean().setAiEnabled(SmAIDocBackingBean.initAiState(getManagedBean().getSmAppl()));
 		}
+		// a task-list re-open resets the page type to BASIC but leaves the personnel tab showing
+		if (getManagedBean().isAiEnabled()
+				&& !SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY.equalsIgnoreCase(pageType)){
+			SmAIDocBackingBean.validateEPF(getManagedBean().getSmAppl());
+		}
 	}
-	//#40112 - end
-
-	//#40112 - start
+	
 	// the appl graph was just replaced, so a selectedShareHolder kept from the previous read is
 	// detached; merging it on the next save fails with an OptimisticLockException
 	private void reattachSelectedShareHolder() {
