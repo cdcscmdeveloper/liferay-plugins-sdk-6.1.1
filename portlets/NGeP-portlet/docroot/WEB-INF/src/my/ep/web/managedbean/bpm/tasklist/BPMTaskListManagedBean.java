@@ -830,6 +830,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       if(worklistItemVO.getTitle().startsWith("lbl.sm")) {
 						    		MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
 									mofResDto = retriveCompanyNameByApplicationId(worklistItemVO.getDocId());
+									worklistItemVO.setAiProcessed(isAiTaskIcon(worklistItemVO.getDocId(), worklistItemVO.getDocStatus())); //#40112
 						    	   StringBuilder sb = new StringBuilder();
 						    	   sb.append(ResourceBundleUtils.getMessage(worklistItemVO.getTitle(), ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 						    	   if(mofResDto.getCompanyName() != null){
