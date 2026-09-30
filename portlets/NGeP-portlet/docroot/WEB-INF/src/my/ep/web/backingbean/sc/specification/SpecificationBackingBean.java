@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date; //#38151
 import java.util.HashMap;
+import java.util.HashSet; //#29661, #41264
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -2136,6 +2137,15 @@ public class SpecificationBackingBean extends
 				// Collections.sort(this.getManagedBean()
 				// .getScQtCheckSt2financeProposalList());
 				localcheckList = null;
+				//#41441 - #10141 Start Vinod
+				Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+				if (Arrays.asList(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
+						QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION,
+						QTStatusConst.SE_PENDING_SUBMISSION,
+						QTStatusConst.SE_PENDING_REVISION).contains(currentStatusId)) {
+					checkAndUpdateNewMandatoryChecklist(this.getManagedBean().getQt(), SourcingConstants.TECHNICAL_DOCTYPE);
+				}
+				//#41441 - #10141 End Vinod
 			}
 			// #40138 Start Vinod
 			else {
@@ -2546,6 +2556,8 @@ public class SpecificationBackingBean extends
 
 				this.getManagedBean().setScQtCheckSt2financeProposalList(
 						resDTO1.getFinancialCheckLists());
+				removeMarkedDeletedChecklists(this.getManagedBean().getScQtCheckSt2financeProposalList(),
+						this.getManagedBean().getMarkDeletedFinChecklist());	//#41026/#10141
 			}
 			//#25138 - add if() condition - end		
 			List<Integer> settinglist = new ArrayList<Integer>();
@@ -9557,8 +9569,9 @@ public class SpecificationBackingBean extends
 						throw new EpException(MessageConst.ERROR_760359);
 					}
 					if (null == Remark.getRemarkId()) {
-						RequestContext.getCurrentInstance().execute(
-								"reviceApprovalDlgs.show()");
+						/* #34444 START*********/
+						reviseSpecificationCommittee();
+						/* #34444 END*********/
 					}
 				}
 				/*
@@ -10640,10 +10653,15 @@ public class SpecificationBackingBean extends
 						new SearchFilterBean("qt",
 								SearchOperator.OPERATOR_EQUALS.value(), true));
 
+				//#34923 - start
+				List<String> docTypeList = new ArrayList<String>();
+				docTypeList.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+				docTypeList.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY);
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("docType",
-								SearchOperator.OPERATOR_EQUALS.value(),
-								ParameterConst.DOCTYPE_PANEL_CIRCULAR));
+								SearchOperator.OPERATOR_IN.value(),
+								docTypeList));
+				//#34923 - end
 
 				circularReqDTO.setCircularVerSearchBean(searchBean);
 
@@ -12802,9 +12820,11 @@ if (null != checklist && !checklist.isEmpty()) {
 												    new FacesScopes().getUserLocale()) });
 						}
 					}
+				////#34444 START**********
+					RequestContext.getCurrentInstance().execute("confirmationPopupQT.hide()");
 				}
-				
-				RequestContext.getCurrentInstance().execute("reviseSCDlgs.show()");
+				reviseSpecificationCommittee();
+			////#34444 END**********
 			} else {
 				getManagedBean().setAutoUpdate(false);
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
@@ -12829,8 +12849,9 @@ if (null != checklist && !checklist.isEmpty()) {
 												    ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 												    new FacesScopes().getUserLocale()) });
 						} else if (null == Remark.getRemarkId()) {
-							RequestContext.getCurrentInstance().execute(
-									"reviceApprovalDlgs.show()");
+							// #34444 START***********
+							reviseSpecificationCommittee();
+							// //#34444 END**********
 						} else {
 							reviseSpecificationCommittee();
 						}
@@ -23560,6 +23581,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 					QTConstants.INACTIVE_CHECKLIST_NOTIFICATION_HIDE);
 			this.getManagedBean().setPreRenderInactiveChecklist(
 					checkInactiveChecklistForPopup(this.getManagedBean().isShowInactiveChecklistPopup(), bpAction));
+			deleteConfirmedInactiveChecklists();	//#41026/#10141
 		} else {// #40998/#10141 - Start
 			Long currentStatusId = this.getManagedBean().getCurrentStatusId();
 			if (currentStatusId.equals(QTStatusConst.SE_PENDING_REVISION)) {
@@ -23653,6 +23675,68 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			}
 		}
 	}
+
+	//#41026/#10141 - Start
+	/**
+	 * Drops checklists already marked for deletion from a reloaded checklist
+	 * list, so unsaved removals are not undone.
+	 *
+	 * @param checklists
+	 * @param markDeletedChecklists
+	 */
+	private void removeMarkedDeletedChecklists(List<ScQtCheckList> checklists,
+			List<ScQtCheckList> markDeletedChecklists) {
+		if (CollectionUtils.isEmpty(checklists) || CollectionUtils.isEmpty(markDeletedChecklists)) {
+			return;
+		}
+		Iterator<ScQtCheckList> iterator = checklists.iterator();
+		while (iterator.hasNext()) {
+			Long qtChecklistId = iterator.next().getQtChecklistId();
+			for (ScQtCheckList deleted : markDeletedChecklists) {
+				if (null != qtChecklistId && qtChecklistId.equals(deleted.getQtChecklistId())) {
+					iterator.remove();
+					break;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Deletes the confirmed inactive checklists from the database so the
+	 * popup is not shown again on the next visit.
+	 */
+	private void deleteConfirmedInactiveChecklists() {
+		List<ScQtCheckList> inActiveChecklist = this.getManagedBean().getInActiveChecklist();
+		if (CollectionUtils.isEmpty(inActiveChecklist)) {
+			return;
+		}
+		List<ScQtCheckList> specCheckLists = new ArrayList<>();
+		List<ScQtCheckList> otherCheckLists = new ArrayList<>();
+		for (ScQtCheckList checklist : inActiveChecklist) {
+			if (null == checklist.getQtChecklistId()) {
+				continue;
+			}
+			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION.equalsIgnoreCase(checklist
+					.getDefinationType().getParameterCode())) {
+				specCheckLists.add(checklist);
+			} else {
+				otherCheckLists.add(checklist);
+			}
+		}
+		if (specCheckLists.isEmpty() && otherCheckLists.isEmpty()) {
+			return;
+		}
+		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+		reqDTO.setScQt(this.getManagedBean().getQt());
+		reqDTO.setCheckLists(specCheckLists);
+		reqDTO.setTobeRemoveList(otherCheckLists);
+		getSpecSO().deleteInactiveChecklists(reqDTO);
+
+		// already deleted, so the later save must not delete them again
+		removeMarkedDeletedChecklists(this.getManagedBean().getMarkDeletedTechChecklist(), inActiveChecklist);
+		removeMarkedDeletedChecklists(this.getManagedBean().getMarkDeletedFinChecklist(), inActiveChecklist);
+	}
+	//#41026/#10141 - End
 
 	// #10141 End Vinod
 
@@ -24111,6 +24195,11 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		int specZoneTabIndex = this.getManagedBean().getSpecZoneTabIndex();
 		this.getManagedBean().setSaveForScorePrintBtn(true); //#10141 - #41172 added.
 		validatePrepareQtChecklist();
+		 // #10141 - #41066 - Start
+		if (this.getManagedBean().isMaintanceFlow()) {
+			checkSpecMaintenanceChecklist();
+		}
+		 // #10141 - #41066 - End
 		
 		this.getManagedBean().setSpecZoneTabIndex(specZoneTabIndex);
 
@@ -24317,6 +24406,45 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 	// #10141 End Vinod
 
+	// #29661, #41264 - Start
+	/**
+	 * Collects ids of the ticked preview rows.
+	 * 
+	 * @param previewList
+	 * @return
+	 */
+	private Set<Long> selectedChecklistPreviewIds(List<ScQtCheckList> previewList) {
+		Set<Long> selectedIds = new HashSet<>();
+		if (CollectionUtils.isNotEmpty(previewList)) {
+			for (ScQtCheckList checkList : previewList) {
+				if (checkList.isSelected()) {
+					selectedIds.add(checkList.getQtChecklistId());
+				}
+			}
+		}
+		return selectedIds;
+	}
+
+	/**
+	 * Re-ticks the preview rows after the list is rebuilt.
+	 * 
+	 * @param previewList
+	 * @param selectedIds
+	 * @return true when every row is ticked
+	 */
+	private boolean restoreChecklistPreviewSelection(List<ScQtCheckList> previewList, Set<Long> selectedIds) {
+		boolean allSelected = CollectionUtils.isNotEmpty(previewList);
+		if (CollectionUtils.isNotEmpty(previewList)) {
+			for (ScQtCheckList checkList : previewList) {
+				checkList.setSelected(selectedIds.contains(checkList.getQtChecklistId()));
+				allSelected = allSelected && checkList.isSelected();
+			}
+		}
+		return allSelected;
+	}
+
+	// #29661, #41264 - End
+
 	// #10141 Start Vinod
 	/**
 	 * this method will download Detailed technical checklist report.
@@ -24343,6 +24471,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 		downloadReportBasedOnChecklistTypeAndAction(reportAttachment, reportName, this.getManagedBean()
 				.getTechChecklistPreview(), false);
+		Set<Long> selectedIds = selectedChecklistPreviewIds(this.getManagedBean().getTechChecklistPreview()); //#29661, #41264
 		validatePrepareQtChecklist();
 		 // #41066 - Start
 		if (this.getManagedBean().isMaintanceFlow()) {
@@ -24350,6 +24479,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 		 // #41066 - End
 		technicalCheckListPreview();
+		this.getManagedBean().setSelectAllTechPreview(
+				restoreChecklistPreviewSelection(this.getManagedBean().getTechChecklistPreview(), selectedIds)); //#29661, #41264
 	}
 
 	// #10141 End Vinod
@@ -24419,6 +24550,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 		downloadReportBasedOnChecklistTypeAndAction(reportAttachment, reportName, this.getManagedBean()
 				.getFinChecklistPreview(), false);
+		Set<Long> selectedIds = selectedChecklistPreviewIds(this.getManagedBean().getFinChecklistPreview()); //#29661, #41264
 		validatePrepareQtChecklist();
 		 // #41066 - Start
 		if (this.getManagedBean().isMaintanceFlow()) {
@@ -24426,6 +24558,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 		 // #41066 - End
 		financialCheckListPreview();
+		this.getManagedBean().setSelectAllFinPreview(
+				restoreChecklistPreviewSelection(this.getManagedBean().getFinChecklistPreview(), selectedIds)); //#29661, #41264
 	}
 
 	// #10141 End Vinod

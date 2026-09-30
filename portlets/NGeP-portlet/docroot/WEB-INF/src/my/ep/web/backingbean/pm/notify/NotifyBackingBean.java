@@ -20,6 +20,7 @@ import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.common.notify.INotifySO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.NotificationTextConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.pm.common.notify.NotifyReqDTO;
 import my.ep.dto.pm.common.notify.NotifyResDTO;
 import my.ep.factory.EpLogger;
@@ -641,4 +642,24 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 	}
 	// 28188 -end-
 	
+	//#38107 - Start
+	/**
+	 * Retrieve notification sender, either original or eGPA
+	 * based on notification id
+	 * 
+	 * @param notify
+	 * @return
+	 */
+	public String retrieveeGPASender(PmNotifyUser notify) {
+		if (notify.getPmNotification() != null) {
+			//Convert notification id (long) to String
+			String notificationId = String.valueOf(notify.getPmNotification().getNotificationId());
+			
+			//Compare notification id with eGPA notification, if true return eGPA
+			return notificationId.equals(NotificationTextConst.TEMPLATE_ID_401223) ? SourcingConstants.ROLE_CODE_EGPA
+					: notify.getSender().getUserName();
+		}
+		return "";
+	}
+	//#38107 - End
 }

@@ -69,7 +69,7 @@
 
 			<ac:paginator for="evaluationreport" />
 			
-			<p:column style="width:2%" >
+			<p:column style="width:2%">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllChk" value="#{consolidationReportBackingBean.managedBean.templateSpecBean.selectAll}" disabled="true">
 						<p:ajax partialSubmit="true" process="@this" update="@this" listener="#{consolidationReportBackingBean.selectAll(consolidationReportBackingBean.managedBean.templateSpecBean.selectAll, consolidationReportBackingBean.managedBean.newBriefingPaperReportList)}"/>
@@ -190,7 +190,7 @@
 
 			<ac:paginator for="evaluationreportdetail" />
 			
-			<p:column style="width:2%" >
+			<p:column style="width:2%">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllChk" value="#{consolidationReportBackingBean.managedBean.templateSpecBean.selectAll}" disabled="true">
 						<p:ajax partialSubmit="true" process="@this" update="@this" listener="#{consolidationReportBackingBean.selectAll(consolidationReportBackingBean.managedBean.templateSpecBean.selectAll, consolidationReportBackingBean.managedBean.scQtFinalizationReportDetail)}"/>

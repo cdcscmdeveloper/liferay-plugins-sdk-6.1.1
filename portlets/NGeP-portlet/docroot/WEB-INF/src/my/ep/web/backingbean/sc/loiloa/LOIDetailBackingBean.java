@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  */
 
 package my.ep.web.backingbean.sc.loiloa;
@@ -765,7 +765,11 @@ public class LOIDetailBackingBean extends
 	        salutation = StringUtils.trimToEmpty(this.getManagedBean().getScLoi().getScSupplierAddress().getPmContactUserID().getSalutationCode().getSalutationName());
 	    }
 
-        return getFormattedNameWithSalutation(name, salutation);
+        return getFormattedSalutationName(salutation, name);
+	}
+	
+	// # 30447 - start
+	public void setFormattedContactPerson(String value) {
 	}
 	// # 30447 - end
 	
@@ -784,28 +788,14 @@ public class LOIDetailBackingBean extends
             salutation = StringUtils.trimToEmpty(this.getManagedBean().getContractSignerUser().getSalutationCode().getSalutationName());
         }
         
-        return getFormattedNameWithSalutation(name, salutation);
+        return getFormattedSalutationName(salutation, name);
 	}
 	// # 30447 - end
 	
 	// # 30447 - start
-	public String getFormattedNameWithSalutation(String name,String salutation) {
-		name = StringUtils.trimToEmpty(name);
-
-		salutation = StringUtils.trimToEmpty(salutation);
-		
-        if (name.isEmpty() || salutation.isEmpty()) {
-            return name;
-        }
-        if (StringUtils.startsWithIgnoreCase(name, salutation)) {
-            return name;
-        }
-        if (name.equals(name.toUpperCase())) {
-            salutation = salutation.toUpperCase();
-        }
-        return salutation + " " + name;
+	public void setFormattedContractSignerUserName(String value) {
 	}
-	// #30447 - upperCase salutation check end
+	// # 30447 - end
 	
 	/**
 	 * Pre render page navigation to multiple loi page based on task id
@@ -3180,10 +3170,12 @@ public class LOIDetailBackingBean extends
 						scLoi.getLoiNo(), Boolean.TRUE);
 				}
 			}
+			/*#34444 Start*/
+			return awardSupplierResDTO;
+			/*#34444 End*/
 		} finally {
 			// iqtAwardSO = null;
 		}
-		return awardSupplierResDTO;
 	}
 	
 	/**
@@ -3402,8 +3394,9 @@ public class LOIDetailBackingBean extends
 	        if (remarksNotFound) {
 	            throw new EpException(MessageConst.ERR_775152);
 	        }
-			RequestContext.getCurrentInstance().execute("reviseLoiDlgs.show()");
-			return;
+	        /*#34444 - Start*/
+	        reviseAction();
+	        /*#34444 - End*/
 		}
 		//25638 - End
 		//#21692 - Start
@@ -7888,9 +7881,14 @@ public class LOIDetailBackingBean extends
 	 */
 	public void validateNegoDecisionAction(String outcome) {
 		try {
+			/*#34444 Start*/
+			this.getManagedBean().setAction(outcome);
+			log.info("validateNegoDecisionAction(String outcome ::>:: " + outcome);
+			/*#34444 End*/
 			ScLoi scLoi = getManagedBean().getScLoi();
 			Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId();
 			String bpmAction = outcome;
+			
 
 			if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)) {
 				String decision = this.getManagedBean().getDecisionCode();
