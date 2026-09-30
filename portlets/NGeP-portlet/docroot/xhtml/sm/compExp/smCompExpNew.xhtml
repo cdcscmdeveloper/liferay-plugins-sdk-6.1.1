@@ -8,6 +8,41 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<ui:define name="resourceSection">
+		<ui:remove>#9299 - #41341 Start</ui:remove>
+		<!-- Keep project category descriptions readable at increased browser zoom. -->
+		<style type="text/css">
+			.sm-comp-exp-categories .ui-selectonemenu {
+				height: auto;
+				min-height: 20px;
+				min-width: 0;
+			}
+			.sm-comp-exp-categories .ui-selectonemenu .ui-selectonemenu-label {
+				box-sizing: border-box;
+				padding-right: 28px !important;
+				white-space: normal;
+				height: auto !important;
+				overflow-wrap: anywhere;
+			}
+			.sm-comp-exp-categories td {
+				white-space: normal;
+				height: auto !important;
+				overflow-wrap: anywhere;
+			}
+			.ui-selectonemenu-panel.sm-comp-exp-category-panel {
+				box-sizing: border-box;
+				width: 40em !important;
+				max-width: calc(100vw - 24px);
+			}
+			.sm-comp-exp-category-panel .ui-selectonemenu-items-wrapper {
+				max-height: 50vh;
+			}
+			.sm-comp-exp-category-panel .ui-selectonemenu-list-item {
+				white-space: normal;
+				height: auto !important;
+				overflow-wrap: anywhere;
+			}
+		</style>
+		<ui:remove>#9299 - #41341 End</ui:remove>
 		<script>
 			$('#portlet_smCompExp_WAR_NGePportlet').find('.portlet-title-text')
 					.html("#{smCompExpMB.headerTitle}");
@@ -60,7 +95,7 @@
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.agency.name']}" /> <p:outputLabel
 							styleClass="mandatory" value="*" /></td>
-					<td style="width: 66%"><p:inputText id="agencyName" size="60"
+					<td style="width: 66%"><p:inputText maxlength="255" id="agencyName" size="60"
 							style="width: auto !important;"
 							readonly="#{smCompExpMB.newMaster.clientType eq null or smCompExpMB.newMaster.clientType eq ParameterConst.clientTypeFederal}"
 							value="#{smCompExpMB.newMaster.agencyName}" /> <p:outputPanel
@@ -89,7 +124,7 @@
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td style="width: 66%"><p:inputText id="fileReferenceNo"
+					<td style="width: 66%"><p:inputText maxlength="50" id="fileReferenceNo"
 							label="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}"
 							value="#{smCompExpMB.newMaster.fileReferenceNo}">
 							<p:ajax event="blur"
@@ -130,10 +165,11 @@
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.draft.table.value']}" /> <p:outputLabel
 							styleClass="mandatory" value="*" /></td>
-					<td style="width: 66%"><p:inputText
+					<td style="width: 66%"><p:inputText maxlength="14"
 							style="width: auto !important;"
 							label="#{lbl['lbl.sm.comp.exp.draft.table.title']}"
 							value="#{smCompExpMB.newMaster.contractValue}">
+							<p:ajax event="blur" process="@this" update="@this" /><!-- #41341 format decimal on blur -->
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText></td>
@@ -228,7 +264,7 @@
 								styleClass="outputLabel-view-label2"
 								value="#{lbl['lbl.sm.comp.exp.update.proj.loc']}" /> <p:outputLabel
 								styleClass="mandatory" value="*" /></td>
-						<td style="width: 66%"><p:inputText
+						<td style="width: 66%"><p:inputText maxlength="300"
 								styleClass="outputLabel-view"
 								value="#{smCompExpMB.newMaster.projectLoc}" /></td>
 					</tr>
@@ -237,7 +273,7 @@
 								styleClass="outputLabel-view-label2"
 								value="#{lbl['lbl.sm.comp.exp.update.serv.provide']}" /> <p:outputLabel
 								styleClass="mandatory" value="*" /></td>
-						<td style="width: 66%"><p:inputText
+						<td style="width: 66%"><p:inputText maxlength="500"
 								styleClass="outputLabel-view"
 								value="#{smCompExpMB.newMaster.workServDesc}" /></td>
 					</tr>
@@ -246,9 +282,10 @@
 								styleClass="outputLabel-view-label2"
 								value="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}" /> <p:outputLabel
 								styleClass="mandatory" value="*" /></td>
-						<td style="width: 66%"><p:inputText
+						<td style="width: 66%"><p:inputText maxlength="14"
 								label="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}"
 								value="#{smCompExpMB.newMaster.consultantFee}">
+								<p:ajax event="blur" process="@this" update="@this" /><!-- #41341 format decimal on blur -->
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText></td>
@@ -263,7 +300,7 @@
 				value="#{lbl['lbl.sm.comp.exp.add.new.cat.code.instruction']}" escape="false"/>
 			<p:dataTable id="smCompExpCatCodes" rows="10" rowIndexVar="index"
 				value="#{smCompExpMB.newMaster.compExpMasterCats}"
-				var="smCompExpCatCode" widgetVar="smCompExpCatCodesWV">
+				var="smCompExpCatCode" widgetVar="smCompExpCatCodesWV" styleClass="sm-comp-exp-categories">
 				<ac:paginator for="smCompExpCatCodes" />
 				<p:column style="width:2%">
 					<f:facet name="header">
@@ -281,6 +318,7 @@
 					headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
 					<h:outputText styleClass="mandatory" value="*" />
 					<p:selectOneMenu id="mainDDId" style="width:95% !important;"
+						panelStyleClass="sm-comp-exp-category-panel"
 						label="#{lbl['lbl.sm.projDtls.mainCat']}"
 						value="#{smCompExpCatCode.categoryL1.categoryL1Id}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -298,6 +336,7 @@
 					headerText="#{lbl['lbl.sm.projDtls.subCat']}">
 					<h:outputText styleClass="mandatory" value="*" />
 					<p:selectOneMenu id="subDDId" style="width:95% !important;"
+						panelStyleClass="sm-comp-exp-category-panel"
 						label="#{lbl['lbl.sm.projDtls.subCat']}"
 						value="#{smCompExpCatCode.categoryL2.categoryL2Id}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -315,6 +354,7 @@
 					headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
 					<h:outputText styleClass="mandatory" value="*" />
 					<p:selectOneMenu id="subDivDDId" style="width:95% !important;"
+						panelStyleClass="sm-comp-exp-category-panel"
 						label="#{lbl['lbl.sm.projDtls.subCatDiv']}"
 						value="#{smCompExpCatCode.categoryL3.categoryL3Id}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -355,7 +395,7 @@
 					process="@form" update=":form">
 					<p:graphicImage value="/css/images/design/upload.png"
 						style="margin-right:2px;" />
-				</p:commandLink> <p:outputPanel id="smCompExpSuppDocListPanelId">
+				</p:commandLink> <p:graphicImage id="suppDocToolTipsId" value="/css/images/design/tooltips.png" /><!-- 9299 CR p255: supp doc tooltip --> <p:tooltip for="suppDocToolTipsId"><img src="/NGeP-portlet/images/suratSetujuTerima_suppDoc_tooltip.jpeg" /></p:tooltip> <p:outputPanel id="smCompExpSuppDocListPanelId">
 					<ui:repeat value="#{smCompExpMB.newMaster.compExpMasterDocs}"
 						var="doc">
 						<br />

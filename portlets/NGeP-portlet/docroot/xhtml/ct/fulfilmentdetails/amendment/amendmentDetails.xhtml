@@ -20,7 +20,8 @@
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend}"
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL or !amendmentBackingBean.validExtensionDate() or ctBackingBean.managedBean.contractExpired
 					or amendmentBackingBean.isContractAmountAmend()}"><!-- Enhancement 15851 - shaqimi -->
-					<p:ajax event="change" update=":form:typesOfAmend,:form:instruction,:form:itemId,:form:serviceId,:form:approvingAuthorityPanel"
+					<!-- #24336 add update :form:newAmtEffDate -->
+					<p:ajax event="change" update=":form:typesOfAmend,:form:instruction,:form:itemId,:form:serviceId,:form:approvingAuthorityPanel,:form:newAmtEffDate"
 						process="@all" onstart="blockWidget.show();" 
 					   oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onContractExtensionChecked}" />
 				</p:selectBooleanCheckbox>
@@ -180,7 +181,8 @@
 					onblur="this.value = this.value.trim() == '' ? '0' : this.value;"
     				onchange="this.value = this.value.trim() == '' ? '0' : this.value;"
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
-					<p:ajax event="change" update="extStartDate, extEndDate,extendMonthsId, :form:itemId, :form:serviceId" listener="#{amendmentBackingBean.onExtensionPeriodChanged}"/>
+					<!-- #24336 add update :form:newAmtEffDate -->
+					<p:ajax event="change" update="extStartDate, extEndDate,extendMonthsId, :form:itemId, :form:serviceId, :form:newAmtEffDate" listener="#{amendmentBackingBean.onExtensionPeriodChanged}"/>
 					</p:inputText>
 					<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.months']}" />
@@ -191,7 +193,8 @@
 					onblur="this.value = this.value.trim() == '' ? '0' : this.value;"
     				onchange="this.value = this.value.trim() == '' ? '0' : this.value;"
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
-					<p:ajax event="change" update="extStartDate, extEndDate, extendDaysId, :form:itemId, :form:serviceId" listener="#{amendmentBackingBean.onExtensionPeriodChanged}"/>
+					<!-- #24336 add update :form:newAmtEffDate -->
+					<p:ajax event="change" update="extStartDate, extEndDate, extendDaysId, :form:itemId, :form:serviceId, :form:newAmtEffDate" listener="#{amendmentBackingBean.onExtensionPeriodChanged}"/>
 					</p:inputText>
 				<p:outputLabel value="#{lbl['lbl.ct.days']}" />
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.period.day']}" style="text-align:left"/>
@@ -229,7 +232,7 @@
 				    mindate="#{amendmentBackingBean.managedBean.newAmendmentEffDate}"
 				    rendered="#{!ctBackingBean.managedBean.disableAmendDetails and !ctBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
 				        <p:ajax event="dateSelect" process="@this" onstart="blockWidget.show();"  oncomplete="blockWidget.hide();"
-				            listener="#{amendmentBackingBean.changeAmendmentEffDate}"  update=":form:itemId,:form:serviceId"/> 
+				            listener="#{amendmentBackingBean.changeAmendmentEffDate}"  update=":form:itemId,:form:serviceId,newAmtEffDate"/> 
 				</p:calendar>
 				<p:inputText disabled="true" style="width:90px;"
 					rendered="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"
@@ -274,7 +277,7 @@
 				<p:selectBooleanCheckbox
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq}"
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL or amendmentBackingBean.isContractAmountAmend()}">
-					<p:ajax event="change" update=":form:secretryDropDownPanel" process="@all"
+					<p:ajax event="change" update="secretryDropDownPanel" process="@this"
 					   onstart="blockWidget.show();" 
 					   oncomplete="blockWidget.hide();"
 					   listener="#{amendmentBackingBean.resetPbqcAuthoritySelection}" /> <!-- #24336 -->
@@ -296,11 +299,11 @@
 					<p:selectOneRadio id="committeeType" styleClass="committee-type-radio" layout="pageDirection"
 						value="#{amendmentBackingBean.managedBean.committeeType}" disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}">
 						<f:selectItems value="#{amendmentBackingBean.getCommitteeTypeSelectItems()}" />
-						<p:ajax event="change" update="secretaryId" process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
+						<p:ajax event="change" update="secretaryPanel" process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
 					</p:selectOneRadio>
 				</h:panelGrid>
 
-				<h:panelGrid columns="3" columnClasses="columnWidth170" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq}">
+				<h:panelGrid id="secretaryPanel" columns="3" columnClasses="columnWidth170" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.pbqcAuthorityReq}">
 					<p:outputLabel value="#{lbl['lbl.ct.secretary.committee']}" />
 					<p:spacer width="2" />
 					<p:selectOneMenu id="secretaryId" value="#{amendmentBackingBean.managedBean.secretaryId}"
