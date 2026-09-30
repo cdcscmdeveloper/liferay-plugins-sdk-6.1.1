@@ -3,15 +3,18 @@ package my.ep.web.backingbean.pm.audit.mapbeans;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.log4j.Logger;
 
 import my.ep.constant.pm.AuditPMSupplierMgtConfigConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmDocumentRestr;
 import my.ep.web.managedbean.pm.common.supportdoc.SupportDocumentManagedBean;
+import my.ep.web.util.pm.helper.ParameterHelper;
 
 /**
  * AuditPMSupportingDocumentBackingBean
@@ -40,14 +43,15 @@ public class AuditPMSupportingDocumentNewListBackingBean {
 		this.roleCode = roleCode;
 		this.docNo = managedBeans.getSelectedDocument().getDisplaySeq();
 		this.docType = managedBeans.getSelectedDocument().getDocName();
+		Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
 		for (PmDocumentRestr pmDocumentRestr : managedBeans.getAppTypeRestrictionsNew()) {
 			/*
 			 * Restriction Document - AppTypeList - Application Type #14
 			 */
 			this.docId = BigInteger.valueOf(pmDocumentRestr.getAppTypeCode().getParameterId());
 			this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
-			detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_APPTYPE_FIELDLABELID, null, pmDocumentRestr.getAppTypeCode()
-					.getPmParameterDescsSpecCallOnly().get(1).getCodeDesc(), actionType(updated));
+					
+					detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_APPTYPE_FIELDLABELID, null, ParameterHelper.getInstance().getParameterDesc(pmDocumentRestr.getAppTypeCode().getParameterType(), pmDocumentRestr.getAppTypeCode().getParameterCode(), locale), actionType(updated));
 			/*
 			 * Restriction Document - AppTypeList - Section : TextList -
 			 * isCompanyInfoChanged #15
@@ -125,6 +129,7 @@ public class AuditPMSupportingDocumentNewListBackingBean {
 		this.roleCode = roleCode;
 		this.docNo = managedBeans.getSelectedDocument().getDisplaySeq();
 		this.docType = managedBeans.getSelectedDocument().getDocName();
+		Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
 		if (null != managedBeans.getNewCompanyCodeTypeAuditList() && !managedBeans.getNewCompanyCodeTypeAuditList().isEmpty()) {
 			log.info("managedBeans.getNewCompanyCodeTypeAuditList()_AAA#&##& ::: "
 					+ managedBeans.getNewCompanyCodeTypeAuditList().size());
@@ -134,12 +139,9 @@ public class AuditPMSupportingDocumentNewListBackingBean {
 				log.info("managedBeans.getSelectedDocument().getDocumentId()_CCC#&##& ::: "
 						+ managedBeans.getSelectedDocument().getDocumentId());
 			this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
-				System.out
-						.println("pmDocumentRestr.getCompanyTypeCode().getPmParameterDescsSpecCallOnly().get(1).getCodeDesc()_DDD#&##& ::: "
-								+ pmDocumentRestr.getCompanyTypeCode().getPmParameterDescsSpecCallOnly().get(1).getCodeDesc());
-			detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_COMPTYPE_FIELDLABELID, null, pmDocumentRestr.getCompanyTypeCode()
-					.getPmParameterDescsSpecCallOnly().get(1).getCodeDesc(), actionType(updated));
-		}
+							
+				detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_COMPTYPE_FIELDLABELID, null, ParameterHelper.getInstance().getParameterDesc(pmDocumentRestr.getCompanyTypeCode().getParameterType(), pmDocumentRestr.getCompanyTypeCode().getParameterCode(), locale), actionType(updated));
+						}
 
 		managedBeans.setComTypeRestrictionsNew(null);
 		}
@@ -157,11 +159,12 @@ public class AuditPMSupportingDocumentNewListBackingBean {
 		this.roleCode = roleCode;
 		this.docNo = managedBeans.getSelectedDocument().getDisplaySeq();
 		this.docType = managedBeans.getSelectedDocument().getDocName();
+		Locale locale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
 		for (PmDocumentRestr pmDocumentRestr : managedBeans.getSuppTypeRestrictionsNew()) {
 			this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
-			this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
-			detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_SUPPTYPE_FIELDLABELID, null, pmDocumentRestr.getSupplierTypeCode()
-					.getPmParameterDescsSpecCallOnly().get(1).getCodeDesc(), actionType(updated));
+			this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());			
+			
+			detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_SUPPTYPE_FIELDLABELID, null, ParameterHelper.getInstance().getParameterDesc(pmDocumentRestr.getSupplierTypeCode().getParameterType(), pmDocumentRestr.getSupplierTypeCode().getParameterCode(), locale), actionType(updated));
 		}
 
 		managedBeans.setSuppTypeRestrictionsNew(null);
@@ -193,10 +196,10 @@ public class AuditPMSupportingDocumentNewListBackingBean {
 								.concat(pmDocumentRestr.getPmCategoryL3().getCategoryL3Code()), actionType(updated));
 				/* 25 */
 				detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_CATEGORYMAINTYPE_FIELDLABELID, null, pmDocumentRestr
-						.getPmCategoryL3().getPmCategoryL2().getCategoryName(), actionType(updated));
+						.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryName(), actionType(updated));
 				/* 26 */
 				detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_CATEGORYSUBTYPE_FIELDLABELID, null, pmDocumentRestr
-						.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryName(), actionType(updated));
+						.getPmCategoryL3().getPmCategoryL2().getCategoryName(), actionType(updated));
 				/* 27 */
 				detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_CATEGORYSUBDIVTYPE_FIELDLABELID, null, pmDocumentRestr
 						.getPmCategoryL3().getCategoryName(), actionType(updated));

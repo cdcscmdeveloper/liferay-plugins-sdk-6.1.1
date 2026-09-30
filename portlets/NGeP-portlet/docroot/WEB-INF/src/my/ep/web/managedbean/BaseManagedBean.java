@@ -27,6 +27,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
+import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.util.FacesScopes;
 
@@ -158,9 +159,6 @@ public abstract class BaseManagedBean implements Serializable {
 	private Boolean isDowngradeRole;
 	// end #29956
 	
-	//14685 - START
-	private boolean showMessage;
-	//14685 - END
 	
 	// 27346
 	private StreamedContent downloadfile;
@@ -188,6 +186,19 @@ public abstract class BaseManagedBean implements Serializable {
 	private boolean displayLabelRegistrationStatus;
 	private boolean displayDropdownRegStatus;
 //	37925 END
+	
+	// 12471 - start
+	private SelectItem[] ministryDDList;
+	private SelectItem[] ptjGroupDDList;
+	private SelectItem[] ptjDDList;
+	private SelectItem[] orgTypeDDList;
+	private SelectItem[] orgNameDDList;
+	private String memberName;
+	private String memberMinOrg;
+	private String memberPtjOrgCode;
+	private String memberPtjOrgName;
+	private UserCommitteeSearchBean committeeSearchBean;
+	// 12471 - end
 	
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
@@ -1034,15 +1045,6 @@ public abstract class BaseManagedBean implements Serializable {
 		this.errorInvalidSelfRequest = errorInvalidSelfRequest;
 	}
 	
-	//14685 - START
-	public boolean isShowMessage() {
-		return showMessage;
-	}
-
-	public void setShowMessage(boolean showMessage) {
-		this.showMessage = showMessage;
-	}
-	//14685 - END
 
 	//start #29956
 	public Boolean isDowngradeRole() {
@@ -1160,4 +1162,92 @@ public abstract class BaseManagedBean implements Serializable {
 		this.displayDropdownRegStatus = displayDropdownRegStatus;
 	}
 //	37925 END
+	
+	// 12471 - start
+	public SelectItem[] getMinistryDDList() {
+		return ministryDDList;
+	}
+
+	public void setMinistryDDList(SelectItem[] ministryDDList) {
+		this.ministryDDList = ministryDDList;
+	}
+
+	public SelectItem[] getPtjGroupDDList() {
+		return ptjGroupDDList;
+	}
+
+	public void setPtjGroupDDList(SelectItem[] ptjGroupDDList) {
+		this.ptjGroupDDList = ptjGroupDDList;
+	}
+
+	public SelectItem[] getPtjDDList() {
+		return ptjDDList;
+	}
+
+	public void setPtjDDList(SelectItem[] ptjDDList) {
+		this.ptjDDList = ptjDDList;
+	}
+
+	public SelectItem[] getOrgTypeDDList() {
+		return orgTypeDDList;
+	}
+
+	public void setOrgTypeDDList(SelectItem[] orgTypeDDList) {
+		this.orgTypeDDList = orgTypeDDList;
+	}
+
+	public SelectItem[] getOrgNameDDList() {
+		return orgNameDDList;
+	}
+
+	public void setOrgNameDDList(SelectItem[] orgNameDDList) {
+		this.orgNameDDList = orgNameDDList;
+	}
+
+	public String getMemberName() {
+		return memberName;
+	}
+
+	public void setMemberName(String memberName) {
+		this.memberName = memberName;
+	}
+
+	public String getMemberMinOrg() {
+		return memberMinOrg;
+	}
+
+	public void setMemberMinOrg(String memberMinOrg) {
+		this.memberMinOrg = memberMinOrg;
+	}
+
+	public String getMemberPtjOrgCode() {
+		return memberPtjOrgCode;
+	}
+
+	public void setMemberPtjOrgCode(String memberPtjOrgCode) {
+		this.memberPtjOrgCode = memberPtjOrgCode;
+	}
+
+	public String getMemberPtjOrgName() {
+		return memberPtjOrgName;
+	}
+
+	public void setMemberPtjOrgName(String memberPtjOrgName) {
+		this.memberPtjOrgName = memberPtjOrgName;
+	}
+
+	public UserCommitteeSearchBean getCommitteeSearchBean() {
+		return committeeSearchBean;
+	}
+
+	public void setCommitteeSearchBean(UserCommitteeSearchBean committeeSearchBean) {
+		this.committeeSearchBean = committeeSearchBean;
+	}
+	// 12471 - end
+
+	// #40112 - Start
+	public boolean isAiEnabled() {
+		return false;
+	}
+	// #40112 - End
 }

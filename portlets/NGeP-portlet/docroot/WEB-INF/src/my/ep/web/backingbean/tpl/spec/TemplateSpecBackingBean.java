@@ -2219,6 +2219,8 @@ public class TemplateSpecBackingBean extends
 						|| templateSpecHelper
 								.isPriceTypeZonalStandard(priceType)) {
 
+					recalcMissingTotalAmount(specMaster, tplSpecAnswer, quantity); //#41210
+
 					if (tplSpecAnswer.getAnswerNumeric() != null) {
 						totalAmount = totalAmount.add(tplSpecAnswer
 								.getAnswerNumeric()).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
@@ -2240,6 +2242,36 @@ public class TemplateSpecBackingBean extends
 		return totalAmount;
 	}
 	
+	//#41210 - Start
+	/**
+	 * Fill in total amount and amount per year when an offered rate was saved without them.
+	 *
+	 * @param specMaster
+	 * @param specAnswer
+	 * @param quantity
+	 */
+	private void recalcMissingTotalAmount(TplSpecMaster specMaster, TplSpecAnswer specAnswer, BigDecimal quantity) {
+		if (specAnswer.getAnswerNumeric() != null || specAnswer.getRatePerUom() == null) {
+			return;
+		}
+		TplSpecQuestion specQuestion = specAnswer.getTplSpecQuestion();
+		specAnswer.setAnswerNumeric(TemplateSpecHelper.getInstance().calcTotalAmount(
+				specQuestion, specAnswer.getRatePerUom(), quantity));
+
+		if (specAnswer.getAnswerNumeric() != null && specAnswer.getAmountPerYear() == null
+				&& ParameterConst.ITEM_TYPE_SERVICE.equals(specMaster.getItemTypeCode().getParameterCode())) {
+			BigDecimal durationMonth = specQuestion.getClDurationMonth() != null
+					? specQuestion.getClDurationMonth() : specMaster.getDurationMonth();
+			BigDecimal amountPerYear = specAnswer.getAnswerNumeric();
+
+			if (durationMonth != null && durationMonth.signum() > 0) {
+				amountPerYear = amountPerYear.divide(durationMonth, 2, RoundingMode.HALF_UP);
+			}
+			specAnswer.setAmountPerYear(amountPerYear.multiply(BigDecimal.valueOf(12)));
+		}
+	}
+	//#41210 - End
+
 	/**
 	 * Calculate the Total Amount Per Question
 	 * 
@@ -3360,6 +3392,7 @@ public class TemplateSpecBackingBean extends
 				templateSpecBean.getSpecMaster().setTotalEstAmount(totalEstAmount);
 			}
 		}
+		templateSpecBean.setSelectedSpecQuestion(null); //#40402
 	}
 	// #25039 End - version zonal
 /** #21695 FARID START */
@@ -3922,7 +3955,7 @@ public class TemplateSpecBackingBean extends
 	 * @return boolean
 	 */
 	public boolean displayMandatorySpecColumn(TemplateSpecBean templateSpecBean) {
-		boolean manSpec = false;
+		boolean mandatorySpec = false;
 		Long statusId = null != this.getManagedBean().getScQt()
 				&& null != this.getManagedBean().getScQt().getQtStatus()
 				&& null != this.getManagedBean().getScQt().getQtStatus()
@@ -3946,12 +3979,12 @@ public class TemplateSpecBackingBean extends
 				if (questionType
 						.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)
 						&& isMandatorySpec) {
-					manSpec = true;
+					mandatorySpec = true;
 					break;
 				}
 			}
 		}
-		return manSpec;
+		return mandatorySpec;
 	}
 
 	// #29187 End Vinod
@@ -4017,7 +4050,6 @@ public class TemplateSpecBackingBean extends
 	 * @return
 	 */
 	public void itemComplianceChangeControl(ValueChangeEvent event) {
-		log.info("New: " + event.getNewValue() + ", Old: " + event.getOldValue());
 		if (event.getOldValue() == null) {
 			getManagedBean().setComplianceOldNull(true);
 		} else {
@@ -4045,6 +4077,75 @@ public class TemplateSpecBackingBean extends
 		}
 	}
 	//#36248_haziq - End
+	
+	//#35293 - Start
+	/**
+	 * To validate Score input value
+	 * 
+	 * @param context
+	 * @param component
+	 * @param value
+	 */
+	public void validateInputScore(FacesContext context, UIComponent component, Object value) {
+		if (value == null) {
+			return;
+		}
+
+		BigDecimal inputValue = new BigDecimal(value.toString());
+		TplSpecAnswer tplSpecAnswer = (TplSpecAnswer) component.getAttributes().get("tplSpecAnswer");
+
+		boolean hasWeightage = false;
+
+		if (tplSpecAnswer != null && tplSpecAnswer.getTplSpecQuestion() != null
+				&& Boolean.TRUE.equals(tplSpecAnswer.getTplSpecQuestion().isWeightageReq())) {
+			hasWeightage = true;
+		}
+		String label = (String) component.getAttributes().get("label");
+		if (label == null) {
+			label = component.getId();
+		}
+
+		if (hasWeightage) {
+
+			// check decimal places (max 2)
+			if (inputValue.stripTrailingZeros().scale() > 2) {
+
+				Object minAttr = component.getAttributes().get("min");
+				Object maxAttr = component.getAttributes().get("max");
+
+				String min = minAttr != null ? minAttr.toString() : "0";
+				String max = maxAttr != null ? maxAttr.toString() : "";
+
+				String errMsg = ResourceBundleUtils.getMessage("lbl.pm.settings.decimal.validaton", new String[] {
+						label, inputValue.toString(), min, max }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale());
+
+				throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
+			}
+		}
+	}
+
+	/**
+	 * Get Max Score
+	 * @param answer
+	 * @param hasWeightage
+	 * @return
+	 */
+	public String getMaxScoreDisplay(TplSpecAnswer answer, boolean hasWeightage) {
+
+		BigDecimal maxScore = answer.getTplSpecQuestion().getMaxScore();
+
+		if (hasWeightage) {
+			if (this.getManagedBean().isWeightage35384WIP()) {
+				BigDecimal weightage = answer.getTplSpecQuestion().getWeightage();
+				maxScore = maxScore.multiply(weightage);
+			}
+			BigDecimal result = maxScore.setScale(2, RoundingMode.HALF_UP);
+			return result.toPlainString(); // returns 20.00
+		}
+		return maxScore.stripTrailingZeros().toPlainString(); // returns 20
+	}
+	//#35293 - End
 	
 	// #39210 Start Vinod 3/10/2025
 	/**
@@ -4101,10 +4202,16 @@ public class TemplateSpecBackingBean extends
 	}
 	// #39210 End Vinod 3/10/2025
 	
-	// #38151 Start
+	// #38151 & #38679 Start
 	private void checkWeightage35384WIP() {
 		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTDetailSO.class);
+		//#38151 - Start
+		//Fix return null during Template Specification Maintenance.
+		if (this.getManagedBean().getTemplateSpecBean().getSpecMaster().getScQtDoc() == null){
+			return;
+		}
+		//#38151 - End
 		ScQt qt = this.getManagedBean().getTemplateSpecBean().getSpecMaster().getScQtDoc().getScQt();
 		Date publishDate = qt.getPublishDate();
 		Date createdDate = qt.getCreatedDate();
@@ -4136,6 +4243,6 @@ public class TemplateSpecBackingBean extends
 			}
 		}
 	}
-	// #38151 End
+	// #38151 & #38679 End
 
 }

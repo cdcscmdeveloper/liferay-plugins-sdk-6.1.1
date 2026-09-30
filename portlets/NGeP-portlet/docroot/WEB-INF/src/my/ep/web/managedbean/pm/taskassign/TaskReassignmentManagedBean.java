@@ -97,6 +97,8 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	private PmUser pmUser;
 	// 20231012 #7465 - End
 
+	private boolean enableAssignButton = true; //#36053
+
 	public TaskReassignmentManagedBean(){}
 
 	/**
@@ -713,4 +715,13 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	}
 	// 20231012 #7465 - End
 
+	//#36053 Start
+	public boolean isEnableAssignButton() {
+		return enableAssignButton;
+	}
+
+	public void setEnableAssignButton(boolean enableAssignButton) {
+		this.enableAssignButton = enableAssignButton;
+	}
+	//#36053 End
 }

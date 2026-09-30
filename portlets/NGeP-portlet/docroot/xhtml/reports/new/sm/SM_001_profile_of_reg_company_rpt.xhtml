@@ -38,8 +38,21 @@
 			</td>
 			 -->
 			<td class="tdContent">
+				<!-- #40001 - START -->
+				<ui:remove>
 				<ac:smReportBasicSupplier bBean="#{profileOfRegCompanyRptBB}" required="true"
 				saveObj="profileOfRegCompanyRptBB.managedBean.selectedBasicAccount" />
+				</ui:remove>
+				<ac:lov id="basicMofSupplier" readonly="true" style="width:289px;"
+					lovId="SM_RPT_BASIC_ACCOUNT" size="40"
+					headerText="#{lbl['lbl.sm.supplov']}" 
+					value="#{profileOfRegCompanyRptBB.managedBean.selectedBasicAccount.companyName}"
+					saveObject="profileOfRegCompanyRptBB.managedBean.selectedBasicAccount" 
+					conditionField="#{profileOfRegCompanyRptBB.constructConditionFieldsBasic()}"
+					tooltip="#{lbl['lbl.sm.rpt.profile.tooltip']}" 
+					displayResultWhenFirstLoad = "false" 
+					displayResultWhenReset = "false"/>
+				<!-- #40001 - END -->
 			</td>
 		</p:outputPanel>
 		<!-- #30824 & #29712, #32564 - end -->

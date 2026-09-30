@@ -1,84 +1,264 @@
 <html>
-   <head>
-      <style>
-         @page { size: A4 portrait;}
-      </style>
-   </head>
-   <body>
-      <table border="1" width="100%" style="font-weight: normal;">
-         <tbody>
+<head>
+    <style>
+        @page Section1 {
+            size: 8.5in 11.0in;
+            margin: 1.0in 1.0in 1.0in 1.0in;
+            mso-header-margin: .5in;
+            mso-footer-margin: .5in;
+            mso-title-page: yes;
+            mso-header: h1;
+            mso-footer: f1;
+            mso-break-type: section-break;
+        }
+
+        div.Section1 {
+            page: Section1;
+        }
+
+        table#hrdftrtbl {
+            margin: 0in 0in 0in 900in;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
+
+        pageBreak {
+            clear: all;
+            page-break-before: always;
+            mso-special-character: line-break;
+        }
+
+        @page Section2 {
+            size: 8.5in 11.0in;
+            margin: 1.0in 1.0in 1.0in 1.0in;
+            mso-header-margin: .5in;
+            mso-footer-margin: .5in;
+            mso-title-page: yes;
+            mso-header: fh1;
+            mso-footer: ff1;
+            mso-break-type: section-break;
+        }
+
+        div.Section2 {
+            page: Section2;
+        }
+
+        table#tblforheader {
+            margin: 0in 0in 0in 900in;
+            overflow: hidden;
+        }
+
+        pageBreak2 {
+            clear: all;
+            page-break-before: always;
+            mso-special-character: line-break;
+        }
+
+        @media print {
+            thead {
+                display: table-header-group;
+            }
+
+            .break {
+                page-break-after: always;
+            }
+        }
+
+        td, div {
+            font-family: Arial;
+            font-size: 10pt;
+            padding: 0;
+        }
+
+        td {
+            padding: 0;
+        }
+
+        .table2 {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .table2 th, .table2 td {
+            border: 1px solid black;
+        }
+
+        th {
+            background-color: #DEDEDE;
+        }
+    </style>
+</head>
+<body>
+    <table border="1" width="100%" cellpadding="0" cellspacing="0" style="font-weight: normal;">
+        <tbody>
             <tr>
-               <td>
-                  <table width="100%">
-                     <tbody>
-                        <tr>
-                           <td width="20%">
-                              <img width="120" height="100" src="$imgUrl"/>
-                           </td>
-                           <td>
-                              <table>
-                                 <tbody>
-                                    <tr>
-                                       <td>$ptjName</td>
-                                    </tr>
-                                    <tr>
-                                       <td>$ministryJabatanName</td>
-                                    </tr>
-                                    <tr>
-                                       <td>$ptjAddress</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Tel No: $telNo</td>
-                                    </tr>
-                                    <tr>
-                                       <td>Fax No: $faxNo</td>
-                                    </tr>
-                                 </tbody>
-                              </table>
-                           </td>
-                        </tr>
-                     </tbody>
-                  </table>
-               </td>
+                <td>
+                    <table width="100%">
+                        <tbody>
+                            <tr>
+                                <td width="20%">
+                                    <img width="120" height="100" src="$imgUrl"/>
+                                </td>
+                                <td>
+                                    <table>
+                                        <tbody>
+                                            <tr><td><strong>$ptjName</strong></td></tr>
+                                            <tr><td><strong>$ministryJabatanName</strong></td></tr>
+                                            <tr><td><strong>$ptjAddress</strong></td></tr>
+                                            <tr><td><strong>Tel No: $telNo</strong></td></tr>
+                                            <tr><td><strong>Fax No: $faxNo</strong></td></tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
             </tr>
-         </tbody>
-      </table>
-      <br/>
-      <div style="font-weight: normal; text-align: center;"><strong><u>NOTIS PEMBERITAHUAN</u></strong></div>
-      <div style="font-weight: normal; text-align: center;"><strong><u><br/></u></strong></div>
-      <div style="font-weight: normal; text-align: right;"><span style="font-size: 10pt;">Tarikh: $noticeDate</span></div>
-      <div style="font-weight: normal; text-align: right;"><br/></div>
-      <div style="font-weight: normal; text-align: left;">Kepada:&nbsp;</div>
-      <div style="text-align: left;"><strong>$supplierName</strong></div>
-      <div style="text-align: left;"><strong>$supplierAddress</strong></div>
-      <div style="font-weight: normal; text-align: left;"><br/></div>
-      <div style="font-weight: normal; text-align: left;">Tuan,</div>
-      <div style="font-weight: normal; text-align: left;"><br/></div>
-      <div style="text-align: left;"><strong>Notis Penamatan Bersama Kontrak</strong></div>
-      <div style="font-weight: normal; text-align: left;"><br/></div>
-      <div style="text-align: left;"><strong>Kontrak:&nbsp;<span class="Apple-tab-span" style="white-space: pre;">			</span>$contractTitle</strong></div>
-      <div style="text-align: left;"><strong>No. Kontrak:&nbsp;<span class="Apple-tab-span" style="white-space:pre">		</span>$contractPhysicalNo</strong></div>
-      <div style="text-align: left;"><strong>Had Nilai Kontrak:&nbsp;<span class="Apple-tab-span" style="white-space:pre">	</span>RM&nbsp;$contractAmount</strong></div>
-      <div style="text-align: left;"><strong>Tempoh Kontrak Date:&nbsp;<span class="Apple-tab-span" style="white-space: pre;">	</span>$effDate sehingga $expDate</strong></div>
-       <div style="text-align: left;"><strong>Tarikh Penamatan Bersama:&nbsp;<span class="Apple-tab-span" style="white-space: pre;">	</span>$noticeDate </strong></div>
-      <div style="font-weight: normal; text-align: left;">
-         <hr/>
-      </div>
-      <div style="font-weight: normal; text-align: left;"><span style="font-size: 10pt;">Ini adalah pemberitahuan kepada persetujuan bersama di antara Pihak Kerajaan dan pihak tuan untuk penamatan Kontrak seperti dirujuk di atas dan penamatan Kontrak tersebut adalah berkuatkuasa secara serta-merta.&nbsp;</span></div>
-      <div style="font-weight: normal; text-align: left;"><span style="font-size: 10pt;"><br/></span></div>
-      <div style="font-weight: normal; text-align: left;"><span style="font-size: 10pt;"><br/></span></div>
-      <div style="font-weight: normal; text-align: left;"><br/></div>
-      <div style="font-weight: normal; text-align: center;"><strong>"BERKHIDMAT UNTUK NEGARA"</strong></div>
-      <div style="font-weight: normal; text-align: left;"><br/></div>
-      <div style="font-weight: normal; text-align: left;"><br/></div>
-      <div style="font-weight: normal; text-align: left;"><br/></div>
-      <div style="font-weight: normal; text-align: left;">Saya yang menurut perintah,&nbsp;</div>
-      <div style="font-weight: normal; text-align: left;"><br/></div>
-      <div style="font-weight: normal; text-align: left;"><br/></div>
-      <div style="font-weight: normal; text-align: left;">------------------------------------------------------</div>
-      <div style="font-weight: normal; text-align: left;">$approverName</div>
-      <div style="font-weight: normal; text-align: left;">$approverDesignation</div>
-      <div style="font-weight: normal; text-align: left;">$ptjName</div>
-      <div style="font-weight: normal; text-align: left;">$ministryName</div>
-   </body>
+        </tbody>
+    </table>
+    <br/>
+    <div style="font-weight: normal; text-align: center;">
+        <strong><u>NOTIS PENAMATAN BERSAMA</u></strong>
+    </div>
+    <div style="font-weight: normal; text-align: right;">Rujukan: $fileRefNo</div>
+    <div style="font-weight: normal; text-align: right;">Tarikh: $noticeDate</div>
+    <br/>
+    <div style="font-weight: normal; text-align: left;">Kepada:&nbsp;</div>
+    <div style="text-align: left;">
+        <strong>$supplierName</strong>
+    </div>
+    <div style="text-align: left;">
+        <strong>$supplierAddress</strong>
+    </div>
+    <br/>
+    <div style="font-weight: normal; text-align: left;">Tuan,</div>
+    <table border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td>
+                <div>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><p><strong>Notis Penamatan Bersama Bagi </strong></p></td>
+                                <td><p><strong>:</strong></p></td>
+                            </tr>
+                            <tr>
+                                <td><p><strong>Kontrak </strong></p></td>
+                                <td><p>: $contractTitle</p></td>
+                            </tr>
+                            <tr>
+                                <td><p><strong>No. Kontrak </strong></p></td>
+                                <td><p>: $contractNo</p></td>
+                            </tr>
+                            <tr>
+                                <td><p><strong>Tempoh Kontrak </strong></p></td>
+                                <td><p>: $effDate sehingga $expDate</p></td>
+                            </tr>
+							<tr>
+                                <td><p><strong>Tarikh Penamatan Bersama </strong></p></td>
+                                <td><p>: $decisionDate</p></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+	<hr/>
+    <div style="text-align: left;">
+        <span style="font-weight: normal;">Dengan hormatnya saya merujuk kepada perkara di atas dan perbincangan bertarikh <strong>$decisionDate</strong> di antara Kerajaan dan syarikat tuan adalah berkaitan. </span>
+    </div>
+    <div style="text-align: left;">
+        <span style="font-weight: normal;">
+            2. Berdasarkan perbincangan tersebut di atas, kontrak <strong>$contractTitle</strong> 
+			ini akan ditamatkan atas persetujuan bersama berkuat kuasa mulai tarikh Perjanjian Penamatan Bersama ditandatangani. 
+			Sehubungan itu, dipohon kerjasama syarikat tuan untuk mengambil tindakan berdasarkan klausa penamatan bersama dalam kontrak tersebut. 
+        </span>
+    </div>
+    <div class="Section1">
+        <div class="pageBreak">
+            <table id="hrdftrtbl" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td>
+                        <div style="mso-element:header" id="h1"></div>
+                        <div style="mso-element:footer" id="f1"></div>
+                    </td>
+                </tr>
+            </table>
+            <br/>
+        </div>
+    </div>
+    <div><br/></div>
+    <br/>
+    <div style="font-weight: normal; text-align: left;">Sekian, terima kasih.</div>
+    <div style="font-weight: normal; text-align: left;">
+        <br/>
+    </div>
+    <div style="text-align: center; font-weight: normal;">
+        <strong>"BERKHIDMAT UNTUK NEGARA"</strong>
+    </div>
+    <div style="font-weight: normal; text-align: left;">
+        <br/>
+    </div>
+    <div style="font-weight: normal; text-align: left;">Saya yang menjalankan amanah,&nbsp;</div>
+    <div style="font-weight: normal; text-align: left;">
+        <br/>
+    </div>
+    <div style="font-weight: normal; text-align: left;">
+        <br/>
+    </div>
+    <div style="font-weight: normal; text-align: left;">------------------------------------------------------</div>
+    <div style="font-weight: normal; text-align: left;">
+        <strong>$approverName</strong>
+    </div>
+    <div style="font-weight: normal; text-align: left;">
+        <strong>$approverDesignation</strong>
+    </div>
+    <div style="font-weight: normal; text-align: left;">
+        <strong>$ptjName</strong>
+    </div>
+    <div style="font-weight: normal; text-align: left;">
+        <strong>$ministryName</strong>
+    </div>
+    <div class="Section2">
+        <!-- Header and Footer Table -->
+        <div class="pageBreak2">
+            <table id="tblforheader" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td>
+                        <div style="mso-element:header" id="fh1">
+                           <table>
+                                <tbody>
+                                    <tr>
+                                        <td><p><strong>Notis Kemungkiran Bagi </strong></p></td>
+                                        <td><p><strong>:</strong></p></td>
+                                    </tr>
+                                    <tr>
+                                        <td><p><strong>Kontrak </strong></p></td>
+                                        <td><p>: $contractTitle</p></td>
+                                    </tr>
+                                    <tr>
+                                        <td><p><strong>No. Kontrak </strong></p></td>
+                                        <td><p>: $contractNo</p></td>
+                                    </tr>
+                                    <tr>
+                                        <td><p><strong>Tempoh Kontrak </strong></p></td>
+                                        <td><p>: $effDate sehingga $expDate</p></td>
+                                    </tr>
+                                    <tr>
+                                        <td><p><strong>Rujukan </strong></p></td>
+                                        <td><p>: $fileRefNo</p></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+							<hr/>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
 </html>

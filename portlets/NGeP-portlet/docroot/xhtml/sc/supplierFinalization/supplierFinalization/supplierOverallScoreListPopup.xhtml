@@ -9,7 +9,7 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<ui:remove>
-		<!-- #38151 datatable value popup-->
+		<!-- #38151,#38679 datatable value popup-->
 		<!-- start -->
 	</ui:remove>
 	<p:dialog id="SuppDetailatestPopupId" widgetVar="SuppDetailatestPopup"
@@ -17,8 +17,8 @@
 		width="950" resizable="false"
 		header="#{lbl['lbl.sc.total.overall.score.percentage']}">
 
-		<p:dataTable id="qualifiedSupplierlatest" var="qualifiedSupp"
-			widgetVar="qualifiedSupplierDtls"
+		<p:dataTable id="qualifiedSupplierlatest" var="qualifiedSuppPopUp"
+			widgetVar="qualifiedSupplierDtlsPopUp"
 			value="#{suppFinalizationBackingBean.managedBean.weightageScoreBeans}"
 			emptyMessage="#{lbl['lbl.sc.supplier.finalization.sorttable.msg.no.records.found']}"
 			editable="true" lazy="true" rowIndexVar="index" rows="10"
@@ -41,48 +41,48 @@
 					<p:column colspan="1">
 						<f:facet name="header">
 							<h:outputText
-								value="#{lbl['lbl.sc.eval.tec.score.popup']}(#{suppFinalizationBackingBean.managedBean.overallTechnicalRecommendationPercent})" />
+								value="#{lbl['lbl.sc.eval.tec.score.popup']}(#{suppFinalizationBackingBean.managedBean.overallTechnicalRecommendationPercent}%)" />
 						</f:facet>
 					</p:column>
 					<p:column colspan="1">
 						<f:facet name="header">
 							<h:outputText
-								value="#{lbl['lbl.sc.eval.fin.score.popup']}(#{suppFinalizationBackingBean.managedBean.overallFinancialRecommendationPercent})" />
+								value="#{lbl['lbl.sc.eval.fin.score.popup']}(#{suppFinalizationBackingBean.managedBean.overallFinancialRecommendationPercent}%)" />
 						</f:facet>
 					</p:column>
 				</p:row>
 			</p:columnGroup>
 			<p:column style="text-align:center;">
 
-				<h:outputText value="#{qualifiedSupp.technicalTotalScore}" >
+				<h:outputText value="#{qualifiedSuppPopUp.technicalTotalScore}" >
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 
 			</p:column>
 			<p:column style="text-align:center;">
 
-				<h:outputText value="#{qualifiedSupp.financialTotalScore}" >
+				<h:outputText value="#{qualifiedSuppPopUp.financialTotalScore}" >
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 
 			</p:column>
 			<p:column style="text-align:center;">
 
-				<h:outputText value="#{qualifiedSupp.recommendationTechnicalScore}" >
+				<h:outputText value="#{qualifiedSuppPopUp.recommendationTechnicalScore}" >
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 
 			</p:column>
 			<p:column style="text-align:center;">
 
-				<h:outputText value="#{qualifiedSupp.recommendationFinancialScore}" >
+				<h:outputText value="#{qualifiedSuppPopUp.recommendationFinancialScore}" >
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 
 			</p:column>
 			<p:column style="text-align:center;">
 
-				<h:outputText value="#{qualifiedSupp.recommendationTotalScore}" >
+				<h:outputText value="#{qualifiedSuppPopUp.recommendationTotalScore}" >
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 
@@ -91,7 +91,7 @@
 		</p:dataTable>
 	</p:dialog>
 	<ui:remove>
-		<!-- #38151 datatable value popup-->
+		<!-- #38151,#38679 datatable value popup-->
 		<!-- end -->
 	</ui:remove>
 </ui:composition>

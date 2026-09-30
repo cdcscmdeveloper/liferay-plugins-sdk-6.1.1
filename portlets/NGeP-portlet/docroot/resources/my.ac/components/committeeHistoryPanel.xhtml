@@ -79,7 +79,9 @@
 						</h:outputText>
 					</p:column>
 				</p:dataTable>
-				<ac:detachablePaginator minimal="true" loopId="@([id$=historyPanelId])" paginatorObject="#{historyPaginator}" />
+				<ui:remove>#35320 - Start</ui:remove>
+					<ac:detachablePaginator minimal="true" loopId="@([id$=historyPanelId])" paginatorObject="#{historyPaginator}" />
+				<ui:remove>#35320 - End</ui:remove>
 			</p:panel>
 			<p:panel id="historyMemberPanelId"
 				header="#{committeeName}">
@@ -124,7 +126,9 @@
 						<h:outputText value="#{qTDetailBB.getParameterDesc(qTDetailBB.getRepresentativeType(selectedHistory.committeeType), member.representativeType)}" /><ui:remove><!-- 25037 - note 677 --></ui:remove>
 						</p:column>
 					</p:dataTable>
-				<ac:detachablePaginator loopId="@([id$=historyMemberTableId])" paginatorObject="#{memberHistoryPaginator}" />
+				<ui:remove>#35320 - Start</ui:remove>
+					<ac:detachablePaginator loopId="@([id$=historyMemberTableId])" paginatorObject="#{memberHistoryPaginator}" />
+				<ui:remove>#35320 - End</ui:remove>
 			</p:panel>
 		</h:panelGrid>
 		<h:panelGrid columns="1" styleClass="gridContainer" rendered="#{isSFCommittee and isLegacy}"><ui:remove>25037 note 670, add islegacy</ui:remove>

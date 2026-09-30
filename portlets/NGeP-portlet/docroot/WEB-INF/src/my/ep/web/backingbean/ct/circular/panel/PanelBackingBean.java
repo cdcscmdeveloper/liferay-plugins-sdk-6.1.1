@@ -974,10 +974,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 						}
 
-						if(panelItem.getCtPanelZones().size()==0) {
+						if(panelItem.getCtPanelZones().size()==0) {//#40748
 							getManagedBean().setSelectedTabIndex(1);
 							throw new EpException(MessageConst.ERROR_100023, 
-									new String[]{ResourceBundleUtils.getMessage("lbl.ct.Zone", 
+									new String[]{ResourceBundleUtils.getMessage("lbl.ct.zone", 
 											ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 						} else {
 							for (CtPanelZone panelZone: panelItem.getCtPanelZones()) {
@@ -2358,36 +2358,88 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 
+	//35506 - Start
 	/**
-	 *   Method to bulk update of item category and zone of 
-	 *    panel circular item details
-	 *    Set boolean value zones false
+	 * Method to bulk update of item category and zone of panel circular item
+	 * details Set boolean value zones false
 	 **/
-	public void bulkUpdateRow(){
+	public void bulkUpdateRow() {
 		try {
-			if(getManagedBean().getCircularVer().getCtPanelItems() != null) {
-				Iterator<CtPanelItem> panelItemIterator = getManagedBean().getCircularVer().getCtPanelItems().iterator();
-				while (panelItemIterator.hasNext()) {
-
-					CtPanelItem  item = panelItemIterator.next();
-					if(item.isSelectedCheckBox()) {
-
-						if(getManagedBean().getPanelCoverageId() != null) {
-							item.setZoneAllParamterId(getManagedBean().getPanelCoverageId());
-						}
-						if(getManagedBean().getItemCategoryId() != null) {
-							item.setCategoryParameterId(getManagedBean().getItemCategoryId());
-						}
-					}
-				}
+			List<CtPanelItem> panelItems = getManagedBean().getCircularVer().getCtPanelItems();
+			if (panelItems == null) {
+				return;
 			}
+
+			for (CtPanelItem item : panelItems) {
+				if (!item.isSelectedCheckBox()) {
+					continue;
+				}
+				updateItemBasicInfo(item);
+				handleCoverage(item);
+			}
+
 			getManagedBean().setSelectedPanelItems(null);
 			getManagedBean().setSelectionOfZone(false);
+
 		} catch (Exception e) {
 			log.error(e);
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+	        SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "PanelBackingBean", null,
+					"PanelBackingBean.bulkUpdateRow()", null, e);
 		}
 	}
+
+	/**
+	 * Update basic information of selected panel item such as coverage and
+	 * category based on managed bean values.
+	 * 
+	 * @param item
+	 *            the selected panel item to be updated
+	 */
+	private void updateItemBasicInfo(CtPanelItem item) {
+
+		getManagedBean().setSelectedPanelItems(item);
+
+		if (getManagedBean().getPanelCoverageId() != null) {
+			item.setZoneAllParamterId(getManagedBean().getPanelCoverageId());
+		}
+
+		if (getManagedBean().getItemCategoryId() != null) {
+			item.setCategoryParameterId(getManagedBean().getItemCategoryId());
+		}
+	}
+
+	/**
+	 * Handle panel coverage logic and adjust related zone, supplier and
+	 * location settings based on coverage type.
+	 * 
+	 * @param item
+	 *            the selected panel item to process
+	 */
+	private void handleCoverage(CtPanelItem item) {
+
+		String panelCoverageICode = getItemGeneralCode(item.getZoneAllParamterId());
+
+		if (ParameterConst.CIRCULAR_PANEL_COVERAGE_ZONE.equalsIgnoreCase(panelCoverageICode)) {
+
+			getManagedBean().setSelectedPanelZone(null);
+			item.setCtPanelSuppliers(null);
+			item.setCtPanelZones(null);
+			getManagedBean().setSelectionOfZone(true);
+
+			if (item.getLocationLevelId() == null) {
+				item.setLocationLevelId(new PmParameter());
+			}
+
+			item.getLocationLevelId().setParameterId(retrieveParameterByTypeAndCode());
+
+		} else if (ParameterConst.CIRCULAR_PANEL_COVERAGE_ALL.equalsIgnoreCase(panelCoverageICode)) {
+
+			item.setCtPanelZones(null);
+			item.setCtPanelSuppliers(null);
+			getManagedBean().setSelectionOfZone(false);
+		}
+	}
+	//35506 - End
 
 	/**
 	 * Method used to set new effective  and end date 
@@ -3557,7 +3609,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
                 + pmCategoryL3.getPmCategoryL2().getCategoryL2Code()
                 + pmCategoryL3.getCategoryL3Code();
 
-		String categoryName = pmCategoryL3.getPmCategoryL2().getPmCategoryL1().getCategoryName();
+		String categoryName = pmCategoryL3.getCategoryName(); //#40876
 
 		// Duplicate Check
 		for (CtPanelCategory existing : ctCategoryList) {
@@ -3569,6 +3621,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 		
 		ctCategoryList.add(createPanelCategory(pmCategoryL3, circularVer));
+		getManagedBean().setAutoUpdate(Boolean.TRUE); //#40498,#30014
 	}
 	
 	/**
@@ -3668,4 +3721,22 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	        || BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action);
 	}
 	//#35506 - End
+	
+	//#40498,#30014 - Start
+	/**
+	 * Disables auto-update for the main page messages before opening the
+	 * category code popup.
+	 */
+	public void beforeOpenCategoryPopup() {
+		getManagedBean().setAutoUpdate(Boolean.FALSE);
+	}
+	
+	/**
+	 * Restores auto-update for the main page messages after the category code
+	 * popup is closed.
+	 */
+	public void afterCloseCategoryPopup() {
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+	}
+	//#40498,#30014 - End
 }

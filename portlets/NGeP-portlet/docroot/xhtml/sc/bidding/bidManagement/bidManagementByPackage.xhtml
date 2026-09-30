@@ -10,10 +10,10 @@
 	<ui:param name="manufacturercategoryCode" value="#{biddingBB.checkManufacturerCategoryCodes(biddingBB.managedBean.scQt)}"></ui:param>
 	<!-- #29466 - END -->
 
-	<ui:remove> #28777#29729 - Start </ui:remove>
+	<ui:remove> 28777,29729 - Start </ui:remove>
 	<ui:param name="isDisqualified"
 		value="#{biddingBB.managedBean.disqualified}"></ui:param>
-	<ui:remove> #28777#29729 - End </ui:remove>
+	<ui:remove> 28777,29729 - End </ui:remove>
 
 	<p:panel header="#{lbl['lbl.sc.item.details']}"
 		id="itemDetailsByPackage" toggleable="true">
@@ -84,12 +84,12 @@
 			<ui:include src="bidManagementTimers.xhtml"></ui:include>
 		</h:panelGrid>
 
-		<ui:remove> #28777#29729 - Start </ui:remove>
+		<ui:remove> 28777,29729 - Start </ui:remove>
 		<h:outputText escape="false"
 			value="#{lbl['lbl.sc.list.qualified.supplier']}"
 			style="font-weight:bold; font-size: 15px;"
 			rendered="#{isDisqualified}" />
-		<ui:remove> #28777#29729 - End </ui:remove>
+		<ui:remove> 28777,29729 - End </ui:remove>
 
 		<p:dataTable id="bidPackagesListForBMBP"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -182,7 +182,7 @@
 			</p:column>
 		</p:dataTable>
 		
-				<ui:remove> #28777#29729 - Start </ui:remove>
+				<ui:remove> 28777,29729 - Start </ui:remove>
 		<h:outputText escape="false"
 			value="#{lbl['lbl.sc.list.disqualified.supplier']}"
 			style="font-weight:bold; font-size: 15px;"
@@ -281,7 +281,7 @@
 				  </c:choose>
 			</p:column>
 		</p:dataTable>
-		<ui:remove> #28777#29729 - End </ui:remove>
+		<ui:remove> 28777,29729 - End </ui:remove>
 		
 	</p:panel>
 	<p:panel>

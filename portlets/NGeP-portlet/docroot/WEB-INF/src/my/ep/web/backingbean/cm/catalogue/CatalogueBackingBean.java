@@ -176,6 +176,7 @@ import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.constant.cm.CmHelper;
 import my.ep.web.managedbean.cm.catalogue.CatalogueManagedBean;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.cm.helper.CmApplicationUtil;
@@ -1895,6 +1896,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			//#30457 - Start
 			getManagedBean().setCatDPScreen(true);
 			//#30457 - End
+			getManagedBean().setMofNo(supplierItem.getMofNo()); //#38972
 
 			// Panel Circular Item
 			if ((supplierItem.getCircularNo() != null && supplierItem.getCircularNo().length() > 0)
@@ -6779,6 +6781,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						f.remove();
 					}
 				}
+				
+				//#26059 - Start
+				cleanItemNameNA(cmSupplierItem.getCmItem());
+				//#26059 - End
 
 				log.info("*****************end********************");
 
@@ -12239,14 +12245,34 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		// #30457 - End
 	}
 	
-	public void closeImagePopup(){ //only affecting draft tab and draft_supp_temp only
-			this.getManagedBean().getDraftSearchDataModel().getList().get(this.getManagedBean().getItemSelectedIndex()).setCmImages(
-					this.getManagedBean().getSelectedMaintainItem().getCmImages());
-		
-		this.getManagedBean().getDraftSearchDataModel().getList().get(this.getManagedBean().getItemSelectedIndex()).setItemDesc(
-				this.getManagedBean().getSelectedMaintainItem().getItemDesc());
+	//#29961 - Start
+	/**
+	 * Updates the selected draft supplier item when the image popup is closed.
+	 * only affecting draft tab and draft_supp_temp only
+	 */
+	public void closeImagePopup(){
+	    int index = this.getManagedBean().getItemSelectedIndex();
+	    CmSupplierItem selected = this.getManagedBean().getSelectedMaintainItem();
+
+	    if (selected == null) {
+	        return;
+	    }
+
+	    List<CmSupplierItem> draftList = this.getManagedBean().getDraftSearchDataModel().getList();
+
+	    if (CollectionUtils.isEmpty(draftList)
+	            || index < 0
+	            || index >= draftList.size()) {
+	        return;
+	    }
+
+	    CmSupplierItem row = draftList.get(index);
+
+	    row.setCmImages(selected.getCmImages());
+	    row.setItemDesc(selected.getItemDesc());
 	}
-	
+	//#29961 - End
+
 	// #30457, #14188 - start
 	public void deleteImageFromPopup(int imageIndex) {
 		log.info("imageIndex:" + imageIndex);
@@ -12370,4 +12396,22 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	
 	//#30457 - farid - end
 
+	// #26059 - Start
+	/**
+	 * Cleans the item name by removing "N/A" or related placeholder values.
+	 * This method checks if the provided {@code CmItem} object is not null,
+	 * then utilizes {@link CommonUtils#removeItemNameNA(String)} to process and
+	 * update the item's name.
+	 * 
+	 * @param cmItem
+	 *            the item object whose name needs to be cleaned; if null, no
+	 *            action is taken.
+	 */
+	public void cleanItemNameNA(CmItem cmItem) {
+		CommonUtils common = new CommonUtils();
+		if (cmItem != null) {
+			cmItem.setItemName(common.removeItemNameNA(cmItem.getItemName()));
+		}
+	}
+	// #26059 - End
 }
