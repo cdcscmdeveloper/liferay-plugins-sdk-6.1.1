@@ -58,6 +58,7 @@ import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.sc.common.ScAddress;
+import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
@@ -1669,6 +1670,26 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean noSupplierExistForEPV;
 	private boolean userAbleToChangePBSecretary;
 	//#21692 - End
+	// #10141 - start
+	private String inActiveChecklistNotificationText;
+	private List<ScQtCheckList> inActiveChecklist;
+	private int inActiveChecklistCount;
+	private boolean disableButtonForInactiveChecklist = false;
+	private boolean showInactiveChecklistWarning = false;
+	private boolean showInactiveChecklistPopup = false;
+	private List<ScQtCheckList> techChecklistPreview;
+	private List<ScQtCheckList> finChecklistPreview;
+	private List<ScQtCheckList> techChecklistSelect;
+	private List<ScQtCheckList> finChecklistSelect;
+	private int technicalPreviewTableRow;
+	private int financialPreviewTableRow;
+	private boolean selectAllTechPreview;
+	private boolean selectAllFinPreview;
+	private boolean saveForSendNotification;
+	private ScAttachment scoreAttachment;
+	private boolean preRenderInactiveChecklist;
+	private boolean saveForScorePrintBtn;
+	// #10141 - end
 	
 	/**
 	 * Sets the panel suppliers.
@@ -11882,4 +11903,153 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.weightage35384WIP = weightage35384WIP;
 	}
 	//#38151,#38679
+	// #10141 - start
+	public String getInActiveChecklistNotificationText() {
+		return inActiveChecklistNotificationText;
+	}
+
+	public void setInActiveChecklistNotificationText(
+			String inActiveChecklistNotificationText) {
+		this.inActiveChecklistNotificationText = inActiveChecklistNotificationText;
+	}
+
+	public List<ScQtCheckList> getInActiveChecklist() {
+		return inActiveChecklist;
+	}
+
+	public void setInActiveChecklist(List<ScQtCheckList> inActiveChecklist) {
+		this.inActiveChecklist = inActiveChecklist;
+	}
+
+	public int getInActiveChecklistCount() {
+		return inActiveChecklistCount;
+	}
+
+	public void setInActiveChecklistCount(int inActiveChecklistCount) {
+		this.inActiveChecklistCount = inActiveChecklistCount;
+	}
+
+	public boolean isDisableButtonForInactiveChecklist() {
+		return disableButtonForInactiveChecklist;
+	}
+
+	public void setDisableButtonForInactiveChecklist(
+			boolean disableButtonForInactiveChecklist) {
+		this.disableButtonForInactiveChecklist = disableButtonForInactiveChecklist;
+	}
+
+	public boolean isShowInactiveChecklistWarning() {
+		return showInactiveChecklistWarning;
+	}
+
+	public void setShowInactiveChecklistWarning(
+			boolean showInactiveChecklistWarning) {
+		this.showInactiveChecklistWarning = showInactiveChecklistWarning;
+	}
+
+	public boolean isShowInactiveChecklistPopup() {
+		return showInactiveChecklistPopup;
+	}
+
+	public void setShowInactiveChecklistPopup(boolean showInactiveChecklistPopup) {
+		this.showInactiveChecklistPopup = showInactiveChecklistPopup;
+	}
+
+	public List<ScQtCheckList> getTechChecklistSelect() {
+		return techChecklistSelect;
+	}
+
+	public void setTechChecklistSelect(List<ScQtCheckList> techChecklistSelect) {
+		this.techChecklistSelect = techChecklistSelect;
+	}
+
+	public List<ScQtCheckList> getFinChecklistSelect() {
+		return finChecklistSelect;
+	}
+
+	public void setFinChecklistSelect(List<ScQtCheckList> finChecklistSelect) {
+		this.finChecklistSelect = finChecklistSelect;
+	}
+
+	public int getTechnicalPreviewTableRow() {
+		return technicalPreviewTableRow;
+	}
+
+	public void setTechnicalPreviewTableRow(int technicalPreviewTableRow) {
+		this.technicalPreviewTableRow = technicalPreviewTableRow;
+	}
+
+	public int getFinancialPreviewTableRow() {
+		return financialPreviewTableRow;
+	}
+
+	public void setFinancialPreviewTableRow(int financialPreviewTableRow) {
+		this.financialPreviewTableRow = financialPreviewTableRow;
+	}
+
+	public List<ScQtCheckList> getTechChecklistPreview() {
+		return techChecklistPreview;
+	}
+
+	public void setTechChecklistPreview(List<ScQtCheckList> techChecklistPreview) {
+		this.techChecklistPreview = techChecklistPreview;
+	}
+
+	public List<ScQtCheckList> getFinChecklistPreview() {
+		return finChecklistPreview;
+	}
+
+	public void setFinChecklistPreview(List<ScQtCheckList> finChecklistPreview) {
+		this.finChecklistPreview = finChecklistPreview;
+	}
+
+	public boolean isSelectAllTechPreview() {
+		return selectAllTechPreview;
+	}
+
+	public void setSelectAllTechPreview(boolean selectAllTechPreview) {
+		this.selectAllTechPreview = selectAllTechPreview;
+	}
+
+	public boolean isSelectAllFinPreview() {
+		return selectAllFinPreview;
+	}
+
+	public void setSelectAllFinPreview(boolean selectAllFinPreview) {
+		this.selectAllFinPreview = selectAllFinPreview;
+	}
+
+	public boolean isSaveForSendNotification() {
+		return saveForSendNotification;
+	}
+
+	public void setSaveForSendNotification(boolean saveForSendNotification) {
+		this.saveForSendNotification = saveForSendNotification;
+	}
+
+	public ScAttachment getScoreAttachment() {
+		return scoreAttachment;
+	}
+
+	public void setScoreAttachment(ScAttachment scoreAttachment) {
+		this.scoreAttachment = scoreAttachment;
+	}
+	
+	public boolean isPreRenderInactiveChecklist() {
+		return preRenderInactiveChecklist;
+	}
+
+	public void setPreRenderInactiveChecklist(boolean preRenderInactiveChecklist) {
+		this.preRenderInactiveChecklist = preRenderInactiveChecklist;
+	}
+
+	public boolean isSaveForScorePrintBtn() {
+		return saveForScorePrintBtn;
+	}
+
+	public void setSaveForScorePrintBtn(boolean saveForScorePrintBtn) {
+		this.saveForScorePrintBtn = saveForScorePrintBtn;
+	}
+	
+	// #10141 - end
 }

@@ -74,6 +74,15 @@ public class QtReportConst implements Serializable {
 	public static final String PARAM_SUBMIT_TO_DT = "SUBMITTODT";
 	public static final String PARAM_DECISION_TYPE = "PSTATUSID";
 	//#21692 - End
+	// #10141 Start Vinod
+	public static final String PARAM_MAP_P_QTCHECKLISTIDS = "P_QTCHECKLISTIDS";
+	public static final String PARAM_MAP_P_LANGUAGE = "P_LANGUAGE";
+	public static final String PARAM_MAP_P_WEIGHTAGE = "P_WEIGHTAGE";
+	public static final String PARAM_MAP_P_QTID = "P_QTID";
+	public static final String PARAM_MAP_P_ZONALID = "P_ZONALID";
+	public static final String PARAM_MAP_P_SCORE_TYPE = "P_STYPE";
+	public static final String PARAM_MAP_P_DOCID = "P_DOCID";
+	// #10141 End Vinod
 	
 	public static final String VELOCITY_CTX_KEY_MOFNO  = "mofNo";// 29819
 	

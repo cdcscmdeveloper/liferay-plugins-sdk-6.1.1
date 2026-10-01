@@ -46,6 +46,20 @@ public class SLALogConstant {
 	public static final String QT_SPECIFICATION_BACKINGBEAN = "SpecificationBackingBean";
 	public static final String QT_TEMPLATESPEC_BACKINGBEAN = "TemplateSpecBackingBean";
 	// #29187 End Vinod
+	//#10141 Start Vinod
+	public static final String QT_INITIATE_INACTIVE_CHECKLIST_PROCESS_FOR_DOC = "initiateInactiveChecklistProcessForDoc";
+	public static final String QT_SPEC_PRE_RENDER_VIEW = "preRenderView";
+	public static final String QT_DOWNLOAD_SCORE_REPORT = "downloadScoreReport";
+	public static final String QT_DOWNLOAD_REPORT_SPEC_PREPARE = "downloadReportSpecPrepare";
+	public static final String QT_PREVIEW_FILE = "previewFile";
+	public static final String QT_PREVIEW_FILE_BY_INPUT_STREAM = "previewFileByInputStream";
+	public static final String QT_DOWNLOAD_TECHNICAL_CHECKLIST_PRIVIEW = "downloadTechnicalChecklistPreview";
+	public static final String QT_DOWNLOAD_FINANCIAL_CHECKLIST_PRIVIEW = "downloadFinancialChecklistPreview";
+	public static final String QT_DOWNLOAD_SELECTED_TECHNICAL_CHECKLIST_PRIVIEW = "downloadSelectedTechnicalChecklistPreview";
+	public static final String QT_DOWNLOAD_SELECTED_FINANCIAL_CHECKLIST_PRIVIEW = "downloadSelectedFinancialChecklistPreview";
+	public static final String QT_SPEC_SCORE_PREVIEW_BACKINGBEAN = "SpecificationBackingBean";
+	public static final String QT_GET_SCORE_REPORT = "getScoreReport";
+	//#10141 End Vinod
 	// 25037 - start
 	public static final String QT_PRERENDER_GENERIC_APPROVAL = "preRenderGenericApproval";
 	public static final String QT_UPDATE_GENERIC_APPROVAL_TASK = "updateGenericApprovalTask";

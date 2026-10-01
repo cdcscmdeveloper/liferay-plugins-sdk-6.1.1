@@ -318,6 +318,58 @@ public interface QTConstants {
 	public static final String DOC_TYPE_SC_FINANCIAL_EVALUATION_REPORT_ATTACHMENT = "FCR";
 	public static final String DOC_TYPE_SC_QT_FINALIZATION_ATTACHMENT = "KTR";
 	// Bug #35485@Syazani 08/02/2024 -- End
+	// #10141 Start Vinod
+	public static final String INACTIVE_CHECKLIST_NOTIFICATION = "inActiveChecklistNotification.show()";
+	public static final String SPEC_SCORE_DLG_WIDGET_SHOW = "specScoreDlgWidget.show()";
+	public static final String LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST = "lbl.sc.spec.confirm.inactive.techfin.checklist";
+	public static final String LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_SPECPREPARE = "lbl.sc.spec.confirm.inactive.techfin.checklist.specprepare";
+	public static final String LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_NOTIFIED = "lbl.sc.spec.confirm.inactive.techfin.checklist.notified";
+	public static final String LBL_INACTIVE_TECH_CHECKLIST = "lbl.sc.spec.confirm.inactive.tech.checklist";
+	public static final String LBL_INACTIVE_FIN_CHECKLIST = "lbl.sc.spec.confirm.inactive.fin.checklist";
+	public static final String LBL_TECHNICAL_CHECKLIST_PREVIEW_PRINTING = "lbl.sc.spec.technical.checklist.preview.printing";
+	public static final String LBL_FINANCIAL_CHECKLIST_PREVIEW_PRINTING = "lbl.sc.spec.financial.checklist.preview.printing";
+	public static final String LBL_TECHNICAL_CHECKLIST_ELEMENT_DETAILS_PREVIEW_PRINTING = "lbl.sc.spec.technical.checklist.element.details.preview.printing";
+	public static final String LBL_FINANCIAL_CHECKLIST_ELEMENT_DETAILS_PREVIEW_PRINTING = "lbl.sc.spec.financial.checklist.element.details.preview.printing";
+	public static final String LBL_SC_SPEC_TECHNICAL_SCORE_REPORT = "lbl.sc.spec.technical.score.report";
+	public static final String LBL_SC_SPEC_FINANCIAL_SCORE_REPORT = "lbl.sc.spec.financial.score.report";
+	public static final String LBL_SC_SPEC_OVERALL_SCORE_REPORT = "lbl.sc.spec.overall.score.report";
+	public static final String LBL_SC_SPEC_TECH_SCORING = "lbl.sc.spec.tech.scoring";
+	public static final String LBL_SC_SPEC_FINANCIAL_SCORING = "lbl.sc.spec.financial.scoring";
+	public static final String LBL_SC_SPEC_RECOMMENDATION = "lbl.sc.spec.recommendation";
+	public static final int ACTIVE_INDEX_4 = 4;
+	public static final int ACTIVE_INDEX_5 = 5;
+	public static final int ACTIVE_INDEX_6 = 6;
+	public static final Long DEFINATION_TYPE_SPECIFICATION = 211L;
+	public static final Long DEFINATION_TYPE_SYSTEM_DEFINED = 213L;
+	public static final Long DEFINATION_TYPE_WEB_FORM = 214L;
+	public static final Long DEFINATION_TYPE_SAMPLE = 215L;
+	public static final Long DEFINATION_TYPE_DEMO = 216L;
+	public static final Long[] DEFINATION_TYPE_LIST = new Long[]{
+		DEFINATION_TYPE_SPECIFICATION,
+		DEFINATION_TYPE_SAMPLE,
+		DEFINATION_TYPE_DEMO
+	};
+	public static final String TECH_CHECKLIST_DOC_DEFINATION_KEY_TG = "TG";
+	public static final String TECH_CHECKLIST_DOC_DEFINATION_KEY_TN = "TN";
+	public static final String TECH_CHECKLIST_DOC_DEFINATION_KEY_NE = "NE";
+	public static final String TECH_CHECKLIST_DOC_DEFINATION_KEY_TL = "TL";
+	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_BS = "BS";
+	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_CF = "CF";
+	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_FG = "FG";
+	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_FN = "FN";
+	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_PC = "PC";
+	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_AL = "AL";
+	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_FGE = "FGE";
+	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_FNE = "FNE";
+	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_CH = "CH";
+	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_SD = "SD";
+	public static final String FILE_EXTENSION_TYPE_PDF = ".pdf";
+	public static final String SPAN_ERROR_ICON = "<div style=\"display: flex;align-items: flex-start;gap: 5px;\"><div><span class=\"ui-messages-error-icon\" style=\"position: relative;right: 30px;\"></span></div>";
+	public static final String SPAN_ERROR_CONTENT_OPEN = "<div><span style=\"position: relative;right: 30px;\">";
+	public static final String SPAN_ERROR_CONTENT_CLOSE = "</span></div></div>";
+	public static final String INACTIVE_CHECKLIST_NOTIFICATION_HIDE = "inActiveChecklistNotification.hide()";
+	public static final String LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_SPECMAINT = "lbl.sc.spec.confirm.inactive.techfin.checklist.specmaint";
+	// #10141 End Vinod
 	
 	// 25037 - start
 	public static final Long ALLOW_COMMITTEE_REASSIGNMENT = 25037L;

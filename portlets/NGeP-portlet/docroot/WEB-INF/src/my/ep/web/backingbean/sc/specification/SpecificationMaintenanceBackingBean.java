@@ -36,6 +36,7 @@ import my.ep.constant.CompositeValidityConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.QTStatusConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
@@ -659,6 +660,29 @@ private class SpecMaintenanceSearchQtDataModel extends
 		// 11104_end
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, renderPage);
 		// 29464-end
+		// #10141 Start Vinod
+		// BUG #40852 WIP QT - Confirmation box not displayed upon clicking pencil Icon
+		if (isEditable
+				&& QTStatusConst.getQTSpecMaintenanceInactiveChecklistUpdateGroup().contains(
+						scQt.getQtStatus().getStatusId())) {			
+			
+			//#40980 - Start
+			ScQt tmpScQt = this.getManagedBean().getQt();
+			specBB.checkAndUpdateNewMandatoryChecklist(tmpScQt, SourcingConstants.FINANCIAL_DOCTYPE);
+			specBB.checkAndUpdateNewMandatoryChecklist(tmpScQt, SourcingConstants.TECHNICAL_DOCTYPE);		
+			//#40980 - End
+			
+			boolean isInactiveChecklistPopup = specBB.checkInactiveChecklistForPopup(this.getManagedBean()
+					.isShowInactiveChecklistPopup(), QTConstants.SPEC_MAINTENANCE);
+
+			if (isInactiveChecklistPopup) {
+				this.getManagedBean().setPreRenderInactiveChecklist(true);
+				RequestContext.getCurrentInstance()
+				.execute(QTConstants.INACTIVE_CHECKLIST_NOTIFICATION);
+				return;
+			}
+		}
+		// #10141 End Vinod
 	}
 
 	/**
