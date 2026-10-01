@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import org.primefaces.json.JSONObject;
 
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.dto.pm.common.city.CityReqDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.division.DivisionReqDTO;
@@ -309,7 +311,14 @@ public final class AiDocSupport {
 						dto.setTenantsName(value);
 					} else if ("monthly_rental".equals(type)) {
 						try {
-							dto.setMonthlyRental(new BigDecimal(value));
+							// the rental input takes 2 decimals within the SM amount range
+							BigDecimal rental = new BigDecimal(value).setScale(2, RoundingMode.HALF_UP);
+							if (rental.doubleValue() >= SupplierManagementConst.MIN_AMT_RANGE
+									&& rental.doubleValue() <= SupplierManagementConst.MAX_AMT_RANGE) {
+								dto.setMonthlyRental(rental);
+							} else {
+								log.error("Error TenancyEntity monthly_rental out of range '" + value + "'");
+							}
 						} catch (NumberFormatException e) {
 							log.error("Error TenancyEntity monthly_rental '" + value + "'");
 						}
@@ -335,9 +344,11 @@ public final class AiDocSupport {
 		private static void setTenancyAddress(AiTenancyDTO dto, JSONObject addr) {
 			if (addr != null) {
 				// form maxlength; POSTCODE is 10, ADDRESS_1/2/3 are 255
-				dto.setPostcode(StringUtils.left(optString(addr, "postcode", "").trim(), 5).trim());
+				// the postcode input accepts 5 digits only; the address is cut at the postcode as printed
+				String postcode = optString(addr, "postcode", "").trim();
+				dto.setPostcode(StringUtils.left(postcode.replaceAll("[^0-9]", ""), 5));
 				String fullAddr = optString(addr, "normalized_Address", "").trim();
-				truncateAddressAtPostcode(dto, fullAddr, dto.getPostcode());
+				truncateAddressAtPostcode(dto, fullAddr, postcode);
 				dto.setCodeCity(optString(addr, "city_code", "").trim());
 				setTenancyArea(dto, optString(addr, "state_code", "").trim(),
 						optString(addr, "district_code", "").trim());
@@ -476,27 +487,31 @@ public final class AiDocSupport {
 				}
 				value = value.trim();
 				if ("KWSP_number".equals(type)) {
-					emp.setKwspNumber(StringUtils.left(value, 10).trim());
+					// the EPF No. input accepts digits only
+					emp.setKwspNumber(StringUtils.left(value.replaceAll("[^0-9]", ""), 10));
 				} else if ("NRIC_number".equals(type)) {
 					// the statement prints the NRIC dashed or spaced; eP stores the 12 digits
-					String nric = StringUtils.left(AiDocValidator.normalizeNric(value), 20).trim();
+					String nric = StringUtils.left(AiDocValidator.normalizeNric(value), 12);
 					// IC wins over passport, whichever the AI sends first
 					if (StringUtils.isNotBlank(nric)) {
 						emp.setIdNo(nric);
 						emp.setPassport(false);
 					}
 				} else if ("Passport_number".equals(type)) {
-					String passport = StringUtils.left(AiDocValidator.normalizeIdNo(value), 20).trim();
-					if (StringUtils.isNotBlank(passport) && (StringUtils.isBlank(emp.getIdNo()) || emp.isPassport())) {
-						emp.setIdNo(passport);
-						emp.setPassport(true);
-					}
+					setPassport(emp, StringUtils.left(AiDocValidator.normalizeIdNo(value), 12));
 				} else if ("employee_name".equals(type)) {
 					// the OCR keeps the statement's own line breaks inside a name
 					emp.setEmployeeName(StringUtils.left(AiDocValidator.normalizePersonName(value), 80).trim());
 				}
 			}
 			return emp;
+		}
+
+		private static void setPassport(AiEpfResultDTO.AiEmployeeDTO emp, String passport) {
+			if (StringUtils.isNotBlank(passport) && (StringUtils.isBlank(emp.getIdNo()) || emp.isPassport())) {
+				emp.setIdNo(passport);
+				emp.setPassport(true);
+			}
 		}
 
 		private static String toEmployerName(JSONArray properties) throws JSONException {
