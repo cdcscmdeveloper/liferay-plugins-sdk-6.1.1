@@ -2040,7 +2040,7 @@ if (CollectionUtils.isNotEmpty(
 				saveAction();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, mainPage);
 			}
-			//#35500 Start
+			//#35500 Start 
 			prepareCommitteeAuditTrail(newCommitteeMembers,deletedCommitteeMembers);
 			prepareCommitteeRoleModified(mapModifiedRoleCommitteeAudit);
 			//#35500 End
