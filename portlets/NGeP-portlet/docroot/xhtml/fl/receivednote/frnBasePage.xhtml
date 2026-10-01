@@ -192,19 +192,23 @@
 			severity="alert" widgetVar="limitConfirmDlg" closable="true"
 			header="#{lbl['lbl.frn.amount.exceeded.threshold']}">
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" process="@form"
 					update="@form"
 					action="#{receivedNoteBackingBean.gpkiSignAction(receivedNoteBackingBean.managedBean.buttonAction)}"
 					onstart="limitConfirmDlg.hide();blockWidget.show();"
 					oncomplete="blockWidget.hide();" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}" partialSubmit="true"
 					onclick="limitConfirmDlg.hide();" />
 			</div>
 		</p:confirmDialog>
-		<ui:remove>#30753 start</ui:remove>
+		<ui:remove>#30753 end</ui:remove>
 		<!--#26279 Start-->
 		<ac:disciplinaryActionHistory voList="#{receivedNoteBackingBean.managedBean.disciplinaryActionVO}" 
 		dialogHeader="#{lbl['lbl.sm.view.details.disciplinary.action.headerlbl']}" dialogWidth="800px" dialogHeight="400px" btnView="true" />
 		<!--#26279 End-->
+
+		<!-- #31344 Start -->
+		<ui:include src="/xhtml/common/itemDetailsPopup.xhtml" />
+		<!-- #31344 End -->
 	</ui:define>
 </ui:composition>

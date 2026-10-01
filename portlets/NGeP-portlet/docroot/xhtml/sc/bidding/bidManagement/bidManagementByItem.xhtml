@@ -6,10 +6,10 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<ui:remove> #28777#29729 - Start </ui:remove>
+	<ui:remove> 28777,29729 - Start </ui:remove>
 	<ui:param name="isDisqualified"
 		value="#{biddingBB.managedBean.disqualified}"></ui:param>
-	<ui:remove> #28777#29729 - End </ui:remove>
+	<ui:remove> 28777,29729 - End </ui:remove>
 
 	<p:panel header="#{lbl['lbl.sc.item.details']}" toggleable="true">
 
@@ -94,12 +94,12 @@
 
 			<h:panelGroup id="itemizedSupplierPricesPanel">
 
-				<ui:remove> #28777#29729 - Start </ui:remove>
+				<ui:remove> 28777,29729 - Start </ui:remove>
 				<h:outputText escape="false"
 					value="#{lbl['lbl.sc.list.qualified.supplier']}"
 					style="font-weight:bold; font-size: 15px;"
 					rendered="#{isDisqualified}" />
-				<ui:remove> #28777#29729 - End </ui:remove>
+				<ui:remove> 28777,29729 - End </ui:remove>
 
 				<p:dataTable id="rankingList" rowIndexVar="index" rows="10"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -176,7 +176,7 @@
 
 				</p:dataTable>
 				
-				<ui:remove> #28777#29729 - Start </ui:remove>
+				<ui:remove> 28777,29729 - Start </ui:remove>
 				<h:outputText escape="false"
 					value="#{lbl['lbl.sc.list.disqualified.supplier']}"
 					style="font-weight:bold; font-size: 15px;"
@@ -264,7 +264,7 @@
 						    </c:choose>
 					</p:column>
 				</p:dataTable>
-				<ui:remove> #28777#29729 - End </ui:remove>
+				<ui:remove> 28777,29729 - End </ui:remove>
 				
 			</h:panelGroup>
 		</h:panelGrid>

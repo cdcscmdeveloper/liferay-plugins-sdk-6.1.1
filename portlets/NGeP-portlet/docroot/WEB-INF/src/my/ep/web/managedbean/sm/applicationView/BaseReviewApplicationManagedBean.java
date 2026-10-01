@@ -374,7 +374,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private boolean otherDescChangeSupplier;
 	private boolean otherDescChangeSupPO;
 	private boolean otherDescChangeSupApprover;
+	private boolean otherDescChangeMaintenance;
+	private boolean authoriseUser;
 	private String otherDescEdited;
+	private String otherDescOld;
+	private SmSupplierCategory historySuppCategory;
+	private SmSupplierCategory selectedCategory;
+	private List<SmSupplierCategory> historyOtherDescList;
+	private List<SmSupplierCategory> supProfileHistoryOtherDesc;
 	// 36504 - END
 	
 	public String getSupportingDocMode() {
@@ -2761,7 +2768,108 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	public void setOtherDescChangeSupApprover(boolean otherDescChangeSupApprover) {
 		this.otherDescChangeSupApprover = otherDescChangeSupApprover;
 	}
+	
+	/**
+	 * @return the historySuppCategory
+	 */
+	public SmSupplierCategory getHistorySuppCategory() {
+		return historySuppCategory;
+	}
+
+	/**
+	 * @param historySuppCategory the historySuppCategory to set
+	 */
+	public void setHistorySuppCategory(SmSupplierCategory historySuppCategory) {
+		this.historySuppCategory = historySuppCategory;
+	}
+	
+	/**
+	 * @return the selectedCategory
+	 */
+	public SmSupplierCategory getSelectedCategory() {
+		return selectedCategory;
+	}
+
+	/**
+	 * @param selectedCategory the selectedCategory to set
+	 */
+	public void setSelectedCategory(SmSupplierCategory selectedCategory) {
+		this.selectedCategory = selectedCategory;
+	}
+	
+	/**
+	 * @return the historyOtherDescList
+	 */
+	public List<SmSupplierCategory> getHistoryOtherDescList() {
+		return historyOtherDescList;
+	}
+
+	/**
+	 * @param historyOtherDescList the historyOtherDescList to set
+	 */
+	public void setHistoryOtherDescList(
+			List<SmSupplierCategory> historyOtherDescList) {
+		this.historyOtherDescList = historyOtherDescList;
+	}
+	
+	/**
+	 * @return the otherDescOld
+	 */
+	public String getOtherDescOld() {
+		return otherDescOld;
+	}
+
+	/**
+	 * @param otherDescOld the otherDescOld to set
+	 */
+	public void setOtherDescOld(String otherDescOld) {
+		this.otherDescOld = otherDescOld;
+	}
+	
+	/**
+	 * @return the otherDescChangeMaintenance
+	 */
+	public boolean isOtherDescChangeMaintenance() {
+		return otherDescChangeMaintenance;
+	}
+
+	/**
+	 * @param otherDescChangeMaintenance the otherDescChangeMaintenance to set
+	 */
+	public void setOtherDescChangeMaintenance(boolean otherDescChangeMaintenance) {
+		this.otherDescChangeMaintenance = otherDescChangeMaintenance;
+	}
+	
+	/**
+	 * @return the supProfileHistoryOtherDesc
+	 */
+	public List<SmSupplierCategory> getSupProfileHistoryOtherDesc() {
+		return supProfileHistoryOtherDesc;
+	}
+
+	/**
+	 * @param supProfileHistoryOtherDesc the supProfileHistoryOtherDesc to set
+	 */
+	public void setSupProfileHistoryOtherDesc(
+			List<SmSupplierCategory> supProfileHistoryOtherDesc) {
+		this.supProfileHistoryOtherDesc = supProfileHistoryOtherDesc;
+	}
+	
+	/**
+	 * @return the authoriseUser
+	 */
+	public boolean isAuthoriseUser() {
+		return authoriseUser;
+	}
+
+	/**
+	 * @param authoriseUser the authoriseUser to set
+	 */
+	public void setAuthoriseUser(boolean authoriseUser) {
+		this.authoriseUser = authoriseUser;
+	}
 	// 36504 - END
+	
 	// 9299 - Start
 	private class MasterAllPagingDataModel extends PagingDataModel<SmCompExpMaster> {
 
@@ -2797,5 +2905,5 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.masterAllDataModel = masterAllDataModel;
 	}
 	// 9299 - END
-	
+
 }

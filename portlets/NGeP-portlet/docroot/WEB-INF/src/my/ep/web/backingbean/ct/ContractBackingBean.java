@@ -203,8 +203,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	private IPagingDataModel<PmOrgProfile> agencyDataModel = new AgencyPagingDataModel();	
 	private static final String CENTRAL_CIRCULAR_PAGE = "/xhtml/ct/circular/portal/centralCircularTab.xhtml?faces-redirect=true";
 	private static final Map<String, String> months;
-	
-	
+	// Start - #30045
+	private Long reasonId = null;
+	private String reasonCode = null;
+	// End - #30045	
 	static
 	{
 		months = new HashMap<String, String>();
@@ -746,7 +748,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 		StringBuilder filePath = new StringBuilder(docRepoSharedDir);
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
-		filePath.append(ModuleCodeConst.ORDER_FULFILLMENT.toUpperCase());
+		filePath.append(ModuleCodeConst.COMMON); //#29587
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 		filePath.append(ContractConst.DOCNAME_ITEM_SPEC_GUIDELINE);
 
@@ -1699,6 +1701,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		getManagedBean().setPtjCodeName(ContractConst.PTJ_CODE);		
 		getManagedBean().setPtjCodeNameSearchValues(null);
 		getManagedBean().setButtonHideActive(true);
+		getManagedBean().setDefaultMinistryExist(false); //Fix - #30045
 		agencyDataModel.resetData();
 	}
 
@@ -1784,6 +1787,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 								SearchCondition.CONDITION_OR.value())));
 				
 				reqDTO.setOrgProfileSearchBean(generateAgencySearchBean(searchBean));
+				//Start - #30045
+				if(isSpecialItemAgencies()){
+					reqDTO.setSpecialItemReason(true);
+					if(reasonCode != null && !reasonCode.isEmpty()){
+						reqDTO.setReasonCode(reasonCode);
+					}
+					
+				}
+				//End - #30045
 				OrgProfileResDTO resDTO = orgProfileSO.searchOrgProfile(reqDTO);
 				if (resDTO.isSuccessful()) {
 					return resDTO.getOrgProfileResultBean();
@@ -2633,13 +2645,39 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IOrgProfileSO.class);
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-			OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByMinistry(reqDTO);
-
+			OrgProfileResDTO resDTO = new OrgProfileResDTO(); //Fix - #30045
+			//Start - #30045
+			if (isSpecialItemAgencies()) {
+				IReasonSO reasonSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IReasonSO.class);
+				reasonCode = reasonSO.getReasonCodeAppliedForCt(reasonId);
+				if(reasonCode != null && !reasonCode.isEmpty()){
+					reqDTO.setReasonCode(reasonCode);
+					List<Long> listAffected = orgProfileSO.retrieveAgencyByReasonCode(reqDTO);
+					reqDTO.setSpecialItemReason(true);
+					reqDTO.setOrgProfileIdListForSpecialItem(listAffected);
+				}
+				
+			}
+			//End - #30045
+			resDTO = orgProfileSO.retrieveOrgProfileListByMinistry(reqDTO); //Fix - #30045
 			List<PmOrgProfile> list = resDTO.getOrgProfileList();
 			items = new SelectItem[list.size()];
 			for (PmOrgProfile orgProfile : list) {
+				//Start - #30045
+				//Checking if default/user ministry is exist in the list
+				if(orgProfile.getOrgProfileId().equals(getManagedBean().getMinistryProfileId())){
+				   getManagedBean().setDefaultMinistryExist(true);
+				}
+				//End - #30045
 				items[i++] = new SelectItem(orgProfile.getOrgProfileId(), orgProfile.getOrgName());
 			}
+			//Start - #30045
+			// To set the first record from the list as a default ministry for getJabatanDropdown()
+			if(!getManagedBean().isDefaultMinistryExist()){
+				getManagedBean().setMinistryProfileId(list.get(0).getOrgProfileId());
+			}
+			//End - #30045
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -2831,7 +2869,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * Method to remove/delete any non-active bond waiver records and their attachments for deferment latest
 	 */
-	private void removeDefermentLatest(){
+	public void removeDefermentLatest(){ //#40114
 		CtBondWaiverDetail latestDeferment = getManagedBean().getContractVer().getBondWaiverDefermentLatest();
 		if (latestDeferment != null && latestDeferment.getCtAttachment() != null
 				&& latestDeferment.getCtAttachment().getAttachmentId() != null) {
@@ -2843,7 +2881,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * Method to remove/delete any non-active bond waiver records and their attachments for deferment history
 	 */
-	private void removeInactiveDefermentHistory(){
+	public void removeInactiveDefermentHistory(){ //#40114
 		List<CtBondWaiverDetail> historyDeferment = getManagedBean().getContractVer().getBondWaiverDefermentHistory();
 		// remove bond waiver that hasn't been approved
 		if (CollectionUtils.isNotEmpty(historyDeferment)) {
@@ -4113,6 +4151,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		getManagedBean().setInPage(false);//Bug 34142 - shaqimi 04/12/2022
 		//Bug 34030 - shaqimi end
 		
+		//24336
+		//Reset page initialization
+		getManagedBean().setInitPage(false);
+		
 		if(slLoaNo.substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)){
 			AmendmentBackingBean abb = new AmendmentBackingBean();
 
@@ -4615,28 +4657,17 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return resDTO.getCtContractVer().getSignedDate();
 	}
 	
-	public String newProcurement(){
-		String procur = null;
-		if(getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().getRequestNote() != null){
-			procur = getParameterDesc(getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().
-					getRequestNote().getRequestNoteDtls().get(0).getProcurementType());
-			return procur;
-		}
-		return null;
+	//Start Fix- #30045
+	public String newProcurement() {
+		String procur = getParameterCode(getManagedBean().getContractVer().getCtContract().getProcurementMode());
+		return ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE.equalsIgnoreCase(procur) ? procur : null;
 	}
 	
 	public String newJustification(){
-		String justifi = null;
-		if(getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().getRequestNote() != null){
-			justifi = getReasonDesc(getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().
-					getRequestNote().getRequestNoteDtls().get(0).getJustificationType());
-
-			return justifi;
-		}
-		return null;
+		 return newProcurement() != null ? getReasonDesc(
+			        getManagedBean().getContractVer().getCtContract().getReason()) : null;
 	}
-
-
+	//End Fix- #30045
 
 	public String getLanguage() {
 		FacesScopes facesScopes = new FacesScopes();
@@ -4730,18 +4761,20 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    getManagedBean().setExtendContract(false);
 	    getManagedBean().setDisableOriginalBond(false);
 
-	    // Retrieve currentPeriod and extendPeriod
-	    String currentPeriod = (loa.getContractDuration() != null) 
-	            ? BigDecimal.valueOf(loa.getContractDuration().longValue()).toString() 
-	            : null;
-
-	    String extendPeriod = (contractVer.getCtContractValue().getContractPeriod() > 0) 
-	            ? Integer.toString(contractVer.getCtContractValue().getContractPeriod()) 
-	            : null;
+	    //#32418 - Start
+	    // Retrieve currentExpDate and newExpDate
+	    Date currentExpDate = loa.getContractExpDate();
+	    Date newExpDate = contractVer.getCtContractValue().getExpDate();
+	    
+	    // Check if contract is extended
+	    boolean isExtended = currentExpDate != null
+	            && newExpDate != null
+	            && newExpDate.after(currentExpDate);
+	    //#32418 - End
 
 	    // Check if the contract needs an extension or requires a bond
 	    if (isContractUpdateOrView(contractVer) && isAlreadyAmendment() && (loa.isBondReq() || getManagedBean().getCtContractAmount().isBondReq())
-	            && currentPeriod != null && extendPeriod != null && !extendPeriod.equals(currentPeriod)) {
+	            && isExtended) { //#32418
 
 	        isContractExtendOrIsBond = true;
 	        getManagedBean().setExtendContract(true);
@@ -5236,5 +5269,36 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value());
 	}
 	//#35506 - End
+	
+	// Start - #30045
+	/**
+	 * Determines whether the current contract or request is associated with a
+	 * PK7 or Special Item agency based on its resolved {@link PmReason}.
+	 * <p>
+	 * The method attempts to resolve the procurement type by calling
+	 * {@code resolveProcTypeForPk7()}. If no reason is found, the method
+	 * immediately returns {@code false} to avoid {@link NullPointerException}.
+	 * </p>
+	 * 
+	 * <p>
+	 * Currently, the decision is simplified to check whether the resolved
+	 * {@link PmReason} has a non-null {@code reasonId}. If the {@code reasonId}
+	 * is not {@code null}, the contract is considered to fall under PK7 or
+	 * special item rules.
+	 * </p>
+	 * 
+	 * @return {@code true} if a valid {@link PmReason} with a non-null
+	 *         {@code reasonId} is resolved; {@code false} otherwise.
+	 */
+	public boolean isSpecialItemAgencies() {
+		PmReason reason = getManagedBean().getContractVer().getCtContract().getReason();
+		if (reason == null) {// avoid NullPointerException
+			return false;
+		} else {
+			reasonId = reason.getReasonId();
+		}
+		return true;
+	}
+	// End - #30045
 
 }

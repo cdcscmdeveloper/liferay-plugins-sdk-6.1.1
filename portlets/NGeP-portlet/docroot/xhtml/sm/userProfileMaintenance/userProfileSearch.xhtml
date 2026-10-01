@@ -47,7 +47,8 @@
 					<p:column headerText="#{lbl['lbl.sm.userprofile.accountstatus']}">
 						<h:outputText value="#{lbl['lbl.sm.accountstatus.active']}" rendered="#{personnel.recordStatusFlg eq '1' and not empty personnel.epRole}" />
 						<h:outputText value="#{lbl['lbl.sm.accountstatus.deactivate']}" rendered="#{personnel.recordStatusFlg eq '1' and empty personnel.epRole}" />
-						<h:outputText value="#{lbl['lbl.sm.accountstatus.pendingactivation']}" rendered="#{personnel.recordStatusFlg ne '1'}" />
+						<h:outputText value="#{lbl['lbl.sm.accountstatus.pendingactivation']}" rendered="#{personnel.recordStatusFlg ne '1' and personnel.recordStatusFlg ne '9'}" /><!-- #40739 -->
+						<h:outputText value="#{lbl['lbl.sm.accountstatus.terminate']}" rendered="#{personnel.recordStatusFlg eq '9'}" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sm.userprofile.eprole']}">
@@ -58,7 +59,7 @@
 					<!-- START 27912 -  Disciplinary Action - 26238 -->
 						<p:commandLink title="#{lbl['lbl.sm.userprofile.edit']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 							action="#{smPersonnelBackingBean.navigateToUpdateUserPage(personnel.personnelId)}" update="@form">
-							<p:graphicImage value="/css/images/design/edit.png" rendered="#{personnel.recordStatusFlg eq 1 and !smPersonnelBackingBean.managedBean.suppInPunishment}" title="#{lbl['lbl.sm.edit']}"></p:graphicImage>
+							<p:graphicImage value="/css/images/design/edit.png" rendered="#{personnel.recordStatusFlg eq 1 and !smPersonnelBackingBean.managedBean.suppInPunishment or personnel.recordStatusFlg eq 9}" title="#{lbl['lbl.sm.edit']}"><!-- #40739 --></p:graphicImage>
 							<p:graphicImage value="/css/images/design/ico-view.png" rendered="#{personnel.recordStatusFlg eq 8 or smPersonnelBackingBean.managedBean.suppInPunishment}" title="#{lbl['lbl.sm.view']}"/>
 						</p:commandLink>
 						<!-- END 27912 -  Disciplinary Action - 26238 -->

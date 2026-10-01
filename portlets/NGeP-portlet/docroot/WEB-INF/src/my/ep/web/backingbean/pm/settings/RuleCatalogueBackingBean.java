@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;//#35323
+import java.util.Arrays;//#35323, #34397, #34398
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -95,6 +95,7 @@ import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmOrgValidity;//#36738
 import my.ep.persistence.entity.pm.authorization.PmPtjSpecialApproval;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -1373,6 +1374,12 @@ public class RuleCatalogueBackingBean extends
 			// 29669,29641 start 
 			if (ruleTypeDesc.getRuleType().getRuleDataTypeId().getParameterCode().matches("A|N|M|P") 
 					&& ruleTypeDesc.getRuleType().getRangeType() != 2) {
+				//#34397, #34398 - start
+				if (isRenewTypes(ruleTypeDesc.getRuleType().getRuleType())){
+					validateRenewMOFParams(ruleTypeDesc);
+				}
+				//#34397, #34398 - end
+				
 				//#35323 and sonarLint fixing - Start
 				for (PmConfigRuleValue ruleTypeValue : ruleTypeDesc.getRuleType().getConfigRuleValues()) {
 					if (ruleTypeValue.getRecordStatusFlg() == 0) {// if is inActive one go to next record
@@ -1444,8 +1451,13 @@ public class RuleCatalogueBackingBean extends
 				if (ruleTypeDesc.getRuleType().getRangeType() != 1
 						|| (ruleTypeDesc.getRuleType().getRangeType() == 1 && baseValueToCompare.isShowFlag())) {
 					if (baseValueToCompare.isErrorExpDate()) {
-						if (!this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType()
+						//#34397, #34398 - start
+						if (isRenewTypes(ruleTypeDesc.getRuleType().getRuleType())) {
+							throw new EpException(MessageConst.ERROR_770257, 
+									new String[] {ruleTypeDesc.getRuleDesc(), getZoneName(baseValueToCompare.getZoneId())});
+						} else if (!this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType()
 								.equals(ruleTypeDesc.getRuleType().getRuleType())) {
+						//#34397, #34398 - end
 							throw new EpException(MessageConst.ERROR_770111,
 									new String[] { ruleTypeDesc.getRuleDesc() });
 						} else {
@@ -1482,9 +1494,12 @@ public class RuleCatalogueBackingBean extends
 						throw new EpException(MessageConst.ERROR_770210, new String[] { ruleTypeDesc.getRuleDesc() });
 					}
 					// 29669 - end
-
-					if (!ruleValueValidation(baseValueToCompare, value,
-							ruleTypeDesc.getRuleType())) {
+					//#34397, #34398 - start
+					if(isRenewTypes(ruleTypeDesc.getRuleType().getRuleType())){
+						validateRenewMOFDate(baseValueToCompare, value, ruleTypeDesc.getRuleDesc());
+					
+					} else if (!ruleValueValidation(baseValueToCompare, value, ruleTypeDesc.getRuleType())) {
+						//#34397, #34398 - end
 
 						// hit error and return
 						switch (ruleTypeDesc.getRuleType().getValidationType()) {
@@ -5915,10 +5930,30 @@ public class RuleCatalogueBackingBean extends
 		log.info("end addPTJCRValues");
 	}
 	
+	//#34397, #34398, #27827
+	/**
+	 * Retrieve zones
+	 */
 	public void retrievePmZoneList() {
-		IZoneSO zoneSO = (IZoneSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
+		IZoneSO zoneSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
 		ZoneResDTO resDTO = zoneSO.retrieveActiveZoneList();
 		this.getManagedBean().setZoneList(resDTO.getZoneList());
+		
+		List<PmZone> zones = new ArrayList<>();
+		//semenanjung, sabah, sarawak
+		List<String> mainCodes = Arrays.asList("1", "2", "3");
+		for (PmZone zone : getManagedBean().getZoneList()) {
+			if (mainCodes.contains(zone.getZoneCode())) {
+				zones.add(zone);
+			}
+		}
+		Collections.sort(zones, new Comparator<PmZone>(){
+			@Override
+			public int compare(final PmZone s1, final PmZone s2) {
+				return s1.getZoneCode().compareTo(s2.getZoneCode());
+			}
+		});
+		getManagedBean().setMainZones(zones);
 	}
 	/* 27827 - END */
 	
@@ -6027,6 +6062,77 @@ public class RuleCatalogueBackingBean extends
 	// #30672, #29669 - 29/01/2023 - Remove this code
 	
 	//#34397, #34398 , #35509 - start
+	/**
+	 * @param type
+	 * @return true for MOF renew period rule types
+	 */
+	public boolean isRenewTypes(String type) {
+		return RuleTypeConst.RENEW_PERIOD_UPDATE.equals(type) || RuleTypeConst.RENEW_PERIOD_ADD_CAT.equals(type)
+			|| RuleTypeConst.RENEW_PERIOD_BUMI.equals(type) || RuleTypeConst.RENEW_PERIOD_CANCEL_CAT.equals(type)
+			|| RuleTypeConst.RENEW_PERIOD.equals(type);
+	}
+	
+	//#27827 - start
+	public List<PmZone> getZones() {
+		String type = getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType();
+		if(RuleTypeConst.PTJ_CODE.equals(type)){
+			return getManagedBean().getMainZones();
+		} else {
+			return isRenewTypes(type) ? getManagedBean().getMainZones() : getManagedBean().getZoneList();
+		}
+	}
+	//#27827 - end
+	
+	private void validateRenewMOFParams(PmConfigRuleDesc ruleDesc){
+		for (PmConfigRuleValue val : ruleDesc.getRuleType().getConfigRuleValues()) {
+			if (val.getZoneId() == null && val.isBrandNew()) {
+				throw new EpException(MessageConst.ERROR_770253,
+						new String[] {getLabel("lbl.pm.zone"), ruleDesc.getRuleDesc()});
+			} else if (val.getRuleValue() == null) {
+				throw new EpException(MessageConst.ERROR_770254,
+						new String[] {getLabel("lbl.pm.value"), ruleDesc.getRuleDesc(), getZoneName(val.getZoneId())});
+			}
+		}
+	}
+	
+	private void validateRenewMOFDate(PmConfigRuleValue baseVal, PmConfigRuleValue value, String desc){
+		if (baseVal.getZoneId() != value.getZoneId()) {
+			return;
+		}
+		if (value.getEffDate() == null) {
+			throw new EpException(MessageConst.ERROR_770254,
+					new String[] {getLabel("lbl.pm.as.effdate"), desc, getZoneName(value.getZoneId())});
+		}
+		if (baseVal.getExpDate() == null) {
+			throw new EpException(MessageConst.ERROR_770255,
+					new String[] {desc, getZoneName(value.getZoneId())});
+		}
+		long baseExp = baseVal.getExpDate().getTime();
+		long valEff = value.getEffDate().getTime();
+		if (baseExp == valEff) {
+			throw new EpException(MessageConst.ERROR_770256,
+					new String[] {desc, getZoneName(value.getZoneId())});
+		}
+		if (baseExp > valEff) {
+			throw new EpException(MessageConst.ERROR_770257,
+					new String[] {desc, getZoneName(value.getZoneId())});
+		}
+	}
+	
+	/**
+	 * @param label
+	 * @param params
+	 * @return label based on user locale
+	 */
+	public String getLabel(String label, String... params){
+		if (params != null) {
+			return ResourceBundleUtils.getMessage(label, params, 
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale());
+		}
+		return ResourceBundleUtils.getMessage(label, 
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale());
+	}
+	
 	/**
 	 * @param zoneId
 	 * @return zone name
@@ -6159,6 +6265,7 @@ public class RuleCatalogueBackingBean extends
 			}
 		}
 
+		// #27827 to be deployed together - START
 		// search via desc
 		if (StringUtils.isNotBlank(searchRuleDesc)) {
 			List<PmConfigRuleValue> byDesc = searchByRuleValueDesc(originalList, searchRuleDesc, false);
@@ -6178,6 +6285,7 @@ public class RuleCatalogueBackingBean extends
 				resultList.retainAll(byZone);
 			}
 		}
+		// #27827 to be deployed together - END
 
 		// search via effective date and expiry date (exact date if only one,
 		// between if both)
@@ -6243,6 +6351,7 @@ public class RuleCatalogueBackingBean extends
 		return searchRuleTypeValueList;
 	}
 
+	// #27827 to be deployed together - START
 	/**
 	 * #36738 filter rule values by description
 	 * 
@@ -6299,6 +6408,7 @@ public class RuleCatalogueBackingBean extends
 			return configRuleValuesList;
 		}
 	}
+	// #27827 to be deployed together - END
 
 	/**
 	 * #36738 filter rule values by effective date and expiry date
@@ -6453,17 +6563,34 @@ public class RuleCatalogueBackingBean extends
 	 */
 	private List<PmPtjSpecialApproval> searchByPtj(List<PmPtjSpecialApproval> ptjApprovalList, String search,
 			boolean useName) {
-		List<PmPtjSpecialApproval> result = new ArrayList<PmPtjSpecialApproval>();
-		for (PmPtjSpecialApproval ptjApproval : ptjApprovalList) {
-			String value = useName ? ptjApproval.getPmOrgProfile().getOrgValidity().getOrgName() : ptjApproval
-					.getPmOrgProfile().getOrgValidity().getOrgCode();
-			String searchRegex = searchRegex(search);
+		List<PmPtjSpecialApproval> result = new ArrayList<>();
 
-			if (value != null && (value.toLowerCase().contains(search.toLowerCase()))
-					|| value.toLowerCase().matches(searchRegex)) {
-				result.add(ptjApproval);
+		if (search == null || search.isEmpty()) {
+			return result;
+		}
+
+		String searchLower = search.toLowerCase();
+		String regex = searchRegex(search);
+
+		for (PmPtjSpecialApproval ptjApproval : ptjApprovalList) {
+			for (PmOrgValidity validity : ptjApproval.getPmOrgProfile().getPmOrgValidityList()) {
+				if (DbValueConst.RECORD_STATUS_ACTIVE !=(validity.getRecordStatusFlg())) {
+					continue;
+				}
+				
+				String value = useName ? validity.getOrgName() : validity.getOrgCode();
+				if (value == null) {
+					continue;
+				}
+				
+				String valueLower = value.toLowerCase();
+				if (valueLower.contains(searchLower) || valueLower.matches(regex)) {
+					result.add(ptjApproval);
+					break;
+				}
 			}
 		}
+
 		return result;
 	}
 

@@ -66,6 +66,11 @@ public class FlReportConst implements Serializable {
 	public static final String FL_052_PURCHASE_STOP_INSTR_PTJ = "FL_052";
 	public static final String FL_055_PURCHASE_STOP_INSTR_SUPP = "FL_055";
 	
+	//31344 - start
+	public static final String FL_085_ITEM_THRESHOLD = "FL_085";
+	public static final String FL_086_ITEM_PANEL_THRESHOLD = "FL_086";
+	//31344 - end
+	
 	// Panel Const
 	public static final String FL_033_SUMMARY = "FL_033";
 	
@@ -137,6 +142,22 @@ public class FlReportConst implements Serializable {
 	public static final String FL_RPT_PSF_ONE_OFF = "PSFONEOFF";
 	public static final String FL_RPT_PSF_PERIOD = "PSFPERIOD";
 	// 29554 end
+	
+	//31344 - start
+	public static final String FL_RPT_PROCUREMENT_TYPE = "PPROCTYPE";
+	public static final String FL_RPT_REASON = "PREASON";
+	public static final String FL_PARAMETER_TYPE_RPT = "RPT";
+	//31344 - end
+	
+	// #27476 start
+	public static final String FL_RPT_PROCUMENT_TYPE_CODE = "PPROCTYPECODE";
+	public static final String FL_RPT_GROUP_SUPP_NAME = "SUPPLIER NAME";
+	public static final String FL_RPT_GROUP_TREASURY_CIRCULAR = "PKP NO";
+	public static final String FL_RPT_GROUP_DOC_STATUS = "STATUS";
+	public static final String FL_RPT_GROUP_REQUISITIONER = "REQUISITIONER";
+	public static final String FL_RPT_GROUP_PROC_TYPE = "PROCUREMENT TYPE";
+	public static final String FL_RPT_GROUP_ITEM_TYPE = "ITEM TYPE";
+	// #27476 end
 	
 	
 	public FlReportConst(){}
@@ -333,4 +354,56 @@ public class FlReportConst implements Serializable {
 		return FL_072_ACCUMULATED_SERVICE_FEE_REPORT;
 	}
 	/*Ends 29554*/
+	
+	//31344 - start
+	public String getFl085ItemThreshold() {
+		return FL_085_ITEM_THRESHOLD;
+	}
+	
+	public String getFl086ItemPanelThreshold() {
+		return FL_086_ITEM_PANEL_THRESHOLD;
+	}
+	//31344 - end
+
+	/**
+	 * @return the flRptGroupSuppName
+	 */
+	public static String getFlRptGroupSuppName() {
+		return FL_RPT_GROUP_SUPP_NAME;
+	}
+
+	/**
+	 * @return the flRptGroupTreasuryCircular
+	 */
+	public static String getFlRptGroupTreasuryCircular() {
+		return FL_RPT_GROUP_TREASURY_CIRCULAR;
+	}
+
+	/**
+	 * @return the flRptGroupDocStatus
+	 */
+	public static String getFlRptGroupDocStatus() {
+		return FL_RPT_GROUP_DOC_STATUS;
+	}
+
+	/**
+	 * @return the flRptGroupRequisitioner
+	 */
+	public static String getFlRptGroupRequisitioner() {
+		return FL_RPT_GROUP_REQUISITIONER;
+	}
+
+	/**
+	 * @return the flRptGroupProcType
+	 */
+	public static String getFlRptGroupProcType() {
+		return FL_RPT_GROUP_PROC_TYPE;
+	}
+
+	/**
+	 * @return the flRptGroupItemType
+	 */
+	public static String getFlRptGroupItemType() {
+		return FL_RPT_GROUP_ITEM_TYPE;
+	}
  }

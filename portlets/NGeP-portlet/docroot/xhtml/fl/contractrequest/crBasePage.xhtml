@@ -18,7 +18,7 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-		<!--#26279 Start-->
+		<!--#26279 Start #40173-remove partialSubmit-->
 		<h:panelGroup layout="block" class="ui-messages ui-widget"
 			rendered="#{not empty contractRequestBackingBean.managedBean.disciplinaryActionMessage}">
 			<h:panelGroup layout="block" class="ui-messages-info ui-corner-all">
@@ -29,7 +29,7 @@
 						<p:commandLink id="sharedcommand" onstart="blockWidget.show()" style="text-decoration: underline; color: inherit;"
 							oncomplete="blockWidget.hide()"
 							action="#{contractRequestBackingBean.viewDisciplinaryAction(contractRequestBackingBean.managedBean.smDisciplinaryAction)}"
-							process="@this" partialSubmit="true" update=":form">#{lbl['lbl.sm.disciplinary.here']}</p:commandLink>
+							process="@this" update=":form">#{lbl['lbl.sm.disciplinary.here']}</p:commandLink>
 						#{lbl['lbl.sm.supplier.to.view.disc.action.details']}</li>
 				</ul>
 			</h:panelGroup>
@@ -213,5 +213,8 @@
 		<ac:disciplinaryActionHistory voList="#{contractRequestBackingBean.managedBean.disciplinaryActionVO}" 
 		dialogHeader="#{lbl['lbl.sm.view.details.disciplinary.action.headerlbl']}" dialogWidth="800px" dialogHeight="400px" btnView="true" />
 		<!--#26279 End-->
+		<!-- #31344 Start -->
+		<ui:include src="/xhtml/common/itemDetailsPopup.xhtml" />
+		<!-- #31344 End -->
 	</ui:define>
 </ui:composition>

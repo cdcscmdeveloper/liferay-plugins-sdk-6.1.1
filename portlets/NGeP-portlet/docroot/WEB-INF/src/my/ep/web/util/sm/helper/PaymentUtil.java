@@ -280,8 +280,11 @@ public class PaymentUtil {
 			String amountStr = df.format(amount);
 			sb.append("\"billAmt\":\"").append(amountStr).append("\"")
 					.append("}");
-			payload = encrypt(sb.toString(),
+//			payload = encrypt(sb.toString(),
+//					PasswordUtils.decrypt(clientKey));
+			payload = CryptoUtils.encryptAES(sb.toString(),
 					PasswordUtils.decrypt(clientKey));
+			log.info("######38377 after encrypt payload using AES no padding#####");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -348,10 +351,13 @@ public class PaymentUtil {
 		if (!StringUtils.isBlank(payload)) {
 			try {
 				log.info("#38377 encrypted payload:" + payload);
-				payload = decrypt(payload, PasswordUtils
+//				payload = decrypt(payload, PasswordUtils
+//						.decrypt(EpPropertiesUtils.getInstance().getProperty(
+//								"payment.gov.vkey")));
+				payload = CryptoUtils.decryptAES(payload, PasswordUtils
 						.decrypt(EpPropertiesUtils.getInstance().getProperty(
 								"payment.gov.vkey")));
-				log.info("#38377 decrypted payload:" + payload);
+				log.info("#38377 after decrypted using AES no padding:" + payload);
 				jsonObject = new JSONObject(payload);
 			} catch (Exception e1) {
 				log.info("#38377 error decrypted payload:" + e1.getMessage());
