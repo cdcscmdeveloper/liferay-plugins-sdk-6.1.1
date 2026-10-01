@@ -1379,7 +1379,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
 		}
         
-        //#30737 - start - for revise purpose
+        //#30737 - start
 		reqDTO.setScLoa(ctContractVer.getCtContract().getLoa());
 		reqDTO.setUserStatusCheckResult(getManagedBean().getUserStatusCheckResult());
         //#30737 - end 

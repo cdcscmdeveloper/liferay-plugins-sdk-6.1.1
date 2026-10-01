@@ -702,7 +702,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
 			}
 			
-			//#30737 - for revise purpose
+			//#30737
 			reqDTO.setUserStatusCheckResult(getManagedBean().getUserStatusCheckResult());
 			
 			System.out.println("Bug #30924 6.0");

@@ -620,7 +620,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}
 			
-			//#30737 - start - for revise purpose
+			//#30737 - start
 			reqDTO.setScLoa(getManagedBean().getContractVer().getCtContract().getLoa());
 			reqDTO.setUserStatusCheckResult(getManagedBean().getUserStatusCheckResult());
 	        //#30737 - end 
