@@ -427,7 +427,7 @@
 							<f:selectItems var="equiCountry"
 								value="#{backingBean.managedBean.countryItems}" />
 								<!-- #36718 - Start -->
-								<p:ajax event="change" process="@this @([id$=equiCompBlockPanel])"
+								<p:ajax event="change" process="@this @([id$=suppEquityCompAddrPanelId])"
 									listener="#{backingBean.onChangeCountry(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
 									update="equiState,divisionCapitalLabelPanelId,divisionCapitalDropdownPanelId,equiDivision,equiDist,equiCity,postCodeSuppEquiPanelId" />
 								<!-- #36718 - End -->
@@ -462,7 +462,7 @@
 							<f:selectItems var="equiState"
 								value="#{backingBean.managedBean.equiCompanyStates}" />
 								<!-- #36718 - Start -->
-								<p:ajax event="change" process="@this @([id$=equiCompBlockPanel])"
+								<p:ajax event="change" process="@this @([id$=suppEquityCompAddrPanelId])"
 									listener="#{backingBean.onChangeState(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
 									update="divisionCapitalLabelPanelId,divisionCapitalDropdownPanelId,equiDist,equiCity" />
 								<!-- #36718 - End -->
@@ -504,7 +504,7 @@
 							itemValue="#{division.divisionId}"
 							itemLabel="#{division.divisionName}" />
 									<!-- #36718 - Start -->
-									<p:ajax event="change" process="@this @([id$=equiCompBlockPanel])"
+									<p:ajax event="change" process="@this @([id$=suppEquityCompAddrPanelId])"
 										listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
 										update="equiDist,equiCity" />
 									<!-- #36718 - End -->
@@ -540,7 +540,7 @@
 							<f:selectItems var="equiDist"
 								value="#{backingBean.managedBean.equiCompanyDistricts}" />
 								<!-- #36718 - Start -->
-								<p:ajax event="change" process="@this @([id$=equiCompBlockPanel])"
+								<p:ajax event="change" process="@this @([id$=suppEquityCompAddrPanelId])"
 									listener="#{backingBean.onChangeDistrict(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
 									update="equiCity" />
 								<!-- #36718 - End -->
@@ -573,7 +573,7 @@
 							<f:selectItems var="equiCity"
 								value="#{backingBean.managedBean.equiCompanyCities}" />
 								<!-- #36718 - Start -->
-								<p:ajax event="change" process="@this @([id$=equiCompBlockPanel])"
+								<p:ajax event="change" process="@this @([id$=suppEquityCompAddrPanelId])"
 									listener="#{backingBean.onChangeCity(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
 									update="equiCity" />
 								<!-- #36718 - End -->
@@ -590,8 +590,6 @@
 						<p:message id="equiCityMsg" for="equiCity" showSummary="true"
 							showDetail="false" display="icon" /></td>
 				</tr>
-				</p:panel>
-				<!-- #36718 - END -->
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
@@ -638,6 +636,8 @@
 							</p:outputPanel>
 						</p:outputPanel></td>
 				</tr>
+				</p:panel>
+				<!-- #36718 - END -->
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
 					<td>

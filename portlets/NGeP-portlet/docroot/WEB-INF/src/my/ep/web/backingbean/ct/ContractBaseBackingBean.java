@@ -28,8 +28,8 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CTProcessNameConst; //#30737
 import my.ep.dto.ct.actor.CtActorReqDTO;
 import my.ep.dto.ct.actor.CtActorResDTO;
-import my.ep.dto.pm.authorization.user.UserStatusCheckReqDTO; // #30737
-import my.ep.dto.pm.authorization.user.UserStatusCheckResDTO; // #30737
+import my.ep.dto.pm.authorization.user.InactiveUserReqDTO; // #30737
+import my.ep.dto.pm.authorization.user.InactiveUserResDTO; // #30737
 import my.ep.dto.pm.authorization.user.UserStatusCheckDTO; // #30737
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
@@ -672,7 +672,7 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
   		
   	    IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 
-  	    UserStatusCheckReqDTO userStatusRequest = new UserStatusCheckReqDTO();
+  	    InactiveUserReqDTO userStatusRequest = new InactiveUserReqDTO();
   	    userStatusRequest.setUserIds(populateUserIdsIntoString(users));
 	  	userStatusRequest.setUserRoleCode(roleCode);
 	  	userStatusRequest.setOrgProfileId(getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
@@ -680,14 +680,14 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 	  	userStatusRequest.setDocNo(getContractVer().getCtContract().getContractNo());
 	  	userStatusRequest.setNotifyAdmin(RoleCode.PTJ_ADMIN.value());
   	    
-  	    UserStatusCheckResDTO resDto = userSO.checkInactiveUserBySP(userStatusRequest);
+  	    InactiveUserResDTO resDto = userSO.checkInactiveUserBySP(userStatusRequest);
   	    resDto.setRoleCode(roleCode);
   	    resDto.setMemberRoleCode(memberRoleCode);
 
   	    return buildUserStatusCheckResults(users, resDto);
   	}
   	
-  	private List<UserStatusCheckDTO> buildUserStatusCheckResults(List<PmUser> users, UserStatusCheckResDTO userStatusResponse) {
+  	private List<UserStatusCheckDTO> buildUserStatusCheckResults(List<PmUser> users, InactiveUserResDTO userStatusResponse) {
 
   	    List<UserStatusCheckDTO> userStatusList = new ArrayList<UserStatusCheckDTO>();
   	    if (!users.isEmpty()) {
