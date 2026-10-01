@@ -5819,8 +5819,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			else {
 				// #29007 Start Vinod
 				checkAndInsertItemSpecOffer();
-				// #29007 End Vinod
-				updateBpmTaskAction(outcome);
+				
+				//34444 START
+				this.getManagedBean().setAction(outcome);
+				getManagedBean().setBtnAction("SUBMISSIONLOA");
+				RequestContext.getCurrentInstance().execute("popupConfirmInfoDlg.show()");
+				RequestContext.getCurrentInstance().execute("blockWidget.hide();");
+				//34444 END
 			}
 		}
 		//20190405@asyrafhaziq - CR25062 - End
@@ -6151,6 +6156,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			// Bug #24769
 			reqDTO.setToBeDeltedZoneCriteria(this.getManagedBean().getToBedeletedSupplierZone());
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			reqDTO.setSaveTemplate(this.getManagedBean().isSaveTemplate());	// Bug #40798@Syazani 21/09/2026
 			resDTO = getQtDirectAwardSO().updateBpmTask(reqDTO);
 			if (resDTO.isSuccessful()) {
 				scLoa = resDTO.getLoa();
@@ -14158,8 +14164,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			if (isPendingAcknowledgement) {
 				DirectAwardReqDTO awardReqDTOnew = new DirectAwardReqDTO();
 				awardReqDTOnew.setScLoa(scLoa);
-				DirectAwardResDTO awardResDTOnew = getQtDirectAwardSO().saveScloiloaitemforDirectLOA(awardReqDTOnew);
+				// Bug #40798@Syazani 21/09/2026 -- Start
+				validateDuplicateItems(this.getManagedBean().getProdscQtDoc(), this.getManagedBean().getServicescQtDoc());
+				awardReqDTOnew.setScQtDoc(this.getManagedBean().getProdscQtDoc());
+				awardReqDTOnew.setServiceQtDoc(this.getManagedBean().getServicescQtDoc());
+				DirectAwardResDTO awardResDTOnew = getQtDirectAwardSO().saveScloiloaitemforDirectLOAConfirmSupplierAcceptBeforeBPM(awardReqDTOnew);
+				// Bug #40798@Syazani 21/09/2026 -- End
 				if (awardResDTOnew.isSuccessful()) {
+					this.getManagedBean().setSaveTemplate(false);	// Bug #40798@Syazani 21/09/2026
 					scLoa.setScLoiLoaItems(awardResDTOnew.getLoa().getScLoiLoaItems());
 				}
 			}
