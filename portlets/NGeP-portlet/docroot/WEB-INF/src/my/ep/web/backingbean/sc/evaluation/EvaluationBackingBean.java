@@ -9732,7 +9732,6 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			evalReqDTO.setScQt(this.getManagedBean().getScQt()); // #28784
 			evalReqDTO.setScQt(this.getManagedBean().getScQt()); //#40791
 			evalReqDTO.setSaveActionClick(true);//#38151
-			evalReqDTO.setWeightage35384WIP(this.getManagedBean().isWeightage35384WIP()); //#38151 WIP keeps old calculation (no weightage multiply)
 			
 			List<ScQtCheckList> qtCheckLists = null;
 			if ("T".equalsIgnoreCase(getManagedBean().getCheckListType())) {
