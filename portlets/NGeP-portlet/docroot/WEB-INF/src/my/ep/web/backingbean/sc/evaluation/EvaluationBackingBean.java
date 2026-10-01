@@ -2751,6 +2751,18 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 					getManagedBean().setTechnicalSummaryGenerated(true);
 				}
 
+				// #25138, #21695 -start- (restored from release-prd-uat)
+				if (this.getManagedBean().getScQt().isDemoRequired()) {
+					this.getManagedBean().setQualifiedSuppliersDM(
+							new SummarySupplierPagingDataModel(
+									"oneTierQualifiedSupplier", true, false, null,
+									evalReqDTO.getResultStages()));
+					this.getManagedBean().setDisqualifiedSuppliersDM(
+							new SummarySupplierPagingDataModel(
+									"oneTierDisQualifiedSupplier", false, false,
+									null, evalReqDTO.getResultStages()));
+				}
+
 				/*
 				 * this.getManagedBean().setQualifiedSuppliersDM( new
 				 * SummarySupplierPagingDataModel( "oneTierQualifiedSupplier",
@@ -9720,6 +9732,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			evalReqDTO.setScQt(this.getManagedBean().getScQt()); // #28784
 			evalReqDTO.setScQt(this.getManagedBean().getScQt()); //#40791
 			evalReqDTO.setSaveActionClick(true);//#38151
+			evalReqDTO.setWeightage35384WIP(this.getManagedBean().isWeightage35384WIP()); //#38151 WIP keeps old calculation (no weightage multiply)
 			
 			List<ScQtCheckList> qtCheckLists = null;
 			if ("T".equalsIgnoreCase(getManagedBean().getCheckListType())) {
