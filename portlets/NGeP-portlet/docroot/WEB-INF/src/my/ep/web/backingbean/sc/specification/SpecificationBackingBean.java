@@ -2221,6 +2221,15 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setDemoScoreSetting(demoScoresetting);
 			}
 
+			// #21695 default technical item score setting when by-item panel is shown (mirrors #35113 clone flow)
+			if (this.getManagedBean().getWipStatusMax() > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE
+					&& null == this.getManagedBean().getTechnicalItemScoreSetting()) {
+				ScQtScoreSetting technicalItemScoresetting = constructScoreSetting(SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM);
+				technicalItemScoresetting.setOverallTechnical(new BigDecimal(50));
+				technicalItemScoresetting.setPassingScore(new BigDecimal(50));
+				this.getManagedBean().setTechnicalItemScoreSetting(technicalItemScoresetting);
+			}
+
 			if (this.getManagedBean().getQt().isPartial()) {
 				this.getManagedBean().getTechnicalScoreSetting().setWeightageReq(false);
 			}
@@ -3059,13 +3068,15 @@ public class SpecificationBackingBean extends
 							if (this.getManagedBean().isWeightage35384WIP()) {
 								calculateRecommendtechnicalScore(this.getManagedBean().getRecommendationScore());
 								calculateRecommendFinancialScore(this.getManagedBean().getRecommendationScore());
-
-							} else {
-								calculateonesetscoring(this.getManagedBean().getRecommendationPackageScore(), false);
 							}
 							// #38151 end Wip
 						}
-
+					}
+					// #38151 non-WIP: run after the loop so the package setting is loaded regardless of row order
+					if (!this.getManagedBean().isWeightage35384WIP()
+							&& null != this.getManagedBean().getRecommendationScore()
+							&& null != this.getManagedBean().getRecommendationPackageScore()) {
+						calculateonesetscoring(this.getManagedBean().getRecommendationPackageScore(), false);
 					}
 
 				}
@@ -11256,7 +11267,7 @@ public class SpecificationBackingBean extends
 				
 				//#38151 To apply the same scoring settings/calculation for both packages and items.
 				newItemScoreSetting.setOverallTechnical(
-					    !this.getManagedBean().isWeightage35384WIP()
+					    this.getManagedBean().isWeightage35384WIP()
 					        ? itemScoreSetting.getOverallTechnical()
 					        : packageScoreSetting.getOverallTechnical()
 					);
@@ -11265,7 +11276,7 @@ public class SpecificationBackingBean extends
 				
 				//#38151 To apply the same scoring settings/calculation for both packages and items.
 				newItemScoreSetting.setOverallFin(
-						    !this.getManagedBean().isWeightage35384WIP()
+						    this.getManagedBean().isWeightage35384WIP()
 						        ? itemScoreSetting.getOverallFin()
 						        : packageScoreSetting.getOverallFin()
 						);
@@ -21156,8 +21167,11 @@ public class SpecificationBackingBean extends
 		Date effDate = appVerDtls.getEffDate();
 		Timestamp effTimestamp = new Timestamp(effDate.getTime());
 
-		if ((createdDate.before(effTimestamp) && !checkStatusWip)) {
-			//null != publishDate && publishDate.before(effDate)
+		// for wip PROD usage only -start-
+		if ((createdDate.before(effTimestamp) && !checkStatusWip && this.getManagedBean().getWipStatusMax() <= SourcingConstants.SCORE_SETTING_TYPE_FINANCIAL_BY_ITEM)
+				&& !checkbyStatus())
+		// for wip PROD usage only -end-
+		{
 			this.getManagedBean().setWeightage35384WIP(true);
 		}
 	}
@@ -21167,5 +21181,16 @@ public class SpecificationBackingBean extends
 				IQTSpecSO.class);
 		return specSo.checkWipScoreFlag(qtId);
 	}
-	// #38151 End
+
+	// #38151 -for wip PROD usage only- start
+	public boolean checkbyStatus() { 
+		Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+		if (QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(currentStatusId)
+				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION.equals(currentStatusId)) {
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
+	// #38151 -for wip PROD usage only- end
+
 }

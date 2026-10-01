@@ -444,8 +444,8 @@
 							style="width:5%; white-space:normal;" />
 						<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}"
 							style="width:10%; text-align:right;" />
-						<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}"
-							style="width:5%; text-align:right;" />
+						<p:column rowspan="2" headerText="#{lbl['lbl.sc.mloi.overall.score']}"
+							style="width:5%; text-align:right;" /><ui:remove><!--  #38151 --></ui:remove>
 									               	<!-- 29021 -start- -->
 		               	<p:column rowspan="2" style="width:5%; text-align:center;" rendered="#{!suppFinalizationBackingBean.evaluateWIP(suppFinalizationBackingBean.managedBean.scQt)}">
 		               		<f:facet name="header">
@@ -623,6 +623,7 @@
 									pattern="#{CommonUtils.getDisplayNumberFormat(
 													CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 					</h:outputText>
+					</p:column>
 				</p:column>
 				<ui:remove><!--  #38151 --></ui:remove>
 				<ui:remove>#29021 - start </ui:remove>

@@ -36,8 +36,10 @@ import my.ep.constant.CompositeValidityConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.QTStatusConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.dto.sc.quationtender.SpecificationReqDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmAppVersion; //#38151
@@ -917,13 +919,20 @@ private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
 		qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
 		qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
 
+		IQTSpecSO	specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTSpecSO.class);
+		SpecificationReqDTO specReqDto=new SpecificationReqDTO();
+		specReqDto.setScQt(this.getManagedBean().getQt());
+		this.getManagedBean().setWipStatusMax(specSo.checkWipScoreSettingMax(specReqDto));
+		
 		PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
 
 		Date effDate = appVerDtls.getEffDate();
 		Timestamp effTimestamp = new Timestamp(effDate.getTime());
 		boolean checkStatusWip =(checkWipScoreSettingFlag(qt.getQtId()));
 
-		if ((createdDate.before(effTimestamp) && !checkStatusWip)) {
+		if ((createdDate.before(effTimestamp) && !checkStatusWip && this.getManagedBean().getWipStatusMax() <= SourcingConstants.SCORE_SETTING_TYPE_FINANCIAL_BY_ITEM)) {
+			//null != publishDate && publishDate.before(effDate)
 			this.getManagedBean().setWeightage35384WIP(true);
 		}
 	}
