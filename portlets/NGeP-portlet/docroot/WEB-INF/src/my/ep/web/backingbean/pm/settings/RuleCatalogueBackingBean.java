@@ -6186,6 +6186,7 @@ public class RuleCatalogueBackingBean extends
 	 * #36738 Search rule type
 	 */
 	public void searchRuleType() {
+		this.getManagedBean().setNewPRList(false); //#35323
 		String searchRuleType = this.getManagedBean().getSearchRuleType();
 		List<PmConfigRuleDesc> configRuleDescList = this.getManagedBean().getOriginalConfigRuleDescList();
 		List<PmConfigRuleDesc> searchRuleDescList = new ArrayList<>();
@@ -6204,6 +6205,11 @@ public class RuleCatalogueBackingBean extends
 		if (CollectionUtils.isNotEmpty(searchRuleDescList)) {
 			this.getManagedBean().setConfigRuleDescList(searchRuleDescList);
 			this.getManagedBean().setSelectedRuleDescType(searchRuleDescList.get(0));
+			//#35323 - Start
+			if (RuleTypeConst.PURCHASE_REQUEST_THERSHOLD.equalsIgnoreCase(searchRuleDescList.get(0).getRuleType().getRuleType())){
+				loadPRValues();
+			}
+			//#35323 - End
 			this.getManagedBean().setOriginalConfigRuleValueList(searchRuleDescList.get(0).getRuleType().getConfigRuleValues());
 		} else {
 			this.getManagedBean().setConfigRuleDescList(null);
@@ -6217,6 +6223,7 @@ public class RuleCatalogueBackingBean extends
 	 * #36738 Reset search rule type
 	 */
 	public void resetRuleType() {
+		this.getManagedBean().setNewPRList(false); //#35323
 		this.getManagedBean().setSearchRuleType(new String());
 		this.getManagedBean().setConfigRuleDescList(this.getManagedBean().getOriginalConfigRuleDescList());
 		this.getManagedBean().setSelectedRuleDescType(this.getManagedBean().getOriginalConfigRuleDescList().get(0));
