@@ -25,7 +25,6 @@ import java.util.Locale; //24333
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -55,8 +54,6 @@ import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
-import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
-import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -144,7 +141,6 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
-import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.ct.CtAddressUtil;
@@ -198,7 +194,7 @@ import org.primefaces.model.UploadedFile;
 public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	private static Logger log = EpLogger.getLogger(ContractBackingBean.class);
-	
+
 	private static final long serialVersionUID = 1L;
 	private CtSchedule[] selectedSchedule;
 	private CtProgressivePayment[] selectedProgressive;
@@ -5365,5 +5361,4 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 	}
 	// #37620,#34367 - End
-	
 }  
