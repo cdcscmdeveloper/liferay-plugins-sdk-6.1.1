@@ -132,6 +132,7 @@ import com.liferay.portal.util.PortalUtil;
 //#35502 - Start
 import my.ep.biz.service.IAuditTrailSO;
 import my.ep.constant.pp.AuditPPConst;
+import my.ep.constant.ModuleCodeConst; // #33690
 import my.ep.web.backingbean.pp.audit.AuditProcurementPlanBackingBeanTemplate;
 import my.ep.biz.service.pp.audit.IAuditProcurementPlanSO;
 import my.ep.dto.pp.audit.AuditProcurementPlanReqDTO;
@@ -3361,8 +3362,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							Exception ex = new Exception("Current Plan Officer lookup failed for login ID: "
 									+ currentPlanOfficerLoginId);
 
-							SLAUtils.getInstance().logSLAError(AuditPPConst.PLAN_OFFICER, "savePlan",
-									ppPlan.getPlanNo(), "ProcurementPlanBackingBean",
+							SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROCUREMENT_PLAN, "savePlan",
+									ppPlan.getPlanNo(), "ProcurementPlanBackingBean.savePlan",
 									new FacesScopes().getUserSessionBean().getUserId(), ex);
 						}
 					}
@@ -3377,8 +3378,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 							Exception ex = new Exception("Unable to resolve current Plan Officer from PP_ACTOR.");
 
-							SLAUtils.getInstance().logSLAError(AuditPPConst.PLAN_OFFICER, "savePlan",
-									ppPlan.getPlanNo(), "ProcurementPlanBackingBean",
+							SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROCUREMENT_PLAN, "savePlan",
+									ppPlan.getPlanNo(), "ProcurementPlanBackingBean.savePlan",
 									new FacesScopes().getUserSessionBean().getUserId(), ex);
 
 							return null;
@@ -3469,8 +3470,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 								Exception ex = new Exception("Unable to resolve Plan Approver USER_ID for login ID: "
 										+ originalApprover.getLoginId());
 
-								SLAUtils.getInstance().logSLAError(AuditPPConst.PLAN_APPROVER_OFFICER, "savePlan",
-										ppPlan.getPlanNo(), "ProcurementPlanBackingBean",
+								SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROCUREMENT_PLAN, "savePlan",
+										ppPlan.getPlanNo(), "ProcurementPlanBackingBean.savePlan",
 										new FacesScopes().getUserSessionBean().getUserId(), ex);
 
 								continue;
@@ -3557,8 +3558,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 					Exception ex = new Exception("Inactive user SP returned empty P_STATUS.");
 
-					SLAUtils.getInstance().logSLAError(AuditPPConst.AUDIT_PROCUREMENT_PLAN, "savePlan",
-							ppPlan.getPlanNo(), "ProcurementPlanBackingBean",
+					SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROCUREMENT_PLAN, "savePlan",
+							ppPlan.getPlanNo(), "ProcurementPlanBackingBean.savePlan",
 							new FacesScopes().getUserSessionBean().getUserId(), ex);
 
 					FacesContext.getCurrentInstance().addMessage(null,
@@ -3576,8 +3577,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 				} catch (NumberFormatException e) {
 
-					SLAUtils.getInstance().logSLAError(AuditPPConst.AUDIT_PROCUREMENT_PLAN, "savePlan",
-							ppPlan.getPlanNo(), "ProcurementPlanBackingBean",
+					SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROCUREMENT_PLAN, "savePlan",
+							ppPlan.getPlanNo(), "ProcurementPlanBackingBean.savePlan",
 							new FacesScopes().getUserSessionBean().getUserId(), e);
 
 					FacesContext.getCurrentInstance().addMessage(null,
@@ -3675,8 +3676,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 					Exception ex = new Exception("P_STATUS = 9 returned outside VERIFY manual Approver-selection flow.");
 
-					SLAUtils.getInstance().logSLAError(AuditPPConst.AUDIT_PROCUREMENT_PLAN, "savePlan",
-							ppPlan.getPlanNo(), "ProcurementPlanBackingBean",
+					SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROCUREMENT_PLAN, "savePlan",
+							ppPlan.getPlanNo(), "ProcurementPlanBackingBean.savePlan",
 							new FacesScopes().getUserSessionBean().getUserId(), ex);
 
 					FacesContext.getCurrentInstance().addMessage(null,

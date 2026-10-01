@@ -41,20 +41,18 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:outputLabel value="#{lbl['lbl.pp.plan.approver']}"/>
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
-				<td>
-					<p:pickList styleClass="ppActors" id="plAppover" var="actor"
+				<td><ui:remove>33690 START</ui:remove> <p:pickList
+						styleClass="ppActors" id="plAppover" var="actor"
 						itemValue="#{actor}" itemLabel="#{actor.userName}"
 						value="#{pPlanBackingBean.managedBean.approverModel}"
 						disabled="#{!pPlanBackingBean.managedBean.modeEditable or (!pPlanBackingBean.isRolePlanner() and !pPlanBackingBean.managedBean.allowVerifierSelectApprover)}"
 						filterMatchMode="contains" converter="pmUserConverter">
-						<ui:remove>33690</ui:remove>
 						<f:facet name="sourceCaption">#{lbl['lbl.pp.available.approver']}</f:facet>
 						<f:facet name="targetCaption">#{lbl['lbl.pp.selected.approver']}</f:facet>
 						<p:column style="width:75%;">
 							<h:outputText value="#{actor.userName}" />
 						</p:column>
-					</p:pickList>
-				</td>
+					</p:pickList> <ui:remove>33690 END</ui:remove></td>
 				<th>
 					
 				</th>
