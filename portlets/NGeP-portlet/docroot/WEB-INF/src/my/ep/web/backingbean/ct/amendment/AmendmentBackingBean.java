@@ -1254,6 +1254,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			/*Setting extension history list for amendment*/
 			getManagedBean().setAmendHistoryList(contractAmendmentSO.retrieveExtensionHistory(reqDTO).getExtensionHistoryList());
 			getManagedBean().setNewAmendmentEffDate(retrieveNewEffDate());
+			
+			//#24336 - Start
+			//Initialize NewAmtEffDate
+			CtAmendment ctAmendment = resDTO.getCtContractVer().getCtAmendment();
+			if(ctAmendment != null && ctAmendment.getNewAmtEffDate() != null){
+				getManagedBean().setInitialNewAmtEffDate(ctAmendment.getNewAmtEffDate());
+			}else{
+				getManagedBean().setInitialNewAmtEffDate(retrieveNewEffDate());
+			}
+			//#24336 - End
 
 			// Initialize new amendment details
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment() == null) {
@@ -4952,6 +4962,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//End Fix - #33287
 		}
 		changeAmendmentEffDate();
+		
+		//#24336
+		handleNewAmtEffDate();
 	}
 
 	/**
@@ -5243,6 +5256,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		//32418 End	
 		changeAmendmentEffDate();
+		
+		//#24336
+		handleNewAmtEffDate();
 	}
 
 	/**
@@ -9491,45 +9507,75 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    }
 		return additionalPercentage;
 	}
-
+	
 	/**
 	 * Updates the new contract amount effective date based on certain business rules.
 	 */
 	public void handleNewAmtEffDate() {
-		BigDecimal newOverallCtAmount = newOverallContractAmount().setScale(2, RoundingMode.HALF_UP);
-		ContractManagedBean contractManagedBean = ctBackingBean.getManagedBean();
-		CtContractVer ctContractVer = contractManagedBean.getContractVer();
-		CtAmendment ctAmendment = ctContractVer.getCtAmendment();
 
-		Date newAmtEffDate;
-		// new overall contract amount is different from overall contact amount
-		if (isNewOverallCtAmountDifferent(newOverallCtAmount)) {
-			
-			//get selected/updated value
-			newAmtEffDate = ctAmendment.getNewAmtEffDate();
-			
-			boolean isDisableNewCtAmountEffDate = contractManagedBean.isDisableNewCtAmountEffDate();
-			if(newAmtEffDate == null || isDisableNewCtAmountEffDate){
-				newAmtEffDate = new Date();
-			}
-			
-			// Enable date input
-			contractManagedBean.setDisableNewCtAmountEffDate(false);
+	    BigDecimal newOverallCtAmount = newOverallContractAmount()
+	    		.setScale(2, RoundingMode.HALF_UP);
+
+	    ContractManagedBean contractManagedBean = ctBackingBean.getManagedBean();
+	    CtContractVer ctContractVer = contractManagedBean.getContractVer();
+	    CtAmendment ctAmendment = ctContractVer.getCtAmendment();
+	    
+	    Date newAmtEffDate = ctAmendment.getNewAmtEffDate();
+
+	    // Original overall contract amount not same as new overall contract amount
+	    if (isNewOverallCtAmountDifferent(newOverallCtAmount)) {
+	    	newAmtEffDate = getNewAmountEffDateForChangedAmount(
+	                newAmtEffDate,
+	                contractManagedBean.isDisableNewCtAmountEffDate()
+	        );
+	        contractManagedBean.setDisableNewCtAmountEffDate(false);
+	    } else {
+	    	// Both overall amount is same
+	    	newAmtEffDate = getNewAmountEffDateForUnchangedAmount(
+	                newAmtEffDate,
+	                ctAmendment
+	        );
+	        contractManagedBean.setDisableNewCtAmountEffDate(true);
+	    }
+	    ctAmendment.setNewAmtEffDate(newAmtEffDate);
+	}
+	
+	/**
+	 * Determines the effective date when the overall contract amount has changed.
+	 */
+	private Date getNewAmountEffDateForChangedAmount(Date newAmtEffDate, boolean isDisableNewCtAmountEffDate) {
 		
-		// same as overall contract amount	
-		} else {
-			
-			Date effDate = ctAmendment.getAmendmentEffDate();
-			if(effDate != null){
-				newAmtEffDate = effDate;
-			} else {
-				newAmtEffDate = new Date();
-			}
-			
-			// Disable date input
-			contractManagedBean.setDisableNewCtAmountEffDate(true);
-		}
-		ctAmendment.setNewAmtEffDate(newAmtEffDate);
+	    if (newAmtEffDate != null && !isDisableNewCtAmountEffDate) {
+	        return newAmtEffDate;
+	    }
+	    return new Date();
+	}
+	
+	/**
+	 * Determines the effective date when the overall contract amount remains unchanged.
+	 */
+	private Date getNewAmountEffDateForUnchangedAmount(Date newAmtEffDate, CtAmendment ctAmendment) {
+		// Saved record
+	    if (newAmtEffDate != null && getManagedBean().getTaskName() != null) {
+	        return getManagedBean().getInitialNewAmtEffDate();
+	    }
+	    return getDefaultAmountEffectiveDate(ctAmendment, getManagedBean().getInitialNewAmtEffDate());
+	}
+	
+	/**
+	 * Determines the default effective date based on the contract amendment details.
+	 */
+	private Date getDefaultAmountEffectiveDate(CtAmendment ctAmendment, Date initialNewAmtEffDate) {
+
+	    if (ctAmendment.isContractExtend()) {
+	        return ctAmendment.getExtendStartDate();
+	    }
+
+	    Date amendmentEffDate = ctAmendment.getAmendmentEffDate();
+	    if (amendmentEffDate != null) {
+	        return amendmentEffDate;
+	    }
+	    return initialNewAmtEffDate != null ? initialNewAmtEffDate : new Date();
 	}
 
 	/**
@@ -9719,7 +9765,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	/** Checks whether the current user is the Contract Approver */
 	private boolean isCtApprover() {
-		return getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value());
+	    String roleCode = getApproverRoleCode();
+	    return roleCode != null && getFacesScopes().hasRoleUser(roleCode);
 	}
 	
 	/**
@@ -9846,7 +9893,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ScQt scQt = ctContractVer.getCtContract().getQuotationTender();
 			
 			if(scQt != null){
-				CommitteeMemberInfoResDTO cmiRes = contractAmendmentSO.retrieveOriginalDeskOfficerCommittee(scQt.getQtId(), SourcingConstants.MEMBER_ROLE_ID_SECRETARY);
+				CommitteeMemberInfoResDTO cmiRes = contractAmendmentSO.retrieveOriginalDeskOfficerCommittee(scQt.getQtId());
 				if(cmiRes != null){
 					
 					// tick checkbox Committee Type
