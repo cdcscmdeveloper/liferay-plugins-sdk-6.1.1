@@ -2412,6 +2412,15 @@ public class SpecificationBackingBean extends
 
 			}
 			settinglist=null;
+
+			// #38151 once the specification is revised (incl. revise from endorsement/sign off),
+			// Evaluation Element Weightage for financial scoring is mandatory = Yes
+			if (QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION.equals(this.getManagedBean().getCurrentStatusId())
+					&& null != this.getManagedBean().getFinancialScoreSetting()) {
+				this.getManagedBean().getFinancialScoreSetting().setWeightageReq(true);
+			}
+			// #38151 end
+
 			List<ScQtCheckList> oriFinancialScoring = this.getManagedBean().getFinancialScoring();//#28784, #33525 - Get User key in weightageScore if avail
 			this.getManagedBean().setFinancialScoring(
 					null);
