@@ -2415,7 +2415,8 @@ public class SpecificationBackingBean extends
 
 			// #38151 once the specification is revised (incl. revise from endorsement/sign off),
 			// Evaluation Element Weightage for financial scoring is mandatory = Yes
-			if (QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION.equals(this.getManagedBean().getCurrentStatusId())
+			if ((QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION.equals(this.getManagedBean().getCurrentStatusId())
+					|| QTStatusConst.SE_PENDING_REVISION.equals(this.getManagedBean().getCurrentStatusId())) // spec maintenance revision
 					&& null != this.getManagedBean().getFinancialScoreSetting()) {
 				this.getManagedBean().getFinancialScoreSetting().setWeightageReq(true);
 			}
