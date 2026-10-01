@@ -8343,6 +8343,13 @@ public class SmApplicationBackingBean extends
 					: getManagedBean().getSelectedShareHolder().getEmail();
 			SmCommonUtil.checkEmailDomainWithExceptionMsg(getManagedBean()
 					.getSelectedShareHolder().getName(), email);
+			// #28720 Start
+			if (!getManagedBean().isDisableIcEmail() && (email.contains("@yahoo.com") || email.contains("@ymail.com") || email.contains("@rocketmail.com"))) {
+				getManagedBean().getSelectedShareHolder().setEmail("");
+				RequestContext.getCurrentInstance().execute("emailPopUpWidgetVar.show()");
+				return;
+			}
+			// #28720 End
 		}
 
 		// if not authorized, clear justification
