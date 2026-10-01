@@ -854,6 +854,16 @@ public class SupplierFinalizationMeetingBackingBean extends
 				for(ScCommitteeMember committeemember:currentCommitteeMemList){
 					if(committeemember.isSelected()){
 						localList.add(committeemember);
+						//#35500 Start
+						if (CollectionUtils.isNotEmpty(deletedCommitteeMember) && !deletedCommitteeMember.contains(committeemember)){//#35500 Fix Reopen 27th Nov
+							deletedCommitteeMember.add(committeemember);
+						}else if (CollectionUtils.isEmpty(deletedCommitteeMember)) {
+							deletedCommitteeMember.add(committeemember);
+						}
+						if (!(newCommitteeMember == null || newCommitteeMember.isEmpty())) {
+							newCommitteeMember.remove(committeemember);
+						}
+						//#35500 End
 					}
 				}
 				if(CollectionUtils.isNotEmpty(localList)){
@@ -1928,7 +1938,10 @@ if (CollectionUtils.isNotEmpty(
 				saveAction();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, mainPage);
 			}
+			//#35500 Start
 			prepareCommitteeAuditTrail(newCommitteeMembers,deletedCommitteeMembers);//28895 - 35500
+			prepareCommitteeRoleModified(mapModifiedRoleCommitteeAudit);
+			//#35500 End
 		}
 	}
 	// 25037 - end
