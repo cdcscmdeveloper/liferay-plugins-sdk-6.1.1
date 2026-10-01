@@ -15544,8 +15544,8 @@ public void retrieveDemoQtDetails(Long qtId) {
 					throw new EpException(MessageConst.ERROR_770408);
 				} else if (eGPAFinalDecision.equals(ParameterConst.APPROVAL_EGPA_DECISION_NOT_APPROVED)
 						&& scQt.getPublishPeriod() < Integer.parseInt(eGPAApprovalRequest.getOriginalValue())) {
-					addFacesMessage(fc, MessageConst.ERROR_760260,
-							new String[] { String.valueOf(scQt.getPublishPeriod()) });
+					throw new EpException(MessageConst.ERROR_760260, new String[] { String.valueOf(scQt
+							.getPublishPeriod()) });
 				}
 			}
 		}

@@ -28,15 +28,42 @@
 			div[id$="publicCatalogId_content"] td.ui-datagrid-column {
 				width: 25% !important;
 			}
+
 			/* #10747 - Shafie - Start  */
 			div[id$="catalogueGridViewID_content"] td.ui-datagrid-column {
 				width: 20% !important;
 			}
 			/* #10747 - Shafie - End  */
+
 			<ui:remove> #10747- Start </ui:remove>
 			.horizontal_dotted_line_visible {
-            margin-bottom: 0px !important; border-top-color: rgb(255, 255, 255) !important; border-top-width: 2px !important; border-top-style: dotted !important;
+				margin-bottom: 0px !important;
+				border-top-color: rgb(255, 255, 255) !important;
+				border-top-width: 2px !important;
+				border-top-style: dotted !important;
             }
+
+            .range-row {
+	    		display: flex;
+	    		align-items: center;
+	   		 	flex-wrap: wrap;
+	    		column-gap: 12px;
+	    		row-gap: 5px;
+	    		width: 100%;
+			}
+
+			.range-field {
+			    display: flex;
+			    align-items: center;
+			    gap: 5px;
+			    white-space: nowrap;
+			    flex-shrink: 0;
+			}
+
+			.range-field input {
+	    		width: 100px !important;
+	    		box-sizing: border-box;
+			}
             <ui:remove> #10747- End </ui:remove>
 		</style>
 
@@ -197,71 +224,86 @@
 											</h:panelGroup></td>
 									</tr>
 
-
-									<tr height="30px;">
+                                    <!-- #10747 - Start  -->
+									<tr height="30px">
 										<td style="border-top: 1px solid #CFD62A;"><p:outputLabel
 												value="#{lbl['lbl.cm.pub.catalog.price.range']}"
-												style="font-weight:bold;float:left;font-size:15px;" /></td>
+												style="font-weight:bold; float:left; font-size:15px;" /></td>
 									</tr>
 									<!-- #10747 - Shafie, Soo, Azza- Start -->
-									<tr height="40px;">
+									<tr height="40px">
 										<td style="border-bottom: 1px solid #CFD62A;">
-											#{lbl['lbl.cm.pub.catalog.from']} 
-											<p:inputText
-												label="#{lbl['lbl.cm.pub.catalog.price.range']}"
-												value="#{pCatalogueBackingBean.managedBean.priceForm}"
-												maxlength="12"
-												size="10">
-											    <f:converter
-													rendered="#{pCatalogueBackingBean.managedBean.converterVisible}"
-													converterId="cmNumberConverter" />
-												<f:attribute name="numberType" value="DECIMAL"/>
-											</p:inputText> 
-											#{lbl['lbl.cm.pub.catalog.to']}
-											<p:inputText
-												label="#{lbl['lbl.cm.pub.catalog.price.range']}"
-												value="#{pCatalogueBackingBean.managedBean.priceTo}"
-												maxlength="12"
-												size="10">
-												<f:converter
-													rendered="#{pCatalogueBackingBean.managedBean.converterVisible}"
-													converterId="cmNumberConverter" />
-												<f:attribute name="numberType" value="DECIMAL"/>
-											</p:inputText>
-										</td>
-									</tr>
-									<tr height="30px;">
-										<td><p:outputLabel
-												value="#{lbl['lbl.cm.pub.catalog.delivery.term']}"
-												style="font-weight:bold;float:left;font-size:15px;" /></td>
-									</tr>
-									<tr height="40px;">
-										<td style="border-bottom: 1px solid #CFD62A;">
-											#{lbl['lbl.cm.pub.catalog.from']} 
-											<p:inputText
-												label="#{lbl['lbl.cm.pub.catalog.delivery.term']}"
-												value="#{pCatalogueBackingBean.managedBean.deliveryFrom}"
-												maxlength="3"
-												size="10">
-												<f:converter
-													rendered="#{pCatalogueBackingBean.managedBean.converterVisible}"
-													converterId="cmNumberConverter" />
-												<f:attribute name="numberType" value="INTEGER"/>
-											</p:inputText> 
-											#{lbl['lbl.cm.pub.catalog.to']} 
-											<p:inputText
-												label="#{lbl['lbl.cm.pub.catalog.delivery.term']}"
-												value="#{pCatalogueBackingBean.managedBean.deliveryTo}"
-												maxlength="3"
-												size="10">
-												<f:converter
-													rendered="#{pCatalogueBackingBean.managedBean.converterVisible}"
-													converterId="cmNumberConverter" />
-												<f:attribute name="numberType" value="INTEGER"/>
-											</p:inputText>
+											<div class="range-row">
+												<!-- FROM -->
+												<div class="range-field">
+													<span> #{lbl['lbl.cm.pub.catalog.from']} </span>
+													<p:inputText
+														label="#{lbl['lbl.cm.pub.catalog.price.range']}"
+														value="#{pCatalogueBackingBean.managedBean.priceForm}"
+														maxlength="12">
+														<f:converter
+															rendered="#{pCatalogueBackingBean.managedBean.converterVisible}"
+															converterId="cmNumberConverter" />
+														<f:attribute name="numberType" value="DECIMAL" />
+													</p:inputText>
+												</div>
+
+												<!-- TO -->
+												<div class="range-field">
+													<span> #{lbl['lbl.cm.pub.catalog.to']} </span>
+													<p:inputText
+														label="#{lbl['lbl.cm.pub.catalog.price.range']}"
+														value="#{pCatalogueBackingBean.managedBean.priceTo}"
+														maxlength="12">
+														<f:converter
+															rendered="#{pCatalogueBackingBean.managedBean.converterVisible}"
+															converterId="cmNumberConverter" />
+														<f:attribute name="numberType" value="DECIMAL" />
+													</p:inputText>
+												</div>
+											</div>
 										</td>
 									</tr>
 
+									<tr height="30px">
+										<td><p:outputLabel
+												value="#{lbl['lbl.cm.pub.catalog.delivery.term']}"
+												style="font-weight:bold; float:left; font-size:15px;" /></td>
+									</tr>
+									<tr height="40px">
+										<td style="border-bottom: 1px solid #CFD62A;">
+											<div class="range-row">
+												<!-- FROM -->
+												<div class="range-field">
+													<span> #{lbl['lbl.cm.pub.catalog.from']} </span>
+													<p:inputText
+														label="#{lbl['lbl.cm.pub.catalog.delivery.term']}"
+														value="#{pCatalogueBackingBean.managedBean.deliveryFrom}"
+														maxlength="3">
+														<f:converter
+															rendered="#{pCatalogueBackingBean.managedBean.converterVisible}"
+															converterId="cmNumberConverter" />
+														<f:attribute name="numberType" value="INTEGER" />
+													</p:inputText>
+												</div>
+
+												<!-- TO -->
+												<div class="range-field">
+													<span> #{lbl['lbl.cm.pub.catalog.to']} </span>
+													<p:inputText
+														label="#{lbl['lbl.cm.pub.catalog.delivery.term']}"
+														value="#{pCatalogueBackingBean.managedBean.deliveryTo}"
+														maxlength="3">
+														<f:converter
+															rendered="#{pCatalogueBackingBean.managedBean.converterVisible}"
+															converterId="cmNumberConverter" />
+														<f:attribute name="numberType" value="INTEGER" />
+													</p:inputText>
+												</div>
+											</div>
+										</td>
+									</tr>
+									<!-- #10747 - End  -->
 									<tr>
 										<td style="text-align: right; padding-top: 5px;"><p:commandButton
 												value="#{lbl['lbl.btn.reset']}"

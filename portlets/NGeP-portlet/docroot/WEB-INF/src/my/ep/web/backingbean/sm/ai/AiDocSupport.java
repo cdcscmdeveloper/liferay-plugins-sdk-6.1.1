@@ -26,11 +26,17 @@ import org.primefaces.json.JSONObject;
 
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.pm.common.city.CityReqDTO;
+import my.ep.dto.pm.common.district.DistrictReqDTO;
+import my.ep.dto.pm.common.division.DivisionReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.common.PmCity;
+import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
+import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmFacility;
@@ -47,6 +53,7 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 public final class AiDocSupport {
 
 	private static final String BR = "<br/>";
+	private static final String LBL_DOC_INVALID = "lbl.sm.ai.doc.invalid";
 	private static final String AI_ONOFF = EpPropertiesUtils.getInstance().getProperty("google.doc.ai.onoff");
 	private static final String AI_BANK_OCR = EpPropertiesUtils.getInstance().getProperty("google.doc.bank.co.name.check.onoff");
 	// this filename will always go to API
@@ -91,11 +98,12 @@ public final class AiDocSupport {
 		public static final String F_POSTCODE = "postcode";
 		public static final String F_COUNTRY = "country";
 		public static final String F_STATE = "state";
+		public static final String F_DIVISION = "division";
 		public static final String F_DISTRICT = "district";
 		public static final String F_CITY = "city";
 		// submitting the dialog applies the whole extracted statement, so all of these are accepted at once
-		public static final String[] F_TENANCY_ALL = { F_OWNER_NAME, F_RENTAL_RATE, F_ADDRESS1,
-				F_ADDRESS2, F_ADDRESS3, F_POSTCODE, F_COUNTRY, F_STATE, F_DISTRICT, F_CITY };
+		static final String[] F_TENANCY_ALL = { F_OWNER_NAME, F_RENTAL_RATE, F_ADDRESS1,
+				F_ADDRESS2, F_ADDRESS3, F_POSTCODE, F_COUNTRY, F_STATE, F_DIVISION, F_DISTRICT, F_CITY };
 
 		private static final Logger log = Logger.getLogger(AiUserEdit.class);
 
@@ -162,6 +170,12 @@ public final class AiDocSupport {
 			return entityKey != null && edits.remove(entityKey) != null;
 		}
 
+		// drops both the edit marks and the accepted set, as if the entity was never submitted
+		public static boolean forget(Map<String, Set<String>> edits, String entityKey) {
+			return clear(edits, entityKey)
+					| clear(edits, entityKey == null ? null : ACCEPTED_PREFIX + entityKey);
+		}
+
 		/**
 		 * Fields the applicant applied by submitting the AI Assistant dialog. Nothing outside this
 		 * set ever carries an AI icon, whatever the typed value happens to be.
@@ -191,6 +205,11 @@ public final class AiDocSupport {
 		private static final String RESULTS = "results";
 		private static final String PROPERTIES = "properties";
 		private static final String NORM_VALUE = "normalizedValue";
+
+		private static String optString(JSONObject obj, String key, String defaultValue) {
+			Object o = obj.opt(key);
+			return o == null || JSONObject.NULL.equals(o) ? defaultValue : o.toString();
+		}
 
 		private static final double DEFAULT_MIN_CONFIDENCE = 0.8;
 		public static final double MIN_CONFIDENCE = resolveMinConfidence();
@@ -276,8 +295,8 @@ public final class AiDocSupport {
 				for (int i = 0; i < entities.length(); i++) {
 					JSONObject entity = entities.getJSONObject(i);
 					String type = entity.optString("type", "");
-					String text = entity.optString(VALUE, "");
-					String value = entity.optString(NORM_VALUE, text);
+					String text = optString(entity, VALUE, "");
+					String value = optString(entity, NORM_VALUE, text);
 					double conf = entity.optDouble(CONFIDENCE, 0.0);
 
 					if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text) || conf < MIN_CONFIDENCE) {
@@ -285,17 +304,21 @@ public final class AiDocSupport {
 					}
 					value = value.trim();
 					if ("landlords_name".equals(type)) {
-						dto.setLandlordsName(value);
+						dto.setLandlordsName(StringUtils.left(value, 50).trim());	// form maxlength; OWNER_NAME is 200
 					} else if ("tenants_name".equals(type)) {
 						dto.setTenantsName(value);
 					} else if ("monthly_rental".equals(type)) {
-						dto.setMonthlyRental(new BigDecimal(value));
+						try {
+							dto.setMonthlyRental(new BigDecimal(value));
+						} catch (NumberFormatException e) {
+							log.error("Error TenancyEntity monthly_rental '" + value + "'");
+						}
 					} else if ("premises_address".equals(type)) {
 						dto.setPremisesAddress(value);
 						setTenancyAddress(dto, entity.optJSONObject("addressComponents"));
 					}
 				}
-			} catch (JSONException | NumberFormatException e) {
+			} catch (JSONException e) {
 				log.error("Error TenancyEntity", e);
 				dto.setError(true);
 			} catch (NullPointerException e) {
@@ -311,20 +334,75 @@ public final class AiDocSupport {
 
 		private static void setTenancyAddress(AiTenancyDTO dto, JSONObject addr) {
 			if (addr != null) {
-				dto.setPostcode(addr.optString("postcode", "").trim());
-				String fullAddr = addr.optString("normalized_Address", "").trim();
+				// form maxlength; POSTCODE is 10, ADDRESS_1/2/3 are 255
+				dto.setPostcode(StringUtils.left(optString(addr, "postcode", "").trim(), 5).trim());
+				String fullAddr = optString(addr, "normalized_Address", "").trim();
 				truncateAddressAtPostcode(dto, fullAddr, dto.getPostcode());
-				dto.setCodeCity(addr.optString("city_code", "").trim());
+				dto.setCodeCity(optString(addr, "city_code", "").trim());
+				setTenancyArea(dto, optString(addr, "state_code", "").trim(),
+						optString(addr, "district_code", "").trim());
 			}
-			if (!StringUtils.isEmpty(dto.getCodeCity())) {
-				PmCity city = SmServiceLookup.getCitySO().getCityByCode(dto.getCodeCity()).getPmCity();
-				dto.setPmCity(city);
+		}
+
+		// Each code must exist under its resolved parent; a null or unknown code is not extracted.
+		private static void setTenancyArea(AiTenancyDTO dto, String stateCode, String districtCode) {
+			PmState state = StringUtils.isEmpty(stateCode) ? null
+					: SmCommonUtil.getInstance().retrieveStateByCountryCodeAndStateCode(stateCode);
+			if (state == null) {
+				return;
 			}
+			dto.setPmState(state);
+			PmDistrict district = null;
+			if (state.getAdoptDivision()) {
+				// AI sends no division code: take the division whose district list holds the district
+				DivisionReqDTO divReq = new DivisionReqDTO();
+				divReq.setStateId(state.getStateId());
+				for (PmDivision div : SmServiceLookup.getDivisionSO().retriveDivisionListByState(divReq)
+						.getDivisionList()) {
+					DistrictReqDTO distReq = new DistrictReqDTO();
+					distReq.setDivisionId(div.getDivisionId());
+					district = findDistrict(SmServiceLookup.getDistrictSO()
+							.retriveDistrictListByDivision(distReq).getDistrictList(), districtCode);
+					if (district != null) {
+						dto.setPmDivision(div);
+						break;
+					}
+				}
+			} else {
+				DistrictReqDTO distReq = new DistrictReqDTO();
+				distReq.setStateId(state.getStateId());
+				district = findDistrict(SmServiceLookup.getDistrictSO()
+						.retriveDistrictListByStateID(distReq).getDistrictList(), districtCode);
+			}
+			if (district == null) {
+				return;
+			}
+			dto.setPmDistrict(district);
+			CityReqDTO cityReq = new CityReqDTO();
+			cityReq.setDistrictId(district.getDistrictId());
+			for (PmCity c : SmServiceLookup.getCitySO().retriveCityListByDistrictId(cityReq).getCityList()) {
+				if (StringUtils.isNotEmpty(dto.getCodeCity()) && dto.getCodeCity().equals(c.getCityCode())) {
+					dto.setPmCity(c);
+					return;
+				}
+			}
+		}
+
+		private static PmDistrict findDistrict(List<PmDistrict> districts, String districtCode) {
+			if (StringUtils.isEmpty(districtCode) || districts == null) {
+				return null;
+			}
+			for (PmDistrict d : districts) {
+				if (districtCode.equals(d.getDistrictCode())) {
+					return d;
+				}
+			}
+			return null;
 		}
 
 		// Truncate the normalized address at the postcode and split into addr1/2/3.
 		private static void truncateAddressAtPostcode(AiTenancyDTO dto, String addr, String postcode) {
-			dto.setAddr1(addr);
+			dto.setAddr1(StringUtils.left(addr, 100).trim());
 			dto.setAddr2("");
 			dto.setAddr3("");
 			if (StringUtils.isEmpty(addr) || StringUtils.isEmpty(postcode)) {
@@ -342,13 +420,13 @@ public final class AiDocSupport {
 			String[] parts = pattern.split(result, 3);
 
 			if (parts.length > 0) {
-				dto.setAddr1(parts[0].trim());
+				dto.setAddr1(StringUtils.left(parts[0].trim(), 100).trim());
 			}
 			if (parts.length > 1) {
-				dto.setAddr2(parts[1].trim());
+				dto.setAddr2(StringUtils.left(parts[1].trim(), 100).trim());
 			}
 			if (parts.length > 2) {
-				dto.setAddr3(parts[2].trim());
+				dto.setAddr3(StringUtils.left(parts[2].trim(), 100).trim());
 			}
 		}
 		
@@ -367,7 +445,11 @@ public final class AiDocSupport {
 					JSONArray properties = entityObj.getJSONArray(PROPERTIES);
 
 					if (entityId.startsWith("employee-")) {
-						employees.add(toEmployee(properties));
+						AiEpfResultDTO.AiEmployeeDTO emp = toEmployee(properties);
+						// a row the AI could not read a name or IC/passport for is dropped
+						if (StringUtils.isNotBlank(emp.getEmployeeName()) && StringUtils.isNotBlank(emp.getIdNo())) {
+							employees.add(emp);
+						}
 					} else if (entityId.startsWith("employer-")) {
 						dto.setEmployerName(toEmployerName(properties));
 					}
@@ -386,20 +468,32 @@ public final class AiDocSupport {
 			for (int i = 0; i < properties.length(); i++) {
 				JSONObject property = properties.getJSONObject(i);
 				String type = property.optString("type", "");
-				String text = property.optString(VALUE, "");
-				String value = property.optString(NORM_VALUE, text);
+				String text = optString(property, VALUE, "");
+				String value = optString(property, NORM_VALUE, text);
 				double conf = property.optDouble(CONFIDENCE, 0.0);
 				if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text) || conf < MIN_CONFIDENCE) {
 					continue;
 				}
 				value = value.trim();
 				if ("KWSP_number".equals(type)) {
-					emp.setKwspNumber(value);
+					emp.setKwspNumber(StringUtils.left(value, 10).trim());
 				} else if ("NRIC_number".equals(type)) {
 					// the statement prints the NRIC dashed or spaced; eP stores the 12 digits
-					emp.setNricNumber(AiDocValidator.normalizeNric(value));
+					String nric = StringUtils.left(AiDocValidator.normalizeNric(value), 20).trim();
+					// IC wins over passport, whichever the AI sends first
+					if (StringUtils.isNotBlank(nric)) {
+						emp.setIdNo(nric);
+						emp.setPassport(false);
+					}
+				} else if ("Passport_number".equals(type)) {
+					String passport = StringUtils.left(AiDocValidator.normalizeIdNo(value), 20).trim();
+					if (StringUtils.isNotBlank(passport) && (StringUtils.isBlank(emp.getIdNo()) || emp.isPassport())) {
+						emp.setIdNo(passport);
+						emp.setPassport(true);
+					}
 				} else if ("employee_name".equals(type)) {
-					emp.setEmployeeName(value);
+					// the OCR keeps the statement's own line breaks inside a name
+					emp.setEmployeeName(StringUtils.left(AiDocValidator.normalizePersonName(value), 80).trim());
 				}
 			}
 			return emp;
@@ -410,8 +504,8 @@ public final class AiDocSupport {
 			for (int i = 0; i < properties.length(); i++) {
 				JSONObject property = properties.getJSONObject(i);
 				String type = property.optString("type", "");
-				String text = property.optString(VALUE, "");
-				String value = property.optString(NORM_VALUE, text);
+				String text = optString(property, VALUE, "");
+				String value = optString(property, NORM_VALUE, text);
 				double conf = property.optDouble(CONFIDENCE, 0.0);
 				if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text) || conf < MIN_CONFIDENCE) {
 					continue;
@@ -458,8 +552,8 @@ public final class AiDocSupport {
 			for (int i = 0; i < properties.length(); i++) {
 				JSONObject property = properties.getJSONObject(i);
 				String type = property.optString("type", "");
-				String text = property.optString(VALUE, "");
-				String value = property.optString(NORM_VALUE, text);
+				String text = optString(property, VALUE, "");
+				String value = optString(property, NORM_VALUE, text);
 				double conf = property.optDouble(CONFIDENCE, 0.0);
 				if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text) || conf < MIN_CONFIDENCE) {
 					continue;
@@ -560,12 +654,11 @@ public final class AiDocSupport {
 
 		public static final double MIN_BANK_MATCH_SCORE = 0.4;
 		public static final double MIN_BANK_MATCH_MARGIN = 0.15;
-		public static final double MIN_TEXT_MATCH_SCORE = 0.6;
 
 		/**
 		 * Verify a tenancy extraction against the rental info keyed in Premises Type; sets the per-field verdict
 		 * flags on the DTO. A field absent from either side is excluded from the verdict (left valid). Landlord's
-		 * Name / Company / Monthly Rental match exactly; the address is matched on tokens.
+		 * Name / Company / Monthly Rental / Address match exactly.
 		 */
 		public static void validateTenancy(AiTenancyDTO te, String landlordName, String companyName,
 				BigDecimal rentalRate, SmAddress addr) {
@@ -596,8 +689,7 @@ public final class AiDocSupport {
 			}
 			String suppAddr = joinParts(addr.getAddress1(), addr.getAddress2(), addr.getAddress3());
 			String jsonAddr = joinParts(te.getAddr1(), te.getAddr2(), te.getAddr3());
-			double score = tokenSimilarity(suppAddr, jsonAddr);
-			if (score < MIN_TEXT_MATCH_SCORE) {
+			if (!normalizedEquals(suppAddr, jsonAddr)) {
 				return;
 			}
 			te.setValidAddress(true);
@@ -831,6 +923,44 @@ public final class AiDocSupport {
 			return nric.replaceAll("[^0-9]", "");
 		}
 
+		/**
+		 * Personnel identity key for an IC or a passport: upper-cased letters and digits only. An IC comes
+		 * out the same as {@link #normalizeNric}; a passport keeps its letters.
+		 * @param idNo
+		 * @return empty when there is nothing left
+		 */
+		public static String normalizeIdNo(String idNo) {
+			if (StringUtils.isBlank(idNo)) {
+				return "";
+			}
+			return idNo.toUpperCase().replaceAll("[^A-Z0-9]", "");
+		}
+
+		/**
+		 * Collapse every run of whitespace - including the line breaks the OCR keeps inside a
+		 * name - to one space, so a name reads the same however the statement printed it.
+		 * @param name
+		 * @return
+		 */
+		public static String normalizePersonName(String name) {
+			if (StringUtils.isBlank(name)) {
+				return "";
+			}
+			return name.replaceAll("\\s+", " ").trim();
+		}
+
+		/**
+		 * Same person's name, whatever the spacing and case. Both sides are sanitized first.
+		 * @param st1
+		 * @param st2
+		 * @return
+		 */
+		public static boolean personNameEquals(String st1, String st2) {
+			String c1 = normalizePersonName(st1);
+			String c2 = normalizePersonName(st2);
+			return !c1.isEmpty() && c1.equalsIgnoreCase(c2);
+		}
+
 		public static List<String> tokenize(String name) {
 			List<String> tokens = new ArrayList<>();
 			String canonical = canonicalizeCompanyName(name);
@@ -853,24 +983,6 @@ public final class AiDocSupport {
 				}
 			}
 			return sb.toString().trim();
-		}
-
-		/**
-		 * Share of tokens the two strings have in common, for free text with no reference list behind it.
-		 * @param st1
-		 * @param st2
-		 * @return 0.0 when either side has no tokens
-		 */
-		public static double tokenSimilarity(String st1, String st2) {
-			Set<String> shared = new HashSet<>(tokenize(st1));
-			Set<String> other = new HashSet<>(tokenize(st2));
-			if (shared.isEmpty() || other.isEmpty()) {
-				return 0.0;
-			}
-			Set<String> union = new HashSet<>(shared);
-			union.addAll(other);
-			shared.retainAll(other);
-			return (double) shared.size() / union.size();
 		}
 
 		// Skim Perbankan Islam entries are separate legal entities, so they never match a conventional name.
@@ -988,6 +1100,7 @@ public final class AiDocSupport {
 				addr.setAddress3AI(null);
 				addr.setPostcodeAI(null);
 				addr.setStateIdAI(null);
+				addr.setDivisionIdAI(null);
 				addr.setDistrictIdAI(null);
 				addr.setCityIdAI(null);
 				addr.setCountryIdAI(null);
@@ -1006,38 +1119,48 @@ public final class AiDocSupport {
 			if (accepted.contains(AiUserEdit.F_RENTAL_RATE)) {
 				fac.setRentalRateAI(te.getMonthlyRental());
 			}
-			SmAddress addr = fac.getSmAddress();
-			if (addr != null) {
-				if (accepted.contains(AiUserEdit.F_ADDRESS1)) {
-					addr.setAddress1AI(te.getAddr1());
-				}
-				if (accepted.contains(AiUserEdit.F_ADDRESS2)) {
-					addr.setAddress2AI(te.getAddr2());
-				}
-				if (accepted.contains(AiUserEdit.F_ADDRESS3)) {
-					addr.setAddress3AI(te.getAddr3());
-				}
-				if (accepted.contains(AiUserEdit.F_POSTCODE)) {
-					addr.setPostcodeAI(te.getPostcode());
-				}
-				PmCity city = te.getPmCity();
-				if (city != null) {
-					if (accepted.contains(AiUserEdit.F_CITY)) {
-						addr.setCityIdAI(city.getCityId());
-					}
-					if (accepted.contains(AiUserEdit.F_COUNTRY)) {
-						addr.setCountryIdAI(SmCommonUtil.getMyCountryId());
-					}
-					if (city.getPmDistrict() != null) {
-						if (accepted.contains(AiUserEdit.F_DISTRICT)) {
-							addr.setDistrictIdAI(city.getPmDistrict().getDistrictId());
-						}
-						if (city.getPmDistrict().getPmState() != null
-								&& accepted.contains(AiUserEdit.F_STATE)) {
-							addr.setStateIdAI(city.getPmDistrict().getPmState().getStateId());
-						}
-					}
-				}
+			setTenancyAddressAiFields(fac.getSmAddress(), te, accepted);
+		}
+
+		private static void setTenancyAddressAiFields(SmAddress addr, AiTenancyDTO te,
+				Set<String> accepted) {
+			if (addr == null) {
+				return;
+			}
+			if (accepted.contains(AiUserEdit.F_ADDRESS1)) {
+				addr.setAddress1AI(te.getAddr1());
+			}
+			if (accepted.contains(AiUserEdit.F_ADDRESS2)) {
+				addr.setAddress2AI(te.getAddr2());
+			}
+			if (accepted.contains(AiUserEdit.F_ADDRESS3)) {
+				addr.setAddress3AI(te.getAddr3());
+			}
+			if (accepted.contains(AiUserEdit.F_POSTCODE)) {
+				addr.setPostcodeAI(te.getPostcode());
+			}
+			setTenancyAreaAiFields(addr, te, accepted);
+		}
+
+		private static void setTenancyAreaAiFields(SmAddress addr, AiTenancyDTO te,
+				Set<String> accepted) {
+			if (te.getPmState() == null) {
+				return;
+			}
+			if (accepted.contains(AiUserEdit.F_COUNTRY)) {
+				addr.setCountryIdAI(SmCommonUtil.getMyCountryId());
+			}
+			if (accepted.contains(AiUserEdit.F_STATE)) {
+				addr.setStateIdAI(te.getPmState().getStateId());
+			}
+			if (te.getPmDivision() != null && accepted.contains(AiUserEdit.F_DIVISION)) {
+				addr.setDivisionIdAI(te.getPmDivision().getDivisionId());
+			}
+			if (te.getPmDistrict() != null && accepted.contains(AiUserEdit.F_DISTRICT)) {
+				addr.setDistrictIdAI(te.getPmDistrict().getDistrictId());
+			}
+			if (te.getPmCity() != null && accepted.contains(AiUserEdit.F_CITY)) {
+				addr.setCityIdAI(te.getPmCity().getCityId());
 			}
 		}
 	}
@@ -1070,7 +1193,7 @@ public final class AiDocSupport {
 		public String getLabel() {
 			// nothing mapped out of this file, same verdict as Bank and Tenancy report
 			if (employerName == null && getEmployees().isEmpty()) {
-				return AiDocParser.label("lbl.sm.ai.doc.invalid");
+				return AiDocParser.label(LBL_DOC_INVALID);
 			}
 			StringBuilder sb = new StringBuilder();
 			if (employerName != null) {
@@ -1116,8 +1239,26 @@ public final class AiDocSupport {
 			private static final long serialVersionUID = 1L;
 
 			private String kwspNumber;
-			private String nricNumber;
+			// IC or passport, as SM_PERSONNEL.IDENTIFICATION_NO; passport says which
+			private String idNo;
+			private boolean passport;
 			private String employeeName;
+
+			public String getIdNo() {
+				return idNo;
+			}
+
+			public void setIdNo(String idNo) {
+				this.idNo = idNo;
+			}
+
+			public boolean isPassport() {
+				return passport;
+			}
+
+			public void setPassport(boolean passport) {
+				this.passport = passport;
+			}
 
 			public String getKwspNumber() {
 				return kwspNumber;
@@ -1125,14 +1266,6 @@ public final class AiDocSupport {
 
 			public void setKwspNumber(String kwspNumber) {
 				this.kwspNumber = kwspNumber;
-			}
-
-			public String getNricNumber() {
-				return nricNumber;
-			}
-
-			public void setNricNumber(String nricNumber) {
-				this.nricNumber = nricNumber;
 			}
 
 			public String getEmployeeName() {
@@ -1162,6 +1295,9 @@ public final class AiDocSupport {
 		private String addr2;
 		private String addr3;
 		private String codeCity;
+		private PmState pmState;
+		private PmDivision pmDivision;
+		private PmDistrict pmDistrict;
 		private PmCity pmCity;
 
 		private boolean validLandlordsName;
@@ -1174,7 +1310,7 @@ public final class AiDocSupport {
 		// Field labels from the common bundle (locale-sensitive at render time).
 		public String getLabel() {
 			if (this.error) {
-				return AiDocParser.label("lbl.sm.ai.doc.invalid");
+				return AiDocParser.label(LBL_DOC_INVALID);
 			}
 			StringBuilder sb = new StringBuilder();
 			appendField(sb, "lbl.cm.company.name", tenantsName, validTenantsName);
@@ -1274,6 +1410,30 @@ public final class AiDocSupport {
 			this.codeCity = codeCity;
 		}
 
+		public PmState getPmState() {
+			return pmState;
+		}
+
+		public void setPmState(PmState pmState) {
+			this.pmState = pmState;
+		}
+
+		public PmDivision getPmDivision() {
+			return pmDivision;
+		}
+
+		public void setPmDivision(PmDivision pmDivision) {
+			this.pmDivision = pmDivision;
+		}
+
+		public PmDistrict getPmDistrict() {
+			return pmDistrict;
+		}
+
+		public void setPmDistrict(PmDistrict pmDistrict) {
+			this.pmDistrict = pmDistrict;
+		}
+
 		public PmCity getPmCity() {
 			return pmCity;
 		}
@@ -1362,7 +1522,7 @@ public final class AiDocSupport {
 		public String getLabel() {
 			StringBuilder sb = new StringBuilder();
 			if (this.error) {
-				return AiDocParser.label("lbl.sm.ai.doc.invalid");
+				return AiDocParser.label(LBL_DOC_INVALID);
 			}
 			if (this.bankStatements.size() == 1) {
 				return bankStatements.get(0).getLabel();

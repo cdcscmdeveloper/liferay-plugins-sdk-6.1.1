@@ -17,15 +17,18 @@ import my.ep.biz.service.pm.common.approveauthority.IApproveAuthorityCommitteeSO
 import my.ep.biz.service.pm.common.approveauthority.IApproveAuthoritySO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.approveauthority.AuthorityCommitteeReqDTO;
 import my.ep.dto.pm.common.approveauthority.AuthorityCommitteeResDTO;
 import my.ep.exception.EpException;
-import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAuthority;
 import my.ep.persistence.entity.pm.common.PmAuthorityCommittee;
 import my.ep.persistence.entity.pm.common.PmRemarkAuthority;
+import my.ep.persistence.logging.LogKey;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.pm.approveauthority.ApproveAuthorityManagedBean;
@@ -34,7 +37,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.TabChangeEvent;
 
@@ -47,15 +49,22 @@ import org.primefaces.event.TabChangeEvent;
 public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorityManagedBean> {
 
 	private static final long serialVersionUID = 1L;
-	private static final Logger log = EpLogger.getLogger(ApproveAuthorityBackingBean.class);
 
 	private static final String NAV_TO_MAIN = "approveAuthorityMain";
-	
+
+	private static final String APPROVE_AUTHORITY_BACKING_BEAN = "ApproveAuthorityBackingBean";
+
 	//Tab values
 	public static final int TAB_JAWATANKUASA_PEROLEHAN = 0;
 	public static final int TAB_PENGURUSAN_TERTINGGI = 1;
 
 	public ApproveAuthorityBackingBean() {
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		if (pmUser != null && pmUser.getUserId() != null) {
+			new LogKey(pmUser.getUserId());
+		} else {
+			new LogKey(1L);
+		}
 	}
 
 	/**
@@ -82,8 +91,10 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_MAIN);
-		} catch (Exception e) {
-			throw e;
+		} catch (Exception ex) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT,
+				ParameterConst.MOF_APPROVING_AUTHORITY, APPROVE_AUTHORITY_BACKING_BEAN,
+				"preLoadApproveAuthority", null, ex);
 		}
 	}
 	
@@ -136,6 +147,11 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 				"apprAuthorityTblWidVar.paginator.endLink.click()");
 	}
 
+	/**
+	 * Returns the list of active and inactive result statuses.
+	 *
+	 * @return an array of SelectItem containing active and inactive statuses
+	 */
 	public SelectItem[] getResultStatusList() {
 		SelectItem[] items = new SelectItem[2];
 		items[0] = new SelectItem(1, ResourceBundleUtils.getMessage("lbl.pm.active",
@@ -159,8 +175,10 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 			if(authCommitteeList != null && !authCommitteeList.isEmpty()){
 				saveAuthCommittee(authCommitteeList);
 			}
-		} catch (Exception e){
-			throw e;
+		} catch (Exception ex){
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT,
+				ParameterConst.MOF_APPROVING_AUTHORITY, APPROVE_AUTHORITY_BACKING_BEAN,
+				"saveNewCommittee", null, ex);
 		}
 		return NAV_TO_MAIN;
 	}
@@ -227,8 +245,10 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 					this.getManagedBean().setListAuthCommittee(pmAuth.getPmAuthorityCommittee());
 				}
 			}
-		} catch (Exception e) {
-			log.error(e);
+		} catch (Exception ex) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT,
+					ParameterConst.MOF_APPROVING_AUTHORITY, APPROVE_AUTHORITY_BACKING_BEAN,
+					"reloadApproveAuthority", authCommittee.getAuthCommitteeId(), ex);
 		}
 	}
 	
@@ -283,9 +303,10 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 	 * This updateAuthCommittee method is to update committee at pm_authority_committee
 	 */
 	public void updateAuthCommittee(){
+		
+		PmAuthorityCommittee popUpCommittee = this.getManagedBean().getUpdateAuthCommittee();
+		
 		try{
-			PmAuthorityCommittee popUpCommittee = this.getManagedBean().getUpdateAuthCommittee();
-
 			FacesContext fc = FacesContext.getCurrentInstance();
 			boolean hasError = false;
 			if(StringUtils.isBlank(popUpCommittee.getCommitteeName())){
@@ -344,8 +365,10 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 					RequestContext.getCurrentInstance().execute("updateCommitteeDialog.hide()");
 				}
 			}
-		} catch (Exception e){
-			throw e;
+		} catch (Exception ex){
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT,
+				ParameterConst.MOF_APPROVING_AUTHORITY, APPROVE_AUTHORITY_BACKING_BEAN,
+				"updateAuthCommittee", popUpCommittee.getAuthCommitteeId(), ex);
 		}
 	}
 	
