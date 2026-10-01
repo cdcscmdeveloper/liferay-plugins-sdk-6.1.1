@@ -6236,6 +6236,7 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 	 * #36738 Reset search rule type
 	 */
 	public void resetRuleType() {
+		this.getManagedBean().setNewPRList(false); //#35323
 		this.getManagedBean().setSearchRuleType(new String());
 		this.getManagedBean().setConfigRuleDescList(this.getManagedBean().getOriginalConfigRuleDescList());
 		this.getManagedBean().setSelectedRuleDescType(this.getManagedBean().getOriginalConfigRuleDescList().get(0));
