@@ -93,7 +93,17 @@
 
 					<h:panelGroup id="approverBtns">
 						<ui:param name="readOnlyTask" value="#{approvalBackingBean.managedBean.readOnly}" />
-						<!-- 28932,25692 -start- -->
+						<ui:remove>#10141 Start Vinod</ui:remove>
+						<p:commandButton
+							value="#{lbl['lbl.sc.spec.inactive.btn.send.notification']}"
+							id="sendNotificationApprove" process="@this" 
+							onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@all"
+							action="#{qTDetailBB.sendNotificationForInactiveChecklist()}"
+							rendered="#{qTDetailBB.managedBean.showInactiveChecklistWarning}"
+							disabled="#{qTDetailBB.managedBean.qt.inactiveChecklistNotified}"
+							title="#{lbl['lbl.sc.spec.inactive.btn.send.notification.mouseover']}" />
+						<ui:remove>#10141 End Vinod</ui:remove>
+					<!-- 28932,25692 -start- -->
 						<ui:decorate template="/WEB-INF/facelets/templates/claim_template_true.xhtml">
 						<!-- 28932,25692 -end- -->
 							<ui:define name="outComeSection">
@@ -101,10 +111,13 @@
 									value="#{approvalBackingBean.managedBean.outComes}">
 									<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 									
+									<ui:remove>#10141 Start Vinod added disable</ui:remove>
 									<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 										styleClass="ui-button" onstart="blockWidget.show();"
 										oncomplete="blockWidget.hide();"
+										disabled="#{qTDetailBB.managedBean.showInactiveChecklistWarning}"
 										action="#{approvalBackingBean.approvalBpmTask(bpmAction)}" />
+									<ui:remove>#10141 End Vinod</ui:remove>
 								</ui:repeat>
 							</ui:define>
 						</ui:decorate>
@@ -164,33 +177,45 @@
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 								<!-- #25635 -start- -->
 								<ui:param name="bpAction" value="SUBMIT" />
+								<ui:remove>#10141 Start Vinod added disabled</ui:remove>
 								<p:commandButton value="#{lbl[buttonLabel]}"
 									styleClass="ui-button"
 									actionListener="#{qTDetailBB.assertSpecificationUpdateInProgress(true)}"
 									update="@([id$=#{submitConfirmId2}])"
+									disabled="#{qTDetailBB.managedBean.showInactiveChecklistWarning}"
 									rendered="#{isClone2 and !isCommitteeApprovalReviseTask}" />
+								<ui:remove>#10141 End Vinod</ui:remove>
 								<!-- #25635 -end- -->
 								<ui:remove> #30477 Start </ui:remove>	
 							<ui:remove> #29732 Start add update </ui:remove>	
+							<ui:remove>#10141 Start Vinod added disabled</ui:remove>
 							<p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button" onclick="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
 								rendered="#{isClone2 and isCommitteeApprovalReviseTask}"
-								action="#{qTDetailBB.updateBpmTask(bpmAction)}" update="@form">
+								action="#{qTDetailBB.updateBpmTask(bpmAction)}" update="@form"
+								disabled="#{qTDetailBB.managedBean.showInactiveChecklistWarning}">
+							<ui:remove>#10141 End Vinod</ui:remove>
 							</p:commandButton>
 							<ui:remove> #30477 End </ui:remove>
 						
 							<ui:remove>9019 -start</ui:remove>
+							 <ui:remove>#10141 Start Vinod added disabled</ui:remove>
 							 <p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button" onclick="cancel1QTDlg.show();"
 								update="@([id$=#{cancel1QTDlg}])"
-								rendered="#{!isClone2 and qTDetailBB.isCancel(bpmAction)}"/>
+								rendered="#{!isClone2 and qTDetailBB.isCancel(bpmAction)}"
+								disabled="#{qTDetailBB.managedBean.showInactiveChecklistWarning}"/>
+								<ui:remove>#10141 End Vinod</ui:remove>
 								<ui:remove>#29732 start add update</ui:remove>
+								<ui:remove>#10141 Start Vinod added disabled</ui:remove>						
 								<p:commandButton value="#{lbl[buttonLabel]}"
 									styleClass="ui-button" onclick="blockWidget.show();"
 									oncomplete="blockWidget.hide();"
 									rendered="#{!isClone1 and !isClone2 and !qTDetailBB.isCancel(bpmAction)}"
-									action="#{qTDetailBB.updateBpmTask(bpmAction)}" update="@form">
+									action="#{qTDetailBB.updateBpmTask(bpmAction)}" update="@form"
+									disabled="#{qTDetailBB.managedBean.showInactiveChecklistWarning}">
+									<ui:remove>#10141 End Vinod</ui:remove>
 									<ui:remove> #29732 End </ui:remove>
 									<ui:remove>start 9019 - Reopen #note-317</ui:remove>
 									<f:param name="skipsubmitvalidation" value="0" />
@@ -198,11 +223,14 @@
 								</p:commandButton>
 								<ui:remove>9019 -end</ui:remove>
 								<ui:remove>#34718 - Start</ui:remove>
+								<ui:remove>#10141 Start Vinod added disabled</ui:remove>
 								<p:commandButton value="#{lbl[buttonLabel]}" 
 									styleClass="ui-button" onclick="blockWidget.show();" 
 									oncomplete="blockWidget.hide();submissionConfirmPopUp.show();" 
 									rendered="#{isClone1 and !isClone2 and !qTDetailBB.isCancel(bpmAction)}"
-									update="@form"/>
+									update="@form"
+									disabled="#{qTDetailBB.managedBean.showInactiveChecklistWarning}"/>
+								<ui:remove>#10141 End Vinod</ui:remove>
 								<ui:remove>#34718 - End</ui:remove>
 						</ui:repeat>
 					</c:when>
@@ -250,6 +278,16 @@
 						action="#{qTDetailBB.checkIsQTAllowCancel}"
 						disabled="#{qTDetailBB.managedBean.qt.brandNew}" />
 				</c:if>
+				<ui:remove>#10141 Start Vinod</ui:remove>
+				<p:commandButton
+					value="#{lbl['lbl.sc.spec.inactive.btn.send.notification']}"
+					id="sendNotification" process="@this" style="float:right;"
+					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@all"
+					action="#{qTDetailBB.sendNotificationForInactiveChecklist()}"
+					rendered="#{qTDetailBB.managedBean.showInactiveChecklistWarning}"
+					disabled="#{qTDetailBB.managedBean.qt.inactiveChecklistNotified}"
+					title="#{lbl['lbl.sc.spec.inactive.btn.send.notification.mouseover']}" />
+				<ui:remove>#10141 End Vinod</ui:remove>
 			</c:if>
 				
 		</td>
