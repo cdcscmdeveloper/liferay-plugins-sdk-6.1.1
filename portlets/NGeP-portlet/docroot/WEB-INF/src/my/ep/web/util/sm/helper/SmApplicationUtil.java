@@ -15535,7 +15535,10 @@ public class SmApplicationUtil {
 			return false;
 		}
 		for(SmDisciplinaryAction da : daList){
-			if(da.isSuspendRegistration() || da.isBlacklistOwner() || da.isCancelRegistration()){
+			if ((da.isSuspendRegistration() || da.isBlacklistOwner() || da
+					.isCancelRegistration())
+					&& da.getRecordStatusFlg().equals(
+							DbValueConst.RECORD_STATUS_ACTIVE)) {
 				return true;
 			}
 		}
