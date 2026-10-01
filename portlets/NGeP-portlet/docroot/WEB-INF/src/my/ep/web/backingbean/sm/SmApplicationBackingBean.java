@@ -3123,10 +3123,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				//#32236 end
 				SmApplicationUtil.validateCategoriesBeforeSave(true,
 						getManagedBean(), currentTab);
+				SmApplicationUtil.updateOverlapDocsToSmAppl(getManagedBean()); //#40444- reposition 
 				SmApplicationUtil
 						.validateOverlapCategoryJustificationAndSuppDocs(
 								getManagedBean(), currentPageType);
-				SmApplicationUtil.updateOverlapDocsToSmAppl(getManagedBean());
 				SmApplicationUtil.getInstance()
 						.removeNotApplicableInformationBeforeSave(
 								getManagedBean());
@@ -4034,6 +4034,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					log.info("******* This is facility for special category page ********");
 					SmApplicationUtil
 							.handleShowOrHideFacilityPanels(getManagedBean());
+					//#28775 - start
+					if (getManagedBean().isSupplierUser()) {
+						getManagedBean().getSmAppl().setSiteVisitGroup(true);
+					}
+					//#28775 - end
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP:
 					getManagedBean().setMachineCategoryVOList(

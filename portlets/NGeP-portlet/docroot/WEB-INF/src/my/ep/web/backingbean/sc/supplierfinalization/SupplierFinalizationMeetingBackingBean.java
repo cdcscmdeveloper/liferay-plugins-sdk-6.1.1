@@ -1942,6 +1942,7 @@ if (CollectionUtils.isNotEmpty(
 			prepareCommitteeAuditTrail(newCommitteeMembers,deletedCommitteeMembers);//28895 - 35500
 			prepareCommitteeRoleModified(mapModifiedRoleCommitteeAudit);
 			//#35500 End
+
 		}
 	}
 	// 25037 - end
