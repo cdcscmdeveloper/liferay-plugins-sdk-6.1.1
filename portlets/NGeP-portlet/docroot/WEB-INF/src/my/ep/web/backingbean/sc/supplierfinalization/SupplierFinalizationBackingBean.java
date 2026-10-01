@@ -764,23 +764,7 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setJustification(
 				scQtFinalization.getJustification());
 		//#34860 start
-		List<String> justificationReasonList = new ArrayList<>();
-		List<ScQtFinalJustification> scQtFinalJustificationList = CollectionUtils.isNotEmpty(this.getManagedBean().getFinalJustificationList())
-				? this.getManagedBean().getFinalJustificationList() : new ArrayList<ScQtFinalJustification>();
-		for (ScQtFinalJustification finalJustification : scQtFinalJustificationList) {
-			// #34444 Start - This code was added for handling the NPE effect
-			if (finalJustification != null) {
-				PmReason justification = finalJustification.getJustification();
-				if (justification != null) {
-					justificationReasonList.add(justification.getReasonCode());
-				}else {
-					log.warn("Justification is null for ScQtFinalJustification");
-					}
-			}
-			// #34444 End/
-		}
-		
-		this.getManagedBean().setJustificationReasonList(justificationReasonList);
+		initializeJustificationReasonList();
 		//#34860 end
 		decisionEvent(null);
 		//#26169 #38 - START Added by Haidah
@@ -14313,5 +14297,27 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		}
 	}
 	//#40396 - End
+	
+	// #34860 start
+	/**
+	 * #34860
+	 * Initialize Justification Reason List 
+	 */
+	public void initializeJustificationReasonList() {		
+		List<String> justificationReasonList = new ArrayList<>();
+		List<ScQtFinalJustification> scQtFinalJustificationList = CollectionUtils.isNotEmpty(this.getManagedBean().getFinalJustificationList()) 
+				? this.getManagedBean().getFinalJustificationList() : new ArrayList<ScQtFinalJustification>();
+		for (ScQtFinalJustification finalJustification : scQtFinalJustificationList) {
+			if (finalJustification != null) {
+				PmReason justification = finalJustification.getJustification();
+				if (justification != null) {
+					justificationReasonList.add(justification.getReasonCode());
+				}
+			}
+		}
+
+		this.getManagedBean().setJustificationReasonList(justificationReasonList);
+	}
+	// #34860 end
 }
 // ***19336

@@ -94,14 +94,14 @@
 				invalidFileMessage="#{lbl['lbl.txt.upload.pdf.file']}"
 				invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed20Mb']}"
 				fileUploadListener="#{ai.handleSupDocFileAttachment}"
-				update="pnl#{cc.attrs.aiDlg}"
+				update="docs#{cc.attrs.aiDlg} result#{cc.attrs.aiDlg} btns#{cc.attrs.aiDlg}"
 				auto="true"
 				label="#{lbl['lbl.txt.upload']}"
 				dragDropSupport="false"
 				multiple="#{cc.attrs.docType eq 'epf'}"
 				showButtons="false"
 				onstart="block#{cc.attrs.aiDlg}.show()"
-				oncomplete="block#{cc.attrs.aiDlg}.hide();"/>
+				oncomplete="if (this.form.data('fileupload')._active == 1) block#{cc.attrs.aiDlg}.hide();"/>
 			
 			<p:outputPanel id="result#{cc.attrs.aiDlg}">
 				<!-- epf -->
@@ -120,8 +120,8 @@
 						<p:column headerText="#{lbl['lbl.sm.person.name']}">
 							<h:outputText value="#{emp.employeeName}" />
 						</p:column>
-						<p:column headerText="#{lbl['lbl.sm.person.icNo']}">
-							<h:outputText value="#{emp.nricNumber}" />
+						<p:column headerText="#{lbl['lbl.sm.person.composition.idenNum']}">
+							<h:outputText value="#{emp.idNo}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.person.epfNo']}">
 							<h:outputText value="#{emp.kwspNumber}" />
@@ -154,7 +154,7 @@
 			</p:outputPanel>
 
 			<p:spacer height="10" />
-			<div class="ppRightBtn">
+			<h:panelGroup id="btns#{cc.attrs.aiDlg}" layout="block" styleClass="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					action="#{ai.submit(cc.attrs.docType, cc.attrs.smAppl)}"
 					rendered="#{empty cc.attrs.updateId}"
@@ -173,7 +173,7 @@
 					disabled="#{empty ai.docs or ai.blockSubmit}"/>
 					
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" onclick="#{cc.attrs.aiDlg}.hide()"/>
-			</div>
+			</h:panelGroup>
 		</p:outputPanel>
 		</p:dialog>
 	</cc:implementation>

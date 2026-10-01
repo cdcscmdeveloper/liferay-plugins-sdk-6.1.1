@@ -206,6 +206,11 @@ public final class AiDocSupport {
 		private static final String PROPERTIES = "properties";
 		private static final String NORM_VALUE = "normalizedValue";
 
+		private static String optString(JSONObject obj, String key, String defaultValue) {
+			Object o = obj.opt(key);
+			return o == null || JSONObject.NULL.equals(o) ? defaultValue : o.toString();
+		}
+
 		private static final double DEFAULT_MIN_CONFIDENCE = 0.8;
 		public static final double MIN_CONFIDENCE = resolveMinConfidence();
 
@@ -290,8 +295,8 @@ public final class AiDocSupport {
 				for (int i = 0; i < entities.length(); i++) {
 					JSONObject entity = entities.getJSONObject(i);
 					String type = entity.optString("type", "");
-					String text = entity.optString(VALUE, "");
-					String value = entity.optString(NORM_VALUE, text);
+					String text = optString(entity, VALUE, "");
+					String value = optString(entity, NORM_VALUE, text);
 					double conf = entity.optDouble(CONFIDENCE, 0.0);
 
 					if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text) || conf < MIN_CONFIDENCE) {
@@ -299,17 +304,21 @@ public final class AiDocSupport {
 					}
 					value = value.trim();
 					if ("landlords_name".equals(type)) {
-						dto.setLandlordsName(value);
+						dto.setLandlordsName(StringUtils.left(value, 50).trim());	// form maxlength; OWNER_NAME is 200
 					} else if ("tenants_name".equals(type)) {
 						dto.setTenantsName(value);
 					} else if ("monthly_rental".equals(type)) {
-						dto.setMonthlyRental(new BigDecimal(value));
+						try {
+							dto.setMonthlyRental(new BigDecimal(value));
+						} catch (NumberFormatException e) {
+							log.error("Error TenancyEntity monthly_rental '" + value + "'");
+						}
 					} else if ("premises_address".equals(type)) {
 						dto.setPremisesAddress(value);
 						setTenancyAddress(dto, entity.optJSONObject("addressComponents"));
 					}
 				}
-			} catch (JSONException | NumberFormatException e) {
+			} catch (JSONException e) {
 				log.error("Error TenancyEntity", e);
 				dto.setError(true);
 			} catch (NullPointerException e) {
@@ -325,12 +334,13 @@ public final class AiDocSupport {
 
 		private static void setTenancyAddress(AiTenancyDTO dto, JSONObject addr) {
 			if (addr != null) {
-				dto.setPostcode(addr.optString("postcode", "").trim());
-				String fullAddr = addr.optString("normalized_Address", "").trim();
+				// form maxlength; POSTCODE is 10, ADDRESS_1/2/3 are 255
+				dto.setPostcode(StringUtils.left(optString(addr, "postcode", "").trim(), 5).trim());
+				String fullAddr = optString(addr, "normalized_Address", "").trim();
 				truncateAddressAtPostcode(dto, fullAddr, dto.getPostcode());
-				dto.setCodeCity(addr.optString("city_code", "").trim());
-				setTenancyArea(dto, addr.optString("state_code", "").trim(),
-						addr.optString("district_code", "").trim());
+				dto.setCodeCity(optString(addr, "city_code", "").trim());
+				setTenancyArea(dto, optString(addr, "state_code", "").trim(),
+						optString(addr, "district_code", "").trim());
 			}
 		}
 
@@ -392,7 +402,7 @@ public final class AiDocSupport {
 
 		// Truncate the normalized address at the postcode and split into addr1/2/3.
 		private static void truncateAddressAtPostcode(AiTenancyDTO dto, String addr, String postcode) {
-			dto.setAddr1(addr);
+			dto.setAddr1(StringUtils.left(addr, 100).trim());
 			dto.setAddr2("");
 			dto.setAddr3("");
 			if (StringUtils.isEmpty(addr) || StringUtils.isEmpty(postcode)) {
@@ -410,13 +420,13 @@ public final class AiDocSupport {
 			String[] parts = pattern.split(result, 3);
 
 			if (parts.length > 0) {
-				dto.setAddr1(parts[0].trim());
+				dto.setAddr1(StringUtils.left(parts[0].trim(), 100).trim());
 			}
 			if (parts.length > 1) {
-				dto.setAddr2(parts[1].trim());
+				dto.setAddr2(StringUtils.left(parts[1].trim(), 100).trim());
 			}
 			if (parts.length > 2) {
-				dto.setAddr3(parts[2].trim());
+				dto.setAddr3(StringUtils.left(parts[2].trim(), 100).trim());
 			}
 		}
 		
@@ -435,7 +445,11 @@ public final class AiDocSupport {
 					JSONArray properties = entityObj.getJSONArray(PROPERTIES);
 
 					if (entityId.startsWith("employee-")) {
-						employees.add(toEmployee(properties));
+						AiEpfResultDTO.AiEmployeeDTO emp = toEmployee(properties);
+						// a row the AI could not read a name or IC/passport for is dropped
+						if (StringUtils.isNotBlank(emp.getEmployeeName()) && StringUtils.isNotBlank(emp.getIdNo())) {
+							employees.add(emp);
+						}
 					} else if (entityId.startsWith("employer-")) {
 						dto.setEmployerName(toEmployerName(properties));
 					}
@@ -454,21 +468,32 @@ public final class AiDocSupport {
 			for (int i = 0; i < properties.length(); i++) {
 				JSONObject property = properties.getJSONObject(i);
 				String type = property.optString("type", "");
-				String text = property.optString(VALUE, "");
-				String value = property.optString(NORM_VALUE, text);
+				String text = optString(property, VALUE, "");
+				String value = optString(property, NORM_VALUE, text);
 				double conf = property.optDouble(CONFIDENCE, 0.0);
 				if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text) || conf < MIN_CONFIDENCE) {
 					continue;
 				}
 				value = value.trim();
 				if ("KWSP_number".equals(type)) {
-					emp.setKwspNumber(value);
+					emp.setKwspNumber(StringUtils.left(value, 10).trim());
 				} else if ("NRIC_number".equals(type)) {
 					// the statement prints the NRIC dashed or spaced; eP stores the 12 digits
-					emp.setNricNumber(AiDocValidator.normalizeNric(value));
+					String nric = StringUtils.left(AiDocValidator.normalizeNric(value), 20).trim();
+					// IC wins over passport, whichever the AI sends first
+					if (StringUtils.isNotBlank(nric)) {
+						emp.setIdNo(nric);
+						emp.setPassport(false);
+					}
+				} else if ("Passport_number".equals(type)) {
+					String passport = StringUtils.left(AiDocValidator.normalizeIdNo(value), 20).trim();
+					if (StringUtils.isNotBlank(passport) && (StringUtils.isBlank(emp.getIdNo()) || emp.isPassport())) {
+						emp.setIdNo(passport);
+						emp.setPassport(true);
+					}
 				} else if ("employee_name".equals(type)) {
 					// the OCR keeps the statement's own line breaks inside a name
-					emp.setEmployeeName(AiDocValidator.normalizePersonName(value));
+					emp.setEmployeeName(StringUtils.left(AiDocValidator.normalizePersonName(value), 80).trim());
 				}
 			}
 			return emp;
@@ -479,8 +504,8 @@ public final class AiDocSupport {
 			for (int i = 0; i < properties.length(); i++) {
 				JSONObject property = properties.getJSONObject(i);
 				String type = property.optString("type", "");
-				String text = property.optString(VALUE, "");
-				String value = property.optString(NORM_VALUE, text);
+				String text = optString(property, VALUE, "");
+				String value = optString(property, NORM_VALUE, text);
 				double conf = property.optDouble(CONFIDENCE, 0.0);
 				if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text) || conf < MIN_CONFIDENCE) {
 					continue;
@@ -527,8 +552,8 @@ public final class AiDocSupport {
 			for (int i = 0; i < properties.length(); i++) {
 				JSONObject property = properties.getJSONObject(i);
 				String type = property.optString("type", "");
-				String text = property.optString(VALUE, "");
-				String value = property.optString(NORM_VALUE, text);
+				String text = optString(property, VALUE, "");
+				String value = optString(property, NORM_VALUE, text);
 				double conf = property.optDouble(CONFIDENCE, 0.0);
 				if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text) || conf < MIN_CONFIDENCE) {
 					continue;
@@ -629,12 +654,11 @@ public final class AiDocSupport {
 
 		public static final double MIN_BANK_MATCH_SCORE = 0.4;
 		public static final double MIN_BANK_MATCH_MARGIN = 0.15;
-		public static final double MIN_TEXT_MATCH_SCORE = 0.6;
 
 		/**
 		 * Verify a tenancy extraction against the rental info keyed in Premises Type; sets the per-field verdict
 		 * flags on the DTO. A field absent from either side is excluded from the verdict (left valid). Landlord's
-		 * Name / Company / Monthly Rental match exactly; the address is matched on tokens.
+		 * Name / Company / Monthly Rental / Address match exactly.
 		 */
 		public static void validateTenancy(AiTenancyDTO te, String landlordName, String companyName,
 				BigDecimal rentalRate, SmAddress addr) {
@@ -665,8 +689,7 @@ public final class AiDocSupport {
 			}
 			String suppAddr = joinParts(addr.getAddress1(), addr.getAddress2(), addr.getAddress3());
 			String jsonAddr = joinParts(te.getAddr1(), te.getAddr2(), te.getAddr3());
-			double score = tokenSimilarity(suppAddr, jsonAddr);
-			if (score < MIN_TEXT_MATCH_SCORE) {
+			if (!normalizedEquals(suppAddr, jsonAddr)) {
 				return;
 			}
 			te.setValidAddress(true);
@@ -901,6 +924,19 @@ public final class AiDocSupport {
 		}
 
 		/**
+		 * Personnel identity key for an IC or a passport: upper-cased letters and digits only. An IC comes
+		 * out the same as {@link #normalizeNric}; a passport keeps its letters.
+		 * @param idNo
+		 * @return empty when there is nothing left
+		 */
+		public static String normalizeIdNo(String idNo) {
+			if (StringUtils.isBlank(idNo)) {
+				return "";
+			}
+			return idNo.toUpperCase().replaceAll("[^A-Z0-9]", "");
+		}
+
+		/**
 		 * Collapse every run of whitespace - including the line breaks the OCR keeps inside a
 		 * name - to one space, so a name reads the same however the statement printed it.
 		 * @param name
@@ -947,24 +983,6 @@ public final class AiDocSupport {
 				}
 			}
 			return sb.toString().trim();
-		}
-
-		/**
-		 * Share of tokens the two strings have in common, for free text with no reference list behind it.
-		 * @param st1
-		 * @param st2
-		 * @return 0.0 when either side has no tokens
-		 */
-		public static double tokenSimilarity(String st1, String st2) {
-			Set<String> shared = new HashSet<>(tokenize(st1));
-			Set<String> other = new HashSet<>(tokenize(st2));
-			if (shared.isEmpty() || other.isEmpty()) {
-				return 0.0;
-			}
-			Set<String> union = new HashSet<>(shared);
-			union.addAll(other);
-			shared.retainAll(other);
-			return (double) shared.size() / union.size();
 		}
 
 		// Skim Perbankan Islam entries are separate legal entities, so they never match a conventional name.
@@ -1221,8 +1239,26 @@ public final class AiDocSupport {
 			private static final long serialVersionUID = 1L;
 
 			private String kwspNumber;
-			private String nricNumber;
+			// IC or passport, as SM_PERSONNEL.IDENTIFICATION_NO; passport says which
+			private String idNo;
+			private boolean passport;
 			private String employeeName;
+
+			public String getIdNo() {
+				return idNo;
+			}
+
+			public void setIdNo(String idNo) {
+				this.idNo = idNo;
+			}
+
+			public boolean isPassport() {
+				return passport;
+			}
+
+			public void setPassport(boolean passport) {
+				this.passport = passport;
+			}
 
 			public String getKwspNumber() {
 				return kwspNumber;
@@ -1230,14 +1266,6 @@ public final class AiDocSupport {
 
 			public void setKwspNumber(String kwspNumber) {
 				this.kwspNumber = kwspNumber;
-			}
-
-			public String getNricNumber() {
-				return nricNumber;
-			}
-
-			public void setNricNumber(String nricNumber) {
-				this.nricNumber = nricNumber;
 			}
 
 			public String getEmployeeName() {

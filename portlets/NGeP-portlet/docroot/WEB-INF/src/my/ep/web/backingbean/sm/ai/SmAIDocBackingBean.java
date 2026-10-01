@@ -27,6 +27,7 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.json.JSONArray;
 
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.ai.AIApiResponse;
@@ -416,7 +417,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	/**
-	 * The Supporting Documents row an AI type projects onto; bank already has its own row.
+	 * The Supporting Documents row an AI type projects onto.
 	 * @param appl
 	 * @param ocrType
 	 * @return
@@ -428,7 +429,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		for (SmApplSupportDoc suppDoc : appl.getSmApplSupportDocs()){
 			PmDocument doc = suppDoc.getPmDocument();
 			if ((TYPE_EPF.equals(ocrType) && isEpfDoc(doc))
-					|| (TYPE_TENANCY.equals(ocrType) && isTenancyDoc(doc))){
+					|| (TYPE_TENANCY.equals(ocrType) && isTenancyDoc(doc))
+					|| (TYPE_BANK.equals(ocrType) && isBankDoc(doc))){
 				return suppDoc;
 			}
 		}
@@ -624,16 +626,16 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		Map<String, SmPersonnel> personnels = new HashMap<>();
 		for (SmPersonnel per : appl.getSmPersonnels()){
-			personnels.put(AiDocValidator.normalizeNric(per.getIdentificationNo()), per);
+			personnels.put(AiDocValidator.normalizeIdNo(per.getIdentificationNo()), per);
 		}
-		
-		//check for dupe IC
+
+		//check for dupe IC/passport
 		for (AiEpfResultDTO.AiEmployeeDTO employee : selectedEmployees) {
-			SmPersonnel per = personnels.get(employee.getNricNumber());
+			SmPersonnel per = personnels.get(employee.getIdNo());
 			if (per != null){
 				// the applicant applied all three fields from the dialog, so all three get the icon
 				// tenancy accepts every extracted field on submit the same way
-				acceptEpfUserEdit(appl, employee.getNricNumber(),
+				acceptEpfUserEdit(appl, employee.getIdNo(),
 						AiUserEdit.F_EPF_NO, AiUserEdit.F_NAME, AiUserEdit.F_IC);
 				// applying the statement overwrites the eP name as well as the EPF No.
 				per.setName(employee.getEmployeeName());
@@ -643,11 +645,20 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				continue;
 			}
 			// a new row is wholly AI-populated, so all three fields are accepted
-			acceptEpfUserEdit(appl, employee.getNricNumber(),
+			acceptEpfUserEdit(appl, employee.getIdNo(),
 					AiUserEdit.F_EPF_NO, AiUserEdit.F_NAME, AiUserEdit.F_IC);
 			per = new SmPersonnel();
 			per.setName(employee.getEmployeeName());
-			per.setIdentificationNo(employee.getNricNumber());
+			per.setIdentificationNo(employee.getIdNo());
+			if (employee.isPassport()){
+				per.setIdentificationTypeId(SmApplicationUtil.retrievePmParameterByTypeAndCode(
+						ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_PASSPORT)
+						.getParameterId());
+			} else {
+				per.setIdentificationTypeId(SmApplicationUtil.retrievePmParameterByTypeAndCode(
+						ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_IC)
+						.getParameterId());
+			}
 			per.setEpfNo(employee.getKwspNumber());
 
 			//defaults as per SmApplicationUtil.setDefaultPersonnelValues() / SssmSO
@@ -882,7 +893,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 
 		Map<String, SmPersonnel> byNric = new HashMap<>();
 		for (SmPersonnel per : appl.getSmPersonnels()){
-			byNric.put(AiDocValidator.normalizeNric(per.getIdentificationNo()), per);
+			byNric.put(AiDocValidator.normalizeIdNo(per.getIdentificationNo()), per);
 		}
 
 		String companyName = appl.getSmSupplier() != null ? appl.getSmSupplier().getCompanyName() : null;
@@ -918,7 +929,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		Map<String, Set<String>> edits = AiUserEdit.parse(response.getUserEdit());
 		for (AiEpfResultDTO.AiEmployeeDTO emp : ee.getEmployees()){
-			applyEpfEmployee(emp, byNric.get(emp.getNricNumber()), edits);
+			applyEpfEmployee(emp, byNric.get(emp.getIdNo()), edits);
 		}
 	}
 
@@ -928,12 +939,12 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			return;
 		}
 		// #40112 - the icon means the applicant submitted this field from the dialog. A personnel
-		// added by hand matches the statement by NRIC but was never accepted, so it stays blank.
-		Set<String> accepted = AiUserEdit.accepted(edits, emp.getNricNumber());
+		// added by hand matches the statement by IC/passport but was never accepted, so it stays blank.
+		Set<String> accepted = AiUserEdit.accepted(edits, emp.getIdNo());
 		if (accepted.isEmpty()){
 			return;
 		}
-		Set<String> edited = AiUserEdit.fields(edits, emp.getNricNumber());
+		Set<String> edited = AiUserEdit.fields(edits, emp.getIdNo());
 		if (accepted.contains(AiUserEdit.F_EPF_NO) && !edited.contains(AiUserEdit.F_EPF_NO)){
 			per.setEpfNoAI(emp.getKwspNumber());
 		}
@@ -979,12 +990,12 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		Map<String, AiEpfResultDTO.AiEmployeeDTO> extracted = new HashMap<>();
 		for (AiEpfResultDTO.AiEmployeeDTO emp : AiDocParser.toEpf(fields).getEmployees()){
-			extracted.put(emp.getNricNumber(), emp);
+			extracted.put(emp.getIdNo(), emp);
 		}
 		Map<String, Set<String>> edits = AiUserEdit.parse(response.getUserEdit());
 		boolean changed = false;
 		for (SmPersonnel per : appl.getSmPersonnels()){
-			String key = AiDocValidator.normalizeNric(
+			String key = AiDocValidator.normalizeIdNo(
 					per.getIcAI() != null ? per.getIcAI() : per.getIdentificationNo());
 			AiEpfResultDTO.AiEmployeeDTO emp = extracted.get(key);
 			if (emp == null){
@@ -1109,7 +1120,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	/**
-	 * Extracted employee IC Nos., empty when nothing was extracted so the caller leaves manual adds
+	 * Extracted employee IC/Passport Nos., empty when nothing was extracted so the caller leaves manual adds
 	 * unrestricted. Wrong-company statements offer no one, the same set the AI Assistant table shows.
 	 * @param appl
 	 * @return
@@ -1126,7 +1137,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		return nrics;
 	}
 
-	// collect trimmed AI-extracted employee IC Nos. from one EPF doc file into nrics
+	// collect trimmed AI-extracted employee IC/Passport Nos. from one EPF doc file into nrics
 	private static void collectEpfEmployeeNrics(AIApiResponse response, String companyName, Set<String> nrics){
 		JSONArray fields = AiDocParser.parseFields(response.getJsonResponse());
 		if (fields == null){
@@ -1139,16 +1150,14 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			return;
 		}
 		for (AiEpfResultDTO.AiEmployeeDTO emp : ee.getEmployees()){
-			if (emp.getNricNumber() != null && !emp.getNricNumber().trim().isEmpty()){
-				nrics.add(emp.getNricNumber().trim());
-			}
+			nrics.add(emp.getIdNo());
 		}
 	}
 
 	/**
-	 * A manually added new personnel must appear by IC No. in the uploaded EPF statement; throws to abort the add.
-	 * Matched on IC No., not name - a matching name with a different IC is a different person.
-	 * Only IC holders are checked - the EPF statement carries IC Nos. only, so any other
+	 * A manually added new personnel must appear by IC/Passport No. in the uploaded EPF statement; throws to abort
+	 * the add. Matched on IC/Passport No., not name - a matching name with a different IC is a different person.
+	 * Only IC and passport holders are checked - the EPF statement carries those only, so any other
 	 * identification type could never match and is left unrestricted.
 	 * @param appl
 	 * @param personnel
@@ -1157,8 +1166,12 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if (appl == null || personnel == null || personnel.getPersonnelId() != null){
 			return;
 		}
-		if (personnel.getIdentificationType() == null || !ParameterConst.IDENTIFICATION_TYPES_IC
-				.equalsIgnoreCase(personnel.getIdentificationType().getParameterCode())){
+		if (personnel.getIdentificationType() == null){
+			return;
+		}
+		String idType = personnel.getIdentificationType().getParameterCode();
+		if (!ParameterConst.IDENTIFICATION_TYPES_IC.equalsIgnoreCase(idType)
+				&& !ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(idType)){
 			return;
 		}
 		Set<String> aiNrics = getAiEpfEmployeeNrics(appl);
@@ -1166,7 +1179,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			return;
 		}
 		if (personnel.getIdentificationNo() != null
-				&& aiNrics.contains(AiDocValidator.normalizeNric(personnel.getIdentificationNo()))){
+				&& aiNrics.contains(AiDocValidator.normalizeIdNo(personnel.getIdentificationNo()))){
 			return;
 		}
 		throw new EpException(SmCommonUtil.getMessage("lbl.sm.ai.epf.personnel.notexist", null));
@@ -1666,12 +1679,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				continue;
 			}
 			for (AiEpfResultDTO.AiEmployeeDTO emp : epf.getEmployees()){
-				String key = emp.getNricNumber();
-				if (StringUtils.isEmpty(key)){
-					key = emp.getKwspNumber() + "|" + emp.getEmployeeName();
-				}
-				if (!unique.containsKey(key)){
-					unique.put(key, emp);
+				if (!unique.containsKey(emp.getIdNo())){
+					unique.put(emp.getIdNo(), emp);
 				}
 			}
 		}
