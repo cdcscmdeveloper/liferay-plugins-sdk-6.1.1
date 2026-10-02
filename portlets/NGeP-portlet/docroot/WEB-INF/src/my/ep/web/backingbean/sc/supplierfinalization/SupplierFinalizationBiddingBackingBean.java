@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,6 +76,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
+import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -90,6 +92,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRema
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportDetail;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportDetailAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
@@ -381,8 +385,9 @@ public class SupplierFinalizationBiddingBackingBean extends
 							scQtFinalization.getOnlineBiddingEndorse())) {
 				retrieveOnlineEndorsement();
 			} else {
-				if (QTStatusConst.SF_PENDING_BIDDING_ESCALATION
-						.equals(getManagedBean().getCurrentStatusId())) {
+				
+				if (QTStatusConst.SF_PENDING_BIDDING_ESCALATION.equals(getManagedBean().getCurrentStatusId())
+						|| QTStatusConst.SF_MOF_COMMITTEE_BIDDING.equals(getManagedBean().getCurrentStatusId())) {//#27502 - New DO MOF Role and Process
 					getManagedBean().setBpkUser(true);
 				}
 				retrieveOfflineEndorsement();
@@ -2957,9 +2962,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 * @return the onlineBiddingFinalizationMeetingActiveIndex
 	 */
 	public int getOnlineBiddingFinalizationMeetingActiveIndex() {
-		if (getManagedBean().isOnlineBiddingEscalation()) {
-			return -1;
-		} else if(mofFinal){// #27502 - Start
+		// #27502 - Start
+		if (getManagedBean().isOnlineBiddingEscalation() || mofFinal ) {
 			return -1;
 		} else {
 			return ONLINE_BIDDING_FINALIZATION_MEETING_ACTIVE_INDEX;
@@ -3220,11 +3224,139 @@ public class SupplierFinalizationBiddingBackingBean extends
 			//#29702 - end
 			if (finalizationReports != null) {
 				getManagedBean().setDocumentList(finalizationReports);
+				populateEvaluationBreifingReports(finalizationReports, getManagedBean().getScQt());//#25651
 			}
+			
+			// #25651 - Start
+			reqDTO.setDocumentCategory(ParameterConst.DOCUMENT_CATEGORY_BRIEFING_PAPER);
+			reqDTO.setExcludedDocNames(SupplierFinalizationBiddingManagedBean.getDirectdownloaddocdefkeys());
+			List<ScQtFinalizationReportDetail> finalizationReportsDetail = qtSuppFinalizationSO
+					.retriveFinalizationReportDetail(reqDTO).getScQtFinalizationReportDetails();
+			populateEvaluationBreifingReportDetails(finalizationReportsDetail, getManagedBean().getScQt());
+			populateBriefingReportDetails(finalizationReportsDetail);
+			// #25651 - End
+			
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
 	}
+	
+	// #25651 - Start
+	/**
+	 * @param finalizationReports
+	 * @param scQt
+	 */
+	public void populateEvaluationBreifingReports(List<ScQtFinalizationReport> finalizationReports, ScQt scQt) {
+
+		if (null != scQt) {
+			String evaluationType = scQt.getEvaluationType();
+			if (StringUtils.isNotEmpty(evaluationType)) {
+
+				List<ScQtFinalizationReport> documentList = new ArrayList<>();
+				Iterator<ScQtFinalizationReport> iterator = finalizationReports.iterator();
+				while (iterator.hasNext()) {
+					ScQtFinalizationReport report = iterator.next();
+
+					if (null != report && report.getPmDocument() != null) {
+						String docDefinitionKey = report.getPmDocument().getDocDefinitionKey();
+
+						if (SourcingConstants.EVALUATION_TYPE_TIER1.equals(evaluationType)) {
+							if (!isWipEvaluationReportExisting(docDefinitionKey, scQt.getQtId())
+									&& SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(docDefinitionKey)) {
+								documentList.add(report);
+							} else if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equals(docDefinitionKey)) {
+								documentList.add(report);
+							}
+
+						} else if (SourcingConstants.EVALUATION_TYPE_TIER2.equals(evaluationType)) {
+
+							boolean isEvaluationType = false;
+							if (SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT.equals(docDefinitionKey)) {
+								isEvaluationType = true;
+							} else if (SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT
+									.equals(docDefinitionKey)) {
+								isEvaluationType = true;
+							} else if (SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT
+									.equals(docDefinitionKey)) {
+								isEvaluationType = true;
+							}
+
+							if (!isWipEvaluationReportExisting(docDefinitionKey, scQt.getQtId()) && isEvaluationType) {
+								documentList.add(report);
+							} else if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equals(docDefinitionKey)) {
+								documentList.add(report);
+							}
+						}
+
+					}
+
+					if (null != report && report.getDocCategory() != null) {
+						String docCategory = report.getDocCategory();
+						if (ParameterConst.DOCUMENT_CATEGORY_ENDORSEMENT_REPORT.equals(docCategory)) {
+							documentList.add(report);
+						}
+					}
+				}
+
+				this.getManagedBean().setDocumentList(documentList);
+			}
+		}
+	}
+
+	// #25651 - End
+	
+	// #25651 - Start
+	/**
+	 * @param finalizationReportDetails
+	 * @param scQt
+	 */
+	public void populateEvaluationBreifingReportDetails(List<ScQtFinalizationReportDetail> finalizationReportDetails,
+			ScQt scQt) {
+
+		if (null != scQt) {
+			String evaluationType = scQt.getEvaluationType();
+			if (StringUtils.isNotEmpty(evaluationType)) {
+
+				List<ScQtFinalizationReportDetail> documentDetailList = new ArrayList<>();
+				Iterator<ScQtFinalizationReportDetail> iterator = finalizationReportDetails.iterator();
+				while (iterator.hasNext()) {
+					ScQtFinalizationReportDetail reportDetail = iterator.next();
+
+					if (null != reportDetail && reportDetail.getPmDocument() != null) {
+						String docDefinitionKey = reportDetail.getPmDocument().getDocDefinitionKey();
+
+						if (SourcingConstants.EVALUATION_TYPE_TIER1.equals(evaluationType)) {
+							if (isWipEvaluationReportExisting(docDefinitionKey, scQt.getQtId())
+									&& SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(docDefinitionKey)) {
+								documentDetailList.add(reportDetail);
+							}
+						} else if (SourcingConstants.EVALUATION_TYPE_TIER2.equals(evaluationType)) {
+
+							boolean isEvaluationType = false;
+							if (SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT.equals(docDefinitionKey)) {
+								isEvaluationType = true;
+							} else if (SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT
+									.equals(docDefinitionKey)) {
+								isEvaluationType = true;
+							} else if (SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT
+									.equals(docDefinitionKey)) {
+								isEvaluationType = true;
+							}
+
+							if (isWipEvaluationReportExisting(docDefinitionKey, scQt.getQtId()) && isEvaluationType) {
+								documentDetailList.add(reportDetail);
+							}
+						}
+
+					}
+				}
+
+				this.getManagedBean().setDocumentDetailList(documentDetailList);
+			}
+		}
+	}
+
+	// #25651 - End
 	
 	private int findFinalizationCount() {
 		IScWorkFlowStatusSO scWorkFlowStatusSO = null;
@@ -3238,6 +3370,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 			statusIds.add(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION);
 //			statusIds.add(QTStatusConst.QT_RE_FINALIZATION);
 //			statusIds.add(QTStatusConst.QT_RE_EVALUATION);
+			statusIds.add(QTStatusConst.SF_MOF_COMMITTEE);//#27502 - New DO MOF Role and Process
 			tenderReqDTO.setStatusIds(statusIds);
 			
 			List<ScWorkFlowStatus> statusList = scWorkFlowStatusSO
@@ -3316,6 +3449,90 @@ public class SupplierFinalizationBiddingBackingBean extends
 		downloadFile(reportAttachment);
 	}
 	
+	//#25651 - Start
+	/**
+	 * To download a report under Briefing Paper/Kertas Taklimat tab
+	 * 
+	 * @param scQtFinalizationReportDetail
+	 *            selected report which would be downloaded
+	 * @throws Exception
+	 *             the exception that would be thrown in case of any error while
+	 *             downloading the report
+	 */
+	public void downloadReportDetail(ScQtFinalizationReportDetail scQtFinalizationReportDetail) throws Exception {
+		debugLogger("downloadReport");
+		
+		ScQtFinalizationReportDetailAttachment reportAttachment = scQtFinalizationReportDetail
+				.getScQtFinalizationReportDetailAttachment();
+		if (null == reportAttachment
+				&& scQtFinalizationReportDetail.getTitle().contains(QTConstants.QT_REPORT_BRIEFING_PAPER)) {
+			reportAttachment = generateBriefingPaperAttachmentDetail(scQtFinalizationReportDetail);
+			scQtFinalizationReportDetail.setScQtFinalizationReportDetailAttachment(reportAttachment);
+		}
+
+		downloadFile(reportAttachment);
+	}
+	//#25651 - End
+	
+	//#25651 - Start
+	/**
+	 * To combine reports ScQtFinalizationReport and ScQtFinalizationReportDetail.
+	 * 
+	 * @throws Exception
+	 *             the exception that would be thrown in case of any error while
+	 *             downloading the report(s)
+	 */
+	public void downloadCombinedReport(Object report) throws Exception {
+
+		if (report instanceof ScQtFinalizationReport) {
+
+			downloadReport((ScQtFinalizationReport) report);
+
+		} else if (report instanceof ScQtFinalizationReportDetail) {
+
+			downloadReportDetail((ScQtFinalizationReportDetail) report);
+		}
+	}
+	//#25651 - End
+	
+	//#25651 - Start
+	/**
+	 * To populate reports ScQtFinalizationReport and ScQtFinalizationReportDetail.
+	 */
+	public List<Object> getCombinedEvaluationReportList() {
+		
+		List<Object> combinedReportList = new ArrayList<>();
+
+		List<ScQtFinalizationReport> reports = getManagedBean().getDocumentList();
+		List<ScQtFinalizationReportDetail> details = getManagedBean().getDocumentDetailList();
+
+		if (CollectionUtils.isNotEmpty(reports)) {
+			combinedReportList.addAll(reports);
+		}
+
+		if (CollectionUtils.isNotEmpty(details)) {
+		    combinedReportList.addAll(details);
+	
+		}
+
+		return combinedReportList;
+	}
+	//#25651 - End
+	
+	//#25651 - Start
+	private ScQtFinalizationReportDetailAttachment generateBriefingPaperAttachmentDetail(
+			ScQtFinalizationReportDetail scQtFinalizationReportDetail) throws Exception {
+		SupplierFinalizationBackingBean supplierFinalizationBackingBean = new SupplierFinalizationBackingBean();
+		supplierFinalizationBackingBean.renewSesionObject();
+		supplierFinalizationBackingBean.getManagedBean().setCurrentStatusId(this.getManagedBean().getCurrentStatusId());
+		supplierFinalizationBackingBean.getManagedBean().setScQtFinalization(
+				this.getManagedBean().getScQtFinalization());
+		supplierFinalizationBackingBean.getManagedBean().setScQt(this.getManagedBean().getScQt());
+		return supplierFinalizationBackingBean.downloadBriefingPaperReportDetailForBidding(scQtFinalizationReportDetail);
+	}
+	//#25651 - End
+	
+	
 	// 30567 - start
 	private ScQtFinalizationReportAttachment generateBriefingPaperAttachment(
 			ScQtFinalizationReport scQtFinalizationReport) throws Exception {
@@ -3330,6 +3547,73 @@ public class SupplierFinalizationBiddingBackingBean extends
 
 	// 30567 - end
 	
+	// #25651 - Start
+	/**
+	 * Download each report detail.
+	 * 
+	 * @param scQtFinalizationReportDetail
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void downloadReport(ScQtFinalizationReportDetail scQtFinalizationReportDetail) throws Exception {
+		generateDocumentAttachment(scQtFinalizationReportDetail);
+	}
+	// #25651 - End
+
+	// #25651 - Start
+	/**
+	 * Generate document attachment for all committee finalization reports detail.
+	 * 
+	 * @param scQtFinalizationReportDetail
+	 * @throws Exception
+	 *             the exception
+	 */
+	private void generateDocumentAttachment(ScQtFinalizationReportDetail scQtFinalizationReportDetail) throws Exception {
+
+		ScQt scQt = getManagedBean().getScQt();
+		String docDefinitionKey = scQtFinalizationReportDetail.getPmDocument().getDocDefinitionKey();
+		String definitionType = scQtFinalizationReportDetail.getDefinationType().getParameterCode();
+		List<String> reportDetailList = reportDetailAttachmentType(docDefinitionKey);
+
+		if (definitionType.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED)) {
+			List<ScAttachment> finalizationReportAttachments = new ArrayList<>();
+			for (String reportDetail : reportDetailList) {
+
+				ScAttachment reportAttachment = new ScQtFinalizationReportDetailAttachment();
+				StringBuilder fileName = new StringBuilder(reportDetail);
+				fileName.append(".pdf");
+				reportAttachment.setFileName(fileName.toString());
+				reportAttachment.setDocNo(scQt.getQtNo());
+				generateBrefingPaperDetailPdf((ScAttachment) reportAttachment, scQt, docDefinitionKey, false);
+				finalizationReportAttachments.add(reportAttachment);
+
+			}
+			downloadAllFiles(this.getManagedBean().getReportDownloadFileName(), finalizationReportAttachments);
+		}
+
+	}
+
+	// #25651 - End
+	
+	// #25651 - Start
+	/**
+	 * @param docDefinitionKey
+	 * @param fileReportName
+	 * @return ScAttachment
+	 */
+	private ScAttachment generateDocumentAttachment(String docDefinitionKey, String fileReportName) throws Exception {
+		
+		ScAttachment reportAttachment = new ScQtFinalizationReportDetailAttachment();
+		ScQt scQt = getManagedBean().getScQt();
+		StringBuilder fileName = new StringBuilder(fileReportName);
+		fileName.append(".pdf");
+		reportAttachment.setFileName(fileName.toString());
+		reportAttachment.setDocNo(scQt.getQtNo());
+		generateBrefingPaperDetailPdf((ScAttachment) reportAttachment, scQt, docDefinitionKey, true);	
+		return reportAttachment;
+	}
+	// #25651 - End
+	
 	/**
 	 * To download all reports under Briefing Paper/Kertas Taklimat tab
 	 * 
@@ -3340,6 +3624,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	public void downloadAllReports() throws Exception {
 		debugLogger("downloadAllReports");
 
+		List<ScAttachment> attachments = new ArrayList<>(); //#25651
 		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean()
 				.getScQtFinalization().getScQtFinalizationReports();
 		// 37623 - start
@@ -3355,9 +3640,112 @@ public class SupplierFinalizationBiddingBackingBean extends
 			scAttachments.add(attachment);
 		}
 		// 37623 - end
-		downloadAllFiles("NGeP-Finalization-Report", scAttachments);
+		
+		//#25651 - Start
+		attachments.addAll(scAttachments); 
+		attachments.addAll(getScqtFinalizationUploadReportDetails());
+		attachments.addAll(getScqtFinalizationReportDetails());
+		attachments.addAll(getBriefingReportDetails());
+		//#25651 - Start
+		
+		downloadAllFiles(SourcingConstants.LAPORAN_KERTAS_TAKLIMAT, attachments); //#25651
 
 	}
+	
+	// #25651 - Start
+	/**
+	 * To download briefing reports detail under Briefing Report tab.
+	 * 
+	 * @throws Exception
+	 *             the exception that would be thrown in case of any error while
+	 *             downloading the report(s)
+	 */
+	private List<ScAttachment> getScqtFinalizationUploadReportDetails() throws Exception {
+
+		List<ScAttachment> attachments = new ArrayList<>();
+		List<ScQtFinalizationReportDetailAttachment> scAttachmentsDetail = new ArrayList<>();
+
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getScQtFinalizationReportDetail())) {
+			for (ScQtFinalizationReportDetail uploadedSfReportDetail : this.getManagedBean().getScQtFinalizationReportDetail()) {
+				if (uploadedSfReportDetail.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)
+						&& null != uploadedSfReportDetail.getScQtFinalizationReportDetailAttachment()) {
+					scAttachmentsDetail.add(uploadedSfReportDetail.getScQtFinalizationReportDetailAttachment());
+				}
+			}
+		}
+		attachments.addAll(scAttachmentsDetail);
+		return attachments;
+	}
+
+	// #25651 - End
+	
+	// #25651 - Start
+	/**
+	 * To download evaluation reports detail under Briefing Report tab.
+	 * 
+	 * @throws Exception
+	 *             the exception that would be thrown in case of any error while
+	 *             downloading the report(s)
+	 */
+	private List<ScAttachment> getScqtFinalizationReportDetails() throws Exception {
+
+		List<ScAttachment> attachments = new ArrayList<>();
+		List<ScQtFinalizationReportDetail> scQtFinalizationReportDetails = getManagedBean().getDocumentDetailList();
+		List<ScQtFinalizationReportDetailAttachment> scAttachmentsDetail = new ArrayList<>();
+
+		if (CollectionUtils.isNotEmpty(scQtFinalizationReportDetails)) {
+			for (ScQtFinalizationReportDetail reportDetail : scQtFinalizationReportDetails) {
+				ScQtFinalizationReportDetailAttachment attachment = reportDetail
+						.getScQtFinalizationReportDetailAttachment();
+				if (attachment == null && reportDetail.getTitle().contains(QTConstants.QT_REPORT_BRIEFING_PAPER)) {
+					attachment = generateBriefingPaperAttachmentDetail(reportDetail);
+				}
+				if (attachment != null) {
+					attachment.setTempFileName(reportDetail.getTitle());
+				}
+
+				scAttachmentsDetail.add(attachment);
+			}
+		}
+
+		attachments.addAll(scAttachmentsDetail);
+		return attachments;
+	}
+
+	// #25651 - End
+	
+	// #25651 - Start
+	/**
+	 * To download briefing reports detail under Briefing Report tab.
+	 * 
+	 * @throws Exception
+	 *             the exception that would be thrown in case of any error while
+	 *             downloading the report(s)
+	 */
+	private List<ScAttachment> getBriefingReportDetails() throws Exception {
+
+		List<ScAttachment> attachments = new ArrayList<>();
+		List<Object[]> reportDetailList = reportDetailAttachmentType();
+		List<ScQtFinalizationReportDetail> scQtFinalizationReportDetail = this.getManagedBean()
+				.getScQtFinalizationReportDetail();
+		if (CollectionUtils.isNotEmpty(scQtFinalizationReportDetail)) {
+			for (ScQtFinalizationReportDetail finalizationreport : scQtFinalizationReportDetail) {
+				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equalsIgnoreCase(finalizationreport
+						.getDefinationType().getParameterCode())) {
+					for (Object[] reportDetail : reportDetailList) {
+						String codeReportName = (String) reportDetail[0];
+						String fileReportName = (String) reportDetail[1];
+						if (codeReportName.equals(finalizationreport.getPmDocument().getDocDefinitionKey())) {
+							attachments.add(generateDocumentAttachment(codeReportName, fileReportName));
+						}
+					}
+				}
+			}
+		}
+		return attachments;
+	}
+
+	// #25651 - End
 	
 	// 25037 - start
 	/**

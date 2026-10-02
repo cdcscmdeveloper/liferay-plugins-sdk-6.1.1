@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.fl.po;
 
@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
+import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.fl.IFulfilmentYepSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
@@ -88,9 +89,12 @@ import my.ep.persistence.entity.fl.order.FlStopInstr;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.fl.yep.FlYepTasklist;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
@@ -107,6 +111,7 @@ import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
 import my.ep.web.backingbean.fl.cr.ContractRequestBackingBean;
 import my.ep.web.backingbean.fl.deliveryorder.DeliveryOrderBackingBean;
 import my.ep.web.backingbean.fl.pr.PurchaseRequestBackingBean;
+import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
 import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
@@ -330,6 +335,11 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					resDTO = fulfilmentOrderSO.saveAP58AL(AttachreqDTO);
 				}
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_AP58_PROCEED)){
+					// #31788 - assign new user
+					if (getManagedBean().isAssignNewUser()) {
+						reqDTO.setAssignNewUser(Boolean.TRUE);
+						reqDTO.setNewUser(getManagedBean().getNewUser());
+					}
 					reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
 					resDTO = fulfilmentOrderSO.proceedAP58(reqDTO);
 				}
@@ -386,11 +396,25 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 					messageId = MessageConst.INFO_745016;
 				}
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-						FacesMessage.SEVERITY_INFO, null,
-						MessageUtils.getMessage(messageId, 
-								new String[]{messagePrefix+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, documentType)+messageSuffix, docNo}, 
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				if (reqDTO.isAssignNewUser()) { // 31788 - acknowledge new assign user
+					messageId = MessageConst.INFO_700128;
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+									messageId,
+									new String[] {
+											getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, getManagedBean()
+													.getFulfilmentOrder().getDocType()),
+											getManagedBean().getFulfilmentOrder().getDocNo(),
+											reqDTO.getNewUser().getUserName() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+				} else {
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+							FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(messageId, 
+									new String[]{messagePrefix+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, documentType)+messageSuffix, docNo}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				}
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);
 			}
@@ -432,6 +456,12 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			throw new EpException(MessageConst.ERROR_740046);
 		}
 		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
+			//40793-start
+			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+				validatePOCOCurrentStatus(action);
+			}
+			//40793-end
+			
 			if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
 				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 			}
@@ -2496,6 +2526,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 //	28377 - end
 	  //29440 start
 	  public String proceedNonAP58() throws IOException{
+		  	validateUserYep(); //#31788 - validate user active
 	    	log.info("inside hideyep");
 	    	Long docId = this.getManagedBean().getFlOrderId();
 			log.info("29440: docid: "+docId);
@@ -2506,12 +2537,31 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			reqDTOflorder.setFlOrderId(docId);
 			resDTO = fulfilmentOrderSO.getFulfilmentOrderById(reqDTOflorder);
 			reqDTOnonAP58.setFulfilmentOrder(resDTO.getFlOrder());
+			reqDTOnonAP58.setPmUser(getFacesScopes().getUserSessionBean()); // 31788 - for prepare tracking diary
+			reqDTOnonAP58.setUserRole(getUserRole()); // 31788 - for prepare tracking diary
+			if(getManagedBean().isAssignNewUser()) { // 31788 - set new assign user and flag
+				reqDTOnonAP58.setAssignNewUser(Boolean.TRUE);
+				reqDTOnonAP58.setNewUser(getManagedBean().getNewUser());
+			}
 			//reqDTOnonAP58.setToken(getFacesScopes().getBPMAuthenticationCtxToken()); //#34686 remove token
 			resDTO = fulfilmentOrderSO.hideYEPtasklist(reqDTOnonAP58);
 			log.info("29440: "+resDTO.isSuccessful());
 			if(resDTO.isSuccessful()) {
-				successMessage(MessageConst.INFO_700005, ParameterTypeConst.DOCUMENT_TYPES,
-						ParameterConst.DOCTYPE_PURCHASE_ORDER,getManagedBean().getFulfilmentOrder().getDocNo().toString(), Boolean.FALSE);
+			if (reqDTOnonAP58.isAssignNewUser()) { // 31788 - acknowledge new assign user
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+								MessageConst.INFO_700128,
+								new String[] {
+										getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, getManagedBean()
+												.getFulfilmentOrder().getDocType()),
+										getManagedBean().getFulfilmentOrder().getDocNo(),
+										reqDTOnonAP58.getNewUser().getUserName() },
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			} else {
+					successMessage(MessageConst.INFO_700005, ParameterTypeConst.DOCUMENT_TYPES,
+							ParameterConst.DOCTYPE_PURCHASE_ORDER,getManagedBean().getFulfilmentOrder().getDocNo().toString(), Boolean.FALSE);
+				}
 				renewSesionObject();
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 				
@@ -2732,6 +2782,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		switch (action) {
 		case BpmOutcomeConst.BPM_AP58_PROCEED:
 			validateApprovalLetter();
+			validateUserYep(); //#31788 - validate user active
 			dialogCommand = "ap58ProceedConfirmDlg.show()";
 			break;
 		case BpmOutcomeConst.BPM_CLOSE_MANUAL:
@@ -2757,4 +2808,321 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		return null;
 	}
 	// #34443 end
+	
+	// Start - #36503
+	/**
+	 * Route to Panel Circular Page from Purchase Order.
+	 * 
+	 * @return page url
+	 */
+	public String gotoCicularPanel() {
+		PanelBackingBean panelBB = new PanelBackingBean();
+		panelBB.getManagedBean().setAction("view");
+		panelBB.getManagedBean().setViewContract(true);
+		panelBB.getManagedBean().setOutComes(new String[] {});
+		panelBB.getManagedBean().setFromCircularNotice(false);
+		panelBB.getManagedBean().setDifferentModule(false);
+
+		Long circularVerId = null;
+
+		if (getManagedBean().getFlRequest() != null && getManagedBean().getFlRequest().getFulfilmentReqId() != null) {
+			IFulfilmentRequestSO fulfilmentRequestSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			reqDTO.setFlRequestId(getManagedBean().getFlRequest().getFulfilmentReqId());
+
+			FulfilmentResDTO resDTO = fulfilmentRequestSO.retrieveCircularVerByFlRequestId(reqDTO);
+
+			if (resDTO != null && resDTO.getCircularVer() != null && resDTO.getCircularVer().getCircularVerId() != null) {
+				circularVerId = resDTO.getCircularVer().getCircularVerId();
+			}
+		}
+
+		if (circularVerId != null && circularVerId.longValue() != 0) {
+			panelBB.getManagedBean().setGotoPreviewPage(NAV_PO);
+			return panelBB.gotoCommonViewPage(circularVerId);
+		}
+
+		return null;
+	}
+
+	/**
+	 * The method used to find active circular record return boolean value in
+	 * case record true
+	 * 
+	 * @return true, if there is an active circular record false, if there isn't
+	 *         active circular record
+	 */
+	public boolean isCircularPanel() {
+
+		IFulfilmentRequestSO fulfilmentRequestSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+
+		reqDTO.setFlRequestId(getManagedBean().getFlRequest().getFulfilmentReqId());
+
+		FulfilmentResDTO resDTO = fulfilmentRequestSO.getPanelFlagByFlRequestId(reqDTO);
+
+		boolean isPanel = resDTO.isPanel();
+
+		if (!isPanel) {
+			return false;
+		}
+
+		FulfilmentResDTO circularDTO = fulfilmentRequestSO.retrieveCircularNoByFlRequestId(reqDTO);
+
+		if (circularDTO != null && circularDTO.getCircularNo() != null) {
+			getManagedBean().setCircularNo(circularDTO.getCircularNo());
+			return true;
+		}
+
+		return false;
+	}
+
+	// End - #36503
+	
+	// 31788 - START
+	/**
+	 * Validate User for YEP
+	 */
+	private void validateUserYep() {
+		IFulfilmentOrderSO fulfilmentOrderSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
+		FlFulfilmentOrder flOrder = getManagedBean().getFulfilmentOrder();
+		FulfilmentReqDTO fulfilmentReqDTO = new FulfilmentReqDTO();
+		fulfilmentReqDTO.setDocId(flOrder.getFulfilmentOrderId());
+		FlYepTasklist yepTask = fulfilmentOrderSO.getYepTaskListByDocId(fulfilmentReqDTO).getFlYepTasklist();
+		FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
+
+		if (yepTask == null) {
+			return;
+		}
+
+		fulfilmentReqDTO.setTaskId(yepTask.getTaskId());
+
+		long statusId = yepTask.getStatusId();
+
+		if (isYepDanApproval(statusId)) {
+			validateYepFlApprover(fulfilmentOrderSO, userSO, fulfilmentReqDTO, flRequest, flOrder);
+		} else if (isYepPaymentMatch(statusId)) {
+			validateYepPayOfficer(userSO, flRequest, flOrder);
+		} else if (isYepInvoice(statusId)) {
+			validateYepSupplier(fulfilmentOrderSO, userSO, fulfilmentReqDTO, flRequest, flOrder);
+		}
+	}
+
+	/**
+	 * Check if yep task is pending DAN approval.
+	 *
+	 * @param statusId
+	 * @return
+	 */
+	private boolean isYepDanApproval(long statusId) {
+		return statusId == FulfilmentStatusConst.CO_PENDING_DAN_APPROVAL.longValue()
+				|| statusId == FulfilmentStatusConst.PO_PENDING_DAN_APPROVAL.longValue();
+	}
+
+	/**
+	 * Check if yep task is pending payment match or payment query.
+	 *
+	 * @param statusId
+	 * @return
+	 */
+	private boolean isYepPaymentMatch(long statusId) {
+		return statusId == FulfilmentStatusConst.CO_PENDING_PAYMENT_MATCH.longValue()
+				|| statusId == FulfilmentStatusConst.PO_PENDING_PAYMENT_MATCH.longValue()
+				|| statusId == FulfilmentStatusConst.CO_PENDING_PAYMENT_QUERY.longValue()
+				|| statusId == FulfilmentStatusConst.PO_PENDING_PAYMENT_QUERY.longValue();
+	}
+
+	/**
+	 * Check if yep task is pending invoice or invoice revision.
+	 *
+	 * @param statusId
+	 * @return
+	 */
+	private boolean isYepInvoice(long statusId) {
+		return statusId == FulfilmentStatusConst.CO_PENDING_INVOICE.longValue()
+				|| statusId == FulfilmentStatusConst.PO_PENDING_INVOICE.longValue()
+				|| statusId == FulfilmentStatusConst.CO_PENDING_REVISION_INVOICE.longValue()
+				|| statusId == FulfilmentStatusConst.PO_PENDING_REVISION_INVOICE.longValue();
+	}
+
+	/**
+	 * Validate the assigned FL approver is still active, else assign a replacement.
+	 *
+	 * @param fulfilmentOrderSO
+	 * @param userSO
+	 * @param fulfilmentReqDTO
+	 * @param flRequest
+	 * @param flOrder
+	 */
+	private void validateYepFlApprover(IFulfilmentOrderSO fulfilmentOrderSO, IUserSO userSO,
+			FulfilmentReqDTO fulfilmentReqDTO, FlFulfilmentRequest flRequest, FlFulfilmentOrder flOrder) {
+		List<String> taskAssignee = fulfilmentOrderSO.getTaskAssigneesByTaskId(fulfilmentReqDTO).getTaskAssignees();
+
+		if (taskAssignee == null || taskAssignee.isEmpty()) {
+			return;
+		}
+
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setLoginId(taskAssignee.get(0));
+		UserResDTO userResDTO = userSO.retrievePmUserByLoginId(userReqDTO);
+
+		if (userResDTO == null || userResDTO.getPmUser() == null) {
+			return;
+		}
+
+		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+				IFulfilmentSO.class);
+		BigDecimal sumItemAmt = fulfilmentSO.getSumTotalItemsAmtByReqId(flRequest.getFulfilmentReqId());
+
+		userReqDTO.setUserId(userResDTO.getPmUser().getUserId());
+		userReqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
+		userReqDTO.setGroupId(flRequest.getPmUserGroup().getUserGroupId());
+		userReqDTO.setRoleCode(RoleCode.FL_APPROVER.value());
+		userReqDTO.setNotify(Boolean.TRUE);
+		userReqDTO.setApprovalLimit(sumItemAmt);
+		userReqDTO.setDocType(flOrder.getDocType());
+		userReqDTO.setDocNo(flOrder.getDocNo());
+
+		UserResDTO validateUserStatus = userSO.validateUserByRoleCode(userReqDTO);
+
+		if (validateUserStatus.getUserStatus().equals(FulfilmentConst.REPLACE_USER)) {
+			getManagedBean().setAssignNewUser(Boolean.TRUE);
+			UserResDTO availableUser = userSO.retrieveFlApproverByUserGroupAndLoginHistory(userReqDTO);
+			getManagedBean().setNewUser(availableUser.getPmUser());
+		} else if (validateUserStatus.getUserStatus().equals(FulfilmentConst.INACTIVE_USER)) {
+			PmOrgProfile orgProfile = flRequest.getPreparedOrgProfile();
+			throw new EpException(MessageConst.ERROR_700128,
+					new String[] { getEpRoleDescByRoleCode(RoleCode.FL_APPROVER.value()),
+							orgProfile.getOrgValidity().getOrgName() });
+		}
+	}
+
+	/**
+	 * Validate at least one pay officer is active, else notify PTJ admin.
+	 *
+	 * @param userSO
+	 * @param flRequest
+	 * @param flOrder
+	 */
+	private void validateYepPayOfficer(IUserSO userSO, FlFulfilmentRequest flRequest, FlFulfilmentOrder flOrder) {
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setRoleCode(RoleCode.PAY_OFFICER.value());
+		userReqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
+
+		UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
+
+		if (userResDTO == null || userResDTO.getUserList() == null || userResDTO.getUserList().isEmpty()) {
+			userReqDTO.setDocType(flOrder.getDocType());
+			userReqDTO.setDocNo(flOrder.getDocNo());
+			userSO.sendNotifyToPtjAdminInactive(userReqDTO);
+
+			PmOrgProfile orgProfile = flRequest.getPreparedOrgProfile();
+			throw new EpException(MessageConst.ERROR_700128,
+					new String[] { getEpRoleDescByRoleCode(RoleCode.PAY_OFFICER.value()),
+							orgProfile.getOrgValidity().getOrgName() });
+		}
+	}
+
+	/**
+	 * Validate the assigned supplier user is still active, else assign a replacement.
+	 *
+	 * @param fulfilmentOrderSO
+	 * @param userSO
+	 * @param fulfilmentReqDTO
+	 * @param flRequest
+	 * @param flOrder
+	 */
+	private void validateYepSupplier(IFulfilmentOrderSO fulfilmentOrderSO, IUserSO userSO,
+			FulfilmentReqDTO fulfilmentReqDTO, FlFulfilmentRequest flRequest, FlFulfilmentOrder flOrder) {
+		String taskAssigned = fulfilmentOrderSO.getAcquiredByTaskId(fulfilmentReqDTO).getAcquiredBy();
+
+		if (taskAssigned == null) {
+			List<String> taskAssignee = fulfilmentOrderSO.getTaskAssigneesByTaskId(fulfilmentReqDTO)
+					.getTaskAssignees();
+			if (taskAssignee == null || taskAssignee.isEmpty()) {
+				return;
+			}
+			taskAssigned = taskAssignee.get(0);
+		}
+
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setLoginId(taskAssigned);
+		UserResDTO userResDTO = userSO.retrievePmUserByLoginId(userReqDTO);
+
+		if (userResDTO == null || userResDTO.getPmUser() == null)
+			return;
+
+		PmParameter procType = flRequest.getProcurementType();
+		if (procType != null && procType.getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
+			validateGovSeller(userSO, userResDTO.getPmUser().getUserId(), flRequest, flOrder);
+		} else if (!userResDTO.getPmUser().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
+			SmSupplier supplier = flRequest.getSmSupplier();
+			userReqDTO.setOrgProfileId(supplier.getSupplierId());
+			UserResDTO nextSupp = userSO.retrieveLatestLoggedInUserByOrgProfile(userReqDTO);
+			getManagedBean().setAssignNewUser(Boolean.TRUE);
+			getManagedBean().setNewUser(nextSupp.getPmUser());
+		}
+	}
+	
+	/**
+	 * Validate the assigned govt seller is still active, else assign a replacement.
+	 * @param userSO
+	 * @param userId
+	 * @param flRequest
+	 * @param flOrder
+	 */
+	private void validateGovSeller(IUserSO userSO, Long userId, FlFulfilmentRequest flRequest, FlFulfilmentOrder flOrder) {
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setUserId(userId);
+		userReqDTO.setOrgProfileId(flRequest.getSmSupplier().getSupplierId());
+		userReqDTO.setRoleCode(RoleCode.GOVT_SELLER.value());
+		userReqDTO.setNotify(Boolean.TRUE);
+		userReqDTO.setDocType(flOrder.getDocType());
+		userReqDTO.setDocNo(flOrder.getDocNo());
+		UserResDTO validateUserStatus = userSO.validateUserByRoleCode(userReqDTO);
+		if (validateUserStatus.getUserStatus().equals(FulfilmentConst.REPLACE_USER)) {
+			getManagedBean().setAssignNewUser(Boolean.TRUE);
+			UserResDTO availableUser = userSO.retrieveUserByRoleWithLoginHistory(userReqDTO);
+			getManagedBean().setNewUser(availableUser.getPmUser());
+		} else if (validateUserStatus.getUserStatus().equals(FulfilmentConst.INACTIVE_USER)) {
+			throw new EpException(MessageConst.ERROR_700128, new String[] {
+					getEpRoleDescByRoleCode(RoleCode.GOVT_SELLER.value()), flRequest.getSmSupplier().getCompanyName() });
+		}
+	}
+	//31788 - END
+
+	//40793-start
+	/**
+	 * validate current POCO work flow status
+	 * 
+	 * @param action
+	 * @throws EpException
+	 *             if not allow to proceed
+	 * 
+	 */
+	private void validatePOCOCurrentStatus(String action) {
+		IFulfilmentOrderSO orderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+				IFulfilmentOrderSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+
+		reqDTO.setFlOrderId(getManagedBean().getFulfilmentOrder().getFulfilmentOrderId());
+		reqDTO.setDocType(getManagedBean().getFulfilmentOrder().getDocType());
+		reqDTO.setTaskDocType(getManagedBean().getFulfilmentOrder().getDocType());
+		reqDTO.setActionCode(action);
+
+		FulfilmentResDTO resDTO = orderSO.validatePOCOCurrentStatus(reqDTO);
+
+		Boolean allowToProceed = resDTO.isFlag();
+		if (!allowToProceed) {
+			throw new EpException(MessageConst.ERROR_740069);
+		}
+	}
+	//40793-end
 }

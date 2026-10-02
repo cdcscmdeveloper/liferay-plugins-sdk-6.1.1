@@ -20,39 +20,70 @@
 				<ui:repeat var="action"
 					value="#{unspscCodeBackingBean.managedBean.action}">
 					<ui:param name="lblBpmBtn" value="lbl.bpm.action.#{action}" />
-					
+					<!-- 34447 Start -->
 					<p:commandButton value="#{lbl['lbl.cm.endorseandpublish']}"
 						rendered="#{bpmTasklistBackingBean.managedBean.claim and action=='SUBMIT' and unspscCodeBackingBean.managedBean.requestCode.itemType=='S' and unspscCodeBackingBean.managedBean.renderV2 }"
-						oncomplete="extensionConfirmation.show()" 
-						disabled ="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1}"
-						update="@form" />
-			
+						actionListener="#{unspscCodeBackingBean.validateSubmitBeforePopup}"
+						disabled ="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1}" update="@form" />
+
 					<p:commandButton
-						disabled="#{(action == 'RECOMMEND_TO_SUPPLIER' and !(unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1)) or (action == 'SUBMIT' and unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1)}"
-						value="#{lbl[lblBpmBtn]}"
-						rendered="#{(bpmTasklistBackingBean.managedBean.claim and action == 'RECOMMEND_TO_SUPPLIER') or 
-						(bpmTasklistBackingBean.managedBean.claim and action == 'SUBMIT' and 
-						((unspscCodeBackingBean.managedBean.requestCode.itemType=='P' and unspscCodeBackingBean.managedBean.renderV2) or !unspscCodeBackingBean.managedBean.renderV2))}"
-						action="#{unspscCodeBackingBean.savetempCode(action)}"
-						update="@form" />
-						
+					    disabled="#{action == 'RECOMMEND_TO_SUPPLIER' and !(unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1)}"
+					    value="#{lbl[lblBpmBtn]}"
+					    rendered="#{bpmTasklistBackingBean.managedBean.claim and action == 'RECOMMEND_TO_SUPPLIER'}"
+					    oncomplete="pendItemCodeCreate_recommendSupplierPopup.show();" />
+
 					<p:commandButton
-						value="#{lbl[lblBpmBtn]}"
-						rendered="#{bpmTasklistBackingBean.managedBean.claim and action == 'REJECT' }"
-						action="#{unspscCodeBackingBean.bpmTesting(action)}"
-						update="@form" />
-						
+					    disabled="#{action == 'SUBMIT' and unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1}"
+					    value="#{lbl[lblBpmBtn]}"
+					    rendered="#{bpmTasklistBackingBean.managedBean.claim and action == 'SUBMIT' and
+					    ((unspscCodeBackingBean.managedBean.requestCode.itemType=='P' and unspscCodeBackingBean.managedBean.renderV2)
+					    or !unspscCodeBackingBean.managedBean.renderV2)}"
+					    action="#{unspscCodeBackingBean.savetempCode(action)}" update="@form" />
+
+					<p:commandButton
+					    value="#{lbl[lblBpmBtn]}"
+					    rendered="#{bpmTasklistBackingBean.managedBean.claim and action == 'REJECT' }"
+					    actionListener="#{unspscCodeBackingBean.validateRejectBeforePopup('pendItemCodeCreate_rejectConfirmPopup')}" />
+					<!-- 34447 End -->
 				</ui:repeat>
+
+				<!-- 34447 Start -->
+				<p:blockUI block="cmReviewUnspsc" widgetVar="pageBlockWidget">
+					<p:graphicImage value="/css/images/ajax-loader.gif" />
+				</p:blockUI>
+
+				<ac:confirmationPopupCM
+					id="pendItemCodeCreate_rejectConfirmPopup" widget="pendItemCodeCreate_rejectConfirmPopup"
+					loadingWidget="pageBlockWidget"
+					okParam="#{unspscCodeBackingBean.bpmTesting('REJECT')}" hasParam="true"
+					content="#{lbl['lbl.cd.dialog.message.reject.request']}"
+					update="@form">
+				</ac:confirmationPopupCM>
+
+				<ac:confirmationPopupCM
+				    id="pendItemCodeCreate_endorsePublishPopup" widget="pendItemCodeCreate_endorsePublishPopup"
+				    loadingWidget="pageBlockWidget"
+				    okParam="#{unspscCodeBackingBean.savetempCode('SUBMIT')}" hasParam="true"
+				    content="#{lbl['lbl.cd.dialog.message.endorse']}"
+				    selectedItem="#{unspscCodeBackingBean.managedBean.selectedLovUnspsc}"
+				    update="@form">
+				</ac:confirmationPopupCM>
+
+				<ac:confirmationPopupCM
+					id="pendItemCodeCreate_recommendSupplierPopup" widget="pendItemCodeCreate_recommendSupplierPopup"
+					loadingWidget="pageBlockWidget"
+					okParam="#{unspscCodeBackingBean.savetempCode('RECOMMEND_TO_SUPPLIER')}" hasParam="true"
+					content="#{lbl['lbl.cd.dialog.message.recommend']}"
+					update="@form"
+					itemList="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes}">
+				</ac:confirmationPopupCM>
+				<!-- 34447 End -->
+
 				<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}"
 					action="#{bpmTasklistBackingBean.claimTaskInDetailPage}"
 					rendered="#{!bpmTasklistBackingBean.managedBean.claim}"
 					update="@form"></p:commandButton>
 			</div>
-
-
-
-
-
 
 			<ui:include src="DocumentHeader.xhtml"></ui:include>
 
@@ -366,16 +397,6 @@
 				<ui:include src="codiRemarks.xhtml"/> 
 			</p:panel>
 			
-			<p:confirmDialog rendered ="#{unspscCodeBackingBean.managedBean.renderV2}" id="publishConfirmationId" message="#{lbl['lbl.cm.dialog.cofirm.publish.msg']}" header="#{lbl['lbl.cm.dialog.cofirm.header']}" widgetVar="extensionConfirmation">
-				<div align="right">
-					<p:commandButton id="confirmID"
-						value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
-						action="#{unspscCodeBackingBean.savetempCode('SUBMIT')}" />
-					<p:commandButton id="declineID"
-						value="#{lbl['lbl.cm.dialog.cofirm.no']}"
-						onclick="extensionConfirmation.hide()" />
-				</div>
-			</p:confirmDialog>
 		</h:panelGroup>
 
 

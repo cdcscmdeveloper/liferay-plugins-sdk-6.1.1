@@ -30,11 +30,16 @@
 							<ui:fragment rendered="#{bpmAction ne '~'}">
 								<ui:param name="buttonLabel"
 									value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+								<!-- #34444 -  start -->
 								<p:commandButton value="#{lbl[buttonLabel]}"
-									styleClass="ui-button" style="float:right;" process="@all" onclick="blockWidget.show();"
-									partialSubmit="true" oncomplete="confirmSubmitMeetingPopup.show();blockWidget.hide();" />
+									onstart="blockWidget.show();" styleClass="ui-button"
+									oncomplete="confirmSubmitMeetingPopup.show();blockWidget.hide();"
+									style="float:right;"
+									actionListener="#{suppFinalMeetingBackingBean.managedBean.prepareAction(bpmAction)}"
+									process="@all" update="@form" />
 							</ui:fragment>
 						</ui:repeat>
+						<!-- #34444 -  end-->
 					</div> <ui:include
 						src="/xhtml/sc/supplierFinalization/confirmMeeting/suppFinalizationHeader.xhtml"></ui:include>
 
@@ -231,11 +236,21 @@
 					</td>
 			</tr>
 		</table>
+		<!-- #34444 -  start -->
 		<ac:confirmationPopup id="confirmSubmitMeetingId"
-		widget="confirmSubmitMeetingPopup" width="490"
-		height="100"
-		title="#{lbl['lbl.sc.confirmation']}"
-		okAction="suppFinalMeetingBackingBean.submitAction('SUBMIT')" 
-		content="#{lbl['lbl.sc.popup.sendtofinalcommittee']}"/>
+			widget="confirmSubmitMeetingPopup" width="490" height="100"
+			title="#{lbl['lbl.sc.confirmation']}"
+			okAction=""
+			content="#{lbl['lbl.sc.popup.sendtofinalcommittee']}"
+			oncompleteOk="popupConfirmInfoDlg.show();" />
+
+
+		<ac:confirmationPopupQT id="popupConfirmInfoDlg"
+			widget="popupConfirmInfoDlg"
+			okAction="#{suppFinalMeetingBackingBean.submitAction(suppFinalMeetingBackingBean.managedBean.btnAction)}"
+			title="#{suppFinalMeetingBackingBean.managedBean.confirmTitle}"
+			content="#{suppFinalMeetingBackingBean.managedBean.confirmContent}"
+			update="@all" okProcess="@all" oncompleteOk="" />
+		<!-- #34444 -  end-->
 	</ui:define>
 </ui:composition>

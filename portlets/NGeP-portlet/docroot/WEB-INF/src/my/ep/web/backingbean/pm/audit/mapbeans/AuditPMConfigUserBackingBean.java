@@ -32,6 +32,7 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private static final String ROLE = "R";
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 	AuditPMSPDTO dtlObj = new AuditPMSPDTO();
 	AuditPMSPDTO dtlObjPNP = new AuditPMSPDTO();
@@ -84,6 +85,7 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 	String orgName;
 	BigInteger orgProfileId;
 	String orgType;
+	boolean isBrandNew; // 40810
 	
 	DecimalFormat df = new DecimalFormat("#,##0.00");
 
@@ -118,31 +120,28 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 		auditPMReqDTO = new AuditPMReqDTO();
 		
 		managedBeans = (ProfileManagementManagedBean) manageBean;
+		isBrandNew = managedBeans.isUserGrpBrandNew(); //40810
 		
 		this.roleCode = roleCode;
-		this.docType = managedBeans.getSelectedUser().isBrandNew() ? 
-				managedBeans.getNewAuditPmUser().getUserName() : managedBeans.getSelectedUser().getUserName();
-		this.docId = managedBeans.getOldAuditPmUserOrg() != null ? BigInteger.valueOf(managedBeans.getOldAuditPmUserOrg().getUserOrgId()) : 
-			BigInteger.valueOf(managedBeans.getBrandNewUserOrgId());
-		this.docGroupId = managedBeans.getSelectedUser().isBrandNew() ? 
-				BigInteger.valueOf(managedBeans.getNewAuditPmUser().getUserId()) : 
-					BigInteger.valueOf(managedBeans.getSelectedUser().getUserId());
-		this.docNo = managedBeans.getSelectedUser().isBrandNew() ? 
-				managedBeans.getNewAuditPmUser().getIdentificationNo() : 
-					managedBeans.getSelectedUser().getIdentificationNo();
-		this.lvl3CodeIndex = managedBeans.getSelectedUserOrg().isBrandNew() ? 
-				managedBeans.getNewAuditPmUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterId().intValue() : 
-					managedBeans.getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterId().intValue();
-		this.orgName = managedBeans.getSelectedUserOrg().isBrandNew() ? 
-				managedBeans.getCurrentActiveOrg().getPmOrgValidity().getOrgName() : 
-					managedBeans.getSelectedUserOrg().getPmOrgProfile().getOrgName();
-		this.orgProfileId = managedBeans.getSelectedUserOrg().isBrandNew() ? 
-				BigInteger.valueOf(managedBeans.getNewAuditPmUserOrg().getUserOrgId()) : 
-					BigInteger.valueOf(managedBeans.getSelectedUserOrg().getUserOrgId());
-		this.orgType = managedBeans.getSelectedUserOrg().isBrandNew() ? 
-				managedBeans.getNewAuditPmUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterCode() : 
-					managedBeans.getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterCode();
-				
+		this.docType = isBrandNew ? managedBeans.getNewAuditPmUser().getUserName() : managedBeans.getSelectedUser()
+				.getUserName();
+		this.docId = managedBeans.getOldAuditPmUserOrg() != null ? BigInteger.valueOf(managedBeans
+				.getOldAuditPmUserOrg().getUserOrgId()) : BigInteger.valueOf(managedBeans.getBrandNewUserOrgId());
+		this.docGroupId = isBrandNew ? BigInteger.valueOf(managedBeans.getNewAuditPmUser().getUserId()) : BigInteger
+				.valueOf(managedBeans.getSelectedUser().getUserId());
+		this.docNo = isBrandNew ? managedBeans.getNewAuditPmUser().getIdentificationNo() : managedBeans
+				.getSelectedUser().getIdentificationNo();
+		this.lvl3CodeIndex = isBrandNew ? managedBeans.getNewAuditPmUserOrg().getPmOrgProfile().getOrgTypeCode()
+				.getParameterId().intValue() : managedBeans.getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode()
+				.getParameterId().intValue();
+		this.orgName = isBrandNew ? managedBeans.getCurrentActiveOrg().getPmOrgValidity().getOrgName() : managedBeans
+				.getSelectedUserOrg().getPmOrgProfile().getOrgName();
+		this.orgProfileId = isBrandNew ? BigInteger.valueOf(managedBeans.getNewAuditPmUserOrg().getUserOrgId())
+				: BigInteger.valueOf(managedBeans.getSelectedUserOrg().getUserOrgId());
+		this.orgType = isBrandNew ? managedBeans.getNewAuditPmUserOrg().getPmOrgProfile().getOrgTypeCode()
+				.getParameterCode() : managedBeans.getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode()
+				.getParameterCode();
+
 		this.objList = new ArrayList<>();
 		
 		if(managedBeans.getOrgCategory() == AuditConst.PM_AUD_FEDERAL && federalGovUsers.contains(orgType)){
@@ -422,47 +421,53 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 	 * set old and/or new value for every organization type except for Supplier. Pusat Tanggungjawab PTJ will have extra steps here.
 	 */
 	private void detailRoles() {
-		if(managedBeans.getNewAuditPmUserRoles() != null){
-			for(PmUserRole newPmUserRole : managedBeans.getNewAuditPmUserRoles()){
+		if (managedBeans.getNewAuditPmUserRoles() != null) {
+			for (PmUserRole newPmUserRole : managedBeans.getNewAuditPmUserRoles()) {
 				PmUserRole oldPmUserRole = null;
-				
+
 				docId = BigInteger.valueOf(newPmUserRole.getUserRoleId());
-				
-				if(managedBeans.getOldAuditPmUserRoles() != null){
-					for(PmUserRole old : managedBeans.getOldAuditPmUserRoles()){
-						if(old.getUserRoleId().equals(newPmUserRole.getUserRoleId())){
+
+				if (managedBeans.getOldAuditPmUserRoles() != null) {
+					for (PmUserRole old : managedBeans.getOldAuditPmUserRoles()) {
+						if (old.getUserRoleId().equals(newPmUserRole.getUserRoleId())) {
 							oldPmUserRole = old;
 						}
 					}
 				}
-				
-				
-				if(oldPmUserRole != null){
-					if(orgType.equals(AuditConst.PM_LVL_CODE_3_OUSR_PTJ)){
-						if((oldPmUserRole.getApprovalLimit() != null && newPmUserRole.getApprovalLimit() != null)
-								&& (!oldPmUserRole.getApprovalLimit().setScale(2).equals(newPmUserRole.getApprovalLimit().setScale(2)))) {
-							detailObj(AuditConst.PM_AUD_OUSR_APPR_LIMIT_FIELDLABELID, df.format(oldPmUserRole.getApprovalLimit()), 
+
+				if (oldPmUserRole != null) {
+					if (orgType.equals(AuditConst.PM_LVL_CODE_3_OUSR_PTJ)) {
+						if ((oldPmUserRole.getApprovalLimit() != null && newPmUserRole.getApprovalLimit() != null)
+								&& (!oldPmUserRole.getApprovalLimit().setScale(2)
+										.equals(newPmUserRole.getApprovalLimit().setScale(2)))) {
+							detailObj(AuditConst.PM_AUD_OUSR_APPR_LIMIT_FIELDLABELID,
+									df.format(oldPmUserRole.getApprovalLimit()),
 									df.format(newPmUserRole.getApprovalLimit()), AuditConst.PM_AUD_ACTION_TYPE_UPD);
 						}
 					}
-					
-					if(!oldPmUserRole.getRecordStatusFlg().equals(newPmUserRole.getRecordStatusFlg())){
-						detailObj(AuditConst.PM_AUD_OUSR_STATUS_ROLE_FIELDLABELID, statusCheck(oldPmUserRole.getRecordStatusFlg()), 
-								statusCheck(newPmUserRole.getRecordStatusFlg()), AuditConst.PM_AUD_ACTION_TYPE_UPD);
+
+					if (!oldPmUserRole.getRecordStatusFlg().equals(newPmUserRole.getRecordStatusFlg())) {
+						detailObjContext(AuditConst.PM_AUD_OUSR_STATUS_ROLE_FIELDLABELID,
+								statusCheck(oldPmUserRole.getRecordStatusFlg()),
+								statusCheck(newPmUserRole.getRecordStatusFlg()), AuditConst.PM_AUD_ACTION_TYPE_UPD,
+								newPmUserRole.getPmRole().getRoleCode(), ROLE);
 					}
-					
+
 				} else {
-					detailObj(AuditConst.PM_AUD_OUSR_ROLE_FIELDLABELID, null, 
-							PmCommonUtil.getRoleDescByRoleCodeAndLanguage(newPmUserRole.getPmRole().getRoleCode(), AuditConst.PM_LANGUAGECODE_MS), 
-							AuditConst.PM_AUD_ACTION_TYPE_INS);
-					if(orgType.equals(AuditConst.PM_LVL_CODE_3_OUSR_PTJ) && newPmUserRole.getApprovalLimit() != null){
-						detailObj(AuditConst.PM_AUD_OUSR_APPR_LIMIT_FIELDLABELID, null, df.format(newPmUserRole.getApprovalLimit()), AuditConst.PM_AUD_ACTION_TYPE_INS);
+					detailObj(AuditConst.PM_AUD_OUSR_ROLE_FIELDLABELID, null,
+							PmCommonUtil.getRoleDescByRoleCodeAndLanguage(newPmUserRole.getPmRole().getRoleCode(),
+									AuditConst.PM_LANGUAGECODE_MS), AuditConst.PM_AUD_ACTION_TYPE_INS);
+					if (orgType.equals(AuditConst.PM_LVL_CODE_3_OUSR_PTJ) && newPmUserRole.getApprovalLimit() != null) {
+						detailObj(AuditConst.PM_AUD_OUSR_APPR_LIMIT_FIELDLABELID, null,
+								df.format(newPmUserRole.getApprovalLimit()), AuditConst.PM_AUD_ACTION_TYPE_INS);
 					}
-					detailObj(AuditConst.PM_AUD_OUSR_STATUS_ROLE_FIELDLABELID, null, statusCheck(newPmUserRole.getRecordStatusFlg()), AuditConst.PM_AUD_ACTION_TYPE_INS);
+					detailObjContext(AuditConst.PM_AUD_OUSR_STATUS_ROLE_FIELDLABELID, null,
+							statusCheck(newPmUserRole.getRecordStatusFlg()), AuditConst.PM_AUD_ACTION_TYPE_INS,
+							newPmUserRole.getPmRole().getRoleCode(), ROLE);
 				}
 			}
-			
-			if(orgType.equals(AuditConst.PM_LVL_CODE_3_OUSR_PTJ)){
+
+			if (orgType.equals(AuditConst.PM_LVL_CODE_3_OUSR_PTJ)) {
 				detailPTJAddress();
 			}
 		}
@@ -502,6 +507,8 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 	}
 	
 	/**
+	 * This method is to mapping value to AuditPMSPDTO to be used in Stored Procedure
+	 * 
 	 * @param fieldLabelId
 	 * @param oldValue
 	 * @param newValue
@@ -524,11 +531,49 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 		if (oldValue != null) {
 			dtlObj.setOldValue(oldValue);
 		}
-		dtlObj.setGroupOrgProfileId(managedBeans.getSelectedUser().isBrandNew() ? 
+		// 40810
+		dtlObj.setGroupOrgProfileId(isBrandNew ? 
 				BigInteger.valueOf(managedBeans.getNewAuditPmUserOrg().getPmOrgProfile().getOrgProfileId()) : 
 					BigInteger.valueOf(managedBeans.getOldAuditPmUserOrg().getPmOrgProfile().getOrgProfileId()));
 		dtlObj.setNewValue(newValue);
 		dtlObj.setActionType(actionType);
+		objList.add(dtlObj);
+	}
+	
+	/**
+	 * This method is to mapping value to AuditPMSPDTO to be used in Stored Procedure with added info Context Value and Context Type
+	 * 
+	 * @param fieldLabelId
+	 * @param oldValue
+	 * @param newValue
+	 * @param actionType
+	 */
+	private void detailObjContext(BigInteger fieldLabelId, String oldValue, String newValue, String actionType,
+			String contextValue, String contextType) {
+		dtlObj = new AuditPMSPDTO();
+		dtlObj.setRoleCode(roleCode);
+		dtlObj.setDocNo(docNo);
+		dtlObj.setDocGroupId(docGroupId);
+		dtlObj.setDocType(docType);
+		dtlObj.setPmParameterLvlId(pmParameterLevelId.get(lvl3CodeIndex));
+		dtlObj.setLvlCode1(AuditConst.PM_LVL_CODE_1_ORGUAD);
+		dtlObj.setLvlCode2(AuditConst.PM_LVL_CODE_2_OUSR);
+		dtlObj.setLvlCode3(lvl3Code.get(lvl3CodeIndex));
+		dtlObj.setDocId(docId);
+		dtlObj.setFieldLabelCode(fieldLabelId);
+		dtlObj.setOrgName(orgName);
+		dtlObj.setOrgProfileId(orgProfileId);
+		if (oldValue != null) {
+			dtlObj.setOldValue(oldValue);
+		}
+		// 40810
+		dtlObj.setGroupOrgProfileId(isBrandNew ? BigInteger.valueOf(managedBeans.getNewAuditPmUserOrg()
+				.getPmOrgProfile().getOrgProfileId()) : BigInteger.valueOf(managedBeans.getOldAuditPmUserOrg()
+				.getPmOrgProfile().getOrgProfileId()));
+		dtlObj.setNewValue(newValue);
+		dtlObj.setActionType(actionType);
+		dtlObj.setContextValue(contextValue);
+		dtlObj.setContextType(contextType);
 		objList.add(dtlObj);
 	}
 	
