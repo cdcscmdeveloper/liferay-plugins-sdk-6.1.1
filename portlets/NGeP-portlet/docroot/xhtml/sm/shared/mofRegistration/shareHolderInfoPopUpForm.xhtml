@@ -219,7 +219,7 @@
 							<p:ajax process="@this" partialSubmit="true" update="@this"
 								listener="#{backingBean.trimPersonnelPassportValue}" />
 							<!-- #40112 -->
-							<p:ajax event="change" partialSubmit="true" process="@this"
+							<p:ajax partialSubmit="true" process="@this"
 								listener="#{backingBean.managedBean.selectedShareHolder.clearIcAI()}" update="shareHolderIcAiIcon" />
 						</p:inputText>
 						<!-- #40112 -->

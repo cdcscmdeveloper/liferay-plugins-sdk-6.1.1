@@ -1163,10 +1163,9 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	/**
-	 * A manually added new personnel must appear by IC/Passport No. in the uploaded EPF statement; throws to abort
-	 * the add. Matched on IC/Passport No., not name - a matching name with a different IC is a different person.
-	 * Only IC and passport holders are checked - the EPF statement carries those only, so any other
-	 * identification type could never match and is left unrestricted.
+	 * A manually added new personnel must appear by IC No. in the uploaded EPF statement; throws to abort
+	 * the add. Matched on IC No., not name - a matching name with a different IC is a different person.
+	 * Only IC holders are checked - passport and any other identification type are left unrestricted.
 	 * @param appl
 	 * @param personnel
 	 */
@@ -1178,8 +1177,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			return;
 		}
 		String idType = personnel.getIdentificationType().getParameterCode();
-		if (!ParameterConst.IDENTIFICATION_TYPES_IC.equalsIgnoreCase(idType)
-				&& !ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(idType)){
+		if (!ParameterConst.IDENTIFICATION_TYPES_IC.equalsIgnoreCase(idType)){
 			return;
 		}
 		Set<String> aiNrics = getAiEpfEmployeeNrics(appl);
@@ -1632,6 +1630,28 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	public void deleteDoc(AIApiResponse doc) {
 		deleteResponse(doc);
 		docs.remove(doc);
+		afterDelete();
+	}
+
+	/**
+	 * Delete every crossed file when the dialog closes, whether by Submit, Cancel or the X.
+	 */
+	public void deleteInvalidDocs() {
+		boolean deleted = false;
+		for (AIApiResponse doc : new ArrayList<>(docs)){
+			if (getDocVerdict(doc) == 2){
+				log.info("Deleting invalid " + docType + " doc on dialog close: " + doc.getFileName());
+				deleteResponse(doc);
+				docs.remove(doc);
+				deleted = true;
+			}
+		}
+		if (deleted){
+			afterDelete();
+		}
+	}
+
+	private void afterDelete() {
 		selectedEmployees = null;
 		// the response is gone already, so save now or its file outlives it until some later Save
 		saveAppl();
