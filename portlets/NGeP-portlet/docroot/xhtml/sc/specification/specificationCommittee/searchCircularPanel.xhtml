@@ -19,7 +19,7 @@
 
 		<h:panelGroup id="panelItemGroupList">
 			<ui:fragment
-				rendered="#{specificationBackingBean.managedBean.circularType eq 'PQ'}">
+				rendered="#{specificationBackingBean.managedBean.circularType eq 'PQ' or specificationBackingBean.managedBean.circularType eq 'MQ'}"><!-- #34923 -->
 			
          		#{specificationBackingBean.managedBean.ctCircularVer.circularNo}>#{lbl['lbl.sc.spec.circular.item.list']}
          		<ac:iconTooltip
