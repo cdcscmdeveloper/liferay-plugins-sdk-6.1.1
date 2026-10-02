@@ -2550,7 +2550,9 @@ public class QTDetailBackingBean extends
 		}
 	}
 	
-	private boolean isQTMaintenanceScreen() {
+	// #25635 -start-
+	public boolean isQTMaintenanceScreen() {
+		// #25635 -end-
 		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	
@@ -7994,7 +7996,7 @@ public class QTDetailBackingBean extends
 	}
 	// Bug #32425, #19336 - End
 	
-	private boolean isDeskOfficer() {
+	public boolean isDeskOfficer() {//35142
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value());
 	}
