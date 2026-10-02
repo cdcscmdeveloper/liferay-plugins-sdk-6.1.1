@@ -4426,6 +4426,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
         		// #26770 - Start.
         		validateReportAttachment();
         		// #26770 - End.
+        		// 27868 - start
+        		validateReasonStatus(scLoa);
+        		// 27868 - end
 				RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
 		}else if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
 			// Enhancement #21694 START
@@ -13580,5 +13583,31 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		return false;
 	}
 	// #26059 - End
+	
+	// 41033, 41034 - start
+	/**
+	 * Sorts SC LOA remarks in descending order by created date (latest first).
+	 * 
+	 * @return
+	 */
+	public List<ScLoaRemark> getSortedRemarksByDate() {
+		List<ScLoaRemark> remarks = getManagedBean().getScLoa().getScLoaRemarks();
+
+		if (remarks == null || remarks.isEmpty()) {
+			return remarks;
+		}
+
+		List<ScLoaRemark> sortedList = new ArrayList<>(remarks);
+
+		Collections.sort(sortedList, new Comparator<ScLoaRemark>() {
+			@Override
+			public int compare(ScLoaRemark r1, ScLoaRemark r2) {
+				return DateUtils.compareDatesForRemark(r1.getCreatedDate(), r2.getCreatedDate());
+			}
+		});
+
+		return sortedList;
+	}
+	// 41033,41034 - end
 }
 

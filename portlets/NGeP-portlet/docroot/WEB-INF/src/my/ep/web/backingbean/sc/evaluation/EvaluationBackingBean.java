@@ -3025,6 +3025,8 @@ public class EvaluationBackingBean extends
 						}
 					}
 					//#25138 - end
+					checkWeightage35384WIP(); //#38151
+					summaryReqDTO.setWeightage35384WIP(this.getManagedBean().isWeightage35384WIP());//#38151
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
 					getManagedBean().setFinancialSummaryGenerated(true);
@@ -3046,6 +3048,8 @@ public class EvaluationBackingBean extends
 						}
 					}
 					//#25138 - end
+					checkWeightage35384WIP(); //#38151
+					summaryReqDTO.setWeightage35384WIP(this.getManagedBean().isWeightage35384WIP());//#38151
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
 					getManagedBean().setFinancialSummaryGenerated(true);
@@ -3079,6 +3083,8 @@ public class EvaluationBackingBean extends
 							&& !this.getManagedBean().isReadOnly()
 							&& !getManagedBean().isFinancialSummaryGenerated()) {
 						evaluationStageStatusCheck();
+						checkWeightage35384WIP(); //#38151
+						summaryReqDTO.setWeightage35384WIP(this.getManagedBean().isWeightage35384WIP());//#38151
 						evaluationSo
 								.prepareFinancialEvaluationSummary(summaryReqDTO);
 						getManagedBean().setFinancialSummaryGenerated(true);
@@ -3370,6 +3376,8 @@ public class EvaluationBackingBean extends
 							financialCheckListStatusCheckPackage();
 					}
 					//#25138(wip 4serangkai) bug -End 8/6/2023
+					checkWeightage35384WIP(); //#38151
+					summaryReqDTO.setWeightage35384WIP(this.getManagedBean().isWeightage35384WIP());//#38151
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
 					getManagedBean().setFinancialSummaryGenerated(true);
@@ -3439,6 +3447,8 @@ public class EvaluationBackingBean extends
 					 * );
 					 */
 					financialCheckListStatusCheck();
+					checkWeightage35384WIP(); //#38151
+					summaryReqDTO.setWeightage35384WIP(this.getManagedBean().isWeightage35384WIP());//#38151
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
 					getManagedBean().setFinancialSummaryGenerated(true);
@@ -3500,6 +3510,8 @@ public class EvaluationBackingBean extends
 					resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE);
 					resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_ITEM);
 					summaryReqDTO.setResultStages(resultStg2);
+					checkWeightage35384WIP(); //#38151
+					summaryReqDTO.setWeightage35384WIP(this.getManagedBean().isWeightage35384WIP());//#38151
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
 					getManagedBean().setFinancialSummaryGenerated(true);
@@ -19969,6 +19981,12 @@ private void retriveCommitteeRemarksList(){
 		this.getManagedBean().setCompanyExpProcRelatedPagingModel(
 				new ViewSupplierCompExpDtlsPagingDataModel(procRelated,
 						evaluationProcReqDTO));
+		
+		// 29661 && 41300 -start-
+		this.getManagedBean().getCompanyExpProcRelatedPagingModel().resetData();
+		this.getManagedBean().getCompanyExpProcRelatedPagingModel()
+				.reloadData();
+		// 29661 && 41300 -end-
 
 		EvaluationResDTO cmpExpProcStatusValue = retrieveContractStatusValueCount(
 				this.getManagedBean().getQtProposalChecklist(), this
@@ -20013,6 +20031,14 @@ private void retriveCommitteeRemarksList(){
 		this.getManagedBean().setCompanyExpNonProcRelatedPagingModel(
 				new ViewSupplierCompExpDtlsPagingDataModel(procNotRelated,
 						evaluationNonProcReqDTO));
+		
+		// 29661 && 41300 -start-
+		this.getManagedBean().getCompanyExpNonProcRelatedPagingModel()
+				.resetData();
+		this.getManagedBean().getCompanyExpNonProcRelatedPagingModel()
+				.reloadData();
+		// 29661 && 41300 -end-
+
 
 		EvaluationResDTO cmpExpNonPrcCountValue = retrieveContractStatusValueCount(
 				this.getManagedBean().getQtProposalChecklist(), this
@@ -20215,7 +20241,7 @@ private void retriveCommitteeRemarksList(){
 	}
 	//#28784 - End
 	
-	//#38151 Start
+	//#38151 & #38679 Start
 	private void checkWeightage35384WIP() {
 		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTDetailSO.class);
@@ -20250,7 +20276,7 @@ private void retriveCommitteeRemarksList(){
 			}
 		}
 	}
-	//#38151 End
+	//#38151 & #38679 End
 	
 	//#28784 - Start
 	private void setDemoReadOnlyFalse() {

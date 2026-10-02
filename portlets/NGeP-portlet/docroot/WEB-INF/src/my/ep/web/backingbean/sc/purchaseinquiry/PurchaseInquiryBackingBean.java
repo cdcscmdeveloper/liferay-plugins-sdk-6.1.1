@@ -854,10 +854,10 @@ public class PurchaseInquiryBackingBean extends
 				requestNote.setRequestNoteDtls(Arrays.asList(requestNoteDtl));
 				
 				// 27868 - start
-				if (validateProcurementTypeisRPT(dataCreatedDate).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {
-					validateReasonStatus(requestNote.getRequestNoteDtls());
+				if (validateProcurementTypeisRPT(dataCreatedDate).equalsIgnoreCase( ParameterTypeConst.PROCUREMENT_TYPE)) {					
 					validateUserProfileAgencyForSpecialItem(requestNote.getRequestNoteDtls());
 				}
+				validateReasonStatus(requestNote.getRequestNoteDtls());
 				validateSupplierAccountTypeForPK7AndSpecialItem(requestNote.getRequestNoteDtls(),
 						scRequestSupplierItem);
 				// 27868 - end
@@ -1146,6 +1146,12 @@ public class PurchaseInquiryBackingBean extends
 		List<ScRequestSupplierItem> scRequestSupplierItems = new ArrayList<ScRequestSupplierItem>();
 		scRequestSupplierItems.add(scRequestSupplierItem);
 		//prInquiry.setScRequestSupplierItems(scRequestSupplierItems); //#29557
+		// #29557 - start
+		// prices saved separately; stale copies break merge
+		for (ScRequestSupplierItem item : prInquiry.getScRequestSupplierItems()) {
+			item.getSupplierItemPrices().clear();
+		}
+		// #29557 - end
 
 		prInquiry.setIsStockAvailable(getManagedBean().getStockAvailable());
 		reqDTO.setPrInquiryDetail(prInquiry);

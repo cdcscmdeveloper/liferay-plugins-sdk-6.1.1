@@ -6886,6 +6886,9 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 					.setCategoryCodeSearchCondition(categoryCodeCondition);
 			proposalReqDTO.setClientType(clinetType);
 			proposalReqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			//29661 && 41170 -start-
+			proposalReqDTO.setScQt(scQt);
+			//29661 && 41170 -end-
 			return proposalSO.retrieveCompanyExpDetails(proposalReqDTO);
 
 		} catch (Exception e) {
@@ -6946,4 +6949,12 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 		return newScQtProposalChecklist;
 	}
 	// Bug #39517@Syazani 07/01/2026 -- End
+
+	// #41190 - Start
+	public boolean isSupplierInfoReminderStage() {
+		ScQt scQt = this.getManagedBean().getQt();
+		PmStatus qtStatus = scQt != null ? scQt.getQtStatus() : null;
+		return qtStatus != null && QTStatusConst.QT_PROPOSAL_PREPARATION.equals(qtStatus.getStatusId());
+	}
+	// #41190 - End
 }
