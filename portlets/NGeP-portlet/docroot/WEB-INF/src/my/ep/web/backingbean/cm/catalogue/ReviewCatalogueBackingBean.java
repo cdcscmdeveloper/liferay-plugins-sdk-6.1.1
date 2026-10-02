@@ -70,7 +70,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.dto.cm.catalogue.CmTrackingDairyVO;
 import my.ep.exception.EpException;
-import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean; //#34447
 
 
 /**
@@ -674,7 +673,7 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
         this.catalogueBackingBean = catalogueBackingBean;
     }
 
-    public String validateRejectBeforePopup() {
+    public void validateRejectBeforePopup() {
         ArrayList<Long> rejectReasonIds = catalogueBackingBean.getManagedBean().getRejectReasonIds();
         String rejectReason = catalogueBackingBean.getManagedBean().getRejectReason();
 		if (rejectReasonIds.isEmpty()) {
@@ -682,7 +681,7 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "", MessageUtils.getMessage(
 							MessageConst.ERROR_715057, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
-			return null;
+			return;
 		}
         for (Object obj : rejectReasonIds) {
             Long id = Long.valueOf(String.valueOf(obj));
@@ -692,11 +691,10 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, "", MessageUtils.getMessage(
 								MessageConst.ERROR_715056, MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
-				return null;
+				return;
             }
         }
         RequestContext.getCurrentInstance().execute("rejectCatConfirmPopup.show();");
-        return null;
     }
     //#34447 - End
 }

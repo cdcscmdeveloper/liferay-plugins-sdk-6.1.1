@@ -54,18 +54,17 @@
 				styleClass="instruction" escape="false"/>
 			<br/><br/>
 			<p:dataTable id="docs#{cc.attrs.aiDlg}" var="doc" value="#{ai.getDocs()}" emptyMessage="">
-				<p:column style="width:5%;text-align:center;"
-					rendered="#{cc.attrs.docType eq 'epf'}">
-					<p:outputPanel rendered="#{ai.getEpfDocVerdict(doc) eq 1}">
+				<p:column style="width:5%;text-align:center;">
+					<p:outputPanel rendered="#{ai.getDocVerdict(doc) eq 1}">
 						<p:graphicImage id="imgAiEpf1" value="/css/images/ai/yes.png" />
-						<p:tooltip for="imgAiEpf1">
-							<p:outputLabel escape="false" value="#{ai.getEpfDocLabel(doc)}"/>
+						<p:tooltip for="imgAiEpf1" rendered="#{not empty ai.getDocLabel(doc)}">
+							<p:outputLabel escape="false" value="#{ai.getDocLabel(doc)}"/>
 						</p:tooltip>
 					</p:outputPanel>
-					<p:outputPanel rendered="#{ai.getEpfDocVerdict(doc) eq 2}">
+					<p:outputPanel rendered="#{ai.getDocVerdict(doc) eq 2}">
 						<p:graphicImage id="imgAiEpf2" value="/css/images/ai/no.png" />
-						<p:tooltip for="imgAiEpf2" rendered="#{not empty ai.getEpfDocLabel(doc)}">
-							<p:outputLabel escape="false" value="#{ai.getEpfDocLabel(doc)}"/>
+						<p:tooltip for="imgAiEpf2" rendered="#{not empty ai.getDocLabel(doc)}">
+							<p:outputLabel escape="false" value="#{ai.getDocLabel(doc)}"/>
 						</p:tooltip>
 					</p:outputPanel>
 				</p:column>
@@ -79,7 +78,6 @@
 						rendered="#{empty cc.attrs.updateId}">
 						<p:graphicImage value="/css/images/design/trash.png" />
 					</p:commandLink>
-					<!-- #40112 -->
 					<p:commandLink action="#{ai.deleteDoc(doc)}" process="@this"
 						update=":#{p:component(pnlId)} :#{p:component(cc.attrs.updateId)}"
 						rendered="#{not empty cc.attrs.updateId}">
@@ -96,14 +94,14 @@
 				invalidFileMessage="#{lbl['lbl.txt.upload.pdf.file']}"
 				invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed20Mb']}"
 				fileUploadListener="#{ai.handleSupDocFileAttachment}"
-				update="pnl#{cc.attrs.aiDlg}"
+				update="docs#{cc.attrs.aiDlg} result#{cc.attrs.aiDlg} btns#{cc.attrs.aiDlg}"
 				auto="true"
 				label="#{lbl['lbl.txt.upload']}"
 				dragDropSupport="false"
 				multiple="#{cc.attrs.docType eq 'epf'}"
 				showButtons="false"
 				onstart="block#{cc.attrs.aiDlg}.show()"
-				oncomplete="block#{cc.attrs.aiDlg}.hide();"/>
+				oncomplete="if (this.form.data('fileupload')._active == 1) block#{cc.attrs.aiDlg}.hide();"/>
 			
 			<p:outputPanel id="result#{cc.attrs.aiDlg}">
 				<!-- epf -->
@@ -122,8 +120,8 @@
 						<p:column headerText="#{lbl['lbl.sm.person.name']}">
 							<h:outputText value="#{emp.employeeName}" />
 						</p:column>
-						<p:column headerText="#{lbl['lbl.sm.person.icNo']}">
-							<h:outputText value="#{emp.nricNumber}" />
+						<p:column headerText="#{lbl['lbl.sm.person.composition.idenNum']}">
+							<h:outputText value="#{emp.idNo}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.person.epfNo']}">
 							<h:outputText value="#{emp.kwspNumber}" />
@@ -156,7 +154,7 @@
 			</p:outputPanel>
 
 			<p:spacer height="10" />
-			<div class="ppRightBtn">
+			<h:panelGroup id="btns#{cc.attrs.aiDlg}" layout="block" styleClass="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					action="#{ai.submit(cc.attrs.docType, cc.attrs.smAppl)}"
 					rendered="#{empty cc.attrs.updateId}"
@@ -167,7 +165,7 @@
 					value="#{lbl['lbl.btn.submit']}"
 					action="#{ai.submit(cc.attrs.docType, cc.attrs.smAppl)}"
 					process="@this dt#{cc.attrs.aiDlg}"
-					update=":#{p:component(cc.attrs.updateId)}"
+					update=":#{p:component(cc.attrs.updateId)} :#{p:component(pnlId)}"
 					rendered="#{not empty cc.attrs.updateId}"
 					onclick="#{cc.attrs.aiDlg}.hide();"
 					onstart="block#{cc.attrs.aiDlg}.show()"
@@ -175,7 +173,7 @@
 					disabled="#{empty ai.docs or ai.blockSubmit}"/>
 					
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" onclick="#{cc.attrs.aiDlg}.hide()"/>
-			</div>
+			</h:panelGroup>
 		</p:outputPanel>
 		</p:dialog>
 	</cc:implementation>

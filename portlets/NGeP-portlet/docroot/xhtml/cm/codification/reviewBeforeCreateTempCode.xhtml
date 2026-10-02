@@ -56,7 +56,6 @@
 					id="pendItemCodeCreate_rejectConfirmPopup" widget="pendItemCodeCreate_rejectConfirmPopup"
 					loadingWidget="pageBlockWidget"
 					okParam="#{unspscCodeBackingBean.bpmTesting('REJECT')}" hasParam="true"
-					title="#{lbl['lbl.cm.dialog.cofirm.header']}"
 					content="#{lbl['lbl.cd.dialog.message.reject.request']}"
 					update="@form">
 				</ac:confirmationPopupCM>
@@ -65,7 +64,6 @@
 				    id="pendItemCodeCreate_endorsePublishPopup" widget="pendItemCodeCreate_endorsePublishPopup"
 				    loadingWidget="pageBlockWidget"
 				    okParam="#{unspscCodeBackingBean.savetempCode('SUBMIT')}" hasParam="true"
-				    title="#{lbl['lbl.cm.dialog.cofirm.header']}"
 				    content="#{lbl['lbl.cd.dialog.message.endorse']}"
 				    selectedItem="#{unspscCodeBackingBean.managedBean.selectedLovUnspsc}"
 				    update="@form">
@@ -75,7 +73,6 @@
 					id="pendItemCodeCreate_recommendSupplierPopup" widget="pendItemCodeCreate_recommendSupplierPopup"
 					loadingWidget="pageBlockWidget"
 					okParam="#{unspscCodeBackingBean.savetempCode('RECOMMEND_TO_SUPPLIER')}" hasParam="true"
-					title="#{lbl['lbl.cm.dialog.cofirm.header']}"
 					content="#{lbl['lbl.cd.dialog.message.recommend']}"
 					update="@form"
 					itemList="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes}">
