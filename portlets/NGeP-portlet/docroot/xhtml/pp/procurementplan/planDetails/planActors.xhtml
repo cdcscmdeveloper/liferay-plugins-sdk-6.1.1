@@ -41,7 +41,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:outputLabel value="#{lbl['lbl.pp.plan.approver']}"/>
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
-				<td><ui:remove>33690 START</ui:remove> <p:pickList
+				<td>
+					<ui:remove>33690 START</ui:remove>
+					<p:pickList
 						styleClass="ppActors" id="plAppover" var="actor"
 						itemValue="#{actor}" itemLabel="#{actor.userName}"
 						value="#{pPlanBackingBean.managedBean.approverModel}"
@@ -52,7 +54,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						<p:column style="width:75%;">
 							<h:outputText value="#{actor.userName}" />
 						</p:column>
-					</p:pickList> <ui:remove>33690 END</ui:remove></td>
+					</p:pickList>
+					<ui:remove>33690 END</ui:remove>
+				</td>
 				<th>
 					
 				</th>

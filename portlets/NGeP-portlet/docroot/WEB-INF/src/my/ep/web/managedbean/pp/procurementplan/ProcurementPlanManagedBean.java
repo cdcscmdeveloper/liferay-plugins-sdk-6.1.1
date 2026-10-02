@@ -178,7 +178,6 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	//#32730 - end
 	private Long auditReviseStatusID; //35502
 	private boolean dimmedJustification; //#35502, Fix as-is bug: #38652
-	
 	// #33690 - START
 	private String currentPlanOfficerLoginId;
 	private boolean allowVerifierSelectApprover;
@@ -1524,7 +1523,7 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 		this.dimmedJustification = dimmedJustification;
 	}
 	//#35502, Fix as-is bug: #38652 - End
-	
+
 	// #33690 - START
 	public String getCurrentPlanOfficerLoginId() {
 		return currentPlanOfficerLoginId;
