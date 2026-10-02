@@ -39,7 +39,7 @@
 		<p:dialog id="#{cc.attrs.aiDlg}" widgetVar="#{cc.attrs.aiDlg}" modal="true"
 			dynamic="true" resizable="true" width="700px" height="500px"
 			header="#{lbl['lbl.btn.upload.doc']}"
-			styleClass="pop_up_top">
+			styleClass="pop_up_top" closable="false"><!-- #41459 -->
 			<!-- every hide() fires close, so Submit and Cancel come through here as well as the X -->
 			<p:ajax event="close" listener="#{ai.deleteInvalidDocs}" process="@this"
 				update=":#{p:component(pnlId)} :#{p:component(cc.attrs.updateId)}"
@@ -194,7 +194,15 @@
 					oncomplete="block#{cc.attrs.aiDlg}.hide(); #{cc.attrs.aiDlg}.hide();"
 					disabled="#{empty ai.docs or ai.blockSubmit}"/>
 					
-				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" onclick="#{cc.attrs.aiDlg}.hide()"/>
+				<!-- #41459 -->
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" action="#{ai.cancel}" process="@this"
+					update=":#{p:component(pnlId)}"
+					rendered="#{empty cc.attrs.updateId}"
+					onclick="#{cc.attrs.aiDlg}.hide()"/>
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" action="#{ai.cancel}" process="@this"
+					update=":#{p:component(pnlId)} :#{p:component(cc.attrs.updateId)}"
+					rendered="#{not empty cc.attrs.updateId}"
+					onclick="#{cc.attrs.aiDlg}.hide()"/>
 			</h:panelGroup>
 		</p:outputPanel>
 		</p:dialog>

@@ -88,6 +88,12 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	private boolean blockSubmit = false;
 	private String docType;
 	private SmAppl smAppl;
+	//#41459 - Start
+	// uploaded since the dialog last closed; Cancel deletes them
+	private List<AIApiResponse> sessionUploads = new ArrayList<>();
+	// tenancy docs a new upload replaces, deleted only on Submit
+	private List<AIApiResponse> replacedDocs = new ArrayList<>();
+	//#41459 - End
 
 	/**
 	 * Point the dialog at one document type, seeding it from AI_API_RESPONSE the first time.
@@ -107,6 +113,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		tenancies.clear();
 		postAI = false;
 		blockSubmit = false;
+		sessionUploads.clear();	//#41459
+		replacedDocs.clear();	//#41459
 
 		seedFromPersisted(docType, smAppl);
 
@@ -297,14 +305,14 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			// OCR never answered: still record the upload, the file belongs to the supplier either way
 			result = new JsonWrapper(System.currentTimeMillis(), "", docType);
 		}
-		// Tenancy is single-file: a new upload REPLACES the previous doc, but only once this one is in
+		// Tenancy is single-file: a new upload REPLACES the previous doc, but only once submitted
 		if (TYPE_TENANCY.equals(docType)){
-			for (AIApiResponse previous : docs){
-				deleteResponse(previous);
-			}
+			replacedDocs.addAll(docs);	//#41459
 			docs.clear();
 		}
-		docs.add(saveResponse(smAppl, result, fileName, filePath));
+		AIApiResponse saved = saveResponse(smAppl, result, fileName, filePath);	//#41459
+		docs.add(saved);	//#41459
+		sessionUploads.add(saved);	//#41459
 		if (docType != null) {
 			processDoc(docType, smAppl);
 			if (result.entities != null){
@@ -662,6 +670,14 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			return;
 		}
 		log.info(docType+"\t"+appl.getApplNo());
+		//#41459 - Start
+		// the uploads are kept now, so the docs they replaced can go
+		for (AIApiResponse previous : replacedDocs){
+			deleteResponse(previous);
+		}
+		replacedDocs.clear();
+		sessionUploads.clear();
+		//#41459 - End
 		if (TYPE_EPF.equals(docType)){
 			if (!EntityHelper.isCollectionEmpty(selectedEmployees)){
 				submitEPF(appl);
@@ -1718,6 +1734,30 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			processDoc(docType, smAppl);
 		}
 	}
+
+	//#41459 - Start
+	/**
+	 * Drop what was uploaded since the dialog last closed, keeping the docs it already had.
+	 */
+	public void cancel() {
+		if (sessionUploads.isEmpty()){
+			return;
+		}
+		for (AIApiResponse res : sessionUploads){
+			deleteResponse(res);
+		}
+		sessionUploads.clear();
+		replacedDocs.clear();
+		selectedEmployees = null;
+		if (TYPE_TENANCY.equals(docType)){
+			validateTenancy(smAppl);
+		} else if (TYPE_EPF.equals(docType)){
+			validateEPF(smAppl);
+		}
+		// the panel re-render re-seeds from AI_API_RESPONSE
+		docType = null;
+	}
+	//#41459 - End
 
 	private void detachFromSupportDoc(AIApiResponse res){
 		if (res == null || res.getApiResponseId() == null || smAppl == null
