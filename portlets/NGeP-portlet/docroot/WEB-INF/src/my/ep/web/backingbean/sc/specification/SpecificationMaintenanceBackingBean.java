@@ -931,11 +931,26 @@ private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
 		Timestamp effTimestamp = new Timestamp(effDate.getTime());
 		boolean checkStatusWip =(checkWipScoreSettingFlag(qt.getQtId()));
 
-		if ((createdDate.before(effTimestamp) && !checkStatusWip && this.getManagedBean().getWipStatusMax() <= SourcingConstants.SCORE_SETTING_TYPE_FINANCIAL_BY_ITEM)) {
+		// for wip PROD usage only -start-
+		if ((createdDate.before(effTimestamp) && !checkStatusWip && this.getManagedBean().getWipStatusMax() <= SourcingConstants.SCORE_SETTING_TYPE_FINANCIAL_BY_ITEM)
+				&& !checkbyStatus())
+		// for wip PROD usage only -end-
+		{
 			//null != publishDate && publishDate.before(effDate)
 			this.getManagedBean().setWeightage35384WIP(true);
 		}
 	}
+
+	// #38151 -for wip PROD usage only- start
+	public boolean checkbyStatus() {
+		Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+		if (QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(currentStatusId)
+				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION.equals(currentStatusId)) {
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
+	// #38151 -for wip PROD usage only- end
 
 	private boolean checkWipScoreSettingFlag(Long qtId) {
 	    IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
