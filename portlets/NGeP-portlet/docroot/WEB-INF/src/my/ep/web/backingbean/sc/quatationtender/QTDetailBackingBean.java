@@ -1126,6 +1126,7 @@ public class QTDetailBackingBean extends
 		debugLogger("editQuationTenderDetails, @Managedbean = "+ this.getManagedBean());
 		this.getManagedBean().setReadOnly(!editable);
 		this.getManagedBean().setMaintanceFlow(true);
+		checkRolesToAuditView(); // #35500
 		IQTDetailSO detailSO;
 		String REDIRECT_PAGE = QTConstants.MAINTANANCE_PAGE;
 
@@ -1382,7 +1383,7 @@ public class QTDetailBackingBean extends
 		
 		Long qtId = scQt.getQtId();
 		Long loaId = findDocIdByDocType(qtId, ParameterConst.DOCTYPE_DIRECT_NEGO);
-		
+		checkRolesToAuditView(); // #35500
 		return new DirectLOABackingBean().retriveLoaDetails(loaId, previousPageUrl, true);
 	}	
 	
@@ -1410,7 +1411,7 @@ public class QTDetailBackingBean extends
 		
 		SupplierFinalizationBackingBean sfbb =  new SupplierFinalizationBackingBean();
 		sfbb.renewSesionObject();
-		
+		checkRolesToAuditView(); // #35500
 		return sfbb.editSupplierFinalizationDetails(scQt, previousPageUrl, false, justAllowRoleCodes);
 	}
 	// #19336, #25201, #17376, #19287 -end-
@@ -1429,6 +1430,7 @@ public class QTDetailBackingBean extends
 		debugLogger("viewSupplierProposalDetails");
 		Long qtId = scQt.getQtId();
 		String docType = getManagedBean().getQtnTenderSearchBean().getResultDocType();
+		checkRolesToAuditView(); // #35500
 		
 		if (ParameterConst.DOCTYPE_QUOTATION.equals(docType) || 
 				ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL.equals(docType)) {
@@ -1466,7 +1468,7 @@ public class QTDetailBackingBean extends
 		ScQt scQt = null;
 		ScLoiForQt scLoiForQt = null;
 		ScLoaForQt scLoaForQt = null;
-		
+		checkRolesToAuditView(); // #35500
 		if(getManagedSearchBeanDocumentTypeIsLOA() || getManagedSearchBeanDocumentTypeIsLOI()){
 			if (obj instanceof ScLoiForQt) {
 				/* Bug #27412 START */
@@ -2039,6 +2041,11 @@ public class QTDetailBackingBean extends
 
 		quationTenderReqDTO.setToBeRemovedCommitteMembers(this.getManagedBean()
 				.getToBeDelCommitteMemebers());
+		// 28895 - 35500
+		quationTenderReqDTO.setDeletedCommitteeMembersAuditTrailList(this.getManagedBean()
+				.getToBeDelCommitteMemebers());
+		quationTenderReqDTO.setCommitteeMemberModifiedRoleAuditTrail(this.getManagedBean().getMapModifiedRole());//#35500 issue fix 4-9
+
 		//20210325@asyrafhaziq_30518 - Start
 	    List <ScQtCommittee> scQtCommittees = getQtCommiteDtlsByQtId(scQt.getQtId());
 	    List<ScQtCommittee> toBeRemovedScQtCommittees = new ArrayList<ScQtCommittee>() ;
@@ -2510,23 +2517,27 @@ public class QTDetailBackingBean extends
 					supplierSearchSO = null;
 				}
 			} else {
-				if (isDeskOfficer()) {
-					// Filter By - actor user id
-					reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
-					
-					// Only DO Actor with edit access right. 
-					// Otherwise (Audit Search), user can view QT based on user roles match with actor.
-					if ((isQTMaintenanceScreen() || isQTSearchScreen()) && !isPbbSecretary()) { //#27668
-						reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
-					}
+				/*
+				 * 38524 - start 
+				 * Update codes with caution! 
+				 * 1. For uncatered roles(bounded as an actor only), please add roleCodes in SourcingConstants.QT_MAINTENANCE_ALLOWED_ACTOR 
+				 * 2. To prevent unauthorize access from multi-role user, only roles listed was allowed for the last fallback scenario
+				 * 3. Any new role that requires global search can be added at the first "if"
+				 */
+				reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+				boolean isMaintenanceScreen = isQTMaintenanceScreen() || isQTSearchScreen();
+
+				if (isAuditor() || isAdmin()) {
+					// Auditor/Admin got previlidge for global search
+					reqDTO.setPmUser(null);
+				} else if (isDeskOfficer() && isMaintenanceScreen
+						&& reqDTO.getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)) {
+					reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
+				} else {
+					// last fallback
+					reqDTO.setRoleCode(null);
 				}
-				//Bug_33484 - start
-				else if (isQcaSecretary() || isQcbSecretary() || isPbbSecretary() 
-						|| isFpbSecretary() || isApprover()){
-					// Filter By - actor user id
-					reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
-				}
-				//Bug_33484 - end
+				// 38524 - end
 				
 				 /* Enhancement #27668 -start-
 				 * TO INCLUDE QT WHICH PPB SECRETARY INVOLVE IN IT, IF HIGHER_AUTHORITY LINK ALSO
@@ -3117,19 +3128,8 @@ public class QTDetailBackingBean extends
 		SelectItem[] finalizationSecratary = getManagedBean().getFinalizationSecratary();
 		Long currentStatusId = scQt.getQtStatus().getStatusId();
 		
-		// #35320 - Start;
-		if (scQt.getFinalizationCommitte() != null && scQt.getFinalizationCommitte().getParameterCode() != null) {
-			if (scQt.getFinalizationCommitte().getParameterCode()
-					.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
-					|| scQt.getFinalizationCommitte().getParameterCode()
-							.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
-				if (isStatusTrigger(currentStatusId)) {
-					scQt.setFinalizationCommitte(new PmParameter());
-					scQt.setFinalizationSecratery(new PmUser());
-					this.getManagedBean().setQt(scQt);
-				}
-			}
-		}
+		// #35320 - Start
+		resetFinalizationCommittee(scQt, currentStatusId);
 		// #35320 - End
 		
 		if (finalizationSecratary == null
@@ -3164,6 +3164,66 @@ public class QTDetailBackingBean extends
 
 		return finalizationSecratary;
 	}
+	
+	// #35320 - Start;
+		/**
+		 * #35320
+		 * Resets the finalization committee and secretary when the quotation
+		 * is finalized by a supported quotation committee and the current status
+		 * is a trigger status.
+		 *
+		 * @param scQt the quotation object to be updated
+		 * @param currentStatusId the current quotation status identifier
+		 */
+		private void resetFinalizationCommittee(ScQt scQt, Long currentStatusId) {
+		    if (!isValidFinalizationCommittee(scQt)) {
+		        return;
+		    }
+
+		    if (!isQuotationCommittee(scQt.getFinalizationCommitte())) {
+		        return;
+		    }
+
+		    if (!resetCommitteeByStatus(currentStatusId)) {
+		        return;
+		    }
+
+		    scQt.setFinalizationCommitte(new PmParameter());
+		    scQt.setFinalizationSecratery(new PmUser());
+		    this.getManagedBean().setQt(scQt);
+		}
+
+		/**
+		 * #35320
+		 * Checks whether the quotation has a valid finalization committee
+		 * and parameter code.
+		 *
+		 * @param scQt the quotation object
+		 * @return {@code true} if the committee and parameter code are present;
+		 *         {@code false} otherwise
+		 */
+		private boolean isValidFinalizationCommittee(ScQt scQt) {
+		    return scQt != null
+		            && scQt.getFinalizationCommitte() != null
+		            && scQt.getFinalizationCommitte().getParameterCode() != null;
+		}
+
+		/**
+		 * #35320
+		 * Determines whether the supplied parameter represents one of the
+		 * supported quotation committee types.
+		 *
+		 * @param committee the finalization committee parameter
+		 * @return {@code true} if the committee is quotation committee A or B;
+		 *         {@code false} otherwise
+		 */
+		private boolean isQuotationCommittee(PmParameter committee) {
+		    String parameterCode = committee.getParameterCode();
+
+		    return ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(parameterCode)
+		            || ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(parameterCode);
+		}
+		// #35320 - End;
 
 	/**
 	 * Retrieve business owner tab dtl.
@@ -3680,6 +3740,12 @@ public class QTDetailBackingBean extends
 				committeReqDTO.setUserLocale(new FacesScopes().getUserLocale());
 				committeReqDTO.setToBeDeletedMembers(this.getManagedBean()
 						.getToBeDelCommitteMemebers());
+				//#28895 - 35500 start
+				committeReqDTO.setNewScCommitteeMemberAuditTrailList(this.getManagedBean().getNewScCommitteeMemberAuditTrailList()); 
+				committeReqDTO.setCommitteeMemberModifiedRoleAuditTrail(this.getManagedBean().getMapModifiedRole());//#35500 issue fix 4-9
+				committeReqDTO.setToBeRemovedCommitteeMemberAuditTrailList(this.getManagedBean()
+						.getDeletedScCommitteeMemberAuditTrailList());
+				//#28895 - 35500 end
 				committeReqDTO.setTaskName(taskName); // Bug #34972@Syazani 09/08/2023
 				committeResDto = committeSO.updateBPMAction(committeReqDTO);
 				
@@ -7410,6 +7476,14 @@ public class QTDetailBackingBean extends
 			quationTenderReqDTO.setDoaList(this.getManagedBean().getPmuserContactpersonList());
 			quationTenderReqDTO.setToken(fs.getBPMAuthenticationCtxToken());
 			// end #25037
+			//28895 - 35500 start
+			quationTenderReqDTO.setDeletedDoaaList(this.getManagedBean().getPmUserDeletedContactPersonList());
+			//#35500 fix issue 5 Start
+			quationTenderReqDTO.setModifiedDoaList(this.getManagedBean().getModifiedDoaList());
+			quationTenderReqDTO.setNewDoaList(this.getManagedBean().getNewDoaList());
+			//#35500 fix issue 5 End
+			quationTenderReqDTO.setNewCommitteeMembersAuditTrailList(this.getManagedBean().getNewScCommitteeMemberAuditTrailList());
+			//28895 - 35500 end
 			
 			//#28188 - Start
 			List<ScQtBsvRegistration> briefingRegistrationList = getBriefingRegistrationListFromSession();
@@ -11679,6 +11753,21 @@ public class QTDetailBackingBean extends
 		return facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value());
 	}
 	// 29732 end
+	
+	/**
+	 * #35500 check user role to access audit Trails
+	 * 
+	 */
+	public void checkRolesToAuditView() {
+		FacesScopes facesScopes = new FacesScopes();
+		if (isQTSearchScreen()
+				&& (facesScopes.hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
+						|| facesScopes.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
+						|| facesScopes.hasRoleUser(RoleCode.BPK_AUDITOR.value()) || facesScopes
+							.hasRoleUser(RoleCode.EP_ADMIN.value()))) {
+			this.getManagedBean().setAuditViewRole(true);
+		}
+	}	
 
 	// 25791-start
 	/**
@@ -12683,13 +12772,8 @@ public class QTDetailBackingBean extends
 	 * @param statusId
 	 * @return boolean
 	 */
-	private static boolean isStatusTrigger(long statusId) {
-        final List<Long> triggerStatuses = Arrays.asList(
-                QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
-                QTStatusConst.QT_REVISION_PUBLICATION,
-                QTStatusConst.QT_PENDING_SCHEDULE_REVISION,
-                QTStatusConst.CMT_PENDING_ASSIGN_FC_SECRETARY
-        );
+	private static boolean resetCommitteeByStatus(long statusId) {
+        final List<Long> triggerStatuses = Arrays.asList(QTStatusConst.RESET_COMMITTEE_BY_STATUS);
         return triggerStatuses.contains(statusId);
 	}
 	

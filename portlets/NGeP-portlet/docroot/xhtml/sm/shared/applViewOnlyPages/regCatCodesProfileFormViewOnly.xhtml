@@ -10,6 +10,34 @@
 <!-- #28175 end -->
 
 	<p:panel header="#{lbl['lbl.sm.wizard.catCodeStepLbl']}" toggleable="true">
+		<!-- 36504 - START -->
+		<p:outputPanel align="left" rendered="#{viewSmApplBackingBean.managedBean.otherDescChangeSupplier and 
+		(viewSmApplBackingBean.managedBean.poUser or viewSmApplBackingBean.managedBean.approverUser or
+		viewSmApplBackingBean.managedBean.authoriseUser)}">
+			<table style="width: 100%">
+				<tr>
+					<td>
+						<h:outputText value="#{lbl['lbl.sm.other.desc.history.click']}"
+							escape="false" />
+						<p:commandLink onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()"
+							action="#{supplierDataMaintenanceBackingBean.otherDescriptionHistoryMaintenance}" process="@this"
+							partialSubmit="true" update="@form">
+							<u><h:outputText
+									value="#{lbl['lbl.sm.other.desc.history.here']}"
+									style="color:blue;" escape="false" /></u>
+						</p:commandLink>
+						<p:spacer width="2" />
+						<h:outputText
+							value="#{lbl['lbl.sm.other.desc.history.to.view.history.of.other.desc']}"
+							escape="false" />
+						<br />
+						<p:spacer height="2" />
+					</td>
+				</tr>
+			</table>
+		</p:outputPanel>
+		<!-- 36504 - END -->
 		<!-- #14150 - added sortBy -->
 		<p:dataTable var="aprvdCatBean"
 			widgetVar="smApprvdCatCodesNonRenewApplDtWidVar"
@@ -25,9 +53,10 @@
 						style="width : 2%;" />
 					<p:column style="width :350px;white-space : normal"
 						headerText="#{lbl['lbl.sm.catCodes.cate']}" />
-					<p:column style="width :100px;white-space : normal" headerText="#{lbl['lbl.sm.catCodes.catType']}" />
-					<p:column style="width :200px;white-space : normal" headerText="#{lbl['lbl.sm.officer.decision']}" />
-					<p:column style="width :450px;white-space : normal" headerText="#{lbl['lbl.sm.remark']}" />
+					<p:column style="white-space : normal" headerText="#{lbl['lbl.sm.catCodes.catType']}" />
+					<p:column style="white-space : normal; width :350px;" headerText="#{lbl['lbl.sm.catCodes.othDesc']}" /> <!-- 36504 -->
+					<p:column style="white-space : normal" headerText="#{lbl['lbl.sm.officer.decision']}" />
+					<p:column style="white-space : normal" headerText="#{lbl['lbl.sm.remark']}" />
 					<p:column headerText="#{lbl['lbl.sm.status']}" />
 				</p:row>
 			</p:columnGroup>
@@ -141,6 +170,24 @@
 				<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
 					rendered="#{aprvdCatBean.specialCategory}" />
 			</p:column>
+			<!-- 36504 - START -->
+			<p:column>
+				<p:outputPanel>
+					<h:outputText
+						style="white-space: pre-wrap;"
+						value="#{aprvdCatBean.otherDesc}"
+						rendered="#{not empty aprvdCatBean.otherDesc and
+						    (aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD or
+						     aprvdCatBean.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING)}" />
+				     <p:graphicImage value="/css/images/design/icon_alert.png"
+						style="float:right;"
+						rendered="#{not empty aprvdCatBean.smSuppCatOtherDescHistory and 
+							(viewSmApplBackingBean.managedBean.poUser or viewSmApplBackingBean.managedBean.approverUser or
+							viewSmApplBackingBean.managedBean.supplierUser or viewSmApplBackingBean.managedBean.authoriseUser) and
+							!aprvdCatBean.otherDescChangeMaintenance}" />
+				</p:outputPanel>
+			</p:column>
+			<!-- 36504 - END -->
 			<p:column>
 				<table style="width: 100%; border: none !important; table-layout: fixed !important;">
 					<tr>
@@ -222,4 +269,13 @@
 	<p:outputPanel layout="block" rendered="#{not empty viewSmApplBackingBean.managedBean.smAppl.smCategoryOverlapDocs}">
 		<ui:include src="overlapCategorySuppDocViewOnly.xhtml"></ui:include>
 	</p:outputPanel>
+	
+	<!-- 36504 - START -->
+	<ac:otherDescriptionHistoryMaintenance
+		categoryCodeList="#{viewSmApplBackingBean.managedBean.supProfileHistoryOtherDesc}"
+		applNo="#{viewSmApplBackingBean.managedBean.smAppl.applNo}"
+		otherDescChangePO="#{viewSmApplBackingBean.managedBean.otherDescChangePO}"
+		otherDescChangeApprover="#{viewSmApplBackingBean.managedBean.otherDescChangeApprover}"
+		otherDescChangeSupplier="#{viewSmApplBackingBean.managedBean.otherDescChangeSupplier}"  />
+	<!-- 36504 - END -->
 </ui:composition>

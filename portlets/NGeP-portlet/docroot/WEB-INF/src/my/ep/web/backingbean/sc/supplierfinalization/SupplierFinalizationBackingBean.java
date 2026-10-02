@@ -6012,6 +6012,7 @@ public class SupplierFinalizationBackingBean extends
 				createShortlistedSuppliersDataModel();// 35140
 			} 
 			
+			setDisableSFJustification();	//40314
 			//#28834 - Start
 			if(scQtFinalization.getCurrentStatus().getPmStatus().getStatusId().equals(QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION)){
 				this.getManagedBean().setDisableJustifications(false);
@@ -6532,9 +6533,7 @@ public class SupplierFinalizationBackingBean extends
 		String selectionMode = null;
 		if (isQTRefinalized() || ParameterConst.RECOMMEND_BY_AWARD
 							.equals(finalizationMethod)) {
-			this.getManagedBean().setSingleAward(true);
-			
-			selectionMode = QTConstants.SF_SINGLE;
+			selectionMode = checkForSelectionMLOI(finalizationMethod);//#40396
 		} else if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
 					.equals(finalizationMethod)) {
 			setOnlineBiddingFlag();
@@ -6962,7 +6961,7 @@ public class SupplierFinalizationBackingBean extends
 		boolean multipleLOIandRefinalized = ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(getManagedBean()
 				.getFinalizationMethod()) && this.getManagedBean().getQtRefinalized();
 
-		if (CollectionUtils.isNotEmpty(scQtRecommend.getRecommendDtls()) && multipleLOIandRefinalized) {
+		if (CollectionUtils.isNotEmpty(scQtRecommend.getRecommendDtls()) && multipleLOIandRefinalized && !isQTCancelledBidSchedule()) {//#40396
 			for (ScQtRecommendDtl recommendDtl : scQtRecommend.getRecommendDtls()) {
 				boolean isLoiAwarded = recommendDtl.getLoiAwarded() == null ? false : recommendDtl.getLoiAwarded();
 			
@@ -7556,7 +7555,8 @@ public class SupplierFinalizationBackingBean extends
 		TplSpecZoneDtl zoneDtl = scQtRecommend.getTplSpecZoneDtl();
 		PmParameter finalizationMethod = getManagedBean().getScQtFinalization()
 											.getFinalizationMethod();
-		isAward = isRecommendByAward();
+		isAward = isRecommendByAward() && !ParameterConst.RECOMMEND_BY_MULTIPLE_LOI
+					.equals(finalizationMethod.getParameterCode());//#40396
 		
 		int activeSupplierCount = 0;
 		if (CollectionUtils.isNotEmpty(
@@ -7636,7 +7636,8 @@ public class SupplierFinalizationBackingBean extends
 			}
 		}
 		String finalizationMethodStr = null;
-		if (isQTRefinalized()) {
+		if (isQTRefinalized() && !ParameterConst.RECOMMEND_BY_MULTIPLE_LOI
+					.equals(finalizationMethod.getParameterCode())) {//#40396
 			finalizationMethodStr = ParameterConst.RECOMMEND_BY_AWARD;
 		} else {
 			finalizationMethodStr = finalizationMethod.getParameterCode();
@@ -10679,7 +10680,7 @@ public class SupplierFinalizationBackingBean extends
 					CommitteReqDTO commReqDTO = new CommitteReqDTO();
 					commReqDTO.setSupplierFinalization(true);
 					commReqDTO.setQtId(getManagedBean().getScQt().getQtId());
-					commReqDTO.setTotalAwardedPrice(totalIntendedPrice);
+					commReqDTO.setTotalAwardedPrice(BigDecimal.ZERO.compareTo(totalIntendedPrice) == 0 ? null : totalIntendedPrice);//#39077
 
 					CommitteResDTO commResDTO = committeeSO.retrieveFinalizationCommitteeType(commReqDTO);
 
@@ -12151,7 +12152,7 @@ public class SupplierFinalizationBackingBean extends
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 		String committeeType = getManagedBean().getCommitteeType();
 
-		BigDecimal committeeThreshold = getThresholdFor(committeeType);
+		BigDecimal committeeThreshold = getThresholdForCommittee(committeeType);
 		if (committeeThreshold == null) {
 			return false;
 		}
@@ -12283,7 +12284,7 @@ public class SupplierFinalizationBackingBean extends
 	 *            committee type identifier
 	 * @return corresponding price threshold or {@code null} if unknown
 	 */
-	public static BigDecimal getThresholdFor(String committeeType) {
+	public static BigDecimal getThresholdForCommittee(String committeeType) {
 		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType)
 				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType)
 				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE.equals(committeeType)) {
@@ -12383,7 +12384,7 @@ public class SupplierFinalizationBackingBean extends
 
 		final boolean isItemize = getManagedBean().isItemize();
 		final String committeeType = getManagedBean().getCommitteeType();
-		final BigDecimal committeeThreshold = getThresholdFor(committeeType);
+		final BigDecimal committeeThreshold = getThresholdForCommittee(committeeType);
 
 		boolean exceed = isItemize ? checkItemizedOffersExceedThreshold(committeeThreshold)
 				: checkPackageOffersExceedThreshold(committeeThreshold);
@@ -12473,7 +12474,9 @@ public class SupplierFinalizationBackingBean extends
 
 			return resultBean != null ? resultBean.getResultList() : Collections.<ScQtEvaluationResultDtl> emptyList();
 		} catch (Exception e) {
-			log.debug(e.getMessage());
+			SLAUtils.getInstance().logSLAError("QT", "retrieveQualifiedSuppliersByItem",
+					getManagedBean().getScQt().getQtId().toString(), "retrieveQualifiedSuppliersByItem",
+					getUserIdSessionFromLoginId(), e);
 			return Collections.emptyList();
 		}
 	}
@@ -12514,7 +12517,9 @@ public class SupplierFinalizationBackingBean extends
 
 			return resultBean != null ? resultBean.getResultList() : Collections.<ScQtEvaluationResultDtl> emptyList();
 		} catch (Exception e) {	
-			log.debug(e.getMessage());
+			SLAUtils.getInstance().logSLAError("QT", "retrieveQualifiedSuppliersByPackage",
+					getManagedBean().getScQt().getQtId().toString(), "retrieveQualifiedSuppliersByPackage",
+					getUserIdSessionFromLoginId(), e);
 			return Collections.emptyList();
 		}
 
@@ -12786,6 +12791,18 @@ public class SupplierFinalizationBackingBean extends
 		} else {
 			this.getManagedBean().setSelectionMode(QTConstants.SF_SINGLE);
 			this.getManagedBean().setSingleAward(true);
+		}
+	}
+	//#40396 - End
+	
+	//#40396 - Start
+	private String checkForSelectionMLOI(String finalizationMethodStr) {
+		if (ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(finalizationMethodStr)) {
+			this.getManagedBean().setMultipleLoi(true);
+			return QTConstants.SF_MULTIPLE;
+		} else {
+			this.getManagedBean().setSingleAward(true);
+			return QTConstants.SF_SINGLE;
 		}
 	}
 	//#40396 - End
