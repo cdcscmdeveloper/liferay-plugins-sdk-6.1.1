@@ -40,7 +40,11 @@
 			dynamic="true" resizable="true" width="700px" height="500px"
 			header="#{lbl['lbl.btn.upload.doc']}"
 			styleClass="pop_up_top">
-			
+			<!-- every hide() fires close, so Submit and Cancel come through here as well as the X -->
+			<p:ajax event="close" listener="#{ai.deleteInvalidDocs}" process="@this"
+				update=":#{p:component(pnlId)} :#{p:component(cc.attrs.updateId)}"
+				disabled="#{cc.attrs.docType ne 'epf'}"/>
+
 		<p:outputPanel id="pnl#{cc.attrs.aiDlg}" layout="block">
 		
 			<f:event type="preRenderComponent" listener="#{ai.initContext(cc.attrs.docType, cc.attrs.smAppl)}" />
@@ -100,7 +104,7 @@
 				dragDropSupport="false"
 				multiple="#{cc.attrs.docType eq 'epf'}"
 				showButtons="false"
-				onstart="block#{cc.attrs.aiDlg}.show()"
+				onstart="this.uploadContent.find('tr.ui-state-error').remove(); block#{cc.attrs.aiDlg}.show()"
 				oncomplete="if (this.form.data('fileupload')._active == 1) block#{cc.attrs.aiDlg}.hide();"/>
 			
 			<p:outputPanel id="result#{cc.attrs.aiDlg}">
@@ -133,11 +137,11 @@
 				<p:outputPanel rendered="#{ai.postAI and cc.attrs.docType eq 'tenancy'}">
 					<h:outputText value="#{lbl['lbl.sm.ai.tnc.extracted']}" styleClass="instruction" />
 					<br/><br/>
-					<h:outputText value="#{lbl['lbl.sm.facility.landLordName']}: " style="font-weight:bold;" />
-					<h:outputText value="#{ai.tenancy.landlordsName}" />
-					<br/>
 					<h:outputText value="#{lbl['lbl.sm.assocCmpny.companyName']}: " style="font-weight:bold;" />
 					<h:outputText value="#{ai.tenancy.tenantsName}" />
+					<br/>
+					<h:outputText value="#{lbl['lbl.sm.facility.landLordName']}: " style="font-weight:bold;" />
+					<h:outputText value="#{ai.tenancy.landlordsName}" />
 					<br/>
 					<h:outputText value="#{lbl['lbl.sm.facility.monthRent']}: " style="font-weight:bold;" />
 					<h:outputText value="#{ai.tenancy.monthlyRental}" />
