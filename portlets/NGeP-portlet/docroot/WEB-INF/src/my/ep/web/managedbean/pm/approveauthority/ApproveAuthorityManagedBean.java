@@ -48,7 +48,9 @@ public class ApproveAuthorityManagedBean extends BaseManagedBean {
 	
 	private String comName;
 	
-	public ApproveAuthorityManagedBean(){}
+	public ApproveAuthorityManagedBean(){
+		//Default constructor required by JSF for managed bean instantiation
+	}
 	
 	public String getAuthCodeDesc() {
 		return authCodeDesc;
