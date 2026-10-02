@@ -82,6 +82,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils; //#33867
 import my.ep.util.SLAUtils; //#36489
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -564,6 +565,10 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					.contains(pmUserOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())) {
 				getManagedBean().setOrgCategory(OTHERS);
 			}
+			//#33867 - START
+			Map<String, Integer> userRoleMap = getCurrentUserRole(pmUserOrg.getPmUserRoles());
+			this.getManagedBean().setCurrentPmUserRoles(userRoleMap);
+			//#33867 - END
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new EpException(MessageConst.ERROR_770016, new String[] { e.getMessage() });
@@ -2114,8 +2119,10 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				roleReqDTO.setOrgTypeId(currentOrgTypeId);
 				roleReqDTO.setBpk(getManagedBean().getSelectedUserOrg().getPmOrgProfile().getBpk() != null
 						? getManagedBean().getSelectedUserOrg().getPmOrgProfile().getBpk() : false);
-				roleReqDTO.setPtjAuthCC(getManagedBean().getSelectedUserOrg().getPmOrgProfile().isPtjAuthCC() != null 
-						? getManagedBean().getSelectedUserOrg().getPmOrgProfile().isPtjAuthCC() : false); // #34945
+				//#34945 - Start
+				Boolean ptjAuthCC = getManagedBean().getSelectedUserOrg().getPmOrgProfile().isPtjAuthCC();
+				roleReqDTO.setPtjAuthCC(ptjAuthCC != null ? ptjAuthCC : Boolean.FALSE);
+				//#34945 - End
 				roleReqDTO.setAssignRole(true);
 				roleReqDTO.setSearchRoleBean(searchBeanData);
 				roleReqDTO.setRoleName(getManagedBean().getSearchRoleName());
@@ -4608,4 +4615,132 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 	}
 	//#36489 and SonarLint Fixing - End
+
+	//#33867 - START
+	/**
+	 * Retrieves the current user roles and their record status.
+	 *
+	 * @param userRoleList the list of user roles
+	 * @return a map containing the role code as the key and record status flag as the value
+	 */
+	private Map<String, Integer> getCurrentUserRole(List<PmUserRole> userRoleList) {
+		Map<String, Integer> userRoleMap = new HashMap<>();
+		if (CollectionUtils.isNotEmpty(userRoleList)) {
+			for (PmUserRole role : userRoleList) {
+				userRoleMap.put(role.getPmRole().getRoleCode(), role.getRecordStatusFlg());
+			}
+		}
+		return userRoleMap;
+	}
+	//#33867 - END
+
+	//#33867 - START
+	/**
+	 * Validates the selected user's status and roles before updating the user information.
+	 * Checks whether the affected roles have any active users if the selected user is deactivated.
+	 * Displays an attention dialog if the affected roles have no active users.
+	 */
+	public void validateStatusAndRole() {
+		int status = this.getManagedBean().getSelectedUserOrg().getRecordStatusFlg();
+
+		Boolean inactiveStatus = false;
+		if (status == DbValueConst.RECORD_STATUS_SUSPENDED) {
+			inactiveStatus = true;
+		}
+
+		List<PmUserRole> userRoleList = this.getManagedBean().getSelectedUserOrg().getPmUserRoles();
+		List<String> roleList = new ArrayList<>();
+		Map<String, Integer> existingUserRole = this.getManagedBean().getCurrentPmUserRoles();
+
+		if (CollectionUtils.isNotEmpty(userRoleList)) {
+			for (PmUserRole role : userRoleList) {
+				Integer newRoleStatus = role.getRecordStatusFlg();
+
+				Integer existingStatus = existingUserRole.get(role.getPmRole().getRoleCode());
+				if (newRoleStatus == DbValueConst.RECORD_STATUS_SUSPENDED && existingStatus != null
+						&& existingStatus != newRoleStatus) {
+					inactiveStatus = true;
+					roleList.add(role.getPmRole().getRoleCode());
+				}
+			}
+		}
+
+		try {
+			if (inactiveStatus) {
+				String roles = checkActiveUser(roleList);
+
+				if (StringUtils.isNotBlank(roles)) {
+					String message = ResourceBundleUtils.getMessage("lbl.pm.profiles.userdetails.attention.msg",
+							new String[] { roles }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale());
+					getManagedBean().setAttentionMsg(message);
+					RequestContext.getCurrentInstance().execute("attentionInfoDlg.show()");
+				} else {
+					RequestContext.getCurrentInstance().execute("updateInfoDlg.show()");
+				}
+			} else {
+				RequestContext.getCurrentInstance().execute("updateInfoDlg.show()");
+			}
+		} catch (Exception ex) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, null, null,
+					"ProfileManagementBackingBean.validateStatusAndRole", null, ex);
+		}
+	}
+	//#33867 - END
+
+	//#33867 - START
+	/**
+	 * Checks for roles assigned to the selected user that do not have active users.
+	 *
+	 * @param roleList list of roles to be checked
+	 * @return roles without active users, or an empty string if none are found
+	 */
+	public String checkActiveUser(List<String> roleList) {
+		PmUser user = this.getManagedBean().getSelectedUser();
+		PmUserOrg userOrg = this.getManagedBean().getSelectedUserOrg();
+
+		RoleReqDTO roleReqDTO = new RoleReqDTO();
+		roleReqDTO.setUserId(user.getUserId());
+		roleReqDTO.setUserOrgId(userOrg.getUserOrgId());
+		roleReqDTO.setOrgProfileId(userOrg.getPmOrgProfile().getOrgProfileId());
+		roleReqDTO.setRoleList(roleList);
+
+		FacesScopes facesScopes = new FacesScopes();
+		roleReqDTO.setUserLocale(facesScopes.getUserLocale());
+
+		IRoleSO roleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRoleSO.class);
+		RoleResDTO roleResDTO = roleSO.retrieveRoleWithoutActiveUser(roleReqDTO);
+
+		String roles = "";
+		try {
+			if (!roleResDTO.getRolesWithoutActiveUsers().isEmpty()) {
+				roles = getRoles(roleResDTO.getRolesWithoutActiveUsers());
+			}
+		} catch (Exception ex) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, null, null,
+					"ProfileManagementBackingBean.checkActiveUser", null, ex);
+		}
+		return roles;
+	}
+	//#33867 - END
+
+	//#33867 - START
+	/**
+	 * Returns a comma-separated string of roles.
+	 *
+	 * @param roleList the list of roles
+	 * @return the roles as a comma-separated string
+	 */
+	private String getRoles(List<String> roleList) {
+		StringBuilder roles = new StringBuilder();
+
+		for (String role : roleList) {
+			if (roles.length() > 0) {
+				roles.append(", ");
+			}
+			roles.append(role);
+		}
+		return roles.toString();
+	}
+	//#33867 - END
 }

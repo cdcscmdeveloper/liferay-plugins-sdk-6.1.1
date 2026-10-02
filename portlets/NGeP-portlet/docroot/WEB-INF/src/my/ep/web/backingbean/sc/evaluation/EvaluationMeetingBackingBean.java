@@ -2479,6 +2479,12 @@ public class EvaluationMeetingBackingBean extends
 		}
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null, message));
 	}
+	
+	/*#34444 start*/
+	public boolean isCommitteeModified() {
+		return isCommitteeModified(
+				this.getManagedBean().getCommitteeMemberActivity());
+		}/*#34444 end*/
 
 	private boolean isCommitteeModified(List<ScCommitteeMember> currList) {
 		List<QtCommitteeMemberBean> previousList = this.getManagedBean().getPrevCommitteeMembers();
