@@ -674,7 +674,14 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			appl.getSmPersonnels().add(per);
 		}
 		
-		//save smAppl
+		SmApplicationBackingBean bb = saveAppl();
+		if (bb != null){
+			validateEPF(bb.getManagedBean().getSmAppl());
+		}
+	}
+
+	// save through the page's own Save; the reload swaps in a fresh appl graph
+	private SmApplicationBackingBean saveAppl(){
 		FacesContext fc = FacesContext.getCurrentInstance();
 		SmApplicationBackingBean bb = fc.getApplication().evaluateExpressionGet(fc, 
 				EL_BACKING_BEAN, SmApplicationBackingBean.class);
@@ -683,8 +690,9 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			SmApplicationUtil.sortPersonnelByRoleInCompany(bb.getManagedBean().getSmAppl());
 			// the reload drops the @Transient roleName, same as every other personnel mutator
 			bb.calcPersonnelListCount();
-			validateEPF(bb.getManagedBean().getSmAppl());
+			smAppl = bb.getManagedBean().getSmAppl();
 		}
+		return bb;
 	}
 
 
@@ -1087,7 +1095,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * @param identificationNo
 	 */
 	public static void forgetEpfUserEdit(SmAppl appl, String identificationNo){
-		String nric = AiDocValidator.normalizeNric(identificationNo);
+		String nric = AiDocValidator.normalizeIdNo(identificationNo);
 		for (AIApiResponse response : findResponses(appl, TYPE_EPF)){
 			Map<String, Set<String>> edits = AiUserEdit.parse(response.getUserEdit());
 			persistUserEdit(response, edits, AiUserEdit.forget(edits, nric));
@@ -1186,10 +1194,10 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	/**
-	 * An EPF or Tenancy doc uploaded via the AI Assistant cannot be deleted from the Supporting Documents listing.
-	 * The _ai marker still answers "uploaded from the AI Assistant dialog?" and is not replaceable by the
-	 * response id; the id is ANDed on top to answer "is that response still alive?", because a resubmit
-	 * clones the file name but not the response and the clone would otherwise never be deletable.
+	 * An EPF or Tenancy doc uploaded via the AI Assistant is deleted in that dialog, not from the Supporting
+	 * Documents listing. The _ai marker answers "uploaded from the AI Assistant dialog?" and is not
+	 * replaceable by the response id; the AI verdict answers "is its response still active?", because a
+	 * verdict is only ever set from an active response - otherwise the file could be deleted nowhere.
 	 * @param doc
 	 * @param file
 	 * @return
@@ -1200,7 +1208,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				|| doc == null || doc.getPmDocument() == null){
 			return false;
 		}
-		return isEpfDoc(doc.getPmDocument()) || isTenancyDoc(doc.getPmDocument());
+		return (isEpfDoc(doc.getPmDocument()) || isTenancyDoc(doc.getPmDocument()))
+				&& file.getValidatedAI() != 0;
 	}
 
 	// true when the filename carries the AI Assistant marker (last token before the extension)
@@ -1624,6 +1633,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		deleteResponse(doc);
 		docs.remove(doc);
 		selectedEmployees = null;
+		// the response is gone already, so save now or its file outlives it until some later Save
+		saveAppl();
 		if (TYPE_TENANCY.equals(docType)){
 			validateTenancy(smAppl);
 		} else if (TYPE_EPF.equals(docType)){
