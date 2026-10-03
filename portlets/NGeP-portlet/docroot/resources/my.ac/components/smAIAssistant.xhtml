@@ -171,9 +171,8 @@
 					process="@this dt#{cc.attrs.aiDlg}"
 					update=":#{p:component(cc.attrs.updateId)} :#{p:component(pnlId)}"
 					rendered="#{not empty cc.attrs.updateId}"
-					onclick="#{cc.attrs.aiDlg}.hide();"
 					onstart="block#{cc.attrs.aiDlg}.show()"
-					oncomplete="block#{cc.attrs.aiDlg}.hide();"
+					oncomplete="block#{cc.attrs.aiDlg}.hide(); #{cc.attrs.aiDlg}.hide();"
 					disabled="#{empty ai.docs or ai.blockSubmit}"/>
 					
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" onclick="#{cc.attrs.aiDlg}.hide()"/>
