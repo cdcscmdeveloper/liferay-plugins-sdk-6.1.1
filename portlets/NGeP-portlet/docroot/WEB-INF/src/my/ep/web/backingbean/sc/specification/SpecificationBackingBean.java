@@ -1123,7 +1123,9 @@ public class SpecificationBackingBean extends SourcingBaseBackingBean<QTDetailMa
 				};
 			
 			// #34656 move validation position ,trigger before popup-start
-			specSo.validateSpecZoneQtyZero(specReqDTO);
+			if (activeIndex >= 2) { //#21695,#25138,#29021,#25635,#41460
+				specSo.validateSpecZoneQtyZero(specReqDTO);
+			}
 			// #34656 move validation position -end
 
 			if (Arrays.asList(allowedTaskName).contains(taskName)

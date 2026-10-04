@@ -1182,8 +1182,8 @@ a:hover.blue_font {
 		<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false"
 		    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" showButtons="false"
 			fileUploadListener="#{directLOABackingBean.fileUpload}" multiple="false"
-			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="approvalLetterUploadWV"
-			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+			allowTypes="#{CommonConstants.FILE_UPLOAD_AGREEMENT_TYPES}" widgetVar="approvalLetterUploadWV"
+			invalidFileMessage="#{lbl['lbl.txt.upload.agreement.invalid.file']}"
 			invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}" 
 			update=":form:uploadedPage" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadApprovalLetterDlg.hide();" >
 		</p:fileUpload>

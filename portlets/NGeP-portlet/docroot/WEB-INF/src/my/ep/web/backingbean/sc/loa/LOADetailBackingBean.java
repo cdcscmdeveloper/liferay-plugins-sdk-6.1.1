@@ -12410,7 +12410,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			this.getManagedBean().setAgreementReqChange(true);
 			this.getManagedBean().setShowApprovalLetter(false); // #25725 - note
 																// 146
-			scLoa.setScLoaAttachment(null);
+			
 			RequestContext.getCurrentInstance().update(CONTRACT_DETAILS_ID);
 		}
 
