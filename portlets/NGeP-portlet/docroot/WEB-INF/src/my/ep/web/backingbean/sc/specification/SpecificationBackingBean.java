@@ -370,6 +370,10 @@ public class SpecificationBackingBean extends
 	 * @return List<ScQtCheckList>
 	 */
 	private List<ScQtCheckList> constructFinSpecsNSocre(ScQtCheckList scQtCheckList) {
+		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);//34852_start
+		SpecificationReqDTO specReqDto = new SpecificationReqDTO();
+		specReqDto.setScQt(this.getManagedBean().getQt());
+		this.getManagedBean().setWipStatusMax(specSo.checkWipScoreSettingMax(specReqDto));//34852_End
 		List<ScQtCheckList> finSpecCheckLists = this.getManagedBean().getFinSpecList();
 		if (null != finSpecCheckLists) {
 			for (ScQtCheckList scQtCheckList2 : finSpecCheckLists) {
