@@ -8510,6 +8510,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		// happen due to resubmit application (#23683)
 		updateCategoriesRecordStatus();
 		reCheckVerifiedSection();
+		cleanOwnershipTypeFacilityType(); //#40368
 		try {
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
 			reqDto.setSmAppl(this.getManagedBean().getSmAppl());
@@ -20406,4 +20407,33 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	    }
 	}
 	//#40801 END
+	
+//	#40368 START
+	/**
+	 * Clears irrelevant data fields based on the facility's ownership type.
+	 * 
+	 * - OWNED: Clears rental address and rental rate.
+	 * - RENTED: Clears purchase date and purchase price.
+	 * - Default: Clears all four fields.
+	 */
+	public void cleanOwnershipTypeFacilityType() {
+		String ownershipType = getManagedBean().getBasicCompanyFacility().getOwnershipType();
+		switch (ownershipType) {
+		case SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN:
+			getManagedBean().getBasicCompanyFacility().setSmAddress(null);
+			getManagedBean().getBasicCompanyFacility().setRentalRate(null);
+			break;
+		case SupplierManagementConst.SM_FACILITY_OWNERSHIP_RENTED:
+			getManagedBean().getBasicCompanyFacility().setPurchaseDate(null);
+			getManagedBean().getBasicCompanyFacility().setPurchasePrice(null);
+			break;
+		default:
+			getManagedBean().getBasicCompanyFacility().setPurchaseDate(null);
+			getManagedBean().getBasicCompanyFacility().setPurchasePrice(null);
+			getManagedBean().getBasicCompanyFacility().setSmAddress(null);
+			getManagedBean().getBasicCompanyFacility().setRentalRate(null);
+			break;
+		}
+	}
+//	#40368 END
 }
