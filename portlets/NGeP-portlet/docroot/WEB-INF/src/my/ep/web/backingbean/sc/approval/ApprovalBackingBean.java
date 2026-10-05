@@ -1316,9 +1316,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale());
 				    this.getManagedBean().setActiveIndex(9);
-				    //#34444 - START
-				    showDialog = null;
-				  //#34444 - END
 					throw new EpException(approverActionmsg);
 				} //#25692-End
 				
@@ -1360,7 +1357,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				if(SCProcessNameConst.APPROVE_PUBLICATION.equalsIgnoreCase(taskName) || 
 						SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)){//#34694
 					/*34444 START*/
-					showDialog = null;
 					reqDTO.setOutcome(action);
 					detailSO.validateQtApprovalDtl(reqDTO);
 					updateReviceBpmTask();
