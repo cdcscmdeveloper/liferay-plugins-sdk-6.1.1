@@ -2,9 +2,7 @@ package my.ep.web.backingbean.ct.circular;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import java.util.HashMap;//34442
@@ -14,32 +12,24 @@ import org.apache.log4j.Logger;
 import javax.faces.application.FacesMessage; //#30737 add import
 import javax.faces.context.FacesContext; //#30737 add import
 
-import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.ct.actor.ICtActorSO; //#30737 add import
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
-import my.ep.constant.BpmOutcomeConst;
-import my.ep.constant.InactiveUserConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constants.CTProcessNameConst;
-import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.actor.CtActorReqDTO; //#30737 add import
 import my.ep.dto.ct.actor.CtActorResDTO; //#30737 add import
 import my.ep.dto.ct.circular.CircularReqDTO;
-import my.ep.dto.ct.circular.CircularResDTO;
 import my.ep.dto.pm.authorization.user.InactiveUserReqDTO; //#30737
 import my.ep.dto.pm.authorization.user.InactiveUserResDTO; //#30737
 import my.ep.dto.pm.authorization.user.UserStatusCheckDTO; //#30737 add import
 import my.ep.constant.ct.ContractStatusConst;//34442
-import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtActor; //#30737 add import
-import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
