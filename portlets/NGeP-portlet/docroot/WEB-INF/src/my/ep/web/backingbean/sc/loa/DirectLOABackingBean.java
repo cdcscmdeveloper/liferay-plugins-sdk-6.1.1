@@ -3893,7 +3893,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				getManagedBean().getScLoa().setBondReq(false);
 			}
 			getManagedBean().setAgreementReqChange(false);
-			getManagedBean().getScLoa().setScLoaAttachment(null);
 			RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
 		} else {
 			getManagedBean().setBondReqSelectedVal(null);
@@ -3901,7 +3900,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			getManagedBean().getScLoa().setBondReq(false);
 			getManagedBean().getScLoa().setAgreementReq(false);
 			getManagedBean().setAgreementReqChange(false);
-			getManagedBean().getScLoa().setScLoaAttachment(null);
 			RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
 		}
 	}
@@ -3954,13 +3952,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 
 			getManagedBean().setAgreementReqChange(false);
-			getManagedBean().getScLoa().setScLoaAttachment(null);
 			RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
 		} else {
 			getManagedBean().setAgreemetSelectedVal(null);
 			getManagedBean().getScLoa().setAgreementReq(false);
 			getManagedBean().setAgreementReqChange(false);
-			getManagedBean().getScLoa().setScLoaAttachment(null);
 			RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
 		}
 	}
@@ -12010,7 +12006,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					|| agreementReqChoice.equalsIgnoreCase(ParameterConst.YES_SELECTED)) {
 				getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
 				getManagedBean().getScLoa().setAgreementReq(true);
-				getManagedBean().getScLoa().setScLoaAttachment(null);
 				RequestContext.getCurrentInstance().update(AGREEMENT_REQ_PG);
 				RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
 			} else {

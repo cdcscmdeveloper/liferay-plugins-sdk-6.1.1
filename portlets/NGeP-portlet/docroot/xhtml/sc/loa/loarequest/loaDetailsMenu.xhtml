@@ -804,9 +804,9 @@ a:hover.blue_font {
 			showButtons="false"
 			fileUploadListener="#{lOADetailBackingBean.fileUpload}"
 			multiple="false"
-			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+			allowTypes="#{CommonConstants.FILE_UPLOAD_AGREEMENT_TYPES}"
 			widgetVar="approvalLetterUploadWV"
-			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+			invalidFileMessage="#{lbl['lbl.txt.upload.agreement.invalid.file']}"
 			invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
 			update=":form:uploadedPage" label="#{lbl['lbl.btn.choose']}"
 			oncomplete="uploadApprovalLetterDlg.hide();">
