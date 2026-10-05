@@ -20417,22 +20417,29 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * - Default: Clears all four fields.
 	 */
 	public void cleanOwnershipTypeFacilityType() {
-		String ownershipType = getManagedBean().getBasicCompanyFacility().getOwnershipType();
-		switch (ownershipType) {
-		case SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN:
-			getManagedBean().getBasicCompanyFacility().setSmAddress(null);
-			getManagedBean().getBasicCompanyFacility().setRentalRate(null);
-			break;
-		case SupplierManagementConst.SM_FACILITY_OWNERSHIP_RENTED:
-			getManagedBean().getBasicCompanyFacility().setPurchaseDate(null);
-			getManagedBean().getBasicCompanyFacility().setPurchasePrice(null);
-			break;
-		default:
-			getManagedBean().getBasicCompanyFacility().setPurchaseDate(null);
-			getManagedBean().getBasicCompanyFacility().setPurchasePrice(null);
-			getManagedBean().getBasicCompanyFacility().setSmAddress(null);
-			getManagedBean().getBasicCompanyFacility().setRentalRate(null);
-			break;
+		SmFacility basicCompanyFacility = getManagedBean().getBasicCompanyFacility();
+
+		if (basicCompanyFacility != null) {
+			String ownershipType = basicCompanyFacility.getOwnershipType();
+			if (ownershipType == null) {
+				ownershipType = "";
+			}
+			switch (ownershipType) {
+			case SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN:
+				basicCompanyFacility.setSmAddress(null);
+				basicCompanyFacility.setRentalRate(null);
+				break;
+			case SupplierManagementConst.SM_FACILITY_OWNERSHIP_RENTED:
+				basicCompanyFacility.setPurchaseDate(null);
+				basicCompanyFacility.setPurchasePrice(null);
+				break;
+			default:
+				basicCompanyFacility.setPurchaseDate(null);
+				basicCompanyFacility.setPurchasePrice(null);
+				basicCompanyFacility.setSmAddress(null);
+				basicCompanyFacility.setRentalRate(null);
+				break;
+			}
 		}
 	}
 //	#40368 END
