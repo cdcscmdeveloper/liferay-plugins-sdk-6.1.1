@@ -3933,7 +3933,7 @@ public class SupplierFinalizationBackingBean extends
 			// #26169 - END
 
 			// 38523 - start
-			//this.downloadAllBriefingPaperReports(true);
+			this.downloadAllBriefingPaperReports(true);
 			
 			// 38523 - end
 			
