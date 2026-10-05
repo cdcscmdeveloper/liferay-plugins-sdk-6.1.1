@@ -2137,6 +2137,15 @@ public class SpecificationBackingBean extends
 				// Collections.sort(this.getManagedBean()
 				// .getScQtCheckSt2financeProposalList());
 				localcheckList = null;
+				//#41441 - #10141 Start Vinod
+				Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+				if (Arrays.asList(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
+						QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION,
+						QTStatusConst.SE_PENDING_SUBMISSION,
+						QTStatusConst.SE_PENDING_REVISION).contains(currentStatusId)) {
+					checkAndUpdateNewMandatoryChecklist(this.getManagedBean().getQt(), SourcingConstants.TECHNICAL_DOCTYPE);
+				}
+				//#41441 - #10141 End Vinod
 			}
 			// #40138 Start Vinod
 			else {
@@ -9560,8 +9569,9 @@ public class SpecificationBackingBean extends
 						throw new EpException(MessageConst.ERROR_760359);
 					}
 					if (null == Remark.getRemarkId()) {
-						RequestContext.getCurrentInstance().execute(
-								"reviceApprovalDlgs.show()");
+						/* #34444 START*********/
+						reviseSpecificationCommittee();
+						/* #34444 END*********/
 					}
 				}
 				/*
@@ -12810,9 +12820,11 @@ if (null != checklist && !checklist.isEmpty()) {
 												    new FacesScopes().getUserLocale()) });
 						}
 					}
+				////#34444 START**********
+					RequestContext.getCurrentInstance().execute("confirmationPopupQT.hide()");
 				}
-				
-				RequestContext.getCurrentInstance().execute("reviseSCDlgs.show()");
+				reviseSpecificationCommittee();
+			////#34444 END**********
 			} else {
 				getManagedBean().setAutoUpdate(false);
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
@@ -12837,8 +12849,9 @@ if (null != checklist && !checklist.isEmpty()) {
 												    ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 												    new FacesScopes().getUserLocale()) });
 						} else if (null == Remark.getRemarkId()) {
-							RequestContext.getCurrentInstance().execute(
-									"reviceApprovalDlgs.show()");
+							// #34444 START***********
+							reviseSpecificationCommittee();
+							// //#34444 END**********
 						} else {
 							reviseSpecificationCommittee();
 						}
