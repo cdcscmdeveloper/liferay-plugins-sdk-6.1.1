@@ -6455,7 +6455,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 
 	// #26284 - End
-}
+
 	
 	//41034 - start
 	/** 
