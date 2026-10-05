@@ -11961,10 +11961,16 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 																			  getManagedBean().getSmAppl().getApplType(), 
 																			  getManagedBean().getSmAppl().getApplCategoryType(), 
 																			  zoneReqSO.retrieveZoneByStateId(zoneReqDTO).getPmZone().getZoneCode());
-				reqDTO.setPoLoginId(po.getLoginId());
-				//#12483 - START
-				reqDTO.setUserId(po.getUserId());
-				//#12483 - END
+				
+				//#33694 - Start
+				po = null;
+				if(po != null){
+					reqDTO.setPoLoginId(po.getLoginId());
+					//#12483 - START
+					reqDTO.setUserId(po.getUserId());
+					//#12483 - END	
+				}
+				//#33694 - End
 			}
 		}else{
 			reqDTO.setPoLoginId(pmUser.getLoginId());
@@ -12519,19 +12525,35 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					//#12483 - START
 					if(this.getManagedBean().isPoUser() && currentReviseReason() != null){
 						PmUser approver = PpCommonUtil.retrieveUserByLoginIdOrUserId(null, SmServiceLookup.getUserSO().retrieveLastPoOrApprover(this.getManagedBean().getSmAppl().getApplNo(), SupplierManagementConst.APPROVER_HQ));
-						if(approver.getRecordStatusFlg() == 1){
+						// #33694 - Start
+						if (approver.getRecordStatusFlg() == 1
+								&& checkUserRole(approver.getUserId(), RoleCode.UPS_APPROVER.value())) {
 							this.getManagedBean().setReviseApprover(approver);
 							successMsg = SmCommonUtil.getOutputMsgBundle(
 									MessageConst.INFO_700014,
-									new String[] { applNo, statusDesc,
-											"<tr><td>1)</td><td>"+PpCommonUtil.retrieveUserByLoginIdOrUserId(approver.getLoginId(), null).getUserName()+"</td></tr>" });
-							
+									new String[] {
+											applNo,
+											statusDesc,
+											"<tr><td>1)</td><td>"
+													+ PpCommonUtil.retrieveUserByLoginIdOrUserId(approver.getLoginId(),
+															null).getUserName() + "</td></tr>" });
+
 						} else {
-							successMsg = SmCommonUtil.getOutputMsgBundle(
-									MessageConst.INFO_700014,
-									new String[] { applNo, statusDesc,
-											getApproverListForSuccessMsg() });
-						}
+							// #33694 - Start
+							String approverList = getApproverListForSuccessMsg();
+							if(StringUtils.isEmpty(approverList)){
+								String roleCode = getEpRoleDescByRoleCode(RoleCode.UPS_APPROVER.value());
+								List<PmUserOrg> userOrgLs = PmCommonUtil.retrieveActiveOrg(approver.getUserId());
+								for (PmUserOrg pmUserOrg : userOrgLs) {
+									successMsg = SmCommonUtil.getOutputMsgBundle(MessageConst.INFO_723009, new String[] {
+											roleCode, pmUserOrg.getPmOrgProfile().getPmOrgValidity().getOrgName() });
+								}
+							}else{
+								successMsg = SmCommonUtil.getOutputMsgBundle(MessageConst.INFO_723007, new String[] {
+										statusDesc, applNo, approverList });
+							}
+							
+							// #33694 - End
 					}else{
 						successMsg = SmCommonUtil.getOutputMsgBundle(
 								MessageConst.INFO_700014,
@@ -12555,8 +12577,20 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				}
 				//#12483 - START
 				else if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REVISE)){
-					successMsg = SmCommonUtil.getOutputMsgBundle(
-							MessageConst.INFO_700023, new String[] { applNo, PpCommonUtil.retrieveUserByLoginIdOrUserId(reqDTO.getPoLoginId(), null).getUserName() });
+					if (StringUtils.isEmpty(reqDTO.getPoLoginId())) {
+						//33694 - Start
+						String roleCode = getEpRoleDescByRoleCode(RoleCode.UPS_PO.value());
+						PmUser user = PpCommonUtil.retrieveUserByLoginIdOrUserId(reqDTO.getPoLoginId(), null);
+						List<PmUserOrg> userOrgLs = PmCommonUtil.retrieveActiveOrg(user.getUserId());
+						for (PmUserOrg pmUserOrg : userOrgLs) {
+							successMsg = SmCommonUtil.getOutputMsgBundle(MessageConst.INFO_723009, new String[] {
+									roleCode, pmUserOrg.getPmOrgProfile().getPmOrgValidity().getOrgName() });
+						}
+						//33694 - End
+					}else{
+						successMsg = SmCommonUtil.getOutputMsgBundle(
+								MessageConst.INFO_700023, new String[] { applNo, PpCommonUtil.retrieveUserByLoginIdOrUserId(reqDTO.getPoLoginId(), null).getUserName() });	
+					}
 				}
 				//#12483 - END
 				reqDTO.setPoOrApproverDecision(res);
@@ -12640,6 +12674,25 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		//#34400 - end
 		return retMsg;
 	}
+		
+	// #33694 - Start
+	private boolean checkUserRole(Long userId, String roleCode) {
+			List<Long> userIds = new ArrayList<Long>();
+			userIds.add(userId);
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserIds(userIds);
+			userReqDTO.setRoleCodes(new ArrayList<String>(Arrays.asList(roleCode)));
+
+			List<PmUserRole> userRoles = (SmServiceLookup.getUserSO().retrieveUserRoleListByUserIdsAndRoleCodes(userReqDTO))
+					.getUserRoleList();
+			for (PmUserRole role : userRoles) {
+				if (role.getRecordStatusFlg() == 1) {
+					return true;
+				}
+			}
+			return false;
+	}
+	// #33694 - End
 
 	//#34392 - Start
 	private void setValueForInquiryRemarks(SmApplSupportDoc smApplSupportDoc) {
@@ -12698,9 +12751,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					.getReviewApplicationSO()
 					.getApproversByZoneAfterEscalate(reviewApplicationReqDTO)
 					.getUserAssignList();
+			//#33694 - Start
 			if (SmCommonUtil.isCollectionEmpty(approverList)) {
-				throw new EpException(MessageConst.ERROR_722658,
-						new String[] { zone.getZoneName() });
+				return "";
+			//#33694 - End
 			} else {
 				List<PmUser> displayApproverList = new ArrayList<>();
 				for (PmUser user : approverList) {

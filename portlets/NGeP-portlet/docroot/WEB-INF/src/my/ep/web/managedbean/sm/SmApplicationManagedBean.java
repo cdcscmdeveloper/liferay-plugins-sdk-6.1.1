@@ -704,6 +704,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	// AI on for the open application: version gate, then extracted or toggle on
 	private boolean aiEnabled;
 	// #40112 - End
+	
+	// #33694 - Start
+	private List<String> assignNewUser;
+	// #33694 - End
 
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
@@ -4962,4 +4966,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.aiEnabled = aiEnabled;
 	}
 	// #40112 - End
+	//#33694 - Start
+	public List<String> getAssignNewUser() {
+		return assignNewUser;
+	}
+
+	public void setAssignNewUser(List<String> assignNewUser) {
+		this.assignNewUser = assignNewUser;
+	}
+	//#33694 - End
 }

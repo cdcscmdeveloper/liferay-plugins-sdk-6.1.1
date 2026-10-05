@@ -17,21 +17,29 @@ import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.sm.supportingdocinquiry.ISupportingDocInquirySO;
 import my.ep.constant.MessageConst;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.common.zone.ZoneReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
 import my.ep.dto.sm.supportingdocinquiry.SupportingDocInquiryReqDTO;
 import my.ep.dto.sm.supportingdocinquiry.SupportingDocInquiryResDTO;
+import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
+import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmZone;
+import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplDocFile;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
+import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -43,6 +51,7 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.supportingdocinquiry.SupportingDocInquiryManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
@@ -199,6 +208,59 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 			ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate.getInstance().getServiceObject("sm", ISupportingDocInquirySO.class);
 			SupportingDocInquiryReqDTO reqDTO = new SupportingDocInquiryReqDTO();
 			Object token = new FacesScopes().getBPMAuthenticationCtxToken();
+			
+			// #33694 - Start
+			MofRegistrationReqDTO reqDTOMof = new MofRegistrationReqDTO();
+			reqDTOMof.setApplId(this.getManagedBean().getAppId());
+			List<SmCompanyBasic> compBasicList = SmServiceLookup.getMofRegistrationSO()
+					.retrieveSmCompanyBasicByApplId(reqDTOMof).getCompanyBasicList();
+			compBasicList.get(0);
+			SmAddress hqAddr = compBasicList.get(0).getSmCompanyAddresses().get(0).getSmAddress();
+			ZoneReqDTO zoneReqDTO = new ZoneReqDTO();
+			zoneReqDTO.setStateId(hqAddr.getPmState().getStateId());
+			PmZone zone = SmServiceLookup.getZoneSO().retrieveZoneByStateId(zoneReqDTO).getPmZone();
+			String sdoLoginIds = "";
+			if (zone != null) {
+				sdoLoginIds = SmCommonUtil.retrieveLoginIdsByZoneAndRole(zone.getZoneCode(), RoleCode.UPS_SDO.value(),
+						this.getManagedBean().getSmApplInquiry().getSmAppl().getSupplierType(), this.getManagedBean()
+								.getSmApplInquiry().getSmAppl().getApplType(), this.getManagedBean().getSmApplInquiry()
+								.getSmAppl().getApplCategoryType());
+				// if (StringUtils.isBlank(sdoLoginIds)) {
+				// throw new EpException(MessageConst.ERROR_722660);
+				// }
+			}
+			
+			SmWorkFlowStatusReqDTO wfReqDTO = new SmWorkFlowStatusReqDTO();
+			wfReqDTO.setApplId(this.getManagedBean().getAppId());
+			wfReqDTO.setStatusId(Long
+					.parseLong(SupplierManagementConst.PM_STATUS_PENDING_RE_REVIEW));
+			String userId = SmServiceLookup.getSmWorkFlowStatusSO()
+					.retrieveUserIdByStatusIdAndDocId(wfReqDTO)
+					.getCreatedByName();
+			
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(Long.valueOf(userId));
+			PmUser assignedSDO = SmServiceLookup.getUserSO().retrieveUserByUserId(userReqDTO).getPmUser();
+			
+			if(assignedSDO.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED){
+				reqDTO.setPreviousAssignee(userId);
+				reqDTO.setCurrentSdoUserId(assignedSDO.getUserId());
+				reqDTO.setCurrentSdoUserName(assignedSDO.getUserName());	
+			}
+			
+			List<PmUserOrg> userOrgLs =PmCommonUtil.retrieveActiveOrg(Long.valueOf(userId));
+			for(PmUserOrg pmUserOrg : userOrgLs){
+				reqDTO.setCurrentOrgName(pmUserOrg.getPmOrgProfile().getPmOrgValidity().getOrgName());
+			}
+			
+			SMMOFRegDataType bpmObj = (SMMOFRegDataType) this.getManagedBean().getBpmPojo();
+			
+			if(StringUtils.isEmpty(sdoLoginIds)){
+				bpmObj.setIsNoActiveUsers(true);
+			}
+			
+			bpmObj.setSdoUsers(sdoLoginIds);
+			// #33694 - End
 			
 			Date currDate = new Date();
 			

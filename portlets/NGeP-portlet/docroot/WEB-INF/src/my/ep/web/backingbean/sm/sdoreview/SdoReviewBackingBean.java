@@ -36,6 +36,7 @@ import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmPendingPoWeightage;
 import my.ep.persistence.entity.sm.SmAppl;
@@ -322,11 +323,6 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 				assignedPOName = setPOJobRoleWeigtage(reqDTO);
 			}
 			
-			// #33694 - Start
-			if (StringUtils.isEmpty(assignedPOName)) {
-				// sendNotificationToRA();
-			}
-			
 			// 29810 - start - add new data type in SMMOFRegDataType - saufi
 			SMMOFRegDataType bpmObj = (SMMOFRegDataType) this.getManagedBean().getBpmPojo();
 			if(this.getManagedBean().getSmAppl().getSdoReceivedDate() != null){
@@ -334,6 +330,15 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 				String dateStr = df.format(this.getManagedBean().getSmAppl().getSdoReceivedDate());	
 				bpmObj.setReceivedDate(BpmCommonUtils.getCalendarValue(this.getManagedBean().getSmAppl().getSdoReceivedDate()));
 			}
+			
+			// #33694 - Start
+			assignedPOName = "";
+			if (StringUtils.isEmpty(assignedPOName)) {
+				// sendNotificationToRA();
+				bpmObj.setIsNoActiveUsers(true);
+				reqDTO.setPmUser(null);
+			}
+			// #33694 - End
 			
 			reqDTO.setBpmPojo(bpmObj);
 			//29810 - end
@@ -715,6 +720,16 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			// #38054 - End
 			String payloadPO = ((SMMOFRegDataType)this.getManagedBean().getBpmPojo()).getPoUsers();
 			String loginId = StringUtils.isNotBlank(payloadPO) ? payloadPO.trim() : null;
+			
+			// #33694 - Start
+			PmUser assignedPO = PmCommonUtil.retrieveUserByLoginId(loginId);
+			reqDTO.setCurrentAssignee(loginId);
+			List<PmUserOrg> userOrgLs = PmCommonUtil.retrieveActiveOrg(assignedPO.getUserId());
+			for (PmUserOrg pmUserOrg : userOrgLs) {
+				reqDTO.setCurrentOrgName(pmUserOrg.getPmOrgProfile().getPmOrgValidity().getOrgName());
+			}
+			// #33694 - End
+
 			if(loginId == null){
 				poUser = SmCommonUtil.getInstance().retrievePOWithLowestWeightage(getManagedBean()
 						.getSmAppl().getSupplierType(), getManagedBean()

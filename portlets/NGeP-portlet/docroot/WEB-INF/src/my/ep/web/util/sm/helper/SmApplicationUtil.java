@@ -16746,6 +16746,39 @@ public class SmApplicationUtil {
 
 		return recommendation;
 	}
+	
+	// #33694 - Start
+	public static String setApplicationType(String applType) {
+		String s = null;
+		switch (applType) {
+
+		case "N":
+			s = "lbl.sm.appl.type.new.mof";
+			break;
+		case "A":
+			s = "lbl.sm.appl.type.add.cat";
+			break;
+		case "B":
+			s = "lbl.sm.appl.type.bumi";
+			break;
+		case "U":
+			s = "lbl.sm.appl.type.update.prof";
+			break;
+		case "R":
+			s = "lbl.sm.appl.type.renew.mof";
+			break;
+		case "C":
+			s = "lbl.sm.appl.type.cancel.mof";
+			break;
+		default:
+			break;
+		}
+
+		String applLbl = ResourceBundleUtils.getMessage(s, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale());
+		return applLbl;
+	}
+	// #33694 - End
 
 }
 
