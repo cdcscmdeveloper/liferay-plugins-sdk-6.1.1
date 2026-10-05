@@ -2468,23 +2468,27 @@ public class QTDetailBackingBean extends
 					supplierSearchSO = null;
 				}
 			} else {
-				if (isDeskOfficer()) {
-					// Filter By - actor user id
-					reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
-					
-					// Only DO Actor with edit access right. 
-					// Otherwise (Audit Search), user can view QT based on user roles match with actor.
-					if (isQTMaintenanceScreen() || isQTSearchScreen()) {
-						reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
-					}
+				/*
+				 * 38524 - start 
+				 * Update codes with caution! 
+				 * 1. For uncatered roles(bounded as an actor only), please add roleCodes in SourcingConstants.QT_MAINTENANCE_ALLOWED_ACTOR 
+				 * 2. To prevent unauthorize access from multi-role user, only roles listed was allowed for the last fallback scenario
+				 * 3. Any new role that requires global search can be added at the first "if"
+				 */
+				reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+				boolean isMaintenanceScreen = isQTMaintenanceScreen() || isQTSearchScreen();
+
+				if (isAuditor() || isAdmin()) {
+					// Auditor/Admin got previlidge for global search
+					reqDTO.setPmUser(null);
+				} else if (isDeskOfficer() && isMaintenanceScreen
+						&& reqDTO.getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)) {
+					reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
+				} else {
+					// last fallback
+					reqDTO.setRoleCode(null);
 				}
-				//Bug_33484 - start
-				else if (isQcaSecretary() || isQcbSecretary() || isPbbSecretary() 
-						|| isFpbSecretary() || isApprover()){
-					// Filter By - actor user id
-					reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
-				}
-				//Bug_33484 - end
+				// 38524 - end
 				
 				 /* Enhancement #27668 -start-
 				 * TO INCLUDE QT WHICH PPB SECRETARY INVOLVE IN IT, IF HIGHER_AUTHORITY LINK ALSO
@@ -2566,7 +2570,9 @@ public class QTDetailBackingBean extends
 		}
 	}
 	
-	private boolean isQTMaintenanceScreen() {
+	// #25635 -start-
+	public boolean isQTMaintenanceScreen() {
+		// #25635 -end-
 		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	
@@ -8015,7 +8021,7 @@ public class QTDetailBackingBean extends
 	}
 	// Bug #32425, #19336 - End
 	
-	private boolean isDeskOfficer() {
+	public boolean isDeskOfficer() {//35142
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value());
 	}

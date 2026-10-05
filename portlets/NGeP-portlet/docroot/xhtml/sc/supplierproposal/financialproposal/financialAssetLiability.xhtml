@@ -117,12 +117,14 @@
 					</ui:fragment></td>
 				<td><p:inputText readonly="true" disabled="true"
 						value="#{noOfContracts.autoScore}" style="text-align:right"
-						rendered="#{ checklistScoreType eq '1'}"></p:inputText> <p:inputText
-						id="financialAssetsAndLiabilityUserScoreId"
+						rendered="#{ checklistScoreType eq '1'}"></p:inputText> 
+					<!-- 21695, 25138 -start- -->
+					<p:inputText id="financialAssetsAndLiabilityUserScoreId"
 						label="#{lbl['lbl.tpl.spec.content.user.score']}"
 						value="#{noOfContracts.userScore}" maxlength="18" required="true"
-						disabled="#{pageDisable or rejectedSupplier}" style="text-align:right"
-						rendered="#{ checklistScoreType eq '2'}">
+						disabled="#{pageDisable or rejectedSupplier or evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '1'}"
+						style="text-align:right" rendered="#{ checklistScoreType eq '2'}">
+						<!-- 21695, 25138 -end- -->
 						<ac:validateNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 							maxIntegerDigits="14" integerOnly="true" />
@@ -159,12 +161,15 @@
 					</ui:fragment></td>
 				<td><p:inputText readonly="true" disabled="true"
 						value="#{noOfYears.autoScore}" style="text-align:right"
-						rendered="#{companyScoreType eq '1'}"></p:inputText> <p:inputText
-						id="financialAssetsLiabilityCurrentRatio" maxlength="18"
-						style="text-align:right" required="true"
+						rendered="#{companyScoreType eq '1'}"></p:inputText> 
+					<!-- 21695, 25138 -start- -->
+					<p:inputText id="financialAssetsLiabilityCurrentRatio"
+						maxlength="18" style="text-align:right" required="true"
 						label="#{lbl['lbl.tpl.spec.content.user.score']}"
-						value="#{noOfYears.userScore}" disabled="#{pageDisable or rejectedSupplier}"
+						value="#{noOfYears.userScore}"
+						disabled="#{pageDisable or rejectedSupplier or evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '1'}"
 						rendered="#{companyScoreType eq '2'}">
+						<!-- 21695, 25138 -end- -->
 						<ac:validateNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 							maxIntegerDigits="14" integerOnly="true" />

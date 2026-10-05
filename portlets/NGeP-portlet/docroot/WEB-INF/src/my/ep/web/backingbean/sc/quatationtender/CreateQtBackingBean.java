@@ -1204,6 +1204,52 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 	}
 
+	// #21695 start
+	/**
+	 * Partial offer change.change partialy offer(offer/not offer) radion button
+	 * in owner.
+	 * 
+	 * @param event
+	 *            (String partialChange)
+	 */
+	public void partialChange(AjaxBehaviorEvent event) {
+		Boolean type = (Boolean) event.getComponent().getAttributes().get("value");
+
+		this.getManagedBean().getQt().setPartial(type);
+
+		if (type == false) {
+			RequestContext.getCurrentInstance().execute("confirmDialogWidgetVar.hide()");
+		} else {
+			RequestContext.getCurrentInstance().execute("confirmDialogWidgetVar.show()");
+		}
+	}
+
+	// #21695 end
+
+	/** #21695 START */
+	public void partialChangePopUpNo() {
+		if (this.getManagedBean().getQt().isPartial() == false) {
+			this.getManagedBean().getQt().setPartial(true);
+		} else if (this.getManagedBean().getQt().isPartial() != false) {
+			this.getManagedBean().getQt().setPartial(false);
+		}
+	}
+
+	/** #21695 END */
+
+	/** #21695 START */
+	public void partialChangePopUpYes() {
+		if (this.getManagedBean().getQt().isPartial() != true) {
+			this.getManagedBean().getQt().setPartial(false);
+		} else if (this.getManagedBean().getQt().isPartial() == true) {
+			this.getManagedBean().getQt().setPartial(true);
+		}
+
+		this.getManagedBean().getQt().setSampleReq(Boolean.FALSE); // #11104
+	}
+
+	/** #21695 END */
+	
 	/**
 	 * Fulfilment change.changed Fulfilemnt Dropdown in specification committee.
 	 * 
