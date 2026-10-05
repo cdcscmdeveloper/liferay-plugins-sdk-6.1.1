@@ -2330,7 +2330,7 @@ public class SpecificationBackingBean extends
 					|| this.getManagedBean()
 							.getScQtCheckSt2financeProposalList().isEmpty()
 					// #25138 - 31578 - Start.
-					|| (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
+					|| (QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION.equals(this.getManagedBean().getCurrentStatusId())
 										&& CollectionUtils.isNotEmpty(this.getManagedBean().getTemplateSpecZoneDtls()))
 					// #25138 - 31578 - End.					
 					) {	
@@ -2832,7 +2832,7 @@ public class SpecificationBackingBean extends
 					retriveSpecQuestion();
 					
 					// #25138 - 31578 - Start.
-					if (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)) {
+					if (QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION.equals(this.getManagedBean().getCurrentStatusId())) {
 						
 						if (tmpCheckList.getQtScoreWeightage().getScQtScoreOfferPrices().size() > 1) {
 		        			Iterator<ScQtScoreOfferPrice> iterator = tmpCheckList.getQtScoreWeightage().getScQtScoreOfferPrices().iterator();
