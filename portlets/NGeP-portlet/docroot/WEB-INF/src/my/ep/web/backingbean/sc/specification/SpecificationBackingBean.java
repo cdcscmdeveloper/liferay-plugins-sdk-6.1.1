@@ -10654,7 +10654,7 @@ public class SpecificationBackingBean extends
 								SearchOperator.OPERATOR_EQUALS.value(), true));
 
 				//#34923 - start
-				List<String> docTypeList = new ArrayList<String>();
+				List<String> docTypeList = new ArrayList<>(); //#41437
 				docTypeList.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
 				docTypeList.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY);
 				searchBean.getDataFilterBeans().add(
