@@ -1247,7 +1247,9 @@ public class SpecificationBackingBean extends
 				SCProcessNameConst.SPEC_MAINTENANCE_REVISE_SCORING //1873 note 149
 			};
 			//#34656 move validation position ,trigger before popup-start
-			specSo.validateSpecZoneQtyZero(specReqDTO);
+			if (activeIndex >= 2) { //#21695,#25138,#29021,#25635,#41460
+				specSo.validateSpecZoneQtyZero(specReqDTO);
+			}
 			//#34656 move validation position -end
 			if (Arrays.asList(allowedTaskName).contains(taskName)
 					|| (StringUtils.isEmpty(taskName) && !this.getManagedBean().isReadOnly())) {
@@ -2112,6 +2114,15 @@ public class SpecificationBackingBean extends
 				// Collections.sort(this.getManagedBean()
 				// .getScQtCheckSt2financeProposalList());
 				localcheckList = null;
+				//#41441 - #10141 Start Vinod
+				Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+				if (Arrays.asList(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
+						QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION,
+						QTStatusConst.SE_PENDING_SUBMISSION,
+						QTStatusConst.SE_PENDING_REVISION).contains(currentStatusId)) {
+					checkAndUpdateNewMandatoryChecklist(this.getManagedBean().getQt(), SourcingConstants.TECHNICAL_DOCTYPE);
+				}
+				//#41441 - #10141 End Vinod
 			}
 			// #40138 Start Vinod
 			else {

@@ -1244,4 +1244,10 @@ public abstract class BaseManagedBean implements Serializable {
 		this.committeeSearchBean = committeeSearchBean;
 	}
 	// 12471 - end
+
+	// #40112 - Start
+	public boolean isAiEnabled() {
+		return false;
+	}
+	// #40112 - End
 }
