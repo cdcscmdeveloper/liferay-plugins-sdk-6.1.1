@@ -7389,8 +7389,7 @@ public class QTDetailBackingBean extends
 		Long statusId = this.getManagedBean().getCurrentStatusId();
 
 		// #29732 start
-		if (QTStatusConst.SE_PENDING_SUBMISSION.equals(statusId) && null != getManagedBean().getQt()
-				&& null != getManagedBean().getQt().getQtStatus()) {
+		if (statusId.equals(QTStatusConst.SE_PENDING_SUBMISSION)) {
 			statusId = getManagedBean().getQt().getQtStatus().getStatusId();
 		}
 		// 29732 end
