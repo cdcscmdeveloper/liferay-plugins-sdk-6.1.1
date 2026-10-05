@@ -11648,6 +11648,23 @@ public class SpecificationBackingBean extends
 				specReqDTO.setCheckLists(financialScoring1);
 				specReqDTO.setSpecType(ParameterConst.SPECIFICATION_TYPE_FINANCIAL);
 				specReqDTO.setScQt(recommendation);
+
+				// #25138 -start-
+				SpecificationReqDTO specReqDto=new SpecificationReqDTO();//34852_start
+				specReqDto.setScQt(this.getManagedBean().getQt());
+				this.getManagedBean().setWipStatusMax(specSO.checkWipScoreSettingMax(specReqDto));//34852_End
+				if(this.getManagedBean().getWipStatusMax()<SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM){//34852_Start
+					this.getManagedBean().setOfferScoreType(ParameterConst.FINANCE_SCORE_TYPE_AUTO);
+					scoreTypeN=ParameterConst.FINANCE_SCORE_TYPE_AUTO;
+				}//34852_End
+				specReqDTO.setOfferScoreType(this.getManagedBean().getOfferScoreType());
+				specReqDTO.setScoreOfferPriceList(this.getManagedBean().getOfferPricePackageList());
+				specReqDTO.setSingleItem(this.getManagedBean().isSingleItem());
+				if(this.getManagedBean().getWipStatusMax()>=SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM){//34852_start
+				specReqDTO.setZonesQt(this.getManagedBean().getQt().isZonal());
+				}//34852_End
+				// #25138 -end-
+
 				specReqDTO.setAllowZeroVariance(true);
 				validateFinancialPackageItemPassingScoring(this
 						.getManagedBean().getFinancialScoreSetting(), this
