@@ -215,7 +215,6 @@ public abstract class BaseManagedBean implements Serializable {
 	List<ScQtFinalizationReportDetail> scQtFinalizationReportDetail; 
 	private List<ScQtFinalizationReportDetail> removeFinalizationReportDetails;
 	private ScQtFinalizationReportDetail selectedBriefingReportDetail;
-	private List<ScQtFinalizationReportDetail> evaluationReportDetailList;
 	private List<Map.Entry<String, String>> reportDetail = new ArrayList<>();
 	
 	// 31788 - start
@@ -225,7 +224,7 @@ public abstract class BaseManagedBean implements Serializable {
     
     // #34444 START
  	@ManagedProperty("#{lbl}")
- 	private ResourceBundle resourceBundle;
+ 	private transient ResourceBundle resourceBundle;
  	// #34444 END
 	
 	public BaseManagedBean(){
@@ -1325,14 +1324,7 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setSelectedBriefingReportDetail(ScQtFinalizationReportDetail selectedBriefingReportDetail) {
 		this.selectedBriefingReportDetail = selectedBriefingReportDetail;
 	}
-	
-	public List<ScQtFinalizationReportDetail> getEvaluationReportDetailList() {
-		return evaluationReportDetailList;
-	}
 
-	public void setEvaluationReportDetailList(List<ScQtFinalizationReportDetail> evaluationReportDetailList) {
-		this.evaluationReportDetailList = evaluationReportDetailList;
-	}
 	// #25651 - End
 	
 	//31788 - start

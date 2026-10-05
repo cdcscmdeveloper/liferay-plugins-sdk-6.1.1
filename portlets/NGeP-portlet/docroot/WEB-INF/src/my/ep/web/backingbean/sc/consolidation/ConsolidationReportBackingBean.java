@@ -534,38 +534,6 @@ public class ConsolidationReportBackingBean extends
 			uploadAttachment(event.getFile(), scAttachment);
 		}
 	}
-	
-	//#25651 - Start
-	/**
-     * To download a report detail under evaluation tab
-	 * 
-	 * @param scQtFinalizationReport
-	 *            selected report which would be downloaded
-	 * @throws Exception
-	 *             the exception that would be thrown in case of any error while
-	 *             downloading the report
-	 */
-	public void downloadReportDetail(ScQtFinalizationReportDetail scQtFinalizationReportDetail)
-			throws Exception {
-		debugLogger("downloadReport");
-
-		ScQtFinalizationReportDetailAttachment reportAttachment = scQtFinalizationReportDetail
-				.getScQtFinalizationReportDetailAttachment();
-		String definitionType = scQtFinalizationReportDetail.getDefinationType().getParameterCode();
-		String docDefinitionKey = null;
-		if (!SourcingConstants.DEMO_EVALUATION_REPORT.equalsIgnoreCase(scQtFinalizationReportDetail.getTitle())) {
-			docDefinitionKey = scQtFinalizationReportDetail.getPmDocument().getDocDefinitionKey();
-		}
-	
-		if (reportAttachment == null
-				|| (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equals(definitionType) && SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT
-						.equals(docDefinitionKey))) {
-			reportAttachment = generateDocumentAttachmentDetail(scQtFinalizationReportDetail);
-			
-		}
-		downloadFile(reportAttachment);
-	}
-	//#25651 - End
 
 	/**
 	 * To download a report under Briefing Paper/Kertas Taklimat tab
@@ -820,7 +788,6 @@ public class ConsolidationReportBackingBean extends
 	public void downloadAllEvaluationReports() throws Exception {
 		debugLogger("downloadAllEvaluationReports");
 
-		List<ScAttachment> attachments = new ArrayList<>();//#25651 
 		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean().getEvaluationReportList();
 		// 37622 - start
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<>();
@@ -837,112 +804,13 @@ public class ConsolidationReportBackingBean extends
 		}
 		// 37622 - end
 		
-		//#25651 - Start
-		attachments.addAll(scAttachments); 
-		attachments.addAll(getScqtFinalizationReportDetails());
-		//#25651 - End
-	
-
 		// Generate all the reports before submission
 		if (!getManagedBean().isSubmit()) {
 			//#28784 - Start
-			downloadSFAndRecommendationFiles("NGeP-Evaluation-Report", attachments); //#25651 
+			downloadSFAndRecommendationFiles("NGeP-Evaluation-Report", scAttachments); 
 			//#28784 - End
 		}
 	}
-	
-	// #25651 - Start
-	/**
-	 * To download evaluation reports detail under Evaluation Report tab.
-	 * 
-	 * @throws Exception
-	 *             the exception that would be thrown in case of any error while
-	 *             downloading the report(s)
-	 */
-	private List<ScAttachment> getScqtFinalizationReportDetails() throws Exception {
-
-		List<ScAttachment> attachments = new ArrayList<>();
-		List<ScQtFinalizationReportDetail> scQtFinalizationReportDetails = getManagedBean()
-				.getEvaluationReportDetailList();
-		List<ScQtFinalizationReportDetailAttachment> scAttachmentsDetail = new ArrayList<>();
-
-		if (CollectionUtils.isNotEmpty(scQtFinalizationReportDetails)) {
-			for (ScQtFinalizationReportDetail reportDetail : scQtFinalizationReportDetails) {
-				ScQtFinalizationReportDetailAttachment attachment = reportDetail
-						.getScQtFinalizationReportDetailAttachment();
-
-				if (attachment == null) {
-					attachment = generateDocumentAttachmentDetail(reportDetail);
-					reportDetail.setScQtFinalizationReportDetailAttachment(attachment);
-				}
-				if (attachment != null) {
-					attachment.setTempFileName(reportDetail.getTitle());
-				}
-
-				scAttachmentsDetail.add(attachment);
-			}
-		}
-
-		attachments.addAll(scAttachmentsDetail);
-		return attachments;
-	}
-
-	// #25651 - End
-	
-	//#25651 - Start
-	/**
-	 * To combine download evaluation report ScQtFinalizationReport and ScQtFinalizationReportDetail
-	 */
-	public void downloadCombinedReport(Object report) throws Exception {
-
-		if (report instanceof ScQtFinalizationReport) {
-
-			downloadReport((ScQtFinalizationReport) report);
-
-		} else if (report instanceof ScQtFinalizationReportDetail) {
-
-			downloadReportDetail((ScQtFinalizationReportDetail) report);
-		}
-	}
-	//#25651 - End
-	
-	//#25651 - Start
-	/**
-	 * To get list evaluation report ScQtFinalizationReport and ScQtFinalizationReportDetail
-	 */
-	public List<Object> getCombinedEvaluationReportList() {
-
-		List<Object> combinedReportList = new ArrayList<>();
-		Long qtId = this.getManagedBean().getScQt().getQtId();
-
-		List<ScQtFinalizationReport> reports = getManagedBean().getEvaluationReportList();
-		List<ScQtFinalizationReportDetail> details = getManagedBean().getEvaluationReportDetailList();
-
-		if (CollectionUtils.isNotEmpty(reports)) {
-			for (ScQtFinalizationReport report : reports) {
-				String key = report.getPmDocument().getDocDefinitionKey();
-
-				if (!isWipEvaluationReportExisting(key, qtId)) {
-					combinedReportList.addAll(reports);
-					break;
-				}
-			}
-		}
-
-		if (CollectionUtils.isNotEmpty(details)) {
-			for (ScQtFinalizationReportDetail detail : details) {
-				String key = detail.getPmDocument().getDocDefinitionKey();
-
-				if (isWipEvaluationReportExisting(key, qtId)) {
-					combinedReportList.addAll(details);
-					break;
-				}
-			}
-		}
-
-		return combinedReportList;
-	}
-	//#25651 - End
 	
 	/**
 	 * save consolidationReport Details.
@@ -1428,8 +1296,7 @@ public class ConsolidationReportBackingBean extends
 			reqDTO.setExcludedDocNames(ConsolidationReportManagedBean.getDirectdownloaddocdefkeys());
 			List<ScQtFinalizationReportDetail> finalizationReportsDetail = qtSuppFinalizationSO
 					.retriveFinalizationReportDetail(reqDTO).getScQtFinalizationReportDetails();
-			populateEvaluationReportDetails(finalizationReportsDetail, this.getManagedBean().getScQt());
-			populateBriefingReportDetails(finalizationReportsDetail);
+			this.getManagedBean().setScQtFinalizationReportDetail(finalizationReportsDetail);
 			// #25651 - End
 			
 		} finally {
@@ -2077,46 +1944,6 @@ public class ConsolidationReportBackingBean extends
 		finalizeUlasanremarks();
 		return reqDTO;
 	}
-	
-    //#25651 - Start
-	private ScQtFinalizationReportDetailAttachment generateDocumentAttachmentDetail(
-			ScQtFinalizationReportDetail scQtFinalizationReportDetail) throws Exception {
-		
-		ScQtFinalization scQtFinalization = getManagedBean()
-				.getScQtFinalization();
-
-		ScQtFinalizationReportDetailAttachment reportAttachment = null;
-
-		String docDefinitionKey = scQtFinalizationReportDetail.getPmDocument()
-				.getDocDefinitionKey();
-		ScQt scQt = getManagedBean().getScQt();
-		reportAttachment = new ScQtFinalizationReportDetailAttachment();
-		reportAttachment.setScQtFinalizationReportDetail(scQtFinalizationReportDetail);
-		reportAttachment.setDocNo(scQtFinalization.getScQt().getQtNo());
-		StringBuilder filename = new StringBuilder();
-		// replace white space due to firefox
-		filename.append(scQtFinalizationReportDetail
-				.getTitle()
-				.replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE,
-						SourcingConstants.UNDER_SCORE)
-				.replaceAll(SourcingConstants.REG_EXP_BACK_SLASH,
-						SourcingConstants.UNDER_SCORE));
-
-		if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT
-				.equals(docDefinitionKey)) {
-			filename.append(".rtf");
-			reportAttachment.setFileName(filename.toString());
-			generateKertasTaklimatPdf(scQt, reportAttachment);
-		} else {
-			debugLogger("No document type exists with the key "
-					+ docDefinitionKey);
-			reportAttachment = null;
-		}
-
-	
-		return reportAttachment;
-	}
-	//#25651 - End
 
 	private ScQtFinalizationReportAttachment generateDocumentAttachment(
 			ScQtFinalizationReport scQtFinalizationReport) throws Exception {
@@ -2161,7 +1988,7 @@ public class ConsolidationReportBackingBean extends
 	}
 
 	private void generateKertasTaklimatPdf(ScQt qt,
-			ScAttachment attachment) throws Exception { //#25651
+			ScQtFinalizationReportAttachment attachment) throws Exception {
 		debugLogger("generateKertasTaklimatPdf");
 		populateAttachmentDetails(attachment);
 
