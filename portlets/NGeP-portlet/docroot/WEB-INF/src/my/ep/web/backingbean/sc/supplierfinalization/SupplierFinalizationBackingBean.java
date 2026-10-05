@@ -12781,7 +12781,7 @@ public class SupplierFinalizationBackingBean extends
 		if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equals(committeeType)
 				|| ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equals(committeeType)) {
 			throw new EpException(MessageConst.ERROR_760394,
-					new String[] { committeeName, String.valueOf(offeredPrice) });
+					new String[] { committeeName, procurementMode, offeredPrice });
 		} // #41184 - End
 		
 	}
