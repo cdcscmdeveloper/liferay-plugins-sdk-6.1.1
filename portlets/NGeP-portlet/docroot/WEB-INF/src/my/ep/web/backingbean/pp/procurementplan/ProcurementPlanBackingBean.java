@@ -189,6 +189,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	private static final Integer startyear = 2018;
 	private static boolean isMandatory = false;
 	private static String pageType = "";
+	
+	//SLA Message
 	private static final String SLA_TXN_SAVEPLAN = "savePlan"; // #33690
 	private static final String SLA_SERVICE_SAVEPLAN = "ProcurementPlanBackingBean.savePlan"; // #33690
 	
@@ -2347,84 +2349,12 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 		// #36107 - End
 
-		// #33690 - START
-		preserveExistingVerifier(roleCode, ppPlanActors);
-		// #33690 - END
+		preserveExistingVerifier(roleCode, ppPlanActors); // #33690
 
 		List<PmUser> sourceList = PpCommonUtil.retrieveUserListByRole(orgProfileId, roleCode, this.getManagedBean().getVerifierModel().getTarget(),false);
 		this.getManagedBean().getVerifierModel().setSource(sourceList);
 	
 	}
-	
-	// #33690 - START
-	private void preserveExistingVerifier(String roleCode, List<PpPlanActor> ppPlanActors) {
-
-		if (!shouldPreserveInactiveVerifier() || ppPlanActors == null) {
-			return;
-		}
-
-		List<PmUser> selectedVerifiers = this.getManagedBean().getVerifierModel().getTarget();
-
-		if (selectedVerifiers == null) {
-			selectedVerifiers = new ArrayList<>();
-		}
-
-		for (PpPlanActor ppPlanActor : ppPlanActors) {
-
-			if (isValidVerifierActor(ppPlanActor, roleCode)
-					&& !isVerifierAlreadySelected(ppPlanActor.getPmUser(), selectedVerifiers)) {
-
-				selectedVerifiers.add(ppPlanActor.getPmUser());
-			}
-		}
-
-		this.getManagedBean().getVerifierModel().setTarget(selectedVerifiers);
-	}
-	
-	private boolean shouldPreserveInactiveVerifier() {
-
-		if (!isRoleApprover() || this.getManagedBean().getSelectedPlan() == null
-				|| this.getManagedBean().getSelectedPlan().getStatus() == null) {
-			return false;
-		}
-
-		Long currentStatusId = this.getManagedBean().getSelectedPlan().getStatus().getStatusId();
-
-		return ProcurementPlanConst.PPP_PENDING_APPROVAL.equals(currentStatusId)
-				|| ProcurementPlanConst.PPP_PENDING_REVISION_APPROVAL.equals(currentStatusId);
-	}
-	
-	private boolean isValidVerifierActor(PpPlanActor ppPlanActor, String roleCode) {
-
-		if (ppPlanActor == null || ppPlanActor.getPmUser() == null || ppPlanActor.getRoleCode() == null) {
-			return false;
-		}
-
-		boolean isActiveActorRecord = DbValueConst.RECORD_STATUS_ACTIVE == ppPlanActor.getRecordStatusFlg();
-
-		boolean isVerifierActor = roleCode.equals(ppPlanActor.getRoleCode().getRoleCode());
-
-		return isActiveActorRecord && isVerifierActor;
-	}
-	
-	private boolean isVerifierAlreadySelected(PmUser verifier, List<PmUser> selectedVerifiers) {
-
-		if (verifier == null || verifier.getUserId() == null) {
-			return false;
-		}
-
-		for (PmUser targetUser : selectedVerifiers) {
-
-			if (targetUser != null && targetUser.getUserId() != null
-					&& targetUser.getUserId().equals(verifier.getUserId())) {
-
-				return true;
-			}
-		}
-
-		return false;
-	}
-	// #33690 - END
 	
 	/**
 	 * retrieve approver source and target
@@ -3271,16 +3201,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	}
 	//#34156 - End
 	
-	// #33690 - START
-	private Integer parseSpStatus(String spStatus) {
-		try {
-			return Integer.valueOf(spStatus);
-		} catch (NumberFormatException e) {
-			return null;
-		}
-	}
-	// #33690 - END
-	
 	public String savePlan(String action) throws Exception{	
 		//LOG : 26549 : SLA Monitoring
 		long startTime = System.currentTimeMillis();
@@ -3413,7 +3333,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						log.info("VERIFY UI Approver list is empty. " + "Resolving original Approver from ppPlanActors.");
 
 						for (PpPlanActor actor : ppPlan.getPpPlanActors()) {
-
 							if (actor != null && actor.getRoleCode() != null && actor.getPmUser() != null
 									&& RoleCode.PLAN_APPROVER.value().equals(actor.getRoleCode().getRoleCode())
 									&& actor.getRecordStatusFlg() != null
@@ -3431,8 +3350,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 									originalApproverReqDTO.setLoginId(originalApprover.getLoginId());
 									originalApproverReqDTO.setFetchAddress(false);
 
-									UserResDTO originalApproverResDTO = userSO
-											.retrieveUserByLoginIdOrUserIdIgnoreStatus(originalApproverReqDTO);
+									UserResDTO originalApproverResDTO = userSO.retrieveUserByLoginIdOrUserIdIgnoreStatus(originalApproverReqDTO);
 
 									if (originalApproverResDTO != null && originalApproverResDTO.getPmUser() != null) {
 										originalApproverUserId = originalApproverResDTO.getPmUser().getUserId();
@@ -3440,7 +3358,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 								}
 
 								if (originalApproverUserId == null) {
-
 									Exception ex = new Exception(
 											"Unable to resolve Plan Approver USER_ID for login ID: "
 													+ originalApprover.getLoginId());
@@ -3448,9 +3365,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 									SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROCUREMENT_PLAN,
 											SLA_TXN_SAVEPLAN, ppPlan.getPlanNo(), SLA_SERVICE_SAVEPLAN,
 											new FacesScopes().getUserSessionBean().getUserId(), ex);
-
 								} else {
-
 									if (approverUserIds.length() > 0) {
 										approverUserIds.append(",");
 									}
@@ -3563,7 +3478,6 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 						|| spStatusInt == PrcCheckUserProfileStatus.NO_AGENCY_NO_ROLE_OTHER_ACTIVE_USER;
 
 				if (isInactiveUserStatus && !BpmOutcomeConst.BPM_VERIFY.equalsIgnoreCase(action)) {
-
 					reqDTO.setInactiveUserStatus(spStatus);
 					reqDTO.setNextActiveUserIds(inactiveUserResDTO.getUserIds());
 					reqDTO.setNextActiveLoginIds(inactiveUserResDTO.getLoginIds());
@@ -3741,8 +3655,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			
 			if (resDTO.isSuccessful()) {
 				//LOG : 26549 : SLA Monitoring
+				
 				SLAUtils.getInstance().logSLAInfo("PM","PS",
 						SLA_SERVICE_SAVEPLAN, startTime);  // #33690
+
 				log.info("Record saved successfully");
 				
 				//#35502 Start - For Audit Trail to SP
@@ -9857,4 +9773,72 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		getManagedBean().setDisabledPTJLov(true);
 	}
 	//#39693_40086 - End
+
+	// #33690 - START
+	private void preserveExistingVerifier(String roleCode, List<PpPlanActor> ppPlanActors) {
+		if (!shouldPreserveInactiveVerifier() || ppPlanActors == null) {
+			return;
+		}
+
+		List<PmUser> selectedVerifiers = this.getManagedBean().getVerifierModel().getTarget();
+
+		if (selectedVerifiers == null) {
+			selectedVerifiers = new ArrayList<>();
+		}
+
+		for (PpPlanActor ppPlanActor : ppPlanActors) {
+			if (isValidVerifierActor(ppPlanActor, roleCode)
+					&& !isVerifierAlreadySelected(ppPlanActor.getPmUser(), selectedVerifiers)) {
+				selectedVerifiers.add(ppPlanActor.getPmUser());
+			}
+		}
+
+		this.getManagedBean().getVerifierModel().setTarget(selectedVerifiers);
+	}
+
+	private boolean shouldPreserveInactiveVerifier() {
+		if (!isRoleApprover() || this.getManagedBean().getSelectedPlan() == null
+				|| this.getManagedBean().getSelectedPlan().getStatus() == null) {
+			return false;
+		}
+
+		Long currentStatusId = this.getManagedBean().getSelectedPlan().getStatus().getStatusId();
+
+		return ProcurementPlanConst.PPP_PENDING_APPROVAL.equals(currentStatusId)
+				|| ProcurementPlanConst.PPP_PENDING_REVISION_APPROVAL.equals(currentStatusId);
+	}
+
+	private boolean isValidVerifierActor(PpPlanActor ppPlanActor, String roleCode) {
+		if (ppPlanActor == null || ppPlanActor.getPmUser() == null || ppPlanActor.getRoleCode() == null) {
+			return false;
+		}
+
+		boolean isActiveActorRecord = DbValueConst.RECORD_STATUS_ACTIVE == ppPlanActor.getRecordStatusFlg();
+		boolean isVerifierActor = roleCode.equals(ppPlanActor.getRoleCode().getRoleCode());
+
+		return isActiveActorRecord && isVerifierActor;
+	}
+	
+	private boolean isVerifierAlreadySelected(PmUser verifier, List<PmUser> selectedVerifiers) {
+		if (verifier == null || verifier.getUserId() == null) {
+			return false;
+		}
+
+		for (PmUser targetUser : selectedVerifiers) {
+			if (targetUser != null && targetUser.getUserId() != null && targetUser.getUserId().equals(verifier.getUserId())) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private Integer parseSpStatus(String spStatus) {
+		try {
+			return Integer.valueOf(spStatus);
+		} catch (NumberFormatException e) {
+			return null;
+		}
+	}
+	// #33690 - END
 }
