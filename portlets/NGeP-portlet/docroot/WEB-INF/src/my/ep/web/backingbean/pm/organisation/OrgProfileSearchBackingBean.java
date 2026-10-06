@@ -375,7 +375,7 @@ public class OrgProfileSearchBackingBean extends
 		}
 		//27502 - Start
 		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean(QTSearchBeanConst.SEARCH_PMORGPROFILE_BPK,
+				new SearchFilterBean(QTSearchBeanConst.SEARCH_BPK,
 						SearchOperator.OPERATOR_EQUALS.value(), true));
 		List<Long> zoneIds = new ArrayList<>();
 
@@ -387,7 +387,7 @@ public class OrgProfileSearchBackingBean extends
 			zoneIds.add(new Long(SupplierManagementConst.PM_ZONE_SEMENANJUNG));
 		}
 		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean(QTSearchBeanConst.SEARCH_PMORGPROFILE_PMZONE_ZONEID,
+				new SearchFilterBean(QTSearchBeanConst.SEARCH_PMZONE_ZONEID,
 				SearchOperator.OPERATOR_IN.value(),
 				zoneIds));
 		//27502 - End
