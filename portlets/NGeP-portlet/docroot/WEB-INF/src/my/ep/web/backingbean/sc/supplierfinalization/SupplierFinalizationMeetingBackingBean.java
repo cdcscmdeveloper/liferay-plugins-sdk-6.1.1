@@ -2383,9 +2383,6 @@ if (CollectionUtils.isNotEmpty(
 			auditResDTO.setCreatedBy(userId);
 			auditResDTO.setStatusId(scWorkFlowStatus.getPmStatus().getStatusId());
 			//#35500 bug fix 2nd Oct End
-			auditResDTO.setStatusId(this.getManagedBean().getCurrentStatusId() != null ?
-					this.getManagedBean().getCurrentStatusId() : 
-					this.getManagedBean().getScQt().getCurrentWorkFlowStatus().getPmStatus().getStatusId());
 			auditResDTO.setRoleCode(checkRolesForAuditTrail());
 			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_QC);
 			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_COMMITTEE);//#35500 Flag changes
