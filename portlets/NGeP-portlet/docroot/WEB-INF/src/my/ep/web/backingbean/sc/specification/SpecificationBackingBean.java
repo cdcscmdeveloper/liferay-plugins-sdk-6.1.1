@@ -1247,7 +1247,9 @@ public class SpecificationBackingBean extends
 				SCProcessNameConst.SPEC_MAINTENANCE_REVISE_SCORING //1873 note 149
 			};
 			//#34656 move validation position ,trigger before popup-start
-			specSo.validateSpecZoneQtyZero(specReqDTO);
+			if (activeIndex >= 2) { //#21695,#25138,#29021,#25635,#41460
+				specSo.validateSpecZoneQtyZero(specReqDTO);
+			}
 			//#34656 move validation position -end
 			if (Arrays.asList(allowedTaskName).contains(taskName)
 					|| (StringUtils.isEmpty(taskName) && !this.getManagedBean().isReadOnly())) {
@@ -2112,6 +2114,15 @@ public class SpecificationBackingBean extends
 				// Collections.sort(this.getManagedBean()
 				// .getScQtCheckSt2financeProposalList());
 				localcheckList = null;
+				//#41441 - #10141 Start Vinod
+				Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+				if (Arrays.asList(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
+						QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION,
+						QTStatusConst.SE_PENDING_SUBMISSION,
+						QTStatusConst.SE_PENDING_REVISION).contains(currentStatusId)) {
+					checkAndUpdateNewMandatoryChecklist(this.getManagedBean().getQt(), SourcingConstants.TECHNICAL_DOCTYPE);
+				}
+				//#41441 - #10141 End Vinod
 			}
 			// #40138 Start Vinod
 			else {
@@ -22822,6 +22833,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			this.getManagedBean().setPreRenderInactiveChecklist(
 					checkInactiveChecklistForPopup(this.getManagedBean()
 							.isShowInactiveChecklistPopup(), bpAction));
+			deleteConfirmedInactiveChecklists();	//#41026/#10141
 		} else {
 			//#40998/#10141 - Start
 			Long currentStatusId = this.getManagedBean().getCurrentStatusId();
@@ -22940,6 +22952,42 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				}
 			}
 		}
+	}
+
+	/**
+	 * Deletes the confirmed inactive checklists from the database so the
+	 * popup is not shown again on the next visit.
+	 */
+	private void deleteConfirmedInactiveChecklists() {
+		List<ScQtCheckList> inActiveChecklist = this.getManagedBean().getInActiveChecklist();
+		if (CollectionUtils.isEmpty(inActiveChecklist)) {
+			return;
+		}
+		List<ScQtCheckList> specCheckLists = new ArrayList<>();
+		List<ScQtCheckList> otherCheckLists = new ArrayList<>();
+		for (ScQtCheckList checklist : inActiveChecklist) {
+			if (null == checklist.getQtChecklistId()) {
+				continue;
+			}
+			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION.equalsIgnoreCase(checklist
+					.getDefinationType().getParameterCode())) {
+				specCheckLists.add(checklist);
+			} else {
+				otherCheckLists.add(checklist);
+			}
+		}
+		if (specCheckLists.isEmpty() && otherCheckLists.isEmpty()) {
+			return;
+		}
+		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+		reqDTO.setScQt(this.getManagedBean().getQt());
+		reqDTO.setCheckLists(specCheckLists);
+		reqDTO.setTobeRemoveList(otherCheckLists);
+		getSpecSO().deleteInactiveChecklists(reqDTO);
+
+		// already deleted, so the later save must not delete them again
+		removeMarkedDeletedChecklists(this.getManagedBean().getMarkDeletedTechChecklist(), inActiveChecklist);
+		removeMarkedDeletedChecklists(this.getManagedBean().getMarkDeletedFinChecklist(), inActiveChecklist);
 	}
 	//#41026/#10141 - End
 
