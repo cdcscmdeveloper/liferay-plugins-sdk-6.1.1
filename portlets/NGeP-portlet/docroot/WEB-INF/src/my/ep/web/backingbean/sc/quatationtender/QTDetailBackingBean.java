@@ -895,7 +895,8 @@ public class QTDetailBackingBean extends
 	 */
 	//Enhancement #25729 -start-
 	public void submitQTDetailsAction() {
-	//Enhancement #25729 -end-
+	//Enhancement #25729 -end-	
+
 		// #29732 Start
 		if (this.getManagedBean().getQt().getQtStatus().getStatusId().equals((QTStatusConst.QT_PENDING_QT_SUBMISSION))) {
 			String changedCatCodeList = checkCatCodeChange();
@@ -2447,23 +2448,27 @@ public class QTDetailBackingBean extends
 					supplierSearchSO = null;
 				}
 			} else {
-				if (isDeskOfficer()) {
-					// Filter By - actor user id
-					reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
-					
-					// Only DO Actor with edit access right. 
-					// Otherwise (Audit Search), user can view QT based on user roles match with actor.
-					if (isQTMaintenanceScreen() || isQTSearchScreen()) {
-						reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
-					}
+				/*
+				 * 38524 - start 
+				 * Update codes with caution! 
+				 * 1. For uncatered roles(bounded as an actor only), please add roleCodes in SourcingConstants.QT_MAINTENANCE_ALLOWED_ACTOR 
+				 * 2. To prevent unauthorize access from multi-role user, only roles listed was allowed for the last fallback scenario
+				 * 3. Any new role that requires global search can be added at the first "if"
+				 */
+				reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+				boolean isMaintenanceScreen = isQTMaintenanceScreen() || isQTSearchScreen();
+
+				if (isAuditor() || isAdmin()) {
+					// Auditor/Admin got previlidge for global search
+					reqDTO.setPmUser(null);
+				} else if (isDeskOfficer() && isMaintenanceScreen
+						&& reqDTO.getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)) {
+					reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
+				} else {
+					// last fallback
+					reqDTO.setRoleCode(null);
 				}
-				//Bug_33484 - start
-				else if (isQcaSecretary() || isQcbSecretary() || isPbbSecretary() 
-						|| isFpbSecretary() || isApprover()){
-					// Filter By - actor user id
-					reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
-				}
-				//Bug_33484 - end
+				// 38524 - end
 				
 				 /* Enhancement #27668 -start-
 				 * TO INCLUDE QT WHICH PPB SECRETARY INVOLVE IN IT, IF HIGHER_AUTHORITY LINK ALSO
@@ -2545,7 +2550,9 @@ public class QTDetailBackingBean extends
 		}
 	}
 	
-	private boolean isQTMaintenanceScreen() {
+	// #25635 -start-
+	public boolean isQTMaintenanceScreen() {
+		// #25635 -end-
 		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	
@@ -3042,6 +3049,10 @@ public class QTDetailBackingBean extends
 		SelectItem[] finalizationSecratary = getManagedBean().getFinalizationSecratary();
 		Long currentStatusId = scQt.getQtStatus().getStatusId();
 		
+		// #35320 - Start
+		resetFinalizationCommittee(scQt, currentStatusId);
+		// #35320 - End
+		
 		if (finalizationSecratary == null
 				&& isQTStatusLessThanOrEquals(currentStatusId, QTStatusConst.QT_PENDING_LOA)) {
 			ICommitteSO committeSO;
@@ -3074,6 +3085,66 @@ public class QTDetailBackingBean extends
 
 		return finalizationSecratary;
 	}
+	
+	// #35320 - Start;
+	/**
+	 * #35320
+	 * Resets the finalization committee and secretary when the quotation
+	 * is finalized by a supported quotation committee and the current status
+	 * is a trigger status.
+	 *
+	 * @param scQt the quotation object to be updated
+	 * @param currentStatusId the current quotation status identifier
+	 */
+	private void resetFinalizationCommittee(ScQt scQt, Long currentStatusId) {
+	    if (!isValidFinalizationCommittee(scQt)) {
+	        return;
+	    }
+
+	    if (!isQuotationCommittee(scQt.getFinalizationCommitte())) {
+	        return;
+	    }
+
+	    if (!resetCommitteeByStatus(currentStatusId)) {
+	        return;
+	    }
+
+	    scQt.setFinalizationCommitte(new PmParameter());
+	    scQt.setFinalizationSecratery(new PmUser());
+	    this.getManagedBean().setQt(scQt);
+	}
+
+	/**
+	 * #35320
+	 * Checks whether the quotation has a valid finalization committee
+	 * and parameter code.
+	 *
+	 * @param scQt the quotation object
+	 * @return {@code true} if the committee and parameter code are present;
+	 *         {@code false} otherwise
+	 */
+	private boolean isValidFinalizationCommittee(ScQt scQt) {
+	    return scQt != null
+	            && scQt.getFinalizationCommitte() != null
+	            && scQt.getFinalizationCommitte().getParameterCode() != null;
+	}
+
+	/**
+	 * #35320
+	 * Determines whether the supplied parameter represents one of the
+	 * supported quotation committee types.
+	 *
+	 * @param committee the finalization committee parameter
+	 * @return {@code true} if the committee is quotation committee A or B;
+	 *         {@code false} otherwise
+	 */
+	private boolean isQuotationCommittee(PmParameter committee) {
+	    String parameterCode = committee.getParameterCode();
+
+	    return ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(parameterCode)
+	            || ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(parameterCode);
+	}
+	// #35320 - End;
 
 	/**
 	 * Retrieve business owner tab dtl.
@@ -7069,6 +7140,10 @@ public class QTDetailBackingBean extends
 	public String cancelQtDetails() {
 		debugLogger("cancelQtDetails");
 		IQTDetailSO detailSO;
+		
+		// #35320 - Start
+		this.getManagedBean().setAfterSF(false);
+		// #35320 - End
 		try {
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
@@ -7096,6 +7171,17 @@ public class QTDetailBackingBean extends
 				TabBean tabBean = new TabBean(null, null, qtApproval,
 						retrieveFinalizationCommitteeType());
 				this.getManagedBean().setSelectedApprovalTabBean(tabBean);
+				
+				// #35320 - Start
+				if (isQTStatusGreaterThanOrEquals(scQt.getQtStatus().getStatusId(),
+						QTStatusConst.QT_SUPPLIER_FINALIZATION)) {
+					this.getManagedBean().setAfterSF(true);
+
+					ScQtApproval approval = this.getManagedBean().getSelectedApprovalTabBean().getScQtApproval();
+					List<ScQtApproverSettings> approverSettings = approval.getApproverSettings();
+					approverSettings.get(0).setCommitteeType(scQt.getFinalizationCommitte());
+					approverSettings.get(0).setPmUser(scQt.getFinalizationSecratery());
+				}// #35320 - End
 			} else {
 				// #9019 -start-
 				// null remark in UI it showing two editable textarea to prevent that only value be pass to below method 
@@ -7910,7 +7996,7 @@ public class QTDetailBackingBean extends
 	}
 	// Bug #32425, #19336 - End
 	
-	private boolean isDeskOfficer() {
+	public boolean isDeskOfficer() {//35142
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value());
 	}
@@ -12623,4 +12709,14 @@ public class QTDetailBackingBean extends
 		return !isShow;
 	}
 	//#21692 - End
+	
+	/**
+	 * #35320 - Start 
+	 * @param statusId
+	 * @return boolean
+	 */
+	private static boolean resetCommitteeByStatus(long statusId) {
+        final List<Long> triggerStatuses = Arrays.asList(QTStatusConst.RESET_COMMITTEE_BY_STATUS);
+        return triggerStatuses.contains(statusId);
+	}//#35320 - End 
 }

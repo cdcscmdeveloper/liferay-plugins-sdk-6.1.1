@@ -20,7 +20,6 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -218,7 +217,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.id.Hex;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -1357,7 +1355,7 @@ public class SmCommonUtil {
 
 		return msg;
 	}
-
+	
 	//13362 - START
 	public static String getMessageMalay(String key, String[] params) {
 		String preferredLang = CommonConstants.LANGUAGE_CODE_MALAY;
@@ -1756,6 +1754,10 @@ public class SmCommonUtil {
 			reqDTO.setSmAppl(smAppl);
 			if (serType.equalsIgnoreCase("SUP")) {
 				reqDTO.setType("supplier");
+			//#24964 - START, 31230
+			} else if (serType.equalsIgnoreCase("PO")){
+				reqDTO.setType("po");
+			//#24964 - END, 31230
 			} else {
 				reqDTO.setType("approved");
 			}
@@ -4009,6 +4011,8 @@ public class SmCommonUtil {
 		List<SelectItem> machineItems = new ArrayList<SelectItem>();
 		String[] categoryInMachineSection = new String[] {
 				ParameterConst.CATEGORY_TYPE_DOCKYARD,
+				ParameterConst.CATEGORY_TYPE_MANUFACTURING, // #25442 - Site Visit Grouping Enhancement -28775
+				ParameterConst.CATEGORY_TYPE_PRINTING, // #25442 - Site Visit Grouping Enhancement -28775
 				ParameterConst.CATEGORY_TYPE_TRAVEL,
 				ParameterConst.CATEGORY_TYPE_WORKSHOP };
 		if (StringUtils.isNotBlank(catTypeCode)
@@ -4367,6 +4371,59 @@ public class SmCommonUtil {
 			}
 		}
 	}
+	
+	//29379 - Site Visit Grouping Enhancement - 28775 -start
+	/**
+	 * Verify MyIdentity with IC only
+	 * @param name
+	 * @param identificationNo
+	 * @return status code
+	 */
+	public String verifyWithMyIdentityICOnly(String name, String identificationNo){
+		MyIdentityReqDTO reqDTO = new MyIdentityReqDTO();
+		IMyIdentitySO reqSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, IMyIdentitySO.class);
+		reqDTO.setName(name.trim());
+		reqDTO.setNewIcNo(identificationNo);
+		reqDTO.setType(my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_ONLINE);
+		try{
+			MyIdentityResDTO resDTO = reqSO.myIdentityVerificationIcOnly(reqDTO);
+			log.info("verifyWithMyIdentityICOnly>>>>" + resDTO.getSeverity()
+					+ ">>code>>" + resDTO.getStatusCode());
+			
+			if (!resDTO.getSeverity().equalsIgnoreCase(
+					my.ep.constant.sm.SupplierManagementConst.MYIDENTITY_SEVERITY_SUCC)) {
+				switch (resDTO.getStatusCode()) {
+				case "70019":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70019);
+				case "70020":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70020);
+				case "70031":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70031);
+				case "70004":
+				case "70005":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
+				case "70039":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70039);
+				case "70040":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70040);
+				}
+			}
+			return resDTO.getStatusCode();
+			
+		} catch(Exception ex){
+			String msg = MessageUtils.getMessage(ex.getMessage(), MessageUtils.BUNDLE_COMMON_MESSAGES,
+					new FacesScopes().getUserLocale());
+			if (msg != null) {
+				throw new EpException(msg + "(ERR-"+ ex.getMessage() + ")");
+			} else {
+				log.error(ex);
+				throw new EpException(ex.getMessage() + "(ERR-729999)");
+			}
+		}
+	}
+	//29379 - Site Visit Grouping Enhancement - 28775 -end
+	
 	//16052019 - SSM INTEGRATION CR - Fahmi
 		/**
 		 * Verify regNo no with SSM
@@ -5334,6 +5391,28 @@ public class SmCommonUtil {
 		
 		return resDTO.getSmSupplierCategoryList();
 	}
+	
+	//28775 - Site Visit Grouping Enhancement - 28775 - start
+	/**
+	 * @param applId
+	 * @param categoryL3Id
+	 * @param applType
+	 * @return supplier categories
+	 */
+	public List<SmSupplierCategory> retrieveSupplierCategoryByApplIdAndCategoryId(
+			Long applId, Long categoryL3Id, String applType){
+	
+		if(applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+			SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+			reqDTO.setApplId(applId);
+			reqDTO.setCategoryId(categoryL3Id);
+			SupplierSearchResDTO resDTO = SmServiceLookup.getSupplierSearchSO()
+					.retrieveCategoryByApplIdAndCategoryId(reqDTO);
+			return resDTO.getSmSupplierCategoryList();
+		}
+		return retrieveSupplierCategoryByApplIdAndCategoryId(applId, categoryL3Id);
+	}
+	//28775 - Site Visit Grouping Enhancement - 28775 - end
 
 	/**
 	 * Gets the my identity status description based on the responsecode.

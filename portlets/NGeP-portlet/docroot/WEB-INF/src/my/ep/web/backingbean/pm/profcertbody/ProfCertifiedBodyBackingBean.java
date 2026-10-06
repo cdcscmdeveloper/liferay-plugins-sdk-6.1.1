@@ -25,10 +25,11 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.common.certbody.ICertBodySO;
-import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.dto.pm.common.certbody.CertBodyReqDTO;
@@ -43,6 +44,8 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMProfCertBodyBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.ProfCertifiedBodySearchBean;
@@ -64,8 +67,12 @@ import org.apache.log4j.Logger;
 public class ProfCertifiedBodyBackingBean extends
 
 BaseBackingBean<ProfCertifiedBodyManagedBean> {
-	private static final Logger log = EpLogger
-			.getLogger(ProfCertifiedBodyBackingBean.class);
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private static final Logger log = EpLogger.getLogger(ProfCertifiedBodyBackingBean.class);
 
 	private IPagingDataModel<PmCertBody> profCertBodyModel = new CertBodyPagingDataModel();
 	
@@ -420,6 +427,18 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 
 			certBodyReqDTO.setCertBody(certBody);
 
+			/************ AUDIT START #28895-35509 *************/
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMProfCertBodyBackingBean();
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
+
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CERT_BODY) && certBody.getCertBodyId() != null) {
+				certBodyReqDTO.setCertBodyId(certBody.getCertBodyId());
+				CertBodyResDTO oldFiled = certBodySO.retrievePmCertBodyDtlById(certBodyReqDTO);
+				getManagedBean().setOldAuditPmCertBody(oldFiled.getCertBody());
+			}
+			/************ AUDIT END #28895-35509 *************/
+			
 			CertBodyResDTO resDTO = certBodySO.saveOrUpdateCertBodyDtls(certBodyReqDTO);
 			reloadProfCertData(resDTO.getCertBody());
 			PmCertBody oldPmCertBody = (PmCertBody) BeanUtils.cloneBean(resDTO.getCertBody());
@@ -427,6 +446,11 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 
 			this.getManagedBean().setCertBody(resDTO.getCertBody());
 			if (resDTO.isSuccessful()) {
+				/************ AUDIT START #28895-35509 *************/
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CERT_BODY)) {
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_CERT_BODY);
+				}
+				/************ AUDIT END #28895-35509 *************/
 				if (certBody.isBrandNew()) {
 					FacesContext.getCurrentInstance().addMessage(
 							null,
@@ -470,7 +494,6 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		     this.getManagedBean().setOldPmCertBody(oldPmCertBody);		
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -491,7 +514,6 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		     this.getManagedBean().setOldPmCertBody(oldPmCertBody);		
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -537,7 +559,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 	}
 
 	/**
-	 * get YES & NO options //TODO: to load dynamically
+	 * get YES & NO options
 	 * 
 	 * @return SelectItem[]
 	 */

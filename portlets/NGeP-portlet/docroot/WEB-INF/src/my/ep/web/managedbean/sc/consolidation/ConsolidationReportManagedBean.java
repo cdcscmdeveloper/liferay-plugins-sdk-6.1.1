@@ -11,6 +11,7 @@ import my.ep.bean.sc.QtEvaluationResultDtlBean;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtScoreSetting; //#38151
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
@@ -20,8 +21,11 @@ import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendationPengesyoranRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendationUlasanRemarks;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;//#38151
 import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.sc.quatationtender.WeightageScoreBean;//#38151
 import my.ep.web.key.sc.supplierfinalization.MapKey;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -90,15 +94,30 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	private List<ScQtFinalizationRemarks> finalizationItemizedRemarks;
 	// #18685 - End
 	private boolean isProcCategoryMedicine;
+	// #21695 Farid start
+	private boolean isOfferAll;
+	// #21695 End
 	private List<ScQtRecommendationUlasanRemarks> finalizationUlasanremarks;
 	private List<ScQtRecommendationPengesyoranRemarks> finalizationPengreysonremarks;
 	
+	// #28777 & #29729 - Start
+	private List<SmSupplierBranch> supplierBranchList;
+	private IPagingDataModel<ScQtEvaluationResultDtl> disQualifiedSuppliersDataModel;
+	// #28777 & #29729 - End
+	
 	private boolean isSetNull ; //Bug #31364
-
 	private boolean isDemoReq; // #28784
-
 	private boolean allSupplierDisagreeEPV;//#21692
 	
+	//#38151 start
+	private List<WeightageScoreBean> weightageScoreBeans;
+	private Long overallTechnicalRecommendationPercent;
+	private Long overallFinancialRecommendationPercent;
+	private List<ScQtScoreSetting> scoreSettings;
+	private boolean weightage35384WIP;
+	private SupplierFinalizationBackingBean suppFinalBean;
+	//#38151 end
+
 	@SuppressWarnings("serial")
 	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
 		{
@@ -590,6 +609,26 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 			List<ScQtRecommendationPengesyoranRemarks> finalizationPengreysonremarks) {
 		this.finalizationPengreysonremarks = finalizationPengreysonremarks;
 	}
+	
+	// #28777 & #29729 - Start
+	public List<SmSupplierBranch> getSupplierBranchList() {
+		return supplierBranchList;
+	}
+
+	public void setSupplierBranchList(List<SmSupplierBranch> supplierBranchList) {
+		this.supplierBranchList = supplierBranchList;
+	}
+
+	public IPagingDataModel<ScQtEvaluationResultDtl> getDisQualifiedSuppliersDataModel() {
+		return disQualifiedSuppliersDataModel;
+	}
+
+	public void setDisQualifiedSuppliersDataModel(
+			IPagingDataModel<ScQtEvaluationResultDtl> disQualifiedSuppliersDataModel) {
+		this.disQualifiedSuppliersDataModel = disQualifiedSuppliersDataModel;
+	}
+
+	// #28777 & #29729 - End
 
 	public boolean isSetNull() {
 		return isSetNull;
@@ -621,7 +660,7 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 		return isDemoReq;
 	}
 	// #28784 -end-
-
+	
 	// #28784 -start-
 	public void setDemoReq(boolean isDemoReq) {
 		this.isDemoReq = isDemoReq;
@@ -636,4 +675,70 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 		this.allSupplierDisagreeEPV = allSupplierDisagreeEPV;
 	}
 	//#21692 - End
+
+	//#21695 Farid
+	/**
+	 * @return the isOfferAll
+	 */
+	public boolean isOfferAll() {
+		return isOfferAll;
+	}
+
+	/**
+	 * @param isOfferAll the isOfferAll to set
+	 */
+	public void setOfferAll(boolean isOfferAll) {
+		this.isOfferAll = isOfferAll;
+	}
+	//#21695 End
+
+	//#38151 - Start
+	public List<WeightageScoreBean> getWeightageScoreBeans() {
+		return weightageScoreBeans;
+	}
+
+	public void setWeightageScoreBeans(List<WeightageScoreBean> weightageScoreBeans) {
+		this.weightageScoreBeans = weightageScoreBeans;
+	}
+
+	public SupplierFinalizationBackingBean getSuppFinalBean() {
+		return suppFinalBean;
+	}
+
+	public void setSuppFinalBean(SupplierFinalizationBackingBean suppFinalBean) {
+		this.suppFinalBean = suppFinalBean;
+	}
+
+	public Long getOverallTechnicalRecommendationPercent() {
+		return overallTechnicalRecommendationPercent;
+	}
+
+	public void setOverallTechnicalRecommendationPercent(Long overallTechnicalRecommendationPercent) {
+		this.overallTechnicalRecommendationPercent = overallTechnicalRecommendationPercent;
+	}
+
+	public List<ScQtScoreSetting> getScoreSettings() {
+		return scoreSettings;
+	}
+
+	public void setScoreSettings(List<ScQtScoreSetting> scoreSettings) {
+		this.scoreSettings = scoreSettings;
+	}
+
+	public Long getOverallFinancialRecommendationPercent() {
+		return overallFinancialRecommendationPercent;
+	}
+
+	public void setOverallFinancialRecommendationPercent(Long overallFinancialRecommendationPercent) {
+		this.overallFinancialRecommendationPercent = overallFinancialRecommendationPercent;
+	}
+
+	public boolean isWeightage35384WIP() {
+		return weightage35384WIP;
+	}
+
+	public void setWeightage35384WIP(boolean weightage35384WIP) {
+		this.weightage35384WIP = weightage35384WIP;
+	}
+	//#38151 - End
 }

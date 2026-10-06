@@ -171,9 +171,11 @@
 				value="#{question.clQuantity}" required="#{isValidationReq}"
 				maxlength="14" label="#{lbl['lbl.tpl.spec.content.quantity']}"
 				rendered="#{empty templateSpecBean.specMaster.tplSpecZone or !templateSpecBean.specMaster.qtyByZone}"
-				onkeypress="if (event.keyCode == 13) { return false; }"> <!-- #32362 -->
-				<p:ajax partialSubmit="true" process="@this"
-					update="@this, qtyMsg, @(.calcAmount)" />
+				onchange="if (this.value.endsWith('.')) { this.value = this.value.slice(0, -1); }"
+				onkeypress="if (event.keyCode == 13) { return false; }"> <!-- #32362 --> <ui:remove>39230</ui:remove>
+				<p:ajax event="change"
+					partialSubmit="true" process="@this"
+					update="@this, qtyMsg, @(.calcAmount)" /> <ui:remove>39230</ui:remove>
 				<ac:validateNumber maxIntegerDigits="10" />
 				<f:attribute name="pattern"
 					value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}" />
@@ -194,12 +196,13 @@
 					target="#{templateSpecBean.specComponentId}"
 					value="#{templateSpecId}" />
 			</p:commandButton>
+			<!-- #21695 FARID tooltip -->
 			<p:commandButton id="zoneQtyBtn" icon="ui-icon-pencil"
 				style="background-color:transparent !important; border:0px none;"
 				action="#{templateSpecBackingBean.zoneQtyPopupAction(templateSpecBean)}"
 				partialSubmit="true" process="@this" update="@([id$=zoneQtyPopup])"
 				rendered="#{!empty templateSpecBean.specMaster.tplSpecZone and templateSpecBean.specMaster.qtyByZone}"
-				title="#{lbl['lbl.tpl.spec.zone.qty.tooltip']}">
+				title="#{lbl['lbl.tpl.qty.instruction.tooltip']}">
 				<f:setPropertyActionListener
 					target="#{templateSpecBean.selectedSpecQuestion}"
 					value="#{question}" />

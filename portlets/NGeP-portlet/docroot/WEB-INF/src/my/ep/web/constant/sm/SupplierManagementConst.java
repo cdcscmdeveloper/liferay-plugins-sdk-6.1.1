@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import my.ep.constants.SMProcessNameConst;
 import my.ep.web.util.sm.helper.SmCommonUtil;
@@ -309,6 +310,14 @@ public class SupplierManagementConst {
 	public static final String MOL_SUCCESS = my.ep.constant.sm.SupplierManagementConst.MOL_SUCCESS;
 	public static final String MOL_FAIL = my.ep.constant.sm.SupplierManagementConst.MOL_FAIL;
 	public static final String MOL_PENDING = my.ep.constant.sm.SupplierManagementConst.MOL_PENDING;
+	
+	//#38377
+	public static final String PAYMENT_GATEWAY_SUCCESS = "SUCC";
+	public static final String PAYMENT_GATEWAY_FAIL = "FAIL";
+	public static final String PAYMENT_GATEWAY_PENDING = "PEND";
+	public static final String PAYMENT_GATEWAY_CHANNEL_MGATE = "MGATE";
+	public static final String PAYMENT_GATEWAY_CHANNEL_FPX = "FPX";
+	
 	public static final String PAYMENT_INVALID_RES = my.ep.constant.sm.SupplierManagementConst.PAYMENT_INVALID_RES;
 
 	public static final String PM_STATUS_PAYMENT = "SPY";
@@ -460,6 +469,19 @@ public class SupplierManagementConst {
 	public static final String MOF_STATUS_ACTIVE = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_ACTIVE;
 	public static final String MOF_STATUS_EXPIRED = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_EXPIRED;
 	public static final String MOF_STATUS_NOT_AVAILABLE = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_NOT_AVAILABLE;
+	// bug #28278 -START
+	public static final String MOF_STATUS_CANCELLED = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_CANCELLED;
+	public static final String MOF_STATUS_DELETED = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_DELETED;
+	// bug #28278 -END
+	// bug #29156 -START
+	public static final String MOF_STATUS_DELETED_SUPPLIER = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_DELETED_SUPPLIER;
+	public static final String MOF_STATUS_EXPIRED_SYSTEM = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM;
+	// bug #29156 -END
+
+	// bug #29156 -START
+	public static final String SM_MOF_DISCIPLINARY_ACTION_BLACKLIST = my.ep.constant.sm.SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_BLACKLIST;
+	public static final String SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG = my.ep.constant.sm.SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG;
+	// bug #29156 -END
 
 	//33248 - reopen 31/05: Disciplinary Action - 26238 - start 
 	public static final String SM_BASIC_DISCIPLINARY_ACTION_BLACKLIST = "B";
@@ -720,6 +742,9 @@ public class SupplierManagementConst {
 
 	public static final int MAX_PAYMENT_BANK = 35;
 
+	public static final String DELETED_BY_DISCIPLINARY_ACTION = my.ep.constant.sm.SupplierManagementConst.DELETED_BY_DISCIPLINARY_ACTION;// 26238, 32332
+	public static final long PM_STATUS_DELETED_BY_DISCIPLINARY_ACTION = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_DELETED_BY_DISCIPLINARY_ACTION; // 26238
+
 	// EXTERNAL CONTEXT SESSION KEY MAP
 	public static final String KEY_MAP_PERSONNEL_LIST = "personnelList";
 
@@ -731,6 +756,12 @@ public class SupplierManagementConst {
 	public static final String PORTAL_URL = "https://www.eperolehan.gov.my/";
 	public static final int NOTIFICATION_ID_401189 = 401189;
 	public static final int NOTIFICATION_ID_401190 = 401190;
+	
+	//28775 - Site Visit Grouping Enhancement - 28775
+	public static final long STATE_SELANGOR = 11L;
+	public static final long STATE_KL = 15L;
+	public static final List<Long> KLANG_VALLEY = Collections.unmodifiableList(Arrays.asList(STATE_SELANGOR, STATE_KL));
+	public static final int IC_NO_LENGTH = 12;
 
 	//9569
 	public static final String EPROLE_DELETED = "Delete";
@@ -745,6 +776,8 @@ public class SupplierManagementConst {
 	public static final String AU_TAB_ID_BANK_INFO = "bankInfoTab";
 	public static final String AU_TAB_ID_CATEGORY_CODE_INFO = "catCodeInfoTab";
 	public static final String AU_TAB_ID_SUPPLIER_INFO = "supplierInfoTab";
+	// #28895_35501_DA - AUDIT TRAIL SM DA
+	public static final String AU_TAB_ID_DISCIPLINARY_ACTION_INFO = "disciplinaryActionInfoTab";
 	public static final String AU_TAB_ID_APPROVED_CATEGORY_CODE_INFO = "approvedCatCodeInfoTab";
 	public static final String AU_TAB_ID_OVERLAPPING_REMARK_INFO = "overlappingRemarkInfoTab";
 	public static final String AU_TAB_ID_APPROVER_REMARK_INFO = "approverRemarkInfoTab";
@@ -756,22 +789,6 @@ public class SupplierManagementConst {
 	public static final String SM_REVISIT_FILE_PATH = "/SM/REVISIT/";
 	
 	public static final Long COMPOSITE_VALIDITY_ID_SM_DEL_PEN=38195L;//38195
-	
-	// bug #29156(26238) - START
-	public static final String SM_MOF_DISCIPLINARY_ACTION_BLACKLIST = my.ep.constant.sm.SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_BLACKLIST;
-	public static final String SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG = my.ep.constant.sm.SupplierManagementConst.SM_MOF_DISCIPLINARY_ACTION_CANCEL_REG;
-	// bug #29156(26238) - END
-	
-	// bug #28278(26238) - START
-	public static final String MOF_STATUS_CANCELLED = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_CANCELLED;
-	public static final String MOF_STATUS_DELETED = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_DELETED;
-	// bug #28278(26238) - END
-	
-	// bug #29156(26238) - START
-	public static final String MOF_STATUS_DELETED_SUPPLIER = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_DELETED_SUPPLIER;
-	public static final String MOF_STATUS_EXPIRED_SYSTEM = my.ep.constant.sm.SupplierManagementConst.MOF_STATUS_EXPIRED_SYSTEM;
-	// bug #29156(26238) - END
-	
 	//26238 - START
 	public static final String MTO_CODE_04 = "04";
 	public static final String MTO_CODE_05 = "05";
@@ -793,6 +810,7 @@ public class SupplierManagementConst {
 	public static final String APPL_TYPE_RENEWAL = my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_RENEWAL;
 	public static final String SSM_COMPANY_COUNTRY_DEFAULT = "ZZ";
 	public static final String SSM_COMPANY_COUNTRY_MALAYSIA = "MAL";
+	public static final Pattern FOREIGN_REG_NO_PATTERN = Pattern.compile("^99[0-9]{4}-[A-Z]$");
 //	#37925 END
 	
 	// Getters for panel info
@@ -1469,6 +1487,11 @@ public class SupplierManagementConst {
 	public String getAuTabIdSupplierInfo() {
 		return AU_TAB_ID_SUPPLIER_INFO;
 	}
+	// #28895_35501_DA Start - AUDIT TRAIL SM DA
+	public String getAuTabIdDisciplinaryActionInfo() {
+		return AU_TAB_ID_DISCIPLINARY_ACTION_INFO;
+	}
+	// #28895_35501_DA End
 
 	public String getAuTabIdApprovedCategoryCodeInfo() {
 		return AU_TAB_ID_APPROVED_CATEGORY_CODE_INFO;
@@ -1537,6 +1560,11 @@ public class SupplierManagementConst {
 	public String getSsmCompanyCountryMalaysia() {
 		return SSM_COMPANY_COUNTRY_MALAYSIA;
 	}
+
+	public static Pattern getForeignRegNoPattern() {
+		return FOREIGN_REG_NO_PATTERN;
+	}
+	
 //	#37925 END
 	
 	// 28278(26238) - START
@@ -1558,4 +1586,14 @@ public class SupplierManagementConst {
 		return MOF_STATUS_EXPIRED_SYSTEM;
 	}
 	// #29156(26238) -END
+	
+	//33248 - reopen 31/05: Disciplinary Action - 26238 - start 
+	public String getSM_BASIC_DISCIPLINARY_ACTION_BLACKLIST() {
+		return SM_BASIC_DISCIPLINARY_ACTION_BLACKLIST;
+	}
+
+	public String getSM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG() {
+		return SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG;
+	}
+	//33248 - reopen 31/05: Disciplinary Action - 26238 - end 
 }

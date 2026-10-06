@@ -155,6 +155,7 @@ import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
+import my.ep.web.backingbean.ct.amendment.helper.AmendmentCommitteeHelper; //35238
 import my.ep.web.backingbean.ct.request.ctadmin.RequestCtAdminBackingBean;
 import my.ep.web.backingbean.ct.supplier.SupplierBackingBean;
 import my.ep.web.backingbean.ct.suspension.SuspensionBackingBean;
@@ -225,7 +226,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	private boolean isUntickOther = false;
 	private boolean spToCheck = false;
 	//End Fix - #33287
-
+	//#35238 start
+	private transient AmendmentCommitteeHelper amendmentCommitteeHelper;
+	private AmendmentManagedBean lastManagedBean;
+	private FacesScopes lastFacesScopes;
+	//#35238 end
+	
 	/**
 	 * The constructor used for initializing the variable.
 	 * This method will initialize the button and approver list.
@@ -1223,6 +1229,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setSecretaryId(null);
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary() != null) {
 				getManagedBean().setSecretaryId(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary().getUserId());
+				getAmendmentCommitteeHelper().checkQCBSecretaryWIP(); //#35238
 			}
 
 			//Enhancement 15851 - Prefix for supplemental contract letter
@@ -3583,6 +3590,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}				
 		}
 		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setSecretary(pmUser);
+		setAmendmentCommitteeType(); //#35238
 	}
 
 	/**
@@ -4646,15 +4654,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		RequestContext.getCurrentInstance().execute("dlg2.show()");
 	}
 
+	//#35238 start
 	/**
-	 * The method used to add the selected existing committee
-	 * member as the meeting committee.
-	 * This method will generate new record(s) in meeting
-	 * committee list.
+	 * The method used to copy the selected committe in the popup (ac component)
+	 * and insert it into committe member list from meeting details page.
+	 * (committee.xhtml)
 	 */
 	public void addSelectedCommitteMembers() {			
-		Map<Long, CtCommitteeMember> duplicatePmUserMap = new HashMap<Long, CtCommitteeMember>();
-		List<CtCommitteeMember> memberList = new ArrayList<CtCommitteeMember>();
+		Map<Long, CtCommitteeMember> duplicatePmUserMap = new HashMap<>();
+		List<CtCommitteeMember> memberList = new ArrayList<>();
 
 		Iterator<PmUser> pmUserItr = getCommitteDataModel().getList().iterator();
 		while(pmUserItr.hasNext()) {
@@ -4672,32 +4680,57 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				committeeMember.setDesignation(users.getDesignation());
 				committeeMember.setEmail(users.getEmail());
 
-				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().size() == 0) {
+				if (CollectionUtils.isEmpty(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers())) {
 					memberList.add(committeeMember);
 				} else {
 					duplicatePmUserMap.put(users.getUserId(), committeeMember);
 				}
 			}
 		}
-		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().size() == 0) {
+		if (CollectionUtils.isEmpty(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers())) {
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().addAll(memberList);
 		} else {
-			List<CtCommitteeMember> committeMember = new ArrayList<CtCommitteeMember>();
-			for (Map.Entry<Long, CtCommitteeMember> entry : duplicatePmUserMap.entrySet()) {
-				boolean chkDataDuplication = false;
-				for (CtCommitteeMember ctMember : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
-					if (entry.getKey().equals(ctMember.getPmUser().getUserId())) {
-						chkDataDuplication = true;
-					}
-				}
-				if (!chkDataDuplication) {
-					committeMember.add(entry.getValue());
-				}	    
-			}
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().addAll(committeMember);
-		} 
-		//Collections.sort(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers());  
+			checkDuplicateSelectedCommitteeMembers(duplicatePmUserMap);
+		}   
 	}
+	
+	/**
+	 * Method to check existing committee and add committee member in the
+	 * approving authority panel in meeting details page
+	 * 
+	 * @param duplicatePmUserMap
+	 *            HashMap of the selected committee
+	 */
+	public void checkDuplicateSelectedCommitteeMembers(Map<Long, CtCommitteeMember> duplicatePmUserMap) {
+		List<CtCommitteeMember> committeMember = new ArrayList<>();
+		for (Map.Entry<Long, CtCommitteeMember> entry : duplicatePmUserMap.entrySet()) {
+			if (!chkDataDuplicationCommitteeMembers(entry)) {
+				committeMember.add(entry.getValue());
+			}
+		}
+		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().addAll(committeMember);
+	}
+	
+	/**
+	 * Method to check member duplicate in the committee list
+	 * 
+	 * @param entry entrySet of the HashMap of the selected committee.
+	 * @return true if selected committee already in the list, else false.
+	 */
+	public boolean chkDataDuplicationCommitteeMembers(Map.Entry<Long, CtCommitteeMember> entry) {
+		boolean chkDataDuplication = false;
+		for (CtCommitteeMember ctMember : ctBackingBean.getManagedBean().getContractVer().getCtAmendment()
+				.getCtCommitteeMembers()) {
+			if (entry.getKey().equals(ctMember.getPmUser().getUserId())) {
+				if (ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(ctMember.getUpdateType())) {
+					ctMember.setUpdateType(null);
+				}
+				chkDataDuplication = true;
+			}
+		}
+		return chkDataDuplication;
+	}
+	//#35238 end
 
 	/**
 	 * The method used to select all added meeting committee(s).
@@ -5434,8 +5467,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 
 			}
-			if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)
-					|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
+			if (isQuotationCommitteeType()) { //#35238
 				if (memberRole) {
 					
 					//#24333 - Start
@@ -5572,15 +5604,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 				//#29403 end
 				
-				if (parameterCode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)) {
+				if (parameterCode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON) &&
+						!ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(committeMember.getUpdateType())) { //#35238
 					chairpersonCount++; //#29403
 					chairpersonRole = false;
 				} else if (parameterCode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
 					secretaryRole = false;
 				} else if (parameterCode.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_MEMBER)) {
 					memberRole = false;
-					if (!getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B) 
-							&& !getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
+					if (!isQuotationCommitteeType()) { //#35238
 						if (committeMember.getRepresentativeType() == null 
 								|| committeMember.getRepresentativeType().getParameterId() == null) {
 							//#24333 - Start
@@ -5896,6 +5928,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					Set<PmUser> set = new LinkedHashSet<PmUser>(userList);
 					userList.clear();
 					userList.addAll(set);
+					getAmendmentCommitteeHelper().checkForQCBCommitteeDeskOfficerWIP(userList); //#35238
 
 					items = new SelectItem[userList.size() + 1];
 					//Bug #29740 - end
@@ -6106,14 +6139,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			//log.info(":::allowChairpersonRole() "+ orgProfileId +". committee type: "+ getManagedBean().getCommitteeType());
 
 			// QCA/QCB, need to be same PTJ
-			if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
-					|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
-				//log.info(":::allowChairpersonRole() "+ orgProfileId +". contract ownerOrgProfileId: "+ ctOwnerOrgProfileId);
-				
-				if (orgProfileId.longValue() == ctOwnerOrgProfileId.longValue()) {
-					allowChairpersonRole = true;
-				}
-			}
+			// #35238 start
+			allowChairpersonRole = getAmendmentCommitteeHelper().determineChairpersonAccessForQuotationCommmittee(
+					orgProfileId, ctOwnerOrgProfileId, userResDTO, allowChairpersonRole);
+			// #35238 end
 			
 			//Bug #26520 - start
 			if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)
@@ -6900,82 +6929,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 			} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
 					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
-				// #25956 - Start
-				if (getFacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())) {
-					userRole = RoleCode.DESK_OFFICER.value();
-				} else {
-					String roleCode = getManagedBean().getCommitteeType() + "_DESK_OFFICER";
-					if (getFacesScopes().hasRoleUser(roleCode)) {
-						userRole = roleCode;
-					}
-				}
-				// #25956 - End
-				//#25956 - Start - Fixing for _Secretary Role		
-				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A) 
-						|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
-					if (getFacesScopes().hasRoleUser(RoleCode.QCA_SECRETARY.value())) {
-						userRole = RoleCode.QCA_SECRETARY.value();
-					} else if (getFacesScopes().hasRoleUser(RoleCode.QCB_SECRETARY.value())) {
-						userRole = RoleCode.QCB_SECRETARY.value();
-					}
-				} else {
-					String roleCode = getManagedBean().getCommitteeType() + "_SECRETARY";
-					if (getFacesScopes().hasRoleUser(roleCode)) {
-						userRole = roleCode;
-					}
-				}
-					
-				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD) 
-						|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)
-						|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)) {
-					if (getFacesScopes().hasRoleUser(RoleCode.PBB_SECRETARY.value())) {
-						userRole = RoleCode.PBB_SECRETARY.value();
-					} else if (getFacesScopes().hasRoleUser(RoleCode.PPB_SECRETARY.value())) {
-						userRole = RoleCode.PPB_SECRETARY.value();
-					}
-				} else {
-					String roleCode = getManagedBean().getCommitteeType() + "_SECRETARY";
-					if (getFacesScopes().hasRoleUser(roleCode)) {
-						userRole = roleCode;
-					}
-				}
-				//#25956 - End - Fixing for _Secretary Role	
-					
-				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
-						|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
-					if (getFacesScopes().hasRoleUser(RoleCode.FPB_SECRETARY.value()) || getFacesScopes().hasRoleUser(RoleCode.PPB_SECRETARY.value())) { //#29740
-						userRole = RoleCode.FPB_SECRETARY.value();
-					}
-				} else {
-					String roleCode = getManagedBean().getCommitteeType() + "_SECRETARY";
-					if (getFacesScopes().hasRoleUser(roleCode)) {
-						userRole = roleCode;
-					}
-				}
+				userRole = getAmendmentCommitteeHelper().determineRoleSecretary(userRole); //#35238
 			} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CHAIR_PERSON_SIGN_OFF_HT_NAME)) {
-				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
-						|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
-					if (getFacesScopes().hasRoleUser(RoleCode.FPB_CHAIRPERSON.value())) {
-						userRole = RoleCode.FPB_CHAIRPERSON.value();
-					}
-				} else {
-					String roleCode = getManagedBean().getCommitteeType() + "_CHAIRPERSON";
-					if (getFacesScopes().hasRoleUser(roleCode)) {
-						userRole = roleCode;
-					}
-				}
+				userRole = getAmendmentCommitteeHelper().determineRoleChairperson(userRole); //#35238
 			} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)) {
-				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
-						|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
-					if (getFacesScopes().hasRoleUser(RoleCode.FPB_MEMBER.value())) {
-						userRole = RoleCode.FPB_MEMBER.value();
-					}
-				} else {
-					String roleCode = getManagedBean().getCommitteeType() + "_MEMBER";
-					if (getFacesScopes().hasRoleUser(roleCode)) {
-						userRole = roleCode;
-					}
-				}
+				userRole = getAmendmentCommitteeHelper().determineRoleMember(userRole); //#35238
 			}
 		}
 		if (userRole == null) {
@@ -7779,59 +7737,77 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	//26753 - start
 				
-	//#29403 start
+	//#35238 start
+	// 26753 - start
+	// #29403 start
+	/**
+	 * Method to copy original committee member into new committe member. To use
+	 * for in the status Pending decision/decision revision.
+	 */
 	public void copyCommitteeMember() {
 		if (getManagedBean().getUpdatedCommitteeMembers() != null) {
 			getManagedBean().getUpdatedCommitteeMembers().clear();
 		}
 
 		@SuppressWarnings("unchecked")
-		List<CtCommitteeMember> copyMember = (List<CtCommitteeMember>) SerializationUtils.clone((Serializable) ctBackingBean.getManagedBean().getContractVer()
-				.getCtAmendment().getCtCommitteeMembers());
+		List<CtCommitteeMember> copyMember = (List<CtCommitteeMember>) SerializationUtils
+				.clone((Serializable) ctBackingBean.getManagedBean().getContractVer().getCtAmendment()
+						.getCtCommitteeMembers());
 		getManagedBean().setUpdatedCommitteeMembers(copyMember);
-	}			
-	//#29403 end
-	
+		getAmendmentCommitteeHelper().setUpdatedCommitteeMemberAttended();
+	}
+	// #29403 end
+
+	/**
+	 * Method to navigate to update committee page from decision tab.
+	 */
 	public void updateCommittee() {
 		// #29403 start
-		// getManagedBean().setUpdateCommittee(Boolean.TRUE);
 		getManagedBean().setSelectAll(false);
 		ctBackingBean.getManagedBean().setButtonHideActive(true);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, UPDATE_COMMITTEE_PAGE);
 		// #29403 end
 	}
-	
+		
 	//#29403 start
+	/**
+	 * Method to do some checking before returning to the decision tab/amendment page.
+	 * It will check if there is any changes related to the committee list.
+	 */
 	public void backToDecisionTab() {
 		getManagedBean().setUpdateCommittee(Boolean.FALSE);
-
-		if (!getManagedBean().isHasChanges()) {
-			if (ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())
-					|| ContractStatusConst.FA_PENDING_MEETING_DECISION_REVISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) { // #26688
-				copyCommitteeMember();
-			}
+		Long statusId = ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId();
+		if (!getManagedBean().isHasChanges()
+				&& (ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(statusId) 
+						|| ContractStatusConst.FA_PENDING_MEETING_DECISION_REVISION.equals(statusId))) { // #26688
+			copyCommitteeMember();
 		}
+
 		if (getManagedBean().getFilteredUpdatedCommitteeMembers() != null) {
 			getFilteredCommitteeMembers().clear();
 		}
-		//#24333 - Start
-		getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage("lbl.ct.decision", 
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
-		//#24333 - Start
-		backToAmendmentPage();
 
+		getManagedBean().setSelectedTabIndex(
+				getManagedBean().getIndexing().get(
+						ResourceBundleUtils.getMessage("lbl.ct.decision", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale())));
+
+		backToAmendmentPage();
 	}
 	
+	/**
+	 * Method to return to the amendment page.
+	 */
 	public void backToAmendmentPage() {
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, PROCESS_AMEND_PAGE);
 	}
-	//#29403 end
-	
+	// #29403 end
+		
 	/**
-	 * The method used to invoke and initiate the search committee 
-	 * member dialog.
+	 * The method used to invoke and initiate the search committee member
+	 * dialog.
 	 */
 	public void getCommitteeMembers() {
 		getManagedBean().setCommitteeName(null);
@@ -7840,6 +7816,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		getCommitteDataModel().resetData();
 		RequestContext.getCurrentInstance().execute("dlgCommittee.show()");
 	}
+	// #35238 end
 	
 	/**
 	 * The method used to add the selected existing committee
@@ -7955,44 +7932,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 	}
 	//29403 end
-	
-	//#29403 start
-	/**
-	 * The method used to get the parameter description by parameter.
-	 * with additional setting for secretary role.
-	 * Attendance is compulsory for secretary.
-	 * 
-	 * @param   index      the current record index (only used for secretary role)
-	 * @param   curCommitteeMember  the current committee member
-	 * @return  parameter description
-	 */
-	public String getParameterDescCommitteeByMember(CtCommitteeMember curCommitteeMember, int index) {
-		String strDescription = null;
-		PmParameter curParameter = null;
-
-		if (curCommitteeMember.getMemberRoleId() != null) {
-			curParameter = ParameterHelper.getInstance().getPmParameterById(curCommitteeMember.getMemberRoleId());
-		} else {
-			curParameter = ParameterHelper.getInstance().getPmParameterById(curCommitteeMember.getMemberRole().getParameterId());
-		}
-
-		if (curParameter != null && curParameter.getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
-			curCommitteeMember.setAttended(true);
-			if (ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())
-					|| ContractStatusConst.FA_PENDING_MEETING_DECISION_REVISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) { // #26688
-				getManagedBean().getUpdatedCommitteeMembers().remove(index);
-				getManagedBean().getUpdatedCommitteeMembers().add(index, curCommitteeMember);
-			} else {
-				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().remove(index);
-				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().add(index, curCommitteeMember);
-			}
-			strDescription = ResourceBundleUtils.getMessage("lbl.ct.secretary", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-		} else {
-			strDescription = getParameterDesc(curParameter);
-		}
-		return strDescription;
-	}
-	//#29403 end
 	
 	/**
 	 * The method used to delete the selected meeting committee(s).
@@ -8131,59 +8070,46 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		// #29403, #24333 end
 	}
 	
+	// #35238 start
+	/**
+	 * Validates the latest committee members to check if there are any
+	 * differences between the updated and original lists. Determines whether a
+	 * dialog should be shown for updating the committee or confirming
+	 * validation.
+	 */
 	public void validateLatestCommitteeMembers() {
 
 		List<CtCommitteeMember> outer = getManagedBean().getUpdatedCommitteeMembers();
-		List<CtCommitteeMember> inner = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers();
+		List<CtCommitteeMember> inner = ctBackingBean.getManagedBean().getContractVer().getCtAmendment()
+				.getCtCommitteeMembers();
 		boolean isUpdateNeeded = false;
 		boolean isFound = false;
 
 		for (CtCommitteeMember ctUpdatedMember : outer) {
 			// #29403 start
-			if (ctUpdatedMember.isSelectedCheckBox()) {
-				ctUpdatedMember.setSelectedCheckBox(false);
-			}
+			getAmendmentCommitteeHelper().resetSelectedCheckbox(ctUpdatedMember);
 			// #29403 end
-			for (CtCommitteeMember originalCtMember : inner) {
-				if (ctUpdatedMember.getPmUser().getUserId().equals(originalCtMember.getPmUser().getUserId())) {
+			CtCommitteeMember matchingMember = getAmendmentCommitteeHelper().findMatchingValidationCommittee(ctUpdatedMember, inner);
+
+			if (matchingMember != null) {
+				// #29403 start
+				getAmendmentCommitteeHelper().resetSelectedCheckbox(matchingMember);
+				// #29403 end
+
+				if (!ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(ctUpdatedMember.getUpdateType())) {
+					isFound = true;
 
 					// #29403 start
-					if (originalCtMember.isSelectedCheckBox()) {
-						originalCtMember.setSelectedCheckBox(false);
-					}
+					isUpdateNeeded = getAmendmentCommitteeHelper().checkRoleAndRepresentativeCommitte(ctUpdatedMember, matchingMember);
 					// #29403 end
 
-					if (!ContractConst.REMOVE_FROM_ATTENDANCE_LIST.equalsIgnoreCase(ctUpdatedMember.getUpdateType())) {
-						isFound = true;
-
-						// #29403 start
-						if (!getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)
-								&& !getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
-							if (ctUpdatedMember.getRepresentativeType() != null && ctUpdatedMember.getRepresentativeType().getParameterId() != null) { // #29403
-								if (!originalCtMember.getRepresentativeType().getParameterId().equals(ctUpdatedMember.getRepresentativeType().getParameterId())) {
-									isUpdateNeeded = true;
-								}
-							}
-						}
-						// #29403 end
-
-						if (ctUpdatedMember.getMemberRole().getParameterId() != null) {
-							if (!originalCtMember.getMemberRole().getParameterId().equals(ctUpdatedMember.getMemberRole().getParameterId())) {
-								isUpdateNeeded = true;
-							}
-						}
-						break;
-					} else {
-						isUpdateNeeded = true;
-						break;
-					}
 				} else {
-					if (ContractConst.ADD_NEW_MEMBER.equalsIgnoreCase(ctUpdatedMember.getUpdateType())) {
-						isUpdateNeeded = true;
-						break;
-					}
+					isUpdateNeeded = true;
 				}
+			} else if (ContractConst.ADD_NEW_MEMBER.equalsIgnoreCase(ctUpdatedMember.getUpdateType())) {
+				isUpdateNeeded = true;
 			}
+
 			if (isUpdateNeeded) {
 				break;
 			}
@@ -8191,20 +8117,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 		// #29403 start
 		validateCommiteeMemberDetails();
-		//#24333 - Start
-		getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage("lbl.ct.decision", 
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
-		//#24333 - End
+		// #24333 start
+		getManagedBean().setSelectedTabIndex(
+				getManagedBean().getIndexing().get(
+						ResourceBundleUtils.getMessage("lbl.ct.decision", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale())));
+		// #24333 end
 		// #29403 end
-
-		if (isUpdateNeeded || !isFound) {
-			RequestContext.getCurrentInstance().execute("updLatestCommitteeDlg.show()");
-		} else {
-			getManagedBean().setUpdateCommittee(Boolean.FALSE);
-			RequestContext.getCurrentInstance().execute("validateLatestCommitteeDlg.show()");
-		}
-
+		getAmendmentCommitteeHelper().showDialogValidateCommittee(isUpdateNeeded, isFound);
 	}
+	// #35238 end
 	
 	public List<CtCommitteeMember> getFilteredCommitteeMembers() {
 		List<CtCommitteeMember> filteredCommitteeMembers = new ArrayList<CtCommitteeMember>();
@@ -8340,7 +8262,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 		if (message != null
 				&& ((remark == null || remark.length() == 0) && (itemRemark == null || itemRemark.length() == 0) && (supplierRemark == null || supplierRemark.length() == 0))) {
-
+			
+			// #26186 #35434 - Start
+			if (getManagedBean().getAckFA() != null && getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)) {
+				getManagedBean().setSelectedTabIndex(
+						getManagedBean().getIndexing().get(
+								ResourceBundleUtils.getMessage("lbl.ct.menu.loa.details", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										new FacesScopes().getUserLocale())));
+			} else {
+				getManagedBean().setSelectedTabIndex(
+						getManagedBean().getIndexing().get(
+								ResourceBundleUtils.getMessage("lbl.ct.menu.amendment", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										new FacesScopes().getUserLocale())));
+			}
+			// #26186 #35434 - End
+			
 			throw new EpException(message, new String[] { ResourceBundleUtils.getMessage("lbl.ct.remark.amendment", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale()) }); //#25956
 		}
@@ -8907,7 +8843,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 
 	/**
-	 * Method to check supplier for Cancelled Bumiputera Status
+	 * Method to check supplier for Cancelled Bumiputera Status, check the
+	 * bumiputera status from supplier module and check the contract is not
+	 * direct loa or direct nego.
 	 * 
 	 * @param supplier the supplier for the current contract
 	 */
@@ -8917,23 +8855,32 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		IQTDetailSO iQtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTDetailSO.class);
 		try {
-			boolean suppBumiputera = suppDataSO.nonDisciplinaryActionCancelBumiputera(supplier.getSupplierId());
-			boolean openFor = iQtDetailSO.getQTOpenForBumiByContractNo(ctBackingBean.getManagedBean().getContractVer().getCtContract()
-					.getContractNo());
+			if (!ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()
+					.equals(ContractStatusConst.FA_PENDING_VERIFICATION)) {
+				boolean suppBumiputera = suppDataSO.nonDisciplinaryActionCancelBumiputera(supplier.getSupplierId());
+				boolean openFor = iQtDetailSO.getQTOpenForBumiByContractNo(ctBackingBean.getManagedBean().getContractVer().getCtContract()
+						.getContractNo());
 
-			if (!suppBumiputera && openFor) {
-				this.getManagedBean().setSupplierBumiCancel(true);
-				if (StringUtils.isNotBlank(this.getManagedBean().getDisciplinaryActionMsg())) {
-					this.getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
+				if (!suppBumiputera && openFor) {
+					setSupplierBumiputeraCancel();
 				}
-				handleMessageSupplierMaintenance();
 			}
-
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "checkSupplierBumiputera",
 					ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(),
 					"checkSupplierBumiputera", getUserIdSessionFromLoginId(), e);
 		}
+	}
+	
+	/**
+	 * Method to set cancel bumiputera if the condition are met
+	 */
+	public void setSupplierBumiputeraCancel() {
+		this.getManagedBean().setSupplierBumiCancel(true);
+		if (StringUtils.isNotBlank(this.getManagedBean().getDisciplinaryActionMsg())) {
+			this.getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
+		}
+		handleMessageSupplierMaintenance();
 	}
 	
 	/**
@@ -9339,4 +9286,50 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		return BigDecimal.ZERO;
 	}
 	//#24333 - End
+	
+	//#35238 start	
+	/**
+	 * Initializes and returns an instance of AmendmentCommitteeHelper. Ensures
+	 * that the helper is only created once per call unless there's changes in
+	 * managed bean or facescope
+	 * 
+	 * @return an initialized AmendmentCommitteeHelper instance.
+	 */
+	private AmendmentCommitteeHelper getAmendmentCommitteeHelper() {
+		AmendmentManagedBean currentManagedBean = getManagedBean();
+		FacesScopes currentFacesScopes = getFacesScopes();
+
+		if (amendmentCommitteeHelper == null || lastManagedBean != currentManagedBean
+				|| lastFacesScopes != currentFacesScopes) {
+			lastManagedBean = currentManagedBean;
+			lastFacesScopes = currentFacesScopes;
+
+			amendmentCommitteeHelper = new AmendmentCommitteeHelper(getManagedBean(), ctBackingBean, getFacesScopes());
+		}
+
+		return amendmentCommitteeHelper;
+	}
+	
+	/**
+	 * Sets the committee type for ctAmendment during save/reject
+	 */
+	public void setAmendmentCommitteeType() {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCommitteeType() != null) {
+			return;
+		}
+		PmParameter pmParameter = getParameterByTypeAndCode(ParameterConst.COMMITTE_TYPE, getManagedBean()
+				.getCommitteeType());
+
+		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setCommitteeType(pmParameter);
+	}
+	
+	/**
+	 * Checks if the given committee type is a quotation committee type QCA,QCB or QC.
+	 *
+	 * @return true if it matches any quotation committee type, false otherwise
+	 */
+	public boolean isQuotationCommitteeType() {
+		return getAmendmentCommitteeHelper().isQuotationCommitteeType();
+	}
+	//#35238 end
 }

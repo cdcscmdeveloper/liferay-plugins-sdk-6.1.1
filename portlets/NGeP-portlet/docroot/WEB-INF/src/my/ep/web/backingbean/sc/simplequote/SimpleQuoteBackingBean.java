@@ -1720,8 +1720,14 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setSubmit(Boolean.FALSE);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
-			reqDTO.setOrgProfileId(getManagedBean().getRequestNote()
-					.getPmOrgProfile().getOrgProfileId());
+			//#39230 - Start
+			if(getManagedBean().getRequestNote().getPmOrgProfile() == null){
+				throw new EpException(MessageConst.ERROR_760824);
+			} else {
+				reqDTO.setOrgProfileId(getManagedBean().getRequestNote()
+						.getPmOrgProfile().getOrgProfileId());
+			}
+			//#39230 - End
 			reqDTO.setQuoteBidDtl(quote);
 			//29194 - Start
 			reqDTO.setRoleCode(getUserRoleCodeSQ());
@@ -2504,8 +2510,14 @@ public class SimpleQuoteBackingBean extends
 
 			FacesScopes facesScopes = new FacesScopes();
 			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
-			reqDTO.setOrgProfileId(getManagedBean().getRequestNote()
-					.getPmOrgProfile().getOrgProfileId());
+			//#39230 - Start
+			if(getManagedBean().getRequestNote().getPmOrgProfile() == null){
+				throw new EpException(MessageConst.ERROR_760824);
+			} else {
+				reqDTO.setOrgProfileId(getManagedBean().getRequestNote()
+						.getPmOrgProfile().getOrgProfileId());
+			}
+			//#39230 - End
 			reqDTO.setQuoteBidDtl(quote);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
@@ -8159,64 +8171,66 @@ public class SimpleQuoteBackingBean extends
 		}
 	}
 	// #38916 - End
-	//40234 - start
-		/**
-		 * To remove govt seller from supplier list 
-		 * when change procurement type from G2G -> Normal
-		 * 
-		 * @param suppliers
-		 */
-		private void removeGovtSellerFromSupplierList(List<ScQuoteSupplier> suppliers) {
-		    IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-		            .getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+	
+	// 40234 - start
+	/**
+	 * To remove govt seller from supplier list when change procurement type
+	 * from G2G -> Normal
+	 * 
+	 * @param suppliers
+	 */
+	private void removeGovtSellerFromSupplierList(List<ScQuoteSupplier> suppliers) {
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 
-		    List<ScQuoteSupplier> suppliersToRemove = new ArrayList<ScQuoteSupplier>();
+		List<ScQuoteSupplier> suppliersToRemove = new ArrayList<ScQuoteSupplier>();
 
-		    for (ScQuoteSupplier supplier : suppliers) {
-		        if (isGovtSeller(supplier, orgProfileSO)) {
-		            suppliersToRemove.add(supplier);
-		        }
-		    }
-
-		    suppliers.removeAll(suppliersToRemove);
-		}
-		
-		/**
-		 * To identify supplier is Goverment Seller
-		 * 
-		 * @param supplier
-		 * @param orgProfileSO
-		 * @return
-		 */
-		private boolean isGovtSeller(ScQuoteSupplier supplier, IOrgProfileSO orgProfileSO) {
-		    if (supplier == null || supplier.getSmSupplier() == null) {
-		        return false;
-		    }
-
-		    OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
-		    profileReqDTO.setOrgProfileId(supplier.getSmSupplier().getSupplierId());
-
-		    OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgProfileByProfileId(profileReqDTO);
-		    PmOrgProfile pmOrgProfile = orgProfileResDTO.getPmOrgProfile();
-
-		    return pmOrgProfile != null && pmOrgProfile.isGovtSeller();
-		}
-		/**
-		 * To remove non g2g supplier from govt list when change procurement type
-		 * 
-		 * 
-		 * @param suppliers
-		 */
-		private void removeSupplierListFromGovtSeller(List<ScQuoteSupplier> suppliers) {
-			List<ScQuoteSupplier> suppliersToRemove = new ArrayList<ScQuoteSupplier>();
-
-			for (ScQuoteSupplier supplier : suppliers) {
-					suppliersToRemove.add(supplier);
+		for (ScQuoteSupplier supplier : suppliers) {
+			if (isGovtSeller(supplier, orgProfileSO)) {
+				suppliersToRemove.add(supplier);
 			}
-
-			suppliers.removeAll(suppliersToRemove);
 		}
-		//40234 - end
+
+		suppliers.removeAll(suppliersToRemove);
+	}
+
+	/**
+	 * To identify supplier is Goverment Seller
+	 * 
+	 * @param supplier
+	 * @param orgProfileSO
+	 * @return
+	 */
+	private boolean isGovtSeller(ScQuoteSupplier supplier, IOrgProfileSO orgProfileSO) {
+		if (supplier == null || supplier.getSmSupplier() == null) {
+			return false;
+		}
+
+		OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
+		profileReqDTO.setOrgProfileId(supplier.getSmSupplier().getSupplierId());
+
+		OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgProfileByProfileId(profileReqDTO);
+		PmOrgProfile pmOrgProfile = orgProfileResDTO.getPmOrgProfile();
+
+		return pmOrgProfile != null && pmOrgProfile.isGovtSeller();
+	}
+
+	/**
+	 * To remove non g2g supplier from govt list when change procurement type
+	 * 
+	 * 
+	 * @param suppliers
+	 */
+	private void removeSupplierListFromGovtSeller(List<ScQuoteSupplier> suppliers) {
+		List<ScQuoteSupplier> suppliersToRemove = new ArrayList<ScQuoteSupplier>();
+
+		for (ScQuoteSupplier supplier : suppliers) {
+			suppliersToRemove.add(supplier);
+		}
+
+		suppliers.removeAll(suppliersToRemove);
+	}
+
+	// 40234 - end
 		
 	// 26284 - Start
 	/**

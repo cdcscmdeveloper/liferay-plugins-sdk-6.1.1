@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.constant.sc;
 
@@ -182,6 +182,7 @@ public interface QTConstants {
 	public static final String FINANCIAL_PAID_UP_CAPITAL_CODE = "PC";
 	public static final String FINANCIAL_SUPPLIER_DETAILS_CODE = "SD";
 
+	public static final String INITIAl_SCORE = "0";//#29168, #25138
 	public static final String AUTO_SCORE = "1";
 	public static final String USER_SCORE = "2";
 
@@ -190,6 +191,7 @@ public interface QTConstants {
 	// Evaluation Constants
 	public static final String COMPLIANCE_CHECK = "C";
 	public static final String TECHNICAL_EVALUATION = "T";
+	public static final String TECHNICAL_EVALUATION_BY_ITEM = "TI"; // #21695
 	public static final String PRESENTATION_DEMO_EVALUATION = "P";
 	public static final String FINANCIAL_EVALUATION_BY_PACKAGE = "FP";
 	public static final String FINANCIAL_EVALUATION_BY_ITEM = "FI";
@@ -199,6 +201,7 @@ public interface QTConstants {
 	public static final String AWARD_TYPE_ITEM = "I";
 	public static final String RECOMMENDATION_PREFERENCE_MARGIN = "RPM";
 	public static final String FINANCIAL_PREFERENCE_MARGIN = "FPM";
+	public static final String TECHNICAL_PREFERENCE_MARGIN = "TPM"; // #21695
 	public static final String FINANCIAL_EVALUATION = "F";
 
 	public static final int CHECKLIST_USER_SCORE = 2;
@@ -257,6 +260,10 @@ public interface QTConstants {
 	public static final String FINANCIAL_SUMMARY_ITEM="FI";
 	public static final String RECOMMENDATION_SUMMARY_PACKAGE_MARGIN="RPM";
 	public static final String RECOMMENDATION_SUMMARY_ITEM="RI";
+	// **** #21695 farid start
+	public static final String TECHNICAL_SUMMARY_PACKAGE_MARGIN="TPM";
+	public static final String TECHNICAL_SUMMARY_ITEM="TI";
+	// **** #21695 end
 	
 	public static final String REPORT_ACKNOWLEDGEMENT_LOA_RECEIPT = "Perakuan Penerimaan Surat Setuju Terima";
 	
@@ -336,6 +343,11 @@ public interface QTConstants {
 	public static final String SAMPLE_PENDING_SUBMISSION = "lbl.sc.qt.sample.proposal.checklist.status.pending.submission";
 	// #11104 -end-
 
+	public static final String SERVICE_OBJECT_CC = "cc";//#28784
+	//#38151
+	public static final Long APP_VERSION_REDMINE_NO_38151 = 35384L;
+	public static final Integer APP_VERSION_REDMINE_NO_38151_PHASE = 2;
+
 	// 6906 - start
 	public static final String SELECTION_MODE_MULTIPLE = "multiple";
 	public static final String SELECTION_MODE_SINGLE = "single";
@@ -377,20 +389,6 @@ public interface QTConstants {
 	public static final Long COMPOSITE_VALIDITY_ID_QT=29007L;
 	public static final Long COMPOSITE_VALIDITY_ID_DP=29006L;
 	// #29007 End Vinod
-
-	// #29187 Start Vinod
-	public static final String LBL_TXT_SELECT = "lbl.txt.select";
-	public static final String LBL_TXT_YES = "lbl.txt.yes";
-	public static final String LBL_TXT_NO = "lbl.txt.no";
-	public static final String COMPLIANCE_CONFIRMATION_POPUP = "complianceConfirmPopUp.show()";
-	public static final String COMPLIANCE_SAMPLE_CONFIRMATION_POPUP = "complianceSampleConfirmPopUp.show()";
-	public static final String VIEW_UOM_QUANTITY_DETAILS = "viewUOMQuantityDetails.show()";
-	public static final String VIEW_ZONE_QUANTITY_POPUP = "viewZoneQuantityPopup.show()";
-	public static final String REQUESTCONTEXT_INSTANCE_UPDATE_ALL = "@all";
-	public static final String LBL_SC_TEC_COMPLIANCE = "lbl.sc.tec.compliance";
-	public static final String LBL_TPL_SPEC_CONTENT_USER_SCORE = "lbl.tpl.spec.content.user.score";
-	// #29187 End Vinod
-
 	
 	// #32119 - start
 	public static final String PORTLET_NAME_CT_MAINTENANCE = "ctContractMaintenance_WAR_NGePportlet";
@@ -422,7 +420,7 @@ public interface QTConstants {
 	// #36757 End Vinod
 	
 	public static final String TEC_PRESENTATION_DEMO_REMARK = "TDR"; // #28784
-	
+
 	// #29732 -Start
 	public static final String LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_1 = "lbl.sc.category.has.changes.on.prerender.view.1";
 	public static final String LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_2 = "lbl.sc.category.has.changes.on.prerender.view.2";
@@ -431,4 +429,22 @@ public interface QTConstants {
 	public static final String QT_STATUS_BUTTON_ENDORSE = "ENDORSE";
 	public static final String SUPPLIER_CRITERIA = "SC";
 	// #29732 -End
+
+	// #29187 Start Vinod
+	public static final String LBL_TXT_SELECT = "lbl.txt.select";
+	public static final String LBL_TXT_YES = "lbl.txt.yes";
+	public static final String LBL_TXT_NO = "lbl.txt.no";
+	public static final String COMPLIANCE_CONFIRMATION_POPUP = "complianceConfirmPopUp.show()";
+	public static final String COMPLIANCE_SAMPLE_CONFIRMATION_POPUP = "complianceSampleConfirmPopUp.show()";
+	public static final String VIEW_UOM_QUANTITY_DETAILS = "viewUOMQuantityDetails.show()";
+	public static final String VIEW_ZONE_QUANTITY_POPUP = "viewZoneQuantityPopup.show()";
+	public static final String REQUESTCONTEXT_INSTANCE_UPDATE_ALL = "@all";
+	public static final String LBL_SC_TEC_COMPLIANCE = "lbl.sc.tec.compliance";
+	public static final String LBL_TPL_SPEC_CONTENT_USER_SCORE = "lbl.tpl.spec.content.user.score";
+	// #29187 End Vinod
+
+	// 32453, #21695, #25138 -start-
+	public static final String FINANCIAL_ITEM_SPEC_ANSWER = "FISA";
+	public static final String PORTLET_NAME_SUPPLIER_PROPOSAL = "scSupplierProposal_WAR_NGePportlet";
+	// #33831, #21695, #25138 - End
 }
