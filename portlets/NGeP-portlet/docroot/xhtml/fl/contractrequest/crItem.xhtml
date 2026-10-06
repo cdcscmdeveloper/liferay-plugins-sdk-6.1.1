@@ -199,6 +199,11 @@
 					<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.tax.guideline2']}" escape="false"  />
 				</c:when>
 			</c:choose>
+			<!-- #31344 add instruction for item -->
+			<br/><br/> 
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.item.list3']}" escape="false"  /><br/>
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.item.list4']}" escape="false"  /><br/>
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.item.list5']}" escape="false"  /><br/><br/>
 			
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.items.spec.guideline']}" escape="false"  />
 			<ui:remove>#29556-Start</ui:remove>
@@ -277,13 +282,20 @@
 					</f:facet>
 					<h:outputText rendered="#{item.scRequestItem.cmItem==null}"
 						value="#{item.scRequestItem.tempUnspscCode}" />
-					<h:outputText rendered="#{item.scRequestItem.cmItem!=null}"
-						value="#{item.scRequestItem.cmItem.extensionCode}" />
-					<span>(<h:outputText
-							value="#{item.scRequestItem.uom.uomName}" />)
+					<!-- #31344 display item details in popup -->				
+					<p:commandLink rendered="#{item.scRequestItem.cmItem!=null}" 
+						oncomplete="itemDescDialogId.show();" 
+						value="#{item.scRequestItem.cmItem.extensionCode}" 
+						style="color: #009ae5; font-size:12px; font-style:italic;"
+						action="#{contractRequestBackingBean.showItemDescPopup(item.scRequestItem.cmItem.itemId)}" 
+						process="@this" 
+						update="@([id$=itemDescDialogId])"/>	
+					<span style="margin-left:4px;"> 
+						(<h:outputText value="#{item.scRequestItem.uom.uomName}" />)
 					</span>
 					<br />
-					<h:outputText value="#{item.scRequestItem.itemName}" />
+					<!--#31344 filter item name-->
+					<h:outputText value="#{contractRequestBackingBean.filterNARequestItemName(item.scRequestItem.requestNoteItemId)}" />
 					<br />
 					<h:outputText value="#{item.skuNumber}" /> <!-- #16344 Farid updates-->
 <!-- #16344 END-->
@@ -1012,13 +1024,20 @@
 					</f:facet>
 					<h:outputText rendered="#{item.scRequestItem.cmItem==null}"
 						value="#{item.scRequestItem.tempUnspscCode}" />
-					<h:outputText rendered="#{item.scRequestItem.cmItem!=null}"
-						value="#{item.scRequestItem.cmItem.extensionCode}" />
+					<!-- #31344 display item details in popup -->				
+					<p:commandLink rendered="#{item.scRequestItem.cmItem!=null}" 
+						oncomplete="itemDescDialogId.show();" 
+						value="#{item.scRequestItem.cmItem.extensionCode}" 
+						style="color: #009ae5; font-size:12px; font-style:italic;"
+						action="#{contractRequestBackingBean.showItemDescPopup(item.scRequestItem.cmItem.itemId)}" 
+						process="@this" 
+						update="@([id$=itemDescDialogId])"/>	
 					<span>(<h:outputText
 							value="#{item.scRequestItem.uom.uomName}" />)
 					</span>
 					<br />
-					<h:outputText value="#{item.scRequestItem.itemName}" id="itemDesc"
+					<!--#31344 filter item name-->
+					<h:outputText value="#{contractRequestBackingBean.filterNARequestItemName(item.scRequestItem.requestNoteItemId)}" id="itemDesc"
 						title="#{item.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : item.scRequestItem.itemDesc}" />
 					<br />
 					<h:outputText value="#{item.sku}" />

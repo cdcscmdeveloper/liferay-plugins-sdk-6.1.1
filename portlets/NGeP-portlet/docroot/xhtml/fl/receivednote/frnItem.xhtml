@@ -55,11 +55,21 @@
             </p:row>
           </p:columnGroup>    
              <p:column>
-            	<h:outputText value="#{item.flDelOrderItem.flFulfilmentItemAddr.itemCode}" />
+            	<!-- #31344 display item details in popup -->	
+            	<p:commandLink rendered="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.cmItem!=null}" 
+					oncomplete="itemDescDialogId.show();" 
+					value="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.cmItem.extensionCode}" 
+					style="color: #009ae5; font-size:12px; font-style:italic; text-align:left; float:left;"
+					action="#{receivedNoteBackingBean.showItemDescPopup(item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.cmItem.itemId)}" 
+					process="@this" 
+					update="@([id$=itemDescDialogId])"/>
         	</p:column>
         	<p:column style="white-space:normal;">
-				<h:outputText value="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemName}" 
-				id="itemDesc" title="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemDesc}"/>
+				<!--#31344 filter item name-->
+				<h:outputText
+					value="#{receivedNoteBackingBean.filterNARequestItemName(item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.requestNoteItemId)}"
+					id="itemDesc"
+					title="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemDesc}" />
 				<p:commandLink oncomplete="frnItemInfo.show();" process="@this"  
 					rendered="#{receivedNoteBackingBean.managedBean.contractFlag}"
 					action="#{receivedNoteBackingBean.frnItemInfoList(item.flDelOrderItem.flFulfilmentItemAddr)}"
@@ -233,7 +243,12 @@
 					<td><p:outputLabel value="#{lbl['lbl.fl.item.code']}" /></td>
 					<td><p:inputText value="#{receivedNoteBackingBean.managedBean.selectedItem.flDelOrderItem.flFulfilmentItemAddr.itemCode}" disabled="true"/></td>
 					<td><p:outputLabel value="#{lbl['lbl.pm.bn.itemname']}" /></td>
-					<td><p:inputText value="#{receivedNoteBackingBean.managedBean.selectedItem.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemName}" size="51" disabled="true"/></td>
+					<!--#31344 filter item name-->
+					<td>
+						<p:inputText
+						value="#{receivedNoteBackingBean.filterNARequestItemName(receivedNoteBackingBean.managedBean.selectedItem.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.requestNoteItemId)}"
+						size="51" disabled="true" />
+					</td>
 				</tr>
 			</table>
 			<p:dataTable id="rejectionRemarks" value="#{receivedNoteBackingBean.managedBean.rejectionRemarkHistory}" var="remarks"

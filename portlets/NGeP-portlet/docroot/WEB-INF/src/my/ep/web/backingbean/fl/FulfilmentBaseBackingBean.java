@@ -21,8 +21,10 @@ import javax.faces.context.FacesContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
@@ -32,6 +34,8 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.cm.codification.CodificationReqDTO;
+import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
@@ -49,6 +53,7 @@ import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.ct.dtl.CtContractValue;
 import my.ep.persistence.entity.fl.FlAddress;
@@ -61,6 +66,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmContact;
+import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
@@ -73,8 +79,11 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;//29556
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -893,4 +902,122 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 
 		commonDownload(filePath.toString(), CommonConstants.DOCNAME_ITEM_SPEC_GUIDELINE);
 	}
+	
+	// #31344 -start-
+	/**
+	 * Show Details Items in popup
+	 * @param cmItemId
+	 * @return void
+	 */
+	public void showItemDescPopup(Long cmItemId) {
+		if (cmItemId == null) {
+			return;
+		}
+
+		try {
+			CodificationReqDTO cReqDTO = new CodificationReqDTO();
+			cReqDTO.setItemId(cmItemId);
+			ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
+			CodificationResDTO codificationResDTO = codificationSO.searchItemObj(cReqDTO);
+			if (codificationResDTO == null || codificationResDTO.getCmItem() == null) {
+				return;
+			}
+			CmItem item = codificationResDTO.getCmItem();
+			populateItemDescPopup(item);
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("FL", "showItemDescPopup", "showItemDescPopup", null,
+					getUserIdSessionFromLoginId(), e);
+		}
+	}
+
+    /**
+     * Populate the item description for pop up
+     * @param item
+     * @return void
+     */
+	private void populateItemDescPopup(CmItem item) {
+		CommonUtils common = new CommonUtils();
+		CodificationBackingBean cdbb = new CodificationBackingBean();
+
+		String segmentTitle = common.removeItemNameNA(item.getCmType().getTypeName()) + " "
+				+ common.removeItemNameNA(item.getCmBrand().getBrandName()) + " "
+				+ common.removeItemNameNA(item.getCmMeasurement().getMeasurementName()) + " "
+				+ common.removeItemNameNA(item.getCmColor().getColorName());
+
+		String segmentCode = item.getCmType().getTypeCode() + item.getCmBrand().getBrandCode()
+				+ item.getCmMeasurement().getMeasurementCode() + item.getCmColor().getColorCode();
+
+		String familyTitle = item.getCmUnspsc().getUnspscTitle() + " " + segmentTitle;
+
+		cdbb.getManagedBean().setFamilyCode(item.getExtensionCode());
+		cdbb.getManagedBean().setCommodityCode(item.getCmUnspsc().getUnspscCode());
+		cdbb.getManagedBean().setCommodityTitle(item.getCmUnspsc().getUnspscTitle());
+		cdbb.getManagedBean().setSegmentTitle(segmentTitle.replaceAll("\\s+", " ").trim());
+		cdbb.getManagedBean().setSegmentCode(segmentCode);
+		cdbb.getManagedBean().setFamilyTitle(familyTitle);
+		cdbb.getManagedBean().setHideExtension(segmentTitle.trim().isEmpty());
+	}
+	
+	/**
+	 * Filter item contain NA, N A, N/A
+	 * @param scRequestItemId
+	 * @return
+	 */
+	public String filterNARequestItemName(Long scRequestItemId) {
+		log.info(scRequestItemId);
+		String emptyItemName = "";
+
+		if (scRequestItemId == null || scRequestItemId == 0) {
+			return emptyItemName;
+		}
+		
+		try {
+			IRequestItemSO reqItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IRequestItemSO.class);
+
+			ScRequestItem scRequestItem = reqItemSO.getRequestItemAndCmItemByRequestItemId(scRequestItemId);
+
+			if (scRequestItem == null || scRequestItem.getItemName() == null) {
+				return emptyItemName;
+			}
+
+			CommonUtils commonUtils = new CommonUtils();
+			String itemName = scRequestItem.getItemName();
+
+			return containsNAExtension(scRequestItem.getCmItem()) ? commonUtils.removeItemNameNA(itemName) : commonUtils
+					.filterItemNameNA(itemName);
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("FL", "filterNARequestItemName", "filterNARequestItemName", null,
+					getUserIdSessionFromLoginId(), e);
+			return emptyItemName;
+		}
+	}
+
+	/**
+	 * Check cm item extension NA, N A, N/A
+	 * @param cmItem
+	 * @return
+	 */
+	private boolean containsNAExtension(CmItem cmItem) {
+		if(cmItem == null) {
+			return false;
+		}
+		
+	    return isNAValue(cmItem.getCmType().getTypeName())
+	            || isNAValue(cmItem.getCmBrand().getBrandName())
+	            || isNAValue(cmItem.getCmColor().getColorName())
+	            || isNAValue(cmItem.getCmMeasurement().getMeasurementName());
+	}
+
+	/**
+	 * Check NA value
+	 * @param value
+	 * @return
+	 */
+	private boolean isNAValue(String value) {
+	    return "NA".equalsIgnoreCase(value);
+	}
+		
+	// #31344 -end-
 }
