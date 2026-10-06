@@ -2885,15 +2885,20 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		PmUser ackBy = scLoa.getAckBy();
 		if(ackBy !=null){
-			//#30449 - start
-			if (ackBy.getSalutationCode() != null){
-				// #30447 - start
-				supplierSignerUser = getFormattedSalutationName(ackBy.getSalutationCode().getSalutationName(), ackBy.getUserName());
-				// #30447 - end
-			}else {
-				supplierSignerUser = ackBy.getUserName();
-			}
-			//#30449 - end
+		    // #30449, #30447 - start
+		    if (ackBy.getSalutationCode() == null) {
+		        PmUser userDtls = retrieveUserDtlById(ackBy.getUserId());
+		        if (userDtls != null) {
+		            ackBy = userDtls;
+		        }
+		    }
+
+		    if (ackBy.getSalutationCode() != null) {
+		        supplierSignerUser = getFormattedSalutationName(ackBy.getSalutationCode().getSalutationName(), ackBy.getUserName());
+		    } else {
+		        supplierSignerUser = ackBy.getUserName();
+		    }
+		    // #30449, #30447 - end
 			supplierSignerIcNo = ackBy.getIdentificationNo();
 		}
 
@@ -3084,16 +3089,20 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				String userName = "&#60;Nama Wakil Syarikat&#62;";//#32738 & #32739
 				String icNo = "&#60;No. Kad Pengenalan&#62;";
 				if (pmUser != null) {
-					// #30449 - start
-						if (pmUser.getSalutationCode()!= null){
-							// #30447 - start
-							userName = getFormattedSalutationName(pmUser.getSalutationCode().getSalutationName(), pmUser.getUserName());
-							// #30447 - end
-						}else{
-							userName = pmUser.getUserName();
-						}
-					//#30449 - end  
-					icNo = pmUser.getIdentificationNo();
+					// #30449, #30447 - start
+				    if (pmUser.getSalutationCode() == null) {
+				        PmUser userDtls = retrieveUserDtlById(pmUser.getUserId());
+				        if (userDtls != null) {
+				            pmUser = userDtls;
+				        }
+				    }
+				    if (pmUser.getSalutationCode() != null) {
+				        userName = getFormattedSalutationName(pmUser.getSalutationCode().getSalutationName(), pmUser.getUserName());
+				    } else {
+				        userName = pmUser.getUserName();
+				    }
+				    icNo = pmUser.getIdentificationNo();
+				 // #30449, #30447 - end
 				}
 				context.put("userName", userName);
 				context.put("icNo", icNo);
