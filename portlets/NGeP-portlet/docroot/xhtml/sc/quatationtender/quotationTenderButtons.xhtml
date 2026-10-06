@@ -156,44 +156,47 @@
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 								<!-- #25635 -start- -->
 								<ui:param name="bpAction" value="SUBMIT" />
-							<p:commandButton value="#{lbl[buttonLabel]}"
-								styleClass="ui-button"
-								actionListener="#{qTDetailBB.assertSpecificationUpdateInProgress(true)}"
-								update="@([id$=#{submitConfirmId2}])"
-								rendered="#{isClone2 and !isCommitteeApprovalReviseTask}" />
-							<!-- #25635 -end- -->
-							<!-- 25077 -start- -->
-							<ui:param name="bpAction" value="SUBMIT" />
-							<!-- 25077 -end- -->
-							
-							<ui:remove> #37632 - Update rendered - Start </ui:remove>
+								<p:commandButton value="#{lbl[buttonLabel]}"
+									styleClass="ui-button"
+									actionListener="#{qTDetailBB.assertSpecificationUpdateInProgress(true)}"
+									update="@([id$=#{submitConfirmId2}])"
+									rendered="#{isClone2 and !isCommitteeApprovalReviseTask}" />
+								<!-- #25635 -end- -->
+								<ui:remove> #30477 Start </ui:remove>	
 							<ui:remove> #29732 Start add update </ui:remove>	
 							<p:commandButton value="#{lbl[buttonLabel]}"
-								styleClass="ui-button"
-								onclick="blockWidget.show();"
+								styleClass="ui-button" onclick="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
-								rendered="#{!qTDetailBB.isCancel(bpmAction) or isCommitteeApprovalReviseTask}"
+								rendered="#{isClone2 and isCommitteeApprovalReviseTask}"
 								action="#{qTDetailBB.updateBpmTask(bpmAction)}" update="@form">
-								<ui:remove>start 9019 - Reopen #note-317</ui:remove>
-								<f:param name="skipsubmitvalidation" value="0" />
-								<ui:remove>end 9019 - Reopen #note-317</ui:remove>
 							</p:commandButton>
-							<ui:remove> #37632 - Update rendered - End </ui:remove>
-
+							<ui:remove> #30477 End </ui:remove>
+						
 							<ui:remove>9019 -start</ui:remove>
-							<p:commandButton value="#{lbl[buttonLabel]}"
+							 <p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button" onclick="cancel1QTDlg.show();"
 								update="@([id$=#{cancel1QTDlg}])"
-								rendered="#{isQTStatusPendingQtSubmission and qTDetailBB.isCancel(bpmAction)}" />
-							<ui:remove>9019 -end</ui:remove>
-							<ui:remove>#34718 - Start</ui:remove>
-							<p:commandButton value="#{lbl[buttonLabel]}"
-								styleClass="ui-button" onclick="blockWidget.show();"
-								oncomplete="blockWidget.hide();submissionConfirmPopUp.show();"
-								rendered="#{isClone1 and !isClone2 and !qTDetailBB.isCancel(bpmAction)}"
-								update="@form" />
-							<ui:remove>#34718 - End</ui:remove>
-							</ui:repeat>
+								rendered="#{!isClone2 and qTDetailBB.isCancel(bpmAction)}"/>
+								<ui:remove>#29732 start add update</ui:remove>
+								<p:commandButton value="#{lbl[buttonLabel]}"
+									styleClass="ui-button" onclick="blockWidget.show();"
+									oncomplete="blockWidget.hide();"
+									rendered="#{!isClone1 and !isClone2 and !qTDetailBB.isCancel(bpmAction)}"
+									action="#{qTDetailBB.updateBpmTask(bpmAction)}" update="@form">
+									<ui:remove> #29732 End </ui:remove>
+									<ui:remove>start 9019 - Reopen #note-317</ui:remove>
+									<f:param name="skipsubmitvalidation" value="0" />
+									<ui:remove>end 9019 - Reopen #note-317</ui:remove>
+								</p:commandButton>
+								<ui:remove>9019 -end</ui:remove>
+								<ui:remove>#34718 - Start</ui:remove>
+								<p:commandButton value="#{lbl[buttonLabel]}" 
+									styleClass="ui-button" onclick="blockWidget.show();" 
+									oncomplete="blockWidget.hide();submissionConfirmPopUp.show();" 
+									rendered="#{isClone1 and !isClone2 and !qTDetailBB.isCancel(bpmAction)}"
+									update="@form"/>
+								<ui:remove>#34718 - End</ui:remove>
+						</ui:repeat>
 					</c:when>
 					<c:when test="#{qTDetailBB.managedBean.createQt or isQTStatusPendingQtSubmission}">
 						<p:commandButton value="#{lbl['lbl.btn.submit']}"

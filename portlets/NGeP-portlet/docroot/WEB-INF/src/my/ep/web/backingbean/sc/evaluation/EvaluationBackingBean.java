@@ -4916,7 +4916,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 							&& !resDTO.getProposalScores().isEmpty()) {
 						for (ScQtProposalScore proposalScore : resDTO
 								.getProposalScores()) {
-							if (proposalScore.getCriteriaType() ==QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_NON_FED_GOV) {
+							if (proposalScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_FED_GOV) {
 								this.getManagedBean()
 										.setNoOfContractsProposalScore(
 												proposalScore);
