@@ -1270,7 +1270,9 @@ public class SpecificationBackingBean extends
 				SCProcessNameConst.SPEC_MAINTENANCE_REVISE_SCORING //1873 note 149
 			};
 			//#34656 move validation position ,trigger before popup-start
-			specSo.validateSpecZoneQtyZero(specReqDTO);
+			if (activeIndex >= 2) { //#21695,#25138,#29021,#25635,#41460
+				specSo.validateSpecZoneQtyZero(specReqDTO);
+			}
 			//#34656 move validation position -end
 			if (Arrays.asList(allowedTaskName).contains(taskName)
 					|| (StringUtils.isEmpty(taskName) && !this.getManagedBean().isReadOnly())) {
@@ -10654,7 +10656,7 @@ public class SpecificationBackingBean extends
 								SearchOperator.OPERATOR_EQUALS.value(), true));
 
 				//#34923 - start
-				List<String> docTypeList = new ArrayList<String>();
+				List<String> docTypeList = new ArrayList<>(); //#41437
 				docTypeList.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
 				docTypeList.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY);
 				searchBean.getDataFilterBeans().add(

@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -246,7 +248,7 @@ public final class AiDocSupport {
 				return null;
 			}
 			try {
-				JSONObject root = new JSONObject(jsonContent);
+				JSONObject root = new JSONObject(toDbChars(jsonContent));
 				if (!root.has("data")) {
 					log.warn("  No data found in JSON");
 					return null;
@@ -267,10 +269,34 @@ public final class AiDocSupport {
 					return null;
 				}
 				return fields;
-			} catch (JSONException | NullPointerException e) {
+			} catch (JSONException | NullPointerException | NumberFormatException e) {
 				log.error(" Error parsing JSON", e);
 			}
 			return null;
+		}
+
+		// the DB is WE8MSWIN1252: what it can't store becomes the 0xBF it would store, raw or backslash-u escaped
+		private static String toDbChars(String json) {
+			CharsetEncoder dbCharset = Charset.forName("windows-1252").newEncoder();
+			StringBuilder sb = new StringBuilder(json.length());
+			for (int i = 0; i < json.length(); i++) {
+				char c = json.charAt(i);
+				if (c == '\\' && i + 1 < json.length()) {
+					char next = json.charAt(i + 1);
+					if (next == 'u' && i + 5 < json.length()
+							&& !dbCharset.canEncode((char) Integer.parseInt(json.substring(i + 2, i + 6), 16))) {
+						sb.append('\u00bf');
+						i += 5;
+						continue;
+					}
+					// any other escape is copied whole, so an escaped backslash is not read as an escape
+					sb.append(c).append(next);
+					i++;
+					continue;
+				}
+				sb.append(dbCharset.canEncode(c) ? c : '\u00bf');
+			}
+			return sb.toString();
 		}
 		
 		/**
@@ -1331,7 +1357,7 @@ public final class AiDocSupport {
 			appendField(sb, "lbl.cm.company.name", tenantsName, validTenantsName);
 			appendField(sb, "lbl.sm.facility.landLordName", landlordsName, validLandlordsName);
 			appendField(sb, "lbl.sm.facility.monthRent", monthlyRental, validMonthlyRental);
-			appendField(sb, "lbl.sm.facility.address", premisesAddress, validAddress);
+			appendField(sb, "lbl.sm.companyaddress", premisesAddress, validAddress);
 			return sb.toString();
 		}
 
