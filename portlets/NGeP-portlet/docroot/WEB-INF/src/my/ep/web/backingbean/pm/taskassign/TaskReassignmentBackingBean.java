@@ -2082,7 +2082,6 @@ public class TaskReassignmentBackingBean extends
 				reqDTO.setUserId(getManagedBean().getResultUser().getUserId());
 			}
 			//#36053 End
-
 			reqDTO.setDocNo(task.getDocNumber());
 			reqDTO.setDocType(task.getDocType());
 			reqDTO.setStatusId(task.getDocStatus().longValue());
