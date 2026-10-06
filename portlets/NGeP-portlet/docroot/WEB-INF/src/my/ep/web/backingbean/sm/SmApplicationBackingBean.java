@@ -20429,4 +20429,337 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 	}
 //	#40368 END
+	// #RUU Start
+	// Check if supplier should be charge for Late Fee
+	private void checkLateRenewal() {
+		getManagedBean().setLateRenewFee(false);
+		long diff = (getManagedBean().getSmSupplier().getSmMofAccounts().get(0).getExpDate().getTime() - (new Timestamp(System.currentTimeMillis()))
+				.getTime()) / (24 * 60 * 60 * 1000L);
+		if (diff < 120) {
+			getManagedBean().setLateRenewFee(true);
+		}
+	}
+	
+	// Payment list for Payment Summary
+	private void calculatePayment() {
+		String regDetails = "";
+		String proDetails = "";
+		String lateDetails = "";
+		String bumiDetails = "";
+		if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+			regDetails = getParameterDesc(ParameterTypeConst.SUPP_PAYMENT_ITEM, SupplierManagementConst.MOF_PAYMENT);
+			proDetails = getParameterDesc(ParameterTypeConst.SUPP_PAYMENT_ITEM, SupplierManagementConst.PROCESSING_PAYMENT);
+		} else if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)){
+			regDetails = "MOF Registration Fee (Add Category)";
+			proDetails = "MOF Processing Fee (Add Category)";
+		} else if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)){
+			bumiDetails = "Bumiputra Certification Fee";
+			proDetails = "MOF Processing Fee (Bumiputera Status Application Application)";
+		} else if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
+			proDetails = "MOF Processing Fee (Update MOF Profile)";
+		} else if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+			regDetails = "MOF Registration Fee (Renewal)";
+			proDetails = "MOF Processing Fee (Renewal)";
+			lateDetails = "MOF Late Fee (Renewal)";
+		}
+
+		getManagedBean().setPaymentDetailsVOList(new ArrayList<SmPaymentDetailsVO>());
+		getManagedBean().setTotalPaymentAmount(BigDecimal.ZERO);
+		getManagedBean().setTotalPaymentAmount(getManagedBean().getTotalPaymentAmount().setScale(2, BigDecimal.ROUND_UP));
+		getManagedBean().setGstAmount(SmCommonUtil.getGstCurrentRate());
+		getManagedBean().setGstPercentageLabels(
+				SmCommonUtil.getMessage("lbl.sm.gst.percent", new String[] { getManagedBean().getGstAmount().toString() }));
+		
+		if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+				|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
+			SmPaymentDetailsVO regPaymentVO = new SmPaymentDetailsVO();
+			regPaymentVO.setDetails(regDetails);
+			regPaymentVO.setPrice(new BigDecimal(600));
+			regPaymentVO.setTotalAmount(regPaymentVO.getPrice());
+			getManagedBean().getPaymentDetailsVOList().add(regPaymentVO);
+		}
+
+		SmPaymentDetailsVO proPaymentVO = new SmPaymentDetailsVO();
+		proPaymentVO.setDetails(proDetails);
+		proPaymentVO.setPrice(SmRuleHelper.getInstance().getProcessingFee());
+		proPaymentVO.setTotalAmount(proPaymentVO.getPrice());
+		getManagedBean().getPaymentDetailsVOList().add(proPaymentVO);
+		
+		if(getManagedBean().isLateRenewFee()){
+			SmPaymentDetailsVO latePaymentVO = new SmPaymentDetailsVO();
+			latePaymentVO.setDetails(lateDetails);
+			latePaymentVO.setPrice(new BigDecimal(300));
+			latePaymentVO.setTotalAmount(latePaymentVO.getPrice());
+			getManagedBean().getPaymentDetailsVOList().add(latePaymentVO);
+		}
+
+		SmApplicationUtil.assignActiveAndApprovedCategoryList(getManagedBean());
+		
+		countNormalCatCode();
+		if (getManagedBean().getNormalCodeCount() > 0) {
+			SmPaymentDetailsVO normalPaymentVO = new SmPaymentDetailsVO();
+			normalPaymentVO = new SmPaymentDetailsVO();
+			normalPaymentVO.setDetails("Normal Category Fee");
+			normalPaymentVO.setPrice(new BigDecimal(200));
+			normalPaymentVO.setQuantity(getManagedBean().getNormalCodeCount());
+			normalPaymentVO.setHasQuantity(true);
+			normalPaymentVO.setTotalAmount(normalPaymentVO.getPrice().multiply(BigDecimal.valueOf(getManagedBean().getNormalCodeCount())));
+			getManagedBean().getPaymentDetailsVOList().add(normalPaymentVO);
+		}
+		
+		countSpecialCatCode();
+		if (getManagedBean().getSpecialCodeCount() > 0) {
+			SmPaymentDetailsVO specialPaymentVO = new SmPaymentDetailsVO();
+			specialPaymentVO = new SmPaymentDetailsVO();
+			specialPaymentVO.setDetails("Special Category Fee");
+			specialPaymentVO.setPrice(new BigDecimal(1200));
+			specialPaymentVO.setQuantity(getManagedBean().getSpecialCodeCount());
+			specialPaymentVO.setHasQuantity(true);
+			specialPaymentVO.setTotalAmount(specialPaymentVO.getPrice().multiply(BigDecimal.valueOf(getManagedBean().getSpecialCodeCount())));
+			getManagedBean().getPaymentDetailsVOList().add(specialPaymentVO);
+		}
+		
+		countCancelledCatCode();
+		if (getManagedBean().getCancelledCount() > 0) {
+			SmPaymentDetailsVO cancelPaymentVO = new SmPaymentDetailsVO();
+			cancelPaymentVO = new SmPaymentDetailsVO();
+			cancelPaymentVO.setDetails("Re-Add Category Fee");
+			cancelPaymentVO.setPrice(new BigDecimal(1000));
+			cancelPaymentVO.setQuantity(getManagedBean().getCancelledCount());
+			cancelPaymentVO.setHasQuantity(true);
+			cancelPaymentVO.setTotalAmount(cancelPaymentVO.getPrice().multiply(BigDecimal.valueOf(getManagedBean().getCancelledCount())));
+			getManagedBean().getPaymentDetailsVOList().add(cancelPaymentVO);
+		}
+		
+		if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)){
+			SmPaymentDetailsVO bumiPaymentVO = new SmPaymentDetailsVO();
+			bumiPaymentVO.setDetails(bumiDetails);
+			bumiPaymentVO.setPrice(new BigDecimal(600));
+			bumiPaymentVO.setTotalAmount(bumiPaymentVO.getPrice());
+			getManagedBean().getPaymentDetailsVOList().add(bumiPaymentVO);
+		}
+		
+		getOverlapFee();
+		if(getManagedBean().getOverlapPrice().compareTo(BigDecimal.ZERO) > 0){
+			SmPaymentDetailsVO overlapPaymentVO = new SmPaymentDetailsVO();
+			overlapPaymentVO.setDetails("Overlapping Fee");
+			overlapPaymentVO.setPrice(getManagedBean().getOverlapPrice());
+			overlapPaymentVO.setTotalAmount(overlapPaymentVO.getPrice());	
+			getManagedBean().getPaymentDetailsVOList().add(overlapPaymentVO);
+		}
+
+		for (SmPaymentDetailsVO paymentDetailsVO : getManagedBean()
+				.getPaymentDetailsVOList()) {
+			getManagedBean().setTotalPaymentAmount(
+					getManagedBean().getTotalPaymentAmount().add(
+							paymentDetailsVO.getTotalAmount()));
+		}
+	}
+	
+	// Count normal code to be charged
+	private void countNormalCatCode() {
+		int approvedCount = 0;
+		if (null != getManagedBean().getApprovedCategoryList() && !getManagedBean().getApprovedCategoryList().isEmpty()) {
+			for (SmSupplierCategory approvedCat : getManagedBean().getApprovedCategoryList()){
+				if(!approvedCat.isSpecialCategory()){
+					approvedCount++;
+				}
+			}
+		}
+
+		int activeCount = 0;
+		if (null != getManagedBean().getActiveCategoryList() && !getManagedBean().getActiveCategoryList().isEmpty()) {
+			for (SmSupplierCategory activeCat : getManagedBean().getActiveCategoryList()){
+				if(!activeCat.isSpecialCategory()){
+					activeCount++;
+				}
+			}
+		}
+
+		int totalCount = approvedCount + activeCount;
+		if (totalCount > 15) {
+			if (getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
+					|| getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) || approvedCount <= 15) {
+				totalCount = totalCount - 15;
+			} else {
+				totalCount = activeCount;
+			}
+		} else {
+			totalCount = 0;
+		}
+		getManagedBean().setNormalCodeCount(totalCount);
+	}
+	
+	// Count special code to be charged
+	private void countSpecialCatCode() {
+		int count = 0;
+		if (getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
+				&& null != getManagedBean().getApprovedCategoryList() && !getManagedBean().getApprovedCategoryList().isEmpty()) {
+			for (SmSupplierCategory cat : getManagedBean().getApprovedCategoryList()) {
+				if (cat.isSpecialCategory()) {
+					count++;
+				}
+			}
+		}
+		if (null != getManagedBean().getActiveCategoryList() && !getManagedBean().getActiveCategoryList().isEmpty()) {
+			for (SmSupplierCategory cat : getManagedBean().getActiveCategoryList()) {
+				if (cat.isSpecialCategory()) {
+					count++;
+				}
+			}
+		}
+		getManagedBean().setSpecialCodeCount(count);
+	}
+	
+	// Count added code that have been removed previously to be charged
+	private void countCancelledCatCode() {
+		getManagedBean().setCancelledCount(0);
+		if (null != getManagedBean().getActiveCategoryList() && !getManagedBean().getActiveCategoryList().isEmpty()) {
+			for (SmSupplierCategory cat : getManagedBean().getActiveCategoryList()) {
+				compareCatCode(cat);
+			}
+		}
+	}
+	
+	// Compare added code with previously removed code
+	private void compareCatCode(SmSupplierCategory activeCat) {
+		for (SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
+			if (cat.getPmCategoryL3().getCategoryL3Id().equals(activeCat.getPmCategoryL3().getCategoryL3Id())
+					&& cat.getCancelledDate() != null) {
+				getManagedBean().setCancelledCount(getManagedBean().getCancelledCount()+1);
+				break;
+			}
+		}
+	}
+	
+	private void getOverlapFee() {
+		SmOverlapCategoryVO overlapVO = SmApplicationUtil.getOverlapCategoryVO(getManagedBean().getSmAppl());
+		getManagedBean().setNormalCodes(new HashSet<String>());
+		getManagedBean().setNormalPersons(new HashSet<String>());
+		getManagedBean().setSpecialCodes(new HashSet<String>());
+		getManagedBean().setSpecialPersons(new HashSet<String>());
+
+		if (overlapVO != null) {
+			List<SmBulkApplOverlapCatVO> categories = overlapVO.getOverlapCategoryVOList();
+
+			if (categories == null || categories.isEmpty()) {
+				categories = overlapVO.getOverlapCategoryMalayList();
+			}
+
+			if (categories != null) {
+				for (SmBulkApplOverlapCatVO category : categories) {
+					countOverlapCatCode(category);
+				}
+			}
+		}
+		
+		long normal = (long) getManagedBean().getNormalCodes().size() + getManagedBean().getNormalPersons().size();
+		long special = (long) getManagedBean().getSpecialCodes().size() + getManagedBean().getSpecialPersons().size();
+		BigDecimal normalFee = BigDecimal.valueOf(1000L).multiply(BigDecimal.valueOf(normal));
+		BigDecimal specialFee = BigDecimal.valueOf(5000L).multiply(BigDecimal.valueOf(special));
+		getManagedBean().setOverlapPrice(normalFee.add(specialFee));
+	}
+	
+	// count price for overlapped code and person
+	private void countOverlapCatCode(SmBulkApplOverlapCatVO category) {
+		String code = category.getCategoryCode();
+		List<SmSupplierCategory> activeCategories = getManagedBean().getActiveCategoryList();
+		
+		if (ParameterConst.NEW_SM_APPLN_FOR_RENEW.equals(getManagedBean().getSmAppl().getApplType())
+				&& getManagedBean().getApprovedCategoryList() != null) {
+			activeCategories.addAll(getManagedBean().getApprovedCategoryList());
+		}
+		
+		SmSupplierCategory matchedCategory = null;
+		
+		for (SmSupplierCategory activeCategory : activeCategories) {
+            if (code != null
+                    && code.equals(CustomUtils.getCategoryCode(activeCategory))) {
+                matchedCategory = activeCategory;
+                break;
+            }
+        }
+
+		if (matchedCategory != null && category.getOverlapInfoList() != null) {
+			boolean isSpecialCode = matchedCategory.isSpecialCategory();
+
+			for (SmBulkApplOverlapCatVO detail : category.getOverlapInfoList()) {
+				String company = detail.getRegNo();
+				String person = detail.getIdentificationNo();
+
+				String codeKey = company.trim() + "|" + code;
+				String personKey = company.trim() + "|" + person.trim();
+
+				if (isSpecialCode) {
+					getManagedBean().getSpecialCodes().add(codeKey);
+					getManagedBean().getSpecialPersons().add(personKey);
+				} else {
+					getManagedBean().getNormalCodes().add(codeKey);
+					getManagedBean().getNormalPersons().add(personKey);
+				}
+			}
+		}
+	}
+	
+	// Bill for additonal Fee
+	private void createCatPyBill(ReviewApplicationReqDTO reqDTO) {
+		List<PyBillDtl> catPyBillList = new ArrayList<PyBillDtl>();
+		
+		if(getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+			checkLateRenewal();
+		}
+		if(getManagedBean().isLateRenewFee()){
+			PyBillDtl latePyBill = new PyBillDtl();
+			PmParameter itemCode = new PmParameter();
+			itemCode.setParameterId(457L);
+			latePyBill.setItemCode(itemCode); 
+			latePyBill.setItemDesc("MOF Late Fee (Renewal)");
+			BigDecimal itemPrice = new BigDecimal(300);
+			latePyBill.setItemPrice(itemPrice);
+			latePyBill.setItemQty(0);
+			catPyBillList.add(latePyBill);
+		}
+		
+		countNormalCatCode();
+		if (getManagedBean().getNormalCodeCount() > 0) {
+			PyBillDtl nPyBill = new PyBillDtl();
+			PmParameter itemCode = new PmParameter();
+			itemCode.setParameterId(457L);
+			nPyBill.setItemCode(itemCode); 
+			nPyBill.setItemDesc("Normal Category Fee");
+			BigDecimal itemPrice = new BigDecimal(200);
+			nPyBill.setItemPrice(itemPrice.multiply(BigDecimal.valueOf(getManagedBean().getNormalCodeCount())));
+			nPyBill.setItemQty(getManagedBean().getNormalCodeCount());
+			catPyBillList.add(nPyBill);
+		}
+		
+		countSpecialCatCode();
+		if (getManagedBean().getSpecialCodeCount() > 0) {
+			PyBillDtl sPyBill = new PyBillDtl();
+			PmParameter itemCode = new PmParameter();
+			itemCode.setParameterId(457L);
+			sPyBill.setItemCode(itemCode); 
+			sPyBill.setItemDesc("Special Category Fee");
+			BigDecimal itemPrice = new BigDecimal(1200);
+			sPyBill.setItemPrice(itemPrice.multiply(BigDecimal.valueOf(getManagedBean().getSpecialCodeCount())));
+			sPyBill.setItemQty(getManagedBean().getSpecialCodeCount());
+			catPyBillList.add(sPyBill);
+		}
+		
+		countCancelledCatCode();
+		if (getManagedBean().getCancelledCount() > 0) {
+			PyBillDtl sPyBill = new PyBillDtl();
+			PmParameter itemCode = new PmParameter();
+			itemCode.setParameterId(457L);
+			sPyBill.setItemCode(itemCode); 
+			sPyBill.setItemDesc("Re-Add Category Fee");
+			BigDecimal itemPrice = new BigDecimal(1000);
+			sPyBill.setItemPrice(itemPrice.multiply(BigDecimal.valueOf(getManagedBean().getCancelledCount())));
+			sPyBill.setItemQty(getManagedBean().getCancelledCount());
+			catPyBillList.add(sPyBill);
+		}
+		
+		reqDTO.setPyBillDtls(catPyBillList);
+	}
+	// #RUU End
 }
