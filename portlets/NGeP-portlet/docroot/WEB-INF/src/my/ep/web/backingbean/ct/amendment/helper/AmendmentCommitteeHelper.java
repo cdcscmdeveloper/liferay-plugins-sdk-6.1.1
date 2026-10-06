@@ -25,7 +25,6 @@ import my.ep.biz.bean.search.SearchFilterBean; //#24336
 import my.ep.biz.bean.search.SearchOrderBean; //#37808
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO; //#24336
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO; //#37808
-
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -982,10 +981,14 @@ public class AmendmentCommitteeHelper {
 
 	// #37808 start
 	/**
-	 * The method used for generating a list of available ministry for searching
-	 * secretary as selection.
-	 * 
-	 * @return the selection list of ministry
+	 * Generates the Ministry dropdown list for the Committee Secretary search.
+	 * <p>
+	 * This method retrieves all available ministries and populates them as
+	 * {@link SelectItem} objects for display in the Approving Authority page.
+	 * The first item in the dropdown is the default "Select" option.
+	 * </p>
+	 *
+	 * @return an array of {@link SelectItem} containing the list of ministries
 	 */
 	public SelectItem[] getMinistryDropdown() {
 		SelectItem[] items = null;
@@ -1005,22 +1008,9 @@ public class AmendmentCommitteeHelper {
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 			
 			for (PmOrgProfile orgProfile : list) {
-				// Start - #30045
-				// Checking if default/user ministry is exist in the list
-//				if (orgProfile.getOrgProfileId().equals(profileId)) {
-//					ctBackingBean.getManagedBean().setDefaultMinistryExist(true);
-//					getManagedBean().setMinistryProfileId(profileId);
-//				}
 				items[i++] = new SelectItem(orgProfile.getOrgProfileId(), orgProfile.getOrgName());
 			}
-			// Start - #30045
-			// To set the first record from the list as a default ministry for
-			// getJabatanDropdown()
-//			if (!ctBackingBean.getManagedBean().isDefaultMinistryExist()) {
-//				ctBackingBean.getManagedBean().setMinistryProfileId(list.get(0).getOrgProfileId());
-//				getManagedBean().setMinistryProfileId(profileId);
-//			}
-			// End - #30045
+
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT,
 					ContractConst.SLA_AMENDMENTBACKINGBEAN, null, ContractConst.SLA_DROPDOWN_COMMITTEE_MINISTRY, null,
@@ -1032,12 +1022,22 @@ public class AmendmentCommitteeHelper {
 	}
 
 	/**
-	 * The method used for generating a list of available jabatan for searching
-	 * secretary as selection.
-	 * 
-	 * @param orgType
-	 *            Organization Type (DEPARTMENT for Jabatan / DIVISION for PTJ)
-	 * @return the selection list of jabatan or PTJ accroding to the parameter
+	 * Generates the Department (Jabatan) or Division (PTJ) dropdown list
+	 * based on the selected parent organization.
+	 * <p>
+	 * The parent organization is determined by the specified organization type:
+	 * <ul>
+	 *   <li>Department - retrieves departments under the selected ministry.</li>
+	 *   <li>Division (PTJ) - retrieves divisions under the selected department.</li>
+	 * </ul>
+	 * The first item in the dropdown is the default "Select" option.
+	 * </p>
+	 *
+	 * @param orgType the organization type to retrieve, such as
+	 *                {@code OrganizationType.DEPARTMENT} or
+	 *                {@code OrganizationType.DIVISION}
+	 * @return an array of {@link SelectItem} containing the corresponding
+	 *         organization list
 	 */
 	public SelectItem[] getJabatanOrPtjDropdown(String orgType) {
 		SelectItem[] items = null;
@@ -1078,28 +1078,94 @@ public class AmendmentCommitteeHelper {
 	}
 	
 	/**
-	 * 
-	 * @param orgType
+	 * Resets the organization and secretary search selections on the
+	 * Approving Authority page.
+	 * <p>
+	 * When the ministry selection changes, the PTJ selection is also cleared.
+	 * This method resets the selected secretary, search criteria, and
+	 * search input values.
+	 * </p>
+	 *
+	 * @param orgType the organization level that triggered the reset
 	 */
 	public void resetSecretaryDropdown(String orgType){
 		if(orgType.equalsIgnoreCase(ContractConst.DROPDOWN_MINISTRY_COMMITTEE)){
 			getManagedBean().setPtjProfileId(null);
 		}
 		getManagedBean().setSelectedSecretary(null);
-		getManagedBean().setSecretaryIcNameSearchValues(null);
 		getManagedBean().setSecretaryIcName(ContractConst.SECRETARY_NAME);
-//		getManagedBean().getSecretaryDataModel().resetData();
+		getManagedBean().setSecretaryIcNameSearchValues(null);
 	}
 	
 	/**
-	 * 
-	 * @param searchBean
-	 * @return searchBean
+	 * Prepares the search bean for Committee Secretary searching.
+	 * <p>
+	 * This method adds organization profile filters, optional secretary search
+	 * criteria, and the default sorting by user name.
+	 * </p>
+	 *
+	 * @param searchBean the search bean to be populated
+	 * @param isSecretarySearch {@code true} to include secretary name/IC search
+	 *                          filters; {@code false} to apply only organization
+	 *                          filters
+	 * @return the populated search bean
 	 */
-	public ISearchBean<PmUser> getSecretarySearchBean(ISearchBean<PmUser> searchBean) {
-
-		setSearchProfileId(searchBean);
-
+	public ISearchBean<PmUser> getCommitteeSecretarySearchBean(ISearchBean<PmUser> searchBean, boolean isSecretarySearch) {
+		setSearchOrgProfileId(searchBean);
+		if(isSecretarySearch){
+			setSearchSecretaryField(searchBean);
+		}
+		
+		searchBean.getSortColumns().add(new SearchOrderBean("userName"));
+		return searchBean;
+	}
+	
+	/**
+	 * Adds organization profile filters to the specified search bean.
+	 * <p>
+	 * Filters are added based on the selected Ministry, Department (Jabatan),
+	 * and Division (PTJ). Only non-null organization profile IDs are included
+	 * in the search criteria.
+	 * </p>
+	 *
+	 * @param searchBean the search bean to which organization filters are added
+	 */
+	public void setSearchOrgProfileId(ISearchBean<PmUser> searchBean){
+		String pmOrgProfile = "pmUserOrgs.pmOrgProfile.";
+		if (getManagedBean().getMinistryProfileId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(pmOrgProfile
+							+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
+							SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getMinistryProfileId()));
+		}
+		if (getManagedBean().getJabatanProfileId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(pmOrgProfile
+							+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()),
+							SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getJabatanProfileId()));
+		}
+		if (getManagedBean().getPtjProfileId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(pmOrgProfile
+							+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.DIVISION.value()),
+							SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getPtjProfileId()));
+		}
+	}
+	
+	/**
+	 * Adds secretary search criteria to the specified search bean.
+	 * <p>
+	 * Depending on the selected search option, this method filters users by:
+	 * <ul>
+	 *   <li>Secretary Name (case-insensitive partial match)</li>
+	 *   <li>Secretary Identification Number (IC)</li>
+	 * </ul>
+	 * No filter is added if the search value is empty.
+	 * </p>
+	 *
+	 * @param searchBean the search bean to which secretary search filters are added
+	 */
+	public void setSearchSecretaryField(ISearchBean<PmUser> searchBean) {
 		if (StringUtils.isNotEmpty(getManagedBean().getSecretaryIcNameSearchValues())) {
 			if (getManagedBean().getSecretaryIcName().equalsIgnoreCase(ContractConst.SECRETARY_NAME)) {
 				SearchFilterBean filterBean = new SearchFilterBean("userName", SearchOperator.OPERATOR_LIKE.value(),
@@ -1112,41 +1178,24 @@ public class AmendmentCommitteeHelper {
 								.getSecretaryIcNameSearchValues()));
 			}
 		}
-		searchBean.getSortColumns().add(new SearchOrderBean("userName"));
-		return searchBean;
 	}
 	
 	/**
-	 * 
-	 * @param searchBean
-	 */
-	public void setSearchProfileId(ISearchBean<PmUser> searchBean){
-		String pmOrgProfile = "pmUserOrgs.pmOrgProfile.";
-		if (getManagedBean().getMinistryProfileId() != null) {
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean(pmOrgProfile + OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
-							SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getMinistryProfileId()));
-		}
-		if (getManagedBean().getJabatanProfileId() != null) {
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean(pmOrgProfile + OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()),
-							SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getJabatanProfileId()));
-		}
-		if (getManagedBean().getPtjProfileId() != null) {
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean(pmOrgProfile + OrgProfileUtil.getSearchBeanParentString(OrganizationType.DIVISION.value()),
-							SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getPtjProfileId()));
-		}
-	}
-	
-	/**
-	 * 
-	 * @return true if committee type is Sabah or Sarawak
+	 * Determines whether the selected committee type requires organization
+	 * filtering for Sabah or Sarawak.
+	 * <p>
+	 * This method returns {@code true} only when the committee type is
+	 * Federal Procurement Board Sabah or Federal Procurement Board Sarawak.
+	 * </p>
+	 *
+	 * @return {@code true} if the committee type is Sabah or Sarawak;
+	 *         {@code false} otherwise
 	 */
 	public boolean getCommitteeTypeSearch() {
 		String committeeType = getManagedBean().getCommitteeType();
-		return StringUtils.isNotEmpty(committeeType) && (committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)
-				|| committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK));
+		return StringUtils.isNotEmpty(committeeType)
+				&& (committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
+						|| committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK));
 	}
 	// #37808 end
 }

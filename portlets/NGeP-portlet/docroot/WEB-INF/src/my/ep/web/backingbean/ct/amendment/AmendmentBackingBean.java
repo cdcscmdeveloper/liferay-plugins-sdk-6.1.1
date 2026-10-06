@@ -362,12 +362,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				if (getManagedBean().getIdentificationNo() != null && !"".equalsIgnoreCase(getManagedBean().getIdentificationNo())){
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("identificationNo", SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getIdentificationNo()));
 				}
+				
+				getAmendmentCommitteeHelper().getCommitteeSecretarySearchBean(searchBean, false); //#37808
 				// Sort by user name
 				searchBean.getSortColumns().add(new SearchOrderBean("userName"));
 
 				committeSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 				committeReqDTO.setUserSearchBean(searchBean);
+				committeReqDTO.setFromCt(true); //#37808
 
 				return committeSO.retrieveUserListByCommType(committeReqDTO)
 						.getUserResultBean();
@@ -10376,7 +10379,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		getManagedBean().setJabatanProfileId(retrieveJabatanOrgProfile(profileId).getOrgProfileId());
 		getManagedBean().setPtjProfileId(profileId);
 		getManagedBean().setSecretaryIcNameSearchValues(null);
-		getManagedBean().setSecretaryIcName(null);
+		getManagedBean().setSecretaryIcName(ContractConst.SECRETARY_NAME);
 		getManagedBean().getSecretaryDataModel().resetData();
 	}
 	

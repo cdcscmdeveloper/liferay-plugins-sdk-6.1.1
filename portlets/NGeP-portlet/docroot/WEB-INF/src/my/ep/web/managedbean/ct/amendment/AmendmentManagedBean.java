@@ -559,18 +559,22 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 				committeReqDTO.setOrgProfileId(ctBackingBean.getManagedBean().getContractVer().getCtContract()
 						.getOwnerOrgProfile().getOrgProfileId());
 				committeReqDTO.setRoleCode(getCommitteeType() + ContractConst._SECRETARY);
+				committeReqDTO.setFromCt(true);
 
 				CommitteReqDTO commReqDO = new CommitteReqDTO();
 				commReqDO.setDocId(ctContract.getLatestContractVer().getContractVerId());
 				commReqDO.setDocType(ctContract.getContractType().getParameterCode());
+				commReqDO.setFromCt(true);
 
 				ISearchResultBean<PmUser> userDOBean = null;
 				committeReqDTO.setUserSearchBean(amendmentBackingBean.getAmendmentCommitteeHelper()
-						.getSecretarySearchBean(searchBean));
+						.getCommitteeSecretarySearchBean(searchBean, true));
 
 				if (amendmentBackingBean.getAmendmentCommitteeHelper().getCommitteeTypeSearch()) {
 					committeReqDTO.setRoleCode(RoleCode.FPB_SECRETARY.value());
 					commReqDO.setRoleCode(RoleCode.PPB_SECRETARY.value());
+					commReqDO.setUserSearchBean(amendmentBackingBean.getAmendmentCommitteeHelper()
+							.getCommitteeSecretarySearchBean(searchBean, true));
 					userDOBean = committeSO.retrieveUserListByCommType(commReqDO).getUserResultBean();
 				}
 
@@ -1900,6 +1904,4 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.secretaryIcName = secretaryIcName;
 	}
 	//#37808 end
-	
-	
 }
