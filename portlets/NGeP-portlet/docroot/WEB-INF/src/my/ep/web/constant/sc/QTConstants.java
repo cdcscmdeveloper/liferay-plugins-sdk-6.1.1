@@ -443,6 +443,9 @@ public interface QTConstants {
 	public static final String LBL_TPL_SPEC_CONTENT_USER_SCORE = "lbl.tpl.spec.content.user.score";
 	// #29187 End Vinod
 
+	// #25726 - Start
+	public static final String SURAT_SETUJU_TERIMA = "Surat Setuju Terima (Termasuk Lampiran A)";
+	// #25726 - End
 	// 32453, #21695, #25138 -start-
 	public static final String FINANCIAL_ITEM_SPEC_ANSWER = "FISA";
 	public static final String PORTLET_NAME_SUPPLIER_PROPOSAL = "scSupplierProposal_WAR_NGePportlet";
