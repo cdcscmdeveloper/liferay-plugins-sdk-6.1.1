@@ -399,13 +399,15 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	}
 	
 	//#40112 - start
-	private boolean isAiTaskIcon(SmAppl appl, Integer docStatus) {
-		if (appl == null || appl.getAiStatus() != 2 || docStatus == null) {
+	// status first: only the two pending statuses pay for the extraction lookup
+	private boolean isAiTaskIcon(Integer applId, Integer docStatus) {
+		if (applId == null || docStatus == null) {
 			return false;
 		}
 		long statusId = docStatus.longValue();
-		return statusId == SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION
-				|| statusId == SupplierManagementConst.PM_STATUS_PENDING_SUPP_DOC_VERIFICATION;
+		return (statusId == SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION
+				|| statusId == SupplierManagementConst.PM_STATUS_PENDING_SUPP_DOC_VERIFICATION)
+				&& SmServiceLookup.getAIApiProcessSO().hasExtraction(applId.longValue());
 	}
 	//#40112 - end
 
@@ -846,6 +848,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       if(worklistItemVO.getTitle().startsWith("lbl.sm")) {
 						    		MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
 									mofResDto = retriveCompanyNameByApplicationId(worklistItemVO.getDocId());
+									worklistItemVO.setAiProcessed(isAiTaskIcon(worklistItemVO.getDocId(), worklistItemVO.getDocStatus())); //#40112
 									log.info("POC RPA Label Value2 --"+worklistItemVO.getTitle()+"  -- "+worklistItemVO.getDocNumber() + " -- "+ResourceBundleUtils.getMessage(worklistItemVO.getTitle(), ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 						    	   StringBuilder sb = new StringBuilder();
 						    	   sb.append(ResourceBundleUtils.getMessage(worklistItemVO.getTitle(), ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
@@ -1596,7 +1599,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			// sm module
 			MofRegistrationResDTO mofResDto = retriveCompanyNameByApplicationId(worklistItemVO.getDocId());
 			//#40112
-			worklistItemVO.setAiProcessed(isAiTaskIcon(mofResDto.getSmAppl(), worklistItemVO.getDocStatus()));
+			worklistItemVO.setAiProcessed(isAiTaskIcon(worklistItemVO.getDocId(), worklistItemVO.getDocStatus()));
 			StringBuilder sb = new StringBuilder();
 			logger.info("POC RPA Label Value1 --"+worklistItemVO.getTitle()+"  -- "+worklistItemVO.getDocNumber() + " -- "+ResourceBundleUtils.getMessage(worklistItemVO.getTitle(), ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 			sb.append(ResourceBundleUtils.getMessage(worklistItemVO.getTitle(),

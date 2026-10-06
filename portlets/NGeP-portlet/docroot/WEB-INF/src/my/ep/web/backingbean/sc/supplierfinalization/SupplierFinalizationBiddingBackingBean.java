@@ -3224,14 +3224,13 @@ public class SupplierFinalizationBiddingBackingBean extends
 			//#29702 - end
 			if (finalizationReports != null) {
 				getManagedBean().setDocumentList(finalizationReports);
-				populateEvaluationBreifingReports(finalizationReports, getManagedBean().getScQt());//#25651
 			}
 			
 			// #25651 - Start
 			reqDTO.setDocumentCategory(ParameterConst.DOCUMENT_CATEGORY_BRIEFING_PAPER);
 			reqDTO.setExcludedDocNames(SupplierFinalizationBiddingManagedBean.getDirectdownloaddocdefkeys());
-			List<ScQtFinalizationReportDetail> finalizationReportsDetail = qtSuppFinalizationSO.retriveFinalizationReportDetail(reqDTO).getScQtFinalizationReportDetails();
-			populateEvaluationBreifingReportDetails(finalizationReportsDetail, getManagedBean().getScQt());
+			List<ScQtFinalizationReportDetail> finalizationReportsDetail = qtSuppFinalizationSO
+					.retriveFinalizationReportDetail(reqDTO).getScQtFinalizationReportDetails();
 			this.getManagedBean().setScQtFinalizationReportDetail(finalizationReportsDetail);
 			// #25651 - End
 			
@@ -3239,123 +3238,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 			qtSuppFinalizationSO = null;
 		}
 	}
-	
-	// #25651 - Start
-	/**
-	 * @param finalizationReports
-	 * @param scQt
-	 */
-	public void populateEvaluationBreifingReports(List<ScQtFinalizationReport> finalizationReports, ScQt scQt) {
-
-		if (null != scQt) {
-			String evaluationType = scQt.getEvaluationType();
-			if (StringUtils.isNotEmpty(evaluationType)) {
-
-				List<ScQtFinalizationReport> documentList = new ArrayList<>();
-				Iterator<ScQtFinalizationReport> iterator = finalizationReports.iterator();
-				while (iterator.hasNext()) {
-					ScQtFinalizationReport report = iterator.next();
-
-					if (null != report && report.getPmDocument() != null) {
-						String docDefinitionKey = report.getPmDocument().getDocDefinitionKey();
-
-						if (SourcingConstants.EVALUATION_TYPE_TIER1.equals(evaluationType)) {
-							if (!isWipEvaluationReportExisting(docDefinitionKey, scQt.getQtId())
-									&& SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(docDefinitionKey)) {
-								documentList.add(report);
-							} else if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equals(docDefinitionKey)) {
-								documentList.add(report);
-							}
-
-						} else if (SourcingConstants.EVALUATION_TYPE_TIER2.equals(evaluationType)) {
-
-							boolean isEvaluationType = false;
-							if (SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT.equals(docDefinitionKey)) {
-								isEvaluationType = true;
-							} else if (SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT
-									.equals(docDefinitionKey)) {
-								isEvaluationType = true;
-							} else if (SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT
-									.equals(docDefinitionKey)) {
-								isEvaluationType = true;
-							}
-
-							if (!isWipEvaluationReportExisting(docDefinitionKey, scQt.getQtId()) && isEvaluationType) {
-								documentList.add(report);
-							} else if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equals(docDefinitionKey)) {
-								documentList.add(report);
-							}
-						}
-
-					}
-
-					if (null != report && report.getDocCategory() != null) {
-						String docCategory = report.getDocCategory();
-						if (ParameterConst.DOCUMENT_CATEGORY_ENDORSEMENT_REPORT.equals(docCategory)) {
-							documentList.add(report);
-						}
-					}
-				}
-
-				this.getManagedBean().setDocumentList(documentList);
-			}
-		}
-	}
-
-	// #25651 - End
-	
-	// #25651 - Start
-	/**
-	 * @param finalizationReportDetails
-	 * @param scQt
-	 */
-	public void populateEvaluationBreifingReportDetails(List<ScQtFinalizationReportDetail> finalizationReportDetails,
-			ScQt scQt) {
-
-		if (null != scQt) {
-			String evaluationType = scQt.getEvaluationType();
-			if (StringUtils.isNotEmpty(evaluationType)) {
-
-				List<ScQtFinalizationReportDetail> documentDetailList = new ArrayList<>();
-				Iterator<ScQtFinalizationReportDetail> iterator = finalizationReportDetails.iterator();
-				while (iterator.hasNext()) {
-					ScQtFinalizationReportDetail reportDetail = iterator.next();
-
-					if (null != reportDetail && reportDetail.getPmDocument() != null) {
-						String docDefinitionKey = reportDetail.getPmDocument().getDocDefinitionKey();
-
-						if (SourcingConstants.EVALUATION_TYPE_TIER1.equals(evaluationType)) {
-							if (isWipEvaluationReportExisting(docDefinitionKey, scQt.getQtId())
-									&& SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(docDefinitionKey)) {
-								documentDetailList.add(reportDetail);
-							}
-						} else if (SourcingConstants.EVALUATION_TYPE_TIER2.equals(evaluationType)) {
-
-							boolean isEvaluationType = false;
-							if (SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT.equals(docDefinitionKey)) {
-								isEvaluationType = true;
-							} else if (SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT
-									.equals(docDefinitionKey)) {
-								isEvaluationType = true;
-							} else if (SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT
-									.equals(docDefinitionKey)) {
-								isEvaluationType = true;
-							}
-
-							if (isWipEvaluationReportExisting(docDefinitionKey, scQt.getQtId()) && isEvaluationType) {
-								documentDetailList.add(reportDetail);
-							}
-						}
-
-					}
-				}
-
-				this.getManagedBean().setDocumentDetailList(documentDetailList);
-			}
-		}
-	}
-
-	// #25651 - End
 	
 	private int findFinalizationCount() {
 		IScWorkFlowStatusSO scWorkFlowStatusSO = null;
@@ -3448,90 +3330,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 		downloadFile(reportAttachment);
 	}
 	
-	//#25651 - Start
-	/**
-	 * To download a report under Briefing Paper/Kertas Taklimat tab
-	 * 
-	 * @param scQtFinalizationReportDetail
-	 *            selected report which would be downloaded
-	 * @throws Exception
-	 *             the exception that would be thrown in case of any error while
-	 *             downloading the report
-	 */
-	public void downloadReportDetail(ScQtFinalizationReportDetail scQtFinalizationReportDetail) throws Exception {
-		debugLogger("downloadReport");
-		
-		ScQtFinalizationReportDetailAttachment reportAttachment = scQtFinalizationReportDetail
-				.getScQtFinalizationReportDetailAttachment();
-		if (null == reportAttachment
-				&& scQtFinalizationReportDetail.getTitle().contains(QTConstants.QT_REPORT_BRIEFING_PAPER)) {
-			reportAttachment = generateBriefingPaperAttachmentDetail(scQtFinalizationReportDetail);
-			scQtFinalizationReportDetail.setScQtFinalizationReportDetailAttachment(reportAttachment);
-		}
-
-		downloadFile(reportAttachment);
-	}
-	//#25651 - End
-	
-	//#25651 - Start
-	/**
-	 * To combine reports ScQtFinalizationReport and ScQtFinalizationReportDetail.
-	 * 
-	 * @throws Exception
-	 *             the exception that would be thrown in case of any error while
-	 *             downloading the report(s)
-	 */
-	public void downloadCombinedReport(Object report) throws Exception {
-
-		if (report instanceof ScQtFinalizationReport) {
-
-			downloadReport((ScQtFinalizationReport) report);
-
-		} else if (report instanceof ScQtFinalizationReportDetail) {
-
-			downloadReportDetail((ScQtFinalizationReportDetail) report);
-		}
-	}
-	//#25651 - End
-	
-	//#25651 - Start
-	/**
-	 * To populate reports ScQtFinalizationReport and ScQtFinalizationReportDetail.
-	 */
-	public List<Object> getCombinedEvaluationReportList() {
-		
-		List<Object> combinedReportList = new ArrayList<Object>();
-
-		List<ScQtFinalizationReport> reports = getManagedBean().getDocumentList();
-		List<ScQtFinalizationReportDetail> details = getManagedBean().getDocumentDetailList();
-
-		if (CollectionUtils.isNotEmpty(reports)) {
-			combinedReportList.addAll(reports);
-		}
-
-		if (CollectionUtils.isNotEmpty(details)) {
-		    combinedReportList.addAll(details);
-	
-		}
-
-		return combinedReportList;
-	}
-	//#25651 - End
-	
-	//#25651 - Start
-	private ScQtFinalizationReportDetailAttachment generateBriefingPaperAttachmentDetail(
-			ScQtFinalizationReportDetail scQtFinalizationReportDetail) throws Exception {
-		SupplierFinalizationBackingBean supplierFinalizationBackingBean = new SupplierFinalizationBackingBean();
-		supplierFinalizationBackingBean.renewSesionObject();
-		supplierFinalizationBackingBean.getManagedBean().setCurrentStatusId(this.getManagedBean().getCurrentStatusId());
-		supplierFinalizationBackingBean.getManagedBean().setScQtFinalization(
-				this.getManagedBean().getScQtFinalization());
-		supplierFinalizationBackingBean.getManagedBean().setScQt(this.getManagedBean().getScQt());
-		return supplierFinalizationBackingBean.downloadBriefingPaperReportDetailForBidding(scQtFinalizationReportDetail);
-	}
-	//#25651 - End
-	
-	
 	// 30567 - start
 	private ScQtFinalizationReportAttachment generateBriefingPaperAttachment(
 			ScQtFinalizationReport scQtFinalizationReport) throws Exception {
@@ -3601,7 +3399,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 * @return ScAttachment
 	 */
 	private ScAttachment generateDocumentAttachment(String docDefinitionKey, String fileReportName) throws Exception {
-		debugLogger("generateDocumentAttachment");
 		
 		ScAttachment reportAttachment = new ScQtFinalizationReportDetailAttachment();
 		ScQt scQt = getManagedBean().getScQt();
@@ -3644,8 +3441,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 		//#25651 - Start
 		attachments.addAll(scAttachments); 
 		attachments.addAll(getScqtFinalizationUploadReportDetails());
-		attachments.addAll(getScqtFinalizationReportDetails());
-		attachments.addAll(getBriefingReportDetails());
 		//#25651 - Start
 		
 		downloadAllFiles(SourcingConstants.LAPORAN_KERTAS_TAKLIMAT, attachments); //#25651
@@ -3674,75 +3469,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 			}
 		}
 		attachments.addAll(scAttachmentsDetail);
-		return attachments;
-	}
-
-	// #25651 - End
-	
-	// #25651 - Start
-	/**
-	 * To download evaluation reports detail under Briefing Report tab.
-	 * 
-	 * @throws Exception
-	 *             the exception that would be thrown in case of any error while
-	 *             downloading the report(s)
-	 */
-	private List<ScAttachment> getScqtFinalizationReportDetails() throws Exception {
-
-		List<ScAttachment> attachments = new ArrayList<>();
-		List<ScQtFinalizationReportDetail> scQtFinalizationReportDetails = getManagedBean()
-				.getEvaluationReportDetailList();
-		List<ScQtFinalizationReportDetailAttachment> scAttachmentsDetail = new ArrayList<>();
-
-		if (CollectionUtils.isNotEmpty(scQtFinalizationReportDetails)) {
-			for (ScQtFinalizationReportDetail reportDetail : scQtFinalizationReportDetails) {
-				ScQtFinalizationReportDetailAttachment attachment = reportDetail
-						.getScQtFinalizationReportDetailAttachment();
-				if (attachment == null && reportDetail.getTitle().contains(QTConstants.QT_REPORT_BRIEFING_PAPER)) {
-					attachment = generateBriefingPaperAttachmentDetail(reportDetail);
-				}
-				if (attachment != null) {
-					attachment.setTempFileName(reportDetail.getTitle());
-				}
-
-				scAttachmentsDetail.add(attachment);
-			}
-		}
-
-		attachments.addAll(scAttachmentsDetail);
-		return attachments;
-	}
-
-	// #25651 - End
-	
-	// #25651 - Start
-	/**
-	 * To download briefing reports detail under Briefing Report tab.
-	 * 
-	 * @throws Exception
-	 *             the exception that would be thrown in case of any error while
-	 *             downloading the report(s)
-	 */
-	private List<ScAttachment> getBriefingReportDetails() throws Exception {
-
-		List<ScAttachment> attachments = new ArrayList<>();
-		List<Object[]> reportDetailList = reportDetailAttachmentType();
-		List<ScQtFinalizationReportDetail> scQtFinalizationReportDetail = this.getManagedBean()
-				.getScQtFinalizationReportDetail();
-		if (CollectionUtils.isNotEmpty(scQtFinalizationReportDetail)) {
-			for (ScQtFinalizationReportDetail finalizationreport : scQtFinalizationReportDetail) {
-				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equalsIgnoreCase(finalizationreport
-						.getDefinationType().getParameterCode())) {
-					for (Object[] reportDetail : reportDetailList) {
-						String codeReportName = (String) reportDetail[0];
-						String fileReportName = (String) reportDetail[1];
-						if (codeReportName.equals(finalizationreport.getPmDocument().getDocDefinitionKey())) {
-							attachments.add(generateDocumentAttachment(codeReportName, fileReportName));
-						}
-					}
-				}
-			}
-		}
 		return attachments;
 	}
 

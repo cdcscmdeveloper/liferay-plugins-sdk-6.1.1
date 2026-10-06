@@ -195,6 +195,9 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	
 	private boolean committeeQCBSecretaryWIP; //#35238
 	
+	//24336
+	private Date initialNewAmtEffDate;
+	
 	//#37808 start
 	private transient IPagingDataModel<PmUser> secretaryDataModel = new SecretaryPagingDataModel();
 	private List<PmUser> secretaryListSearch;
@@ -1788,6 +1791,17 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.committeeQCBSecretaryWIP = committeeQCBSecretaryWIP;
 	}
 	//#35238 end
+	
+	//#24336 - Start
+	public Date getInitialNewAmtEffDate() {
+		return initialNewAmtEffDate;
+	}
+	
+	public void setInitialNewAmtEffDate(Date initialNewAmtEffDate) {
+		this.initialNewAmtEffDate = initialNewAmtEffDate;
+	}
+	//#24336 - End
+
 	//#37808 start 
 	/**
 	 * @return the secretaryDataModel
@@ -1886,4 +1900,6 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.secretaryIcName = secretaryIcName;
 	}
 	//#37808 end
+	
+	
 }

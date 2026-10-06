@@ -3619,5 +3619,4 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 	// #36503 - end
 
-	
 }
