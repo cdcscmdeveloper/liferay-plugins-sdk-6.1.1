@@ -5907,6 +5907,7 @@ public class SmApplicationUtil {
 							.getCategoryL3Id());
 					MofRegistrationResDTO resDTO = mofRegistrationSO
 							.hasActiveTransactionsForSupplierAndCategoryCode(reqDto);
+					log.info("TB 41486 HAS ACTIVE TRANSACTION SUPPLIERID:"+supplierId+" CATEGORY ID:"+reqDto.getCatL3Id());
 					log.info("**** Active Transactions ********"
 							+ resDTO.isHasActiveTransaction());
 					if (resDTO.isHasActiveTransaction()) {
