@@ -189,8 +189,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	private static final Integer startyear = 2018;
 	private static boolean isMandatory = false;
 	private static String pageType = "";
-	private static final String METHOD_SAVE_PLAN = "savePlan"; // #33690
-	private static final String SOURCE_SAVE_PLAN = "ProcurementPlanBackingBean.savePlan"; // #33690
+	private static final String SLA_TXN_SAVEPLAN = "savePlan"; // #33690
+	private static final String SLA_SERVICE_SAVEPLAN = "ProcurementPlanBackingBean.savePlan"; // #33690
 	
 	private GlAccountBackingBean glAccBackingBean = new GlAccountBackingBean();
 	//200911@akmal - Enhancement27624 - End
@@ -3361,8 +3361,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 							Exception ex = new Exception("Current Plan Officer lookup failed for login ID: "
 									+ currentPlanOfficerLoginId);
 
-							SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROCUREMENT_PLAN, METHOD_SAVE_PLAN,
-									ppPlan.getPlanNo(), SOURCE_SAVE_PLAN,
+							SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROCUREMENT_PLAN, SLA_TXN_SAVEPLAN,
+									ppPlan.getPlanNo(), SLA_SERVICE_SAVEPLAN,
 									new FacesScopes().getUserSessionBean().getUserId(), ex);
 						}
 					}
@@ -3373,8 +3373,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 						if (currentPlanOfficerUserId == null) {
 							Exception ex = new Exception("Unable to resolve current Plan Officer from PP_ACTOR.");
-							SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROCUREMENT_PLAN, METHOD_SAVE_PLAN,
-									ppPlan.getPlanNo(), SOURCE_SAVE_PLAN,
+							SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROCUREMENT_PLAN, SLA_TXN_SAVEPLAN,
+									ppPlan.getPlanNo(), SLA_SERVICE_SAVEPLAN,
 									new FacesScopes().getUserSessionBean().getUserId(), ex);
 							return null;
 						}
@@ -3446,7 +3446,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 													+ originalApprover.getLoginId());
 
 									SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROCUREMENT_PLAN,
-											METHOD_SAVE_PLAN, ppPlan.getPlanNo(), SOURCE_SAVE_PLAN,
+											SLA_TXN_SAVEPLAN, ppPlan.getPlanNo(), SLA_SERVICE_SAVEPLAN,
 											new FacesScopes().getUserSessionBean().getUserId(), ex);
 
 								} else {
@@ -3525,8 +3525,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 
 				if (StringUtils.isBlank(spStatus)) {
 					Exception ex = new Exception("Inactive user SP returned empty P_STATUS.");
-					SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROCUREMENT_PLAN, METHOD_SAVE_PLAN,
-							ppPlan.getPlanNo(), SOURCE_SAVE_PLAN,
+					SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROCUREMENT_PLAN, SLA_TXN_SAVEPLAN,
+							ppPlan.getPlanNo(), SLA_SERVICE_SAVEPLAN,
 							new FacesScopes().getUserSessionBean().getUserId(), ex);
 					FacesContext.getCurrentInstance().addMessage(null,
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, inactiveUserResDTO.getMessage()));
@@ -3539,8 +3539,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				if (spStatusInt == null) {
 					Exception ex = new Exception("Invalid inactive user SP status: " + spStatus);
 
-					SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROCUREMENT_PLAN, METHOD_SAVE_PLAN,
-							ppPlan.getPlanNo(), SOURCE_SAVE_PLAN, new FacesScopes().getUserSessionBean().getUserId(),
+					SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROCUREMENT_PLAN, SLA_TXN_SAVEPLAN,
+							ppPlan.getPlanNo(), SLA_SERVICE_SAVEPLAN, new FacesScopes().getUserSessionBean().getUserId(),
 							ex);
 
 					FacesContext.getCurrentInstance().addMessage(null,
@@ -3631,8 +3631,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 				if (spStatusInt == PrcCheckUserProfileStatus.ADMIN_USER_NOT_FOUND) {
 					Exception ex = new Exception("P_STATUS = 9 returned outside VERIFY manual Approver-selection flow.");
 
-					SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROCUREMENT_PLAN, METHOD_SAVE_PLAN,
-							ppPlan.getPlanNo(), SOURCE_SAVE_PLAN,
+					SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROCUREMENT_PLAN, SLA_TXN_SAVEPLAN,
+							ppPlan.getPlanNo(), SLA_SERVICE_SAVEPLAN,
 							new FacesScopes().getUserSessionBean().getUserId(), ex);
 
 					FacesContext.getCurrentInstance().addMessage(null,
@@ -3742,7 +3742,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			if (resDTO.isSuccessful()) {
 				//LOG : 26549 : SLA Monitoring
 				SLAUtils.getInstance().logSLAInfo("PM","PS",
-						SOURCE_SAVE_PLAN, startTime);
+						SLA_SERVICE_SAVEPLAN, startTime);  // #33690
 				log.info("Record saved successfully");
 				
 				//#35502 Start - For Audit Trail to SP
