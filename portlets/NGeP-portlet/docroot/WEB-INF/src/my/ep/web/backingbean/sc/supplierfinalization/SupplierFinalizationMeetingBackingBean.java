@@ -80,6 +80,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.sc.common.ScWorkFlowStatus; //#35500 bug fix 2nd Oct
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMemberHistory;
@@ -2361,16 +2362,27 @@ if (CollectionUtils.isNotEmpty(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailSO.class);
 		IAuditTrailSO auditTrailsSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.AUDIT, IAuditTrailSO.class);
+		//#35500 bug fix 2nd Oct Start
+		IQTDetailSO qtDetailSO =  BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+		//#35500 bug fix 2nd Oct End
 		
 		if ((CollectionUtils.isNotEmpty(newCommitteeMembers) || CollectionUtils.isNotEmpty(deletedCommitteeMembers)) &&
 				auditTrailsSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)) {
 			
 			AuditTrailResDTO auditResDTO = new AuditTrailResDTO();
+			//#35500 bug fix 2nd Oct Start
+			Long docId = this.getManagedBean().getScQt().getQtId();
+			String docNo = this.getManagedBean().getScQt().getQtNo();			
+			Long userId = getUserIdSessionFromLoginId();
+			ScWorkFlowStatus scWorkFlowStatus = qtDetailSO.retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION, docId, docNo, userId);
 
 			auditResDTO.setDocTypeId(this.getManagedBean().getScQt().getProcurementMode().getParameterId());
-			auditResDTO.setDocId(this.getManagedBean().getScQt().getQtId());
-			auditResDTO.setDocNo(this.getManagedBean().getScQt().getQtNo());
-			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
+			auditResDTO.setDocId(docId);
+			auditResDTO.setDocNo(docNo);
+			auditResDTO.setCreatedBy(userId);
+			auditResDTO.setStatusId(scWorkFlowStatus.getPmStatus().getStatusId());
+			//#35500 bug fix 2nd Oct End
 			auditResDTO.setStatusId(this.getManagedBean().getCurrentStatusId() != null ?
 					this.getManagedBean().getCurrentStatusId() : 
 					this.getManagedBean().getScQt().getCurrentWorkFlowStatus().getPmStatus().getStatusId());
