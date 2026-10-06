@@ -7007,7 +7007,7 @@ public class RuleCatalogueBackingBean extends
 	                throw new EpException(
 	                        MessageConst.ERROR_760834,
 	                        new String[] {
-	                            orgProfile.getOrgName(),
+	                        	orgProfile.getOrgCode() + " - " + orgProfile.getOrgName(),
 	                            this.getManagedBean()
 	                                .getSelectedRuleDescType()
 	                                .getRuleDesc()

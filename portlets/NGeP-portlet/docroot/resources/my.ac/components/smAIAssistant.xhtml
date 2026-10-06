@@ -40,7 +40,11 @@
 			dynamic="true" resizable="true" width="700px" height="500px"
 			header="#{lbl['lbl.btn.upload.doc']}"
 			styleClass="pop_up_top">
-			
+			<!-- every hide() fires close, so Submit and Cancel come through here as well as the X -->
+			<p:ajax event="close" listener="#{ai.deleteInvalidDocs}" process="@this"
+				update=":#{p:component(pnlId)} :#{p:component(cc.attrs.updateId)}"
+				disabled="#{cc.attrs.docType ne 'epf'}"/>
+
 		<p:outputPanel id="pnl#{cc.attrs.aiDlg}" layout="block">
 		
 			<f:event type="preRenderComponent" listener="#{ai.initContext(cc.attrs.docType, cc.attrs.smAppl)}" />
@@ -94,14 +98,14 @@
 				invalidFileMessage="#{lbl['lbl.txt.upload.pdf.file']}"
 				invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed20Mb']}"
 				fileUploadListener="#{ai.handleSupDocFileAttachment}"
-				update="pnl#{cc.attrs.aiDlg}"
+				update="docs#{cc.attrs.aiDlg} result#{cc.attrs.aiDlg} btns#{cc.attrs.aiDlg}"
 				auto="true"
 				label="#{lbl['lbl.txt.upload']}"
 				dragDropSupport="false"
 				multiple="#{cc.attrs.docType eq 'epf'}"
 				showButtons="false"
-				onstart="block#{cc.attrs.aiDlg}.show()"
-				oncomplete="block#{cc.attrs.aiDlg}.hide();"/>
+				onstart="this.uploadContent.find('tr.ui-state-error').remove(); block#{cc.attrs.aiDlg}.show()"
+				oncomplete="if (this.form.data('fileupload')._active == 1) block#{cc.attrs.aiDlg}.hide();"/>
 			
 			<p:outputPanel id="result#{cc.attrs.aiDlg}">
 				<!-- epf -->
@@ -120,8 +124,8 @@
 						<p:column headerText="#{lbl['lbl.sm.person.name']}">
 							<h:outputText value="#{emp.employeeName}" />
 						</p:column>
-						<p:column headerText="#{lbl['lbl.sm.person.icNo']}">
-							<h:outputText value="#{emp.nricNumber}" />
+						<p:column headerText="#{lbl['lbl.sm.person.composition.idenNum']}">
+							<h:outputText value="#{emp.idNo}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.person.epfNo']}">
 							<h:outputText value="#{emp.kwspNumber}" />
@@ -133,11 +137,11 @@
 				<p:outputPanel rendered="#{ai.postAI and cc.attrs.docType eq 'tenancy'}">
 					<h:outputText value="#{lbl['lbl.sm.ai.tnc.extracted']}" styleClass="instruction" />
 					<br/><br/>
-					<h:outputText value="#{lbl['lbl.sm.facility.landLordName']}: " style="font-weight:bold;" />
-					<h:outputText value="#{ai.tenancy.landlordsName}" />
-					<br/>
 					<h:outputText value="#{lbl['lbl.sm.assocCmpny.companyName']}: " style="font-weight:bold;" />
 					<h:outputText value="#{ai.tenancy.tenantsName}" />
+					<br/>
+					<h:outputText value="#{lbl['lbl.sm.facility.landLordName']}: " style="font-weight:bold;" />
+					<h:outputText value="#{ai.tenancy.landlordsName}" />
 					<br/>
 					<h:outputText value="#{lbl['lbl.sm.facility.monthRent']}: " style="font-weight:bold;" />
 					<h:outputText value="#{ai.tenancy.monthlyRental}" />
@@ -154,7 +158,7 @@
 			</p:outputPanel>
 
 			<p:spacer height="10" />
-			<div class="ppRightBtn">
+			<h:panelGroup id="btns#{cc.attrs.aiDlg}" layout="block" styleClass="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					action="#{ai.submit(cc.attrs.docType, cc.attrs.smAppl)}"
 					rendered="#{empty cc.attrs.updateId}"
@@ -167,13 +171,12 @@
 					process="@this dt#{cc.attrs.aiDlg}"
 					update=":#{p:component(cc.attrs.updateId)} :#{p:component(pnlId)}"
 					rendered="#{not empty cc.attrs.updateId}"
-					onclick="#{cc.attrs.aiDlg}.hide();"
 					onstart="block#{cc.attrs.aiDlg}.show()"
-					oncomplete="block#{cc.attrs.aiDlg}.hide();"
+					oncomplete="block#{cc.attrs.aiDlg}.hide(); #{cc.attrs.aiDlg}.hide();"
 					disabled="#{empty ai.docs or ai.blockSubmit}"/>
 					
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" onclick="#{cc.attrs.aiDlg}.hide()"/>
-			</div>
+			</h:panelGroup>
 		</p:outputPanel>
 		</p:dialog>
 	</cc:implementation>
