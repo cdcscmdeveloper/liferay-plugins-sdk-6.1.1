@@ -4133,9 +4133,9 @@ public class SmApplicationUtil {
 			boolean isAdd = false;
 			boolean isSubAdd = false;
 			for (Object[] arr : resultList) {
-				// #39545 - Start
+				// #39545, #40444 - Start
 				applStatus = StringUtils.EMPTY;
-				// #39545 - End
+				// #39545, #40444 - End
 				catCode = arr[0] + "" + arr[1] + arr[2] + "";
 				isActiveAppl = arr[20] + "";
 				voTmp = (SmBulkApplOverlapCatVO) EntityHelper

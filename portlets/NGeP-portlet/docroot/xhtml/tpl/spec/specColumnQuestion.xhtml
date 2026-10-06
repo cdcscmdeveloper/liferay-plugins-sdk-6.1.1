@@ -80,8 +80,16 @@
 			<ui:remove>#36681 - end</ui:remove>
 			<p:message id="specificationMsg" for="specification" display="icon" />
 			<br />
-			#{question.cmItem.extensionCode}
-			<p:spacer width="20" />
+
+				<!-- #31503 Start -->
+				<p:commandLink oncomplete="itemDescDialogId.show();"
+					value="#{question.cmItem.extensionCode}"
+					style="color: #009ae5; font-size:12px;font-style:italic"
+					action="#{codificationBackingBean.showItemDescPopup(question)}"
+					process="@this" update="@([id$=itemDescDialogId])" />
+				<!-- #31503 End -->
+				
+				<p:spacer width="20" />
 			<p:commandLink id="itemSpecificationLink" process="@this"
 				update="@([id$=itemSpecificationDlg])"
 				oncomplete="itemSpecificationDlgVar.show();"
@@ -89,45 +97,36 @@
 				<p:graphicImage value="/css/images/design/ico-viewnedit.png" />
 			</p:commandLink>
 			</ui:fragment>
+			<!-- #31503 Start -->
+			<ui:include src="/xhtml/common/itemDetailsPopup.xhtml" />
+			<!-- #31503 End -->
 		</c:if>
 		<c:if test="#{!updateSpec}">
 			<h:outputText value="#{fn:replace(question.clItem,',',',  ')}" escape="false"
 				rendered="#{isQuestionTypeItem}" />
-				<ui:fragment rendered="#{specificationrequired }">
-				<ui:param name="clspecDetail" value="#{fn:replace(question.clSpecDetail,',',',  ')}"></ui:param>
+				
+			<ui:fragment rendered="#{specificationrequired }">
+				<ui:param name="clspecDetail"
+					value="#{fn:replace(question.clSpecDetail,',',',  ')}"></ui:param>
 				<h:outputText
-				value="#{templateSpecBackingBean.replaceWithBR(clspecDetail)}"
-				escape="false"
-				rendered="#{!isQuestionTypeItem or !isSpecificationReq}"
-				style="white-space: normal;word-wrap: break-word;" />
-				</ui:fragment>
-		</c:if>
-	</p:column>
-	
-	<!-- <p:column
-		rendered="#{isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq) or isSqSpec }">
+					value="#{templateSpecBackingBean.replaceWithBR(clspecDetail)}"
+					escape="false"
+					rendered="#{!isQuestionTypeItem or !isSpecificationReq}"
+					style="white-space: normal;word-wrap: break-word;" />
 
-		<c:if test="#{updateSpec}">
-			<p:inputTextarea id="specification" style="width:calc(100% - 20px);"
-				value="#{question.clSpecDetail}"
-				rendered="#{!isQuestionTypeItem or !isSpecificationReq}"
-				required="#{isValidationReq}" rows="5" maxlength="1000"
-				onkeyup="limitTextArea(this,1000);"
-				onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,1000);"
-				label="#{lbl['lbl.tpl.spec.content.specification']}"
-				autoResize="false">
-				<p:ajax partialSubmit="true" process="@this" update="@this" />
-			</p:inputTextarea>
-			<p:message id="specificationMsg" for="specification" display="icon" />
+				<!-- #31503 Start -->
+				<p:commandLink oncomplete="itemDescDialogId.show();"
+					value="#{question.cmItem.extensionCode}"
+					style="color: #009ae5; font-size:12px;font-style:italic"
+					action="#{codificationBackingBean.showItemDescPopup(question)}"
+					process="@this" update="@([id$=itemDescDialogId])" />
+				<!-- #31503 End -->
+			</ui:fragment>
+			<!-- #31503 Start -->
+			<ui:include src="/xhtml/common/itemDetailsPopup.xhtml" />
+			<!-- #31503 End -->
 		</c:if>
-		<c:if test="#{!updateSpec}">
-			<h:outputText
-				value="#{templateSpecBackingBean.replaceWithBR(question.clSpecDetail)}"
-				escape="false"
-				rendered="#{!isQuestionTypeItem or !isSpecificationReq}"
-				style="white-space: normal;word-wrap: break-word;" />
-		</c:if>
-	</p:column> -->
+	</p:column>	
 	
 	<p:column style="width:98px;"
 		rendered="#{isItemTypeService and isFulfilmentTypeReq}">

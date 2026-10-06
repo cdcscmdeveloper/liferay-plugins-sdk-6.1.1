@@ -20,13 +20,27 @@
 					<h:outputText value="#{lbl['lbl.fl.item.details']}" style="text-align:center;"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.details']}"/>
 				</f:facet>
-				<h:outputText rendered="#{chargeLineNode.parent == 'true' }" value="#{chargeLineNode.flFulfilmentItemAddr.itemCode}" style="text-align:left; float:left;"/>
-				<h:outputText value="(" rendered="#{chargeLineNode.parent == 'true'}" />
-					<h:outputText value="#{chargeLineNode.flFulfilmentItemAddr.scRequestItem.uom.uomName}" 
-					rendered="#{chargeLineNode.parent == 'true'}" style="white-space:normal;"/>
-					<h:outputText value=")" rendered="#{chargeLineNode.parent == 'true'}" />		
-				<br />
-				<h:outputText value="#{chargeLineNode.flFulfilmentItemAddr.scRequestItem.itemName}" id="itemDesc" style="text-align:left; float:left;"
+				<div style="overflow:hidden;" rendered="#{chargeLineNode.parent == 'true'}">
+					<!-- #31344 display item details in popup -->
+				    <p:commandLink
+				        oncomplete="itemDescDialogId.show();"
+				        value="#{chargeLineNode.flFulfilmentItemAddr.scRequestItem.cmItem.extensionCode}"
+				        style="color:#009ae5;font-size:12px;font-style:italic;float:left;"
+				        action="#{stopInstrBB.showItemDescPopup(chargeLineNode.flFulfilmentItemAddr.scRequestItem.cmItem.itemId)}"
+				        process="@this"
+				        update="@([id$=itemDescDialogId])"/>
+				
+				    <span style="float:left;margin-left:4px;" rendered="#{chargeLineNode.parent == 'true'}">
+				        (<h:outputText
+				            value="#{chargeLineNode.flFulfilmentItemAddr.scRequestItem.uom.uomName}" />)
+				    </span>
+				
+				</div>
+				<div style="clear:both;" rendered="#{chargeLineNode.parent == 'true'}"></div>
+				<!--#31344 filter item name-->
+				<h:outputText
+					value="#{stopInstrBB.filterNARequestItemName(chargeLineNode.flFulfilmentItemAddr.scRequestItem.requestNoteItemId)}"
+					id="itemDesc" style="text-align:left; float:left;"
 					title="#{chargeLineNode.flFulfilmentItemAddr.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : chargeLineNode.flFulfilmentItemAddr.scRequestItem.itemDesc}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column> 
@@ -36,13 +50,21 @@
     				 <h:outputText value="#{lbl['lbl.fl.item.code']}"/>
      					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.item.code']}"/>
     				</f:facet>
-				<h:outputText
-					value="#{chargeLineNode.flFulfilmentItemAddr.itemCode}"
-					rendered="#{chargeLineNode.parent == 'true'}" />
+				<!-- #31344 display item details in popup -->	
+            	<p:commandLink rendered="#{chargeLineNode.parent == 'true'}" 
+					oncomplete="itemDescDialogId.show();" 
+					value="#{chargeLineNode.flFulfilmentItemAddr.itemCode}" 
+					style="color: #009ae5; font-size:12px; font-style:italic; text-align:left; float:left;"
+					action="#{stopInstrBB.showItemDescPopup(chargeLineNode.flFulfilmentItemAddr.scRequestItem.cmItem.itemId)}" 
+					process="@this" 
+					update="@([id$=itemDescDialogId])"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;">
-				<h:outputText value="#{chargeLineNode.flFulfilmentItemAddr.scRequestItem.itemName}"  id="itemDesc"
-					rendered="#{chargeLineNode.parent == 'true'}" title="#{chargeLineNode.flFulfilmentItemAddr.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : chargeLineNode.flFulfilmentItemAddr.scRequestItem.itemDesc}"/>
+				<!--#31344 filter item name-->
+				<h:outputText
+					value="#{stopInstrBB.filterNARequestItemName(chargeLineNode.flFulfilmentItemAddr.scRequestItem.requestNoteItemId)}"
+					id="itemDesc" rendered="#{chargeLineNode.parent == 'true'}"
+					title="#{chargeLineNode.flFulfilmentItemAddr.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : chargeLineNode.flFulfilmentItemAddr.scRequestItem.itemDesc}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.uom']}" style="white-space:normal;">
 				<h:outputText value="#{chargeLineNode.flFulfilmentItemAddr.scRequestItem.uom.uomName}"
