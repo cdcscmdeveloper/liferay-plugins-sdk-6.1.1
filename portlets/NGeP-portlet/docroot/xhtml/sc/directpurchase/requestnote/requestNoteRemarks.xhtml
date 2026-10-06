@@ -6,17 +6,19 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	<ui:remove>41034 - start</ui:remove>
 	<c:if test="#{isPendingItemCodificationStatus}">
 		<ac:scRemarkAndAttachment
-			remarkList="#{requestNoteBackingBean.managedBean.requestNote.remarks}"
+			remarkList="#{requestNoteBackingBean.sortedRequestNoteRemarksByDate}"
 			showAttachment="false" readonly="#{!requestNoteBackingBean.managedBean.cancel}"
 			instruction="#{lbl['lbl.sc.requestnote.remarks.instruction']}" />
 	</c:if>
 	<c:if test="#{!isPendingItemCodificationStatus}">
 		<ac:scRemarkAndAttachment
-			remarkList="#{requestNoteBackingBean.managedBean.requestNote.remarks}"
+			remarkList="#{requestNoteBackingBean.sortedRequestNoteRemarksByDate}"
 			showAttachment="false"
 			readonly="#{requestNoteBackingBean.managedBean.viewOnly}"
 			instruction="#{isPendingApprovalStatus ? lbl['lbl.sc.requestnote.remarks.instruction'] : ''}" />
 	</c:if>
+	<ui:remove>41034 - end</ui:remove>
 </ui:composition>
