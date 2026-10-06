@@ -183,7 +183,11 @@ public abstract class BaseManagedBean implements Serializable {
 	private boolean displayLabelRegistrationStatus;
 	private boolean displayDropdownRegStatus;
 //	37925 END
-	
+
+	// #25726 start
+	private BigDecimal lowerLimit = new BigDecimal(200000);
+	// #25726 end
+
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
 	}
@@ -1121,4 +1125,14 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setDisciplinaryAction(boolean disciplinaryAction) {
 		this.disciplinaryAction = disciplinaryAction;
 	}
+	// #25726 start
+	public BigDecimal getLowerLimit() {
+		return lowerLimit;
+	}
+
+	public void setLowerLimit(BigDecimal lowerLimit) {
+		this.lowerLimit = lowerLimit;
+	}
+	// #25726 end
+
 }

@@ -5,6 +5,12 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+<!-- #25726/25725 - Check and display Italic value -->
+<style>
+.italic-item {
+	font-style: italic !important;
+}
+</style>
 	
 	<ui:param name="requestNoteDtl"
 					value="#{requestNoteBackingBean.managedBean.requestNoteDtl}"></ui:param>
@@ -144,10 +150,14 @@
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.request.note.fulfill.type']}" /></td>
+					<!-- #25725 - Start -->
 					<td><p:inputText
 							value="#{requestNoteBackingBean.getParameterDesc(requestNoteDtl.fulfilmentType)}"
-							disabled="true" size="30" style="margin-top: 5px;" /> <ac:iconTooltip
-							value="#{lbl['lbl.sc.fulfilment.tooltip']}" /></td>
+							disabled="true" size="30" style="margin-top: 5px;" 
+							styleClass="#{requestNoteBackingBean.checkItalicCodeNameForMy(requestNoteDtl.fulfilmentType.parameterId) ? 'italic-item' : ''}"/> 
+							<ac:iconTooltip
+							value="#{lbl['lbl.sc.fulfilment.type.tooltip']}" /></td>
+					<!-- #25725 - End -->
 				</tr>
 			</table>
 
