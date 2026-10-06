@@ -9,7 +9,6 @@ import java.util.Collections; //#24336
 import java.util.Comparator; //#24336
 import java.util.List;
 
-
 import javax.faces.application.FacesMessage; //#37808
 import javax.faces.context.FacesContext; //#37808
 import javax.faces.model.SelectItem; //#24336
