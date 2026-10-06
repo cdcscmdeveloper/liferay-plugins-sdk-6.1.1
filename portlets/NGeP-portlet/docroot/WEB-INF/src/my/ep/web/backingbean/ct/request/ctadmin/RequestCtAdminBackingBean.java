@@ -718,7 +718,7 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 			
 	        List<UserStatusCheckDTO> userStatusResults = 
 	        		checkUserStatus(approverType, getSelectedApprovers(), ctBB.getManagedBean().getDocTypeFromAgreementTaskList(), null);
-	        handleInactiveUserValidation(outcome, userStatusResults);
+	        handleInactiveUserValidation(userStatusResults);
 		}
 		//#30737 - End
 		

@@ -45,7 +45,6 @@ import my.ep.dto.pm.authorization.user.UserStatusCheckDTO; // #30737
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.suspension.CTContractSuspensionDataType;
 import my.ep.persistence.entity.ct.CtActor;
-import my.ep.persistence.entity.ct.CtContract; // #30737
 import my.ep.persistence.entity.ct.CtContractVer; //35506
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
@@ -745,19 +744,17 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		
 		//#30737 - Start
 		CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
-		CtContract ctContract = ctContractVer.getCtContract();
 		
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
 		    List<UserStatusCheckDTO> userStatusResults = 
 	        		checkUserStatus(determineContractApproverRole(), getSelectedApprovers(), getManagedBean().getContractVer().getDocType(), null);
-	        handleInactiveUserValidation(outcome, userStatusResults);
+	        handleInactiveUserValidation(userStatusResults);
 		}
 		
 		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
 		    List<UserStatusCheckDTO> userStatusResults =
 		    		getContractAdminUserStatus(
 		    				ctContractVer.getContractVerId(),
-		    				ctContract.getContractType().getParameterCode(),
 		    				ctContractVer.getDocType());
 
 		    if (userStatusResults != null && !userStatusResults.isEmpty()) {
@@ -767,7 +764,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	            getManagedBean().setUserStatusCheckResult(userStatus);
 
 	            if (InactiveUserConst.INACTIVE_USER_5.equals(userStatus)) {
-	                handleInactiveUserValidation(outcome, userStatusResults);
+	                handleInactiveUserValidation(userStatusResults);
 	            }
 		    }
 		}

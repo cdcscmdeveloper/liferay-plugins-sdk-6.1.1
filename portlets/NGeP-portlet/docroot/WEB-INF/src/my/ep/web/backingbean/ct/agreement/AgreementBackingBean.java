@@ -1010,14 +1010,12 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			String approverType = determineRoleCode();
 	        List<UserStatusCheckDTO> userStatusResults = 
 	        		checkUserStatus(approverType, getSelectedApprovers(), ctBB.getManagedBean().getDocTypeFromAgreementTaskList(), null);
-	        handleInactiveUserValidation(outcome, userStatusResults);
+	        handleInactiveUserValidation(userStatusResults);
 		}
 		
 		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
-	        List<UserStatusCheckDTO> userStatusResults = new ArrayList<>();
-	        userStatusResults = getContractAdminUserStatus(
+	         List<UserStatusCheckDTO> userStatusResults = getContractAdminUserStatus(
 					ctBB.getManagedBean().getDocIdFromAgreementTaskList(),
-					getManagedBean().getCtAgreement().getCtContract().getContractType().getParameterCode(), 
 					ctBB.getManagedBean().getDocTypeFromAgreementTaskList());
 			
 			 if (!userStatusResults.isEmpty()) {
@@ -1030,7 +1028,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 					}
 				 
 				 if(InactiveUserConst.INACTIVE_USER_5.equals(userStatus)){
-	                handleInactiveUserValidation(outcome, userStatusResults);
+	                handleInactiveUserValidation(userStatusResults);
 				 }
             }
 	    }
@@ -3051,8 +3049,8 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	/**
 	 * Determines the role code based on the contract type.
 	 * 
-	 * @return the role code string, or null if no matching contract type is
-	 *         found
+	 * @return the role code string, or null if no matching 
+	 * contract type is found
 	 */
 	private String determineRoleCode() {
 		CtContract ctContract = getContractVer().getCtContract();

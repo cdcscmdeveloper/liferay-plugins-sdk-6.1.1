@@ -2087,14 +2087,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
 		    List<UserStatusCheckDTO> userStatusResults =
 	        		checkUserStatus(determineContractApproverRole(), getSelectedApprovers(), ctContractVer.getDocType(), null);
-	        handleInactiveUserValidation(action, userStatusResults);
+	        handleInactiveUserValidation(userStatusResults);
 		}
 		
 		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
 		    List<UserStatusCheckDTO> userStatusResults =
 		    		getContractAdminUserStatus(
 		    				ctContractVer.getContractVerId(),
-		    				ctContractVer.getCtContract().getContractType().getParameterCode(),
 		    				ctContractVer.getDocType());
 
 		    if (userStatusResults != null && !userStatusResults.isEmpty()) {
@@ -2105,7 +2104,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	            getManagedBean().setUserStatusCheckResult(userStatus);
 
 	            if (InactiveUserConst.INACTIVE_USER_5.equals(userStatus)) {
-	                handleInactiveUserValidation(action, userStatusResults);
+	                handleInactiveUserValidation(userStatusResults);
 	            }
 		    }
 		}

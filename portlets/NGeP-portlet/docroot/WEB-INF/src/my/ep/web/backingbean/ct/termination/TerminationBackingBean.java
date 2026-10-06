@@ -627,7 +627,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 			String approverType = determineRoleCode();
 	        List<UserStatusCheckDTO> userStatusResults =
 	        		checkUserStatus(approverType, getSelectedApprovers(), docType, null);
-	        handleInactiveUserValidation(outcome, userStatusResults);
+	        handleInactiveUserValidation(userStatusResults);
 	        
 			log.info(" action : "+outcome);
 		}
@@ -639,7 +639,6 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 			
 			selectedActor = getContractAdminUserStatus(
 					ctContractVer.getContractVerId(),
-					ctContractVer.getCtContract().getContractType().getParameterCode(), 
 					ctContractVer.getDocType());
 			
 			 if (!selectedActor.isEmpty()) {
@@ -652,7 +651,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 				 
 				 if(InactiveUserConst.INACTIVE_USER_5.equals(userStatus)){
 		        	log.info("INACTIVE_USER_5 + return 5");
-	                handleInactiveUserValidation(outcome, selectedActor);
+	                handleInactiveUserValidation(selectedActor);
 				 }
             }
 			log.info("INACTIVE_USER action : "+outcome);

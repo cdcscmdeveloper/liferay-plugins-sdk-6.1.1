@@ -638,7 +638,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				 
 				 if(InactiveUserConst.INACTIVE_USER_5.equals(userStatus)){
 		        	log.info(" BPM_SUBMIT + return 5");
-	                handleInactiveUserValidation(action, userStatusResults);
+	                handleInactiveUserValidation(userStatusResults);
 				 }
 	         }
 				
@@ -867,7 +867,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 						ParameterConst.CONTRACT_TYPE_MINISTRY)) ? RoleCode.CT_APPROVER.value() : RoleCode.BPK_CC_APPROVER.value();
 				List<UserStatusCheckDTO> userStatusResults = 
 						checkInactiveUsers(approverType, getSelectedApprovers(), docType);
-		        handleInactiveUserValidation(action, userStatusResults);
+		        handleInactiveUserValidation(userStatusResults);
 		        
 				log.info(" action : "+action);
 			}
@@ -894,7 +894,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 					 
 					 if(InactiveUserConst.INACTIVE_USER_5.equals(userStatus)){
 			        	log.info(" BPM_SUBMIT + return 5");
-		                handleInactiveUserValidation(action, userStatusResults);
+		                handleInactiveUserValidation(userStatusResults);
 					 }
 		         }
 					

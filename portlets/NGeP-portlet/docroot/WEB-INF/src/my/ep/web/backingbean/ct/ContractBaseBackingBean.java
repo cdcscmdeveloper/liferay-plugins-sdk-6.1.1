@@ -505,7 +505,7 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 
     	CtContract ctContract = getContractVer().getCtContract();
     	if (ctContract == null) {
-    		return null;
+    		return new String[0];
     	}
     	String contractNo = ctContract.getContractNo();
     	
@@ -519,7 +519,7 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 
         if (MessageConst.ERROR_100069.equals(errorCode)) {
             if (parameters != null) {
-            	List<String> result = new ArrayList<String>();
+            	List<String> result = new ArrayList<>();
             	result.add(contractNo);
             	Collections.addAll(result, parameters);
             	return result.toArray(new String[result.size()]);
@@ -527,27 +527,37 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
             return new String[] {contractNo, selectedUserNames};
         }
 
-        if (MessageConst.ERROR_100071.equals(errorCode)
-        		|| MessageConst.ERROR_100073.equals(errorCode)) {
-        	if(parameters != null){
-        		return parameters;
-        	}
+        if ((MessageConst.ERROR_100071.equals(errorCode)
+        		|| MessageConst.ERROR_100073.equals(errorCode)) && parameters != null) {
+        	return parameters;
         }
         
         return new String[0];
     }
     
+    /**
+     * Retrieves and formats the names of the selected approvers into a single string.
+     */
     private String getSelectedUserNames() {
-        List<String> userNames = new ArrayList<String>();
+        List<String> userNames = new ArrayList<>();
         for (PmUser user : getSelectedApprovers()) {
             userNames.add(user.getUserName());
         }
         return buildUserNames(userNames);
     }
     
+    /**
+     * Validates the status of users selected for the current action and throws an
+     * exception when one or more users are inactive or unavailable.
+     * 
+     * NOTE:
+     * The cyclomatic complexity is higher than the recommended threshold because
+     * the validation must handle multiple user status combinations and
+     * task-specific error handling for different business processes.
+    */
     public void validateUserStatusOnAction(List<UserStatusCheckDTO> userStatusResults) {
 
-        List<UserStatusCheckDTO> inactiveUsers = new ArrayList<UserStatusCheckDTO>();
+        List<UserStatusCheckDTO> inactiveUsers = new ArrayList<>();
 
         CtContract ctContract = getContractVer().getCtContract();
         
@@ -610,6 +620,11 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
         return;
     }
     
+    /**
+     * Builds the message parameters for inactive committee users by combining
+     * their committee roles and user names, with each user displayed on a
+     * separate line.
+     */
     private String buildInactiveCommitteeUserParameters(List<UserStatusCheckDTO> inactiveUsers) {
         StringBuilder sb = new StringBuilder();
 
@@ -627,14 +642,21 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
         return sb.toString();
     }
     
+    /**
+     * Retrieves and formats the names of inactive users into a single string.
+     */
     private String getInactiveUserNames(List<UserStatusCheckDTO> inactiveUsers) {
-        List<String> userNames = new ArrayList<String>();
+        List<String> userNames = new ArrayList<>();
         for (UserStatusCheckDTO userStatus : inactiveUsers) {
             userNames.add(userStatus.getUserName());
         }
         return buildUserNames(userNames);
     }
     
+    /**
+     * Builds a formatted string containing the specified user names, separating
+     * multiple names with commas and using "and" before the last name.
+     */
     private String buildUserNames(List<String> userNames) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < userNames.size(); i++) {
@@ -654,30 +676,36 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
     protected abstract CtContractVer getContractVer();
     protected abstract String getTaskName();
     
-  	protected List<UserStatusCheckDTO> getContractAdminUserStatus(Long docId, String parameterCode, String docType){
-          
+    /**
+     * Retrieves the contract admin and checks the admin user status
+     */
+  	protected List<UserStatusCheckDTO> getContractAdminUserStatus(Long docId, String docType){
   		String userRole = determineContractAdminRole();
-	      
   		CtActor ctActor = retrieveContractActor(docId, docType, userRole);
   		if (ctActor != null) {
-	        List<PmUser> users = new ArrayList<PmUser>();
+	        List<PmUser> users = new ArrayList<>();
 	        users.add(ctActor.getUser());
 	        return checkUserStatus(userRole, users, docType, null);
   		}
-	      
 	    return new ArrayList<>();
   	}
   	
+  	/**
+  	 * Checks the status of the specified users by invoking the user status
+  	 * stored procedure and builds the corresponding user status check results.
+  	 */
   	protected List<UserStatusCheckDTO> checkUserStatus(String roleCode, List<PmUser> users, String docType, String memberRoleCode) {
   		
   	    IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 
+  	    CtContract ctContract = getContractVer().getCtContract();
+  	    
   	    InactiveUserReqDTO userStatusRequest = new InactiveUserReqDTO();
   	    userStatusRequest.setUserIds(populateUserIdsIntoString(users));
 	  	userStatusRequest.setUserRoleCode(roleCode);
-	  	userStatusRequest.setOrgProfileId(getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+	  	userStatusRequest.setOrgProfileId(ctContract.getOwnerOrgProfile().getOrgProfileId());
 	  	userStatusRequest.setDocType(docType);
-	  	userStatusRequest.setDocNo(getContractVer().getCtContract().getContractNo());
+	  	userStatusRequest.setDocNo(ctContract.getContractNo());
 	  	userStatusRequest.setNotifyAdmin(RoleCode.PTJ_ADMIN.value());
   	    
   	    InactiveUserResDTO resDto = userSO.checkInactiveUserBySP(userStatusRequest);
@@ -687,9 +715,13 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
   	    return buildUserStatusCheckResults(users, resDto);
   	}
   	
+  	/**
+  	 * Builds a list of user status check results by combining the selected users
+  	 * with the status information returned from the user status check.
+  	 */
   	private List<UserStatusCheckDTO> buildUserStatusCheckResults(List<PmUser> users, InactiveUserResDTO userStatusResponse) {
 
-  	    List<UserStatusCheckDTO> userStatusList = new ArrayList<UserStatusCheckDTO>();
+  	    List<UserStatusCheckDTO> userStatusList = new ArrayList<>();
   	    if (!users.isEmpty()) {
   	    	String[] userStatuses = userStatusResponse.getStatus().split(",");
   	  	    for (int i = 0; i < userStatuses.length; i++) {
@@ -702,10 +734,11 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
   	  	        userStatus.setUserRoleDesc(userRoleDesc);
   	  	        userStatus.setStatus(Long.parseLong(userStatuses[i].trim()));
   	  	        
-  	  	        if (ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equals(userStatusResponse.getMemberRoleCode())) {
+  	  	        String memberRoleCode = userStatusResponse.getMemberRoleCode();
+  	  	        if (ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equals(memberRoleCode)) {
   	  	        	userStatus.setMemberRole(ResourceBundleUtils.getMessage("lbl.ct.chairperson", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-  	  	        } else if (ParameterConst.COMMITTEE_ROLE_MEMBER.equals(userStatusResponse.getMemberRoleCode())) {
+  	  	        } else if (ParameterConst.COMMITTEE_ROLE_MEMBER.equals(memberRoleCode)) {
   	  	        	userStatus.setMemberRole(ResourceBundleUtils.getMessage("lbl.ct.member", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
   	  	        }
@@ -715,7 +748,9 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
   	    return userStatusList;
   	}
   	
-  	// private to populate user id into string with comma delimiter 
+  	/**
+  	 * Builds a comma-separated string containing the user IDs of the specified users.
+  	 */
   	private String populateUserIdsIntoString(List<PmUser> pmUsers){
   		StringBuilder sb = new StringBuilder();
   		for(PmUser user : pmUsers){
@@ -730,40 +765,42 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
   	/**
   	 * Handles inactive user validation during actions.
   	 *
-  	 * @param outcome -action outcome such as SUBMIT or REVISE
   	 * @param userStatusResults - list of result returned from user status checking process (SP)
   	 * @throws EpException if inactive user conditions are met during validation. 
   	 * Different error messages will be generated based on the returned error code.
   	 */
-  	protected void handleInactiveUserValidation(String outcome, List<UserStatusCheckDTO> userStatusResults) {
+  	protected void handleInactiveUserValidation(List<UserStatusCheckDTO> userStatusResults) {
   		try {
-  			
   			if (userStatusResults.isEmpty()){
   				throw new EpException(MessageConst.ERROR_722505);
   			}
-  			
   			validateUserStatusOnAction(userStatusResults);
-	      	
   		} catch (EpException ex) {
   			throw buildInactiveUserException(ex);
   		}
     }
   	
+  	/**
+	 * Determines the contract admin role based on the contract type.
+	 */
   	protected String determineContractAdminRole() {
-  		String userRole;
-  		if(ParameterConst.CONTRACT_TYPE_CENTRAL.equalsIgnoreCase(getContractVer().getCtContract().getContractType().getParameterCode())){
+  		String userRole = null;
+  		String parameterCode = getContractVer().getCtContract().getContractType().getParameterCode();
+  		if(ParameterConst.CONTRACT_TYPE_CENTRAL.equalsIgnoreCase(parameterCode)){
   			userRole = RoleCode.BPK_CCA.value();
-  		} else {
+  		} else if(ParameterConst.CONTRACT_TYPE_MINISTRY.equalsIgnoreCase(parameterCode)) {
   			userRole = RoleCode.MIN_CONTRACT_ADMIN.value();
   		}
   		return userRole;
   	}
   	
+  	/**
+	 * Determines the contract approver role based on the contract type.
+	 */
   	protected String determineContractApproverRole() {
   		String parameterCode = getContractVer().getCtContract().getContractType().getParameterCode();
 	    if (ParameterConst.CONTRACT_TYPE_MINISTRY.equalsIgnoreCase(parameterCode)) {
 	        return RoleCode.CT_APPROVER.value();
-	        
 	    } else if (ParameterConst.CONTRACT_TYPE_CENTRAL.equalsIgnoreCase(parameterCode)) {
 	        return RoleCode.BPK_CC_APPROVER.value();
 	    }
