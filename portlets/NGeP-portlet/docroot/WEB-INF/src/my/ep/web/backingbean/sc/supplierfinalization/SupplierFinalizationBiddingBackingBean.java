@@ -1333,6 +1333,26 @@ public class SupplierFinalizationBiddingBackingBean extends
 							.getManagedBean().getCurrentStatusId()));
 					//#21692 - End
 	
+					setUserDetails(activity);
+					missingActivities.add(activity);
+				}
+			}
+			this.getManagedBean().getCommitteeList().addAll(missingActivities);
+			List<ScQtCommitteeActivity> committeeEndorsementList = new ArrayList<>();
+			// 25037 - end
+			for (ScQtCommitteeActivity commActivity 
+					: scQtCommittee.getCommitteeActivities()) {
+				if (commActivity.isAttended()) {
+					committeeEndorsementList.add(commActivity);
+				}
+			}
+			getManagedBean().setCommitteeEndorsementList(
+					committeeEndorsementList);
+		}
+		
+		initializeCommitteeRemarks();
+	}
+
 	// #27502 - New DO MOF Role and Process - Start
 	
 	/**
@@ -1476,27 +1496,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 		}
 	}
 
-	/// #27502 - New DO MOF Role and Process - End
-	
-					setUserDetails(activity);
-					missingActivities.add(activity);
-				}
-			}
-			this.getManagedBean().getCommitteeList().addAll(missingActivities);
-			List<ScQtCommitteeActivity> committeeEndorsementList = new ArrayList<>();
-			// 25037 - end
-			for (ScQtCommitteeActivity commActivity 
-					: scQtCommittee.getCommitteeActivities()) {
-				if (commActivity.isAttended()) {
-					committeeEndorsementList.add(commActivity);
-				}
-			}
-			getManagedBean().setCommitteeEndorsementList(
-					committeeEndorsementList);
-		}
-		
-		initializeCommitteeRemarks();
-	}
+	// #27502 - New DO MOF Role and Process - End
 	
 	private void initializeCommitteeRemarks() {
 		ScQtCommittee scQtCommittee = this.getManagedBean().getScQtCommittee();
