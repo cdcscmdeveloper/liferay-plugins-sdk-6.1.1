@@ -18,7 +18,6 @@ import org.apache.commons.collections.CollectionUtils; //#37808
 import org.apache.commons.lang.StringUtils; //#37808
 import org.primefaces.context.RequestContext;
 
-
 import my.ep.biz.bean.search.ISearchBean; //#37808
 import my.ep.biz.bean.search.SearchBean; //#24336
 import my.ep.biz.bean.search.SearchFilterBean; //#24336
