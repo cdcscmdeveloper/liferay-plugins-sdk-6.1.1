@@ -162,7 +162,7 @@
 			</table>
 			<ui:remove> 34449 - Popup button from bpm</ui:remove>
 			<p:outputPanel id="pidConformDlgWrapper">
-				<ac:confirmationPopup id="pidConformDlgPid" widget="pidConformDlg"
+				<ac:confirmationPopupSM id="pidConformDlgPid" widget="pidConformDlg"
 					width="400" height="100"
 					okAction="#{purchaseInDefaultBackingBean.approverAction(purchaseInDefaultBackingBean.managedBean.selectedAction)}"
 					title="#{purchaseInDefaultBackingBean.managedBean.confirmationMessageTitle}"
@@ -172,18 +172,12 @@
 			<ui:remove>34449 - end</ui:remove>					
 		</c:if>
 		<ui:remove> #28865, 34449 - start</ui:remove>
-		<p:confirmDialog message="#{lbl['lbl.ct.pid.confirm.msg']}"
-			severity="alert" widgetVar="submitSuppDlg" closable="true"
-			appendToBody="true" header="#{lbl['lbl.sc.header.message.submit']}">
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
-					action="#{purchaseInDefaultBackingBean.submitPurchaseInDefault(null)}"
-					onstart="submitSuppDlg.hide();blockWidget.show();"
-					oncomplete="blockWidget.hide();" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
-					onclick="submitSuppDlg.hide();" />
-			</div>
-		</p:confirmDialog>
+		<ac:confirmationPopupSM id="submitSuppDlgPid"
+			widget="submitSuppDlg" width="400" height="100" hasParam="true"
+			okParam="#{purchaseInDefaultBackingBean.submitPurchaseInDefault(null)}"
+			title="#{lbl['lbl.sc.header.message.submit']}"
+			content="#{lbl['lbl.ct.pid.confirm.msg']}"
+			update="@this" loadingWidget="blockWidget" />
 		<ui:remove> 28865, 34449 - end</ui:remove>
 		<ui:remove> 9133, 34449 - start</ui:remove>
 		<p:confirmDialog message="#{lbl['lbl.cancel.dialog.confirm.message']}"
@@ -201,7 +195,7 @@
 		<ui:remove> 9133, 34449 - end</ui:remove>
 		<ui:remove>34449 - start</ui:remove>
 		<ui:remove> Popup Submit Action </ui:remove>
-		<ac:confirmationPopup id="submitConformDlgPid"
+		<ac:confirmationPopupSM id="submitConformDlgPid"
 			widget="submitConformDlg" width="400" height="100"
 			okAction="#{purchaseInDefaultBackingBean.submitPurchaseInDefault(null)}"
 			title="#{lbl['lbl.sc.header.message.submit']}"

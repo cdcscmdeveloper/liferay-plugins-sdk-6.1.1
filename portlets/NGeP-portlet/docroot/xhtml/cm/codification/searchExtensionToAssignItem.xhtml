@@ -228,14 +228,14 @@
 					<!-- #31503 remove column -->
 
 				</p:dataTable>
-				<!-- #31503 Start -->
+				<!-- #31503, #34447 Start -->
 				<div style="text-align: right;">
 					<p:commandButton value="#{lbl['lbl.sc.qt.assign.code']}"
 						action="#{codificationBackingBean.assignItemConfirmation}"
 						disabled="#{codificationBackingBean.managedBean.isRenderButtonAssignCode()}"
 						update="@([id$=assignCodeDialConfirm])" />
 				</div>
-				<!-- #31503 End -->
+				<!-- #31503, #34447 End -->
 				<div class="clear"></div>
 				<div style="text-align: right;">
 					<p:commandButton value="#{lbl['lbl.cm.request.extension.code']}"
@@ -250,8 +250,8 @@
 			<!-- Item Specification PopUp -->
 			<ui:include src="/xhtml/cm/codification/itemSpecDlg.xhtml" />
 
-			<!-- #31503 Start -->
-			<ui:remove>#26059 - Start</ui:remove>
+			<!-- #31503, #34447 Start -->
+			<!-- <ui:remove>#26059 - Start</ui:remove>
 			<p:dialog id="assignCodeDialConfirm"
 				widgetVar="assignCodeDialConfirm"
 				header="#{lbl['lbl.sc.item.details']}" width="500"
@@ -282,8 +282,22 @@
 
 				</p:outputPanel>
 			</p:dialog>
-			<ui:remove>#26059 - End</ui:remove>
-			<!-- #31503 End -->
+			<ui:remove>#26059 - End</ui:remove> -->
+			<!-- #31503, #34447 End -->
+
+			<!-- 34447 Start -->
+			<p:blockUI block="cmExtensionSearchToAssignID" widgetVar="pageBlockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif" />
+			</p:blockUI>
+
+			<ac:confirmationPopupCM
+				id="assignCodeDialConfirm" widget="assignCodeDialConfirm"
+				loadingWidget="pageBlockWidget"
+				okParam="#{codificationBackingBean.insertContractedItemCode(codificationBackingBean.managedBean.objSelected)}" hasParam="true"
+				content="#{codificationBackingBean.managedBean.itemCodeDesc}&lt;br/&gt;&lt;br/&gt;#{lbl['lbl.cd.dialog.message.assign']}"
+				update="@form" >
+			</ac:confirmationPopupCM>
+			<!-- 34447 End -->
 
 		</h:panelGroup>
 

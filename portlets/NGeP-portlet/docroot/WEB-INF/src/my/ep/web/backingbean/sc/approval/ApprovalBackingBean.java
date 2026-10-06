@@ -4,7 +4,7 @@
  * 
  * Release 1.00    
  *    
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
  */
@@ -1339,15 +1339,19 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			
 			if (isRevised) {
 				action = BpmOutcomeConst.BPM_REVISE;
-				showDialog = "reviceApprovalDlg.show()";
+				//#34444 - START
+				updateReviceBpmTask();
+				//#34444 - END
 			} else if (isApproved) {
 				action = BpmOutcomeConst.BPM_APPROVE;
 //				showDialog = "gpki_dlg.show()";
 //				isGpkiPopup = true;
 				gpkiSignAction(null);
 			} else if (isRejected) {
-				action = BpmOutcomeConst.BPM_REJECT;
-				showDialog = "rejectApprovalDlg.show()";
+ 				action= BpmOutcomeConst.BPM_REJECT;
+ 				//#34444 - START
+				updateRejectBpmTask();
+				//#34444 - END
 			}
 			
 		} else {
@@ -1356,7 +1360,11 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				// #32376 - Start
 				if(SCProcessNameConst.APPROVE_PUBLICATION.equalsIgnoreCase(taskName) || 
 						SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)){//#34694
-					showDialog = "reviceApprovalDlgTemp.show()";
+					/*34444 START*/
+					reqDTO.setOutcome(action);
+					detailSO.validateQtApprovalDtl(reqDTO);
+					updateReviceBpmTask();
+					/*34444 END*/
 				}
 				// #32376 - End
 			} else if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(action)
@@ -4046,9 +4054,15 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		List<AuditTrailReqDTO> auditReqList = new ArrayList<>();
 		
 		auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_GI);
+		// #35500 EPV 7th Sep Start
+		String fcCode = scQt.getFinalizationCommitte().getParameterCode().toUpperCase();
+		if (fcCode.contains("FSB") || fcCode.contains("FSW")) {
+			auditResDTO.setRoleCode(RoleCode.FPB_SECRETARY.value());
+		} else {
+			auditResDTO.setRoleCode(RoleCode.PPB_SECRETARY.value());
+		}
 		Long userId = getUserIdSessionFromLoginId();
-		ScActor scActor = getActorByQtIdAndUserId(scQt.getQtId(),userId);
-		auditResDTO.setRoleCode(scActor.getRoleCode());//#35500 fix 31st March
+		// #35500 EPV 7th Sep End
 		auditResDTO.setDocTypeId(scQt.getProcurementMode().getParameterId());
 		auditResDTO.setDocId(scQt.getQtId());
 		auditResDTO.setDocNo(scQt.getQtNo());

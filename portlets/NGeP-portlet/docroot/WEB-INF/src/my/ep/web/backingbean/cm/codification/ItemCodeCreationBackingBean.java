@@ -24,6 +24,10 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
+//#34447 Start
+import org.apache.commons.lang.StringUtils; 
+import org.primefaces.context.RequestContext;
+//#34447 End
 //35503 Start
 import my.ep.biz.service.IAuditTrailSO;
 import my.ep.constant.cm.AuditCMConst;
@@ -651,4 +655,39 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 			e.printStackTrace();
 		}
 	}
+
+	//#34447 - Start
+	/**
+	 * Validate empty mandatory field before displaying popup
+	 */
+	public void validateAddUnspscBeforePopup(String popupWidget) {
+	    if (!isUnspscSelectionComplete()) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+							MessageConst.ERROR_715008, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+			return;
+	    }
+	    RequestContext.getCurrentInstance().execute(popupWidget + ".show();");
+	}
+
+	private boolean isUnspscSelectionComplete() {
+	    CmUnspsc segment = this.getManagedBean().getSelectedLovUnspscSegment();
+	    CmUnspsc family  = this.getManagedBean().getSelectedLovUnspscfamily();
+	    CmUnspsc cls     = this.getManagedBean().getSelectedLovUnspscClass();
+	    CmUnspsc item    = this.getManagedBean().getSelectedLovUnspsc();
+
+	    return !isAnyFieldEmpty(segment)
+	        && !isAnyFieldEmpty(family)
+	        && !isAnyFieldEmpty(cls)
+	        && !isAnyFieldEmpty(item);
+	}
+
+	private boolean isAnyFieldEmpty(CmUnspsc lov) {
+	    return lov == null
+	            || StringUtils.isBlank(lov.getUnspscCode())
+	            || StringUtils.isBlank(lov.getUnspscTitle())
+	            || StringUtils.isBlank(lov.getUnspscTitleEng());
+	}
+	//#34447 - End
 }

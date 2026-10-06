@@ -19,6 +19,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCurrency;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
+import my.ep.persistence.entity.sc.loaloi.ScLoaRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaSupportingDoc;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
@@ -397,6 +398,11 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	// #29661 end
 	
 	private SmSupplier tempSmSupplier;	// Bug #40022@Syazani -- 16/02/2026
+	
+	//#11134/#41092 -start-
+	private List<ScLoaRemark> supplierRemarks;
+	//#11134/#41092 -end-	
+	private boolean isSaveTemplate = true;	// Bug #40798@Syazani 21/09/2026
 	
 	/**
 	 * Gets the spki backing bean.
@@ -2294,4 +2300,25 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 		this.tempSmSupplier = tempSmSupplier;
 	}
 	// Bug #40022@Syazani -- 16/02/2026 -- End
+	
+	// #11134/#41092 -start-
+	public List<ScLoaRemark> getSupplierRemarks() {
+		return supplierRemarks;
+	}
+
+	public void setSupplierRemarks(List<ScLoaRemark> supplierRemarks) {
+		this.supplierRemarks = supplierRemarks;
+	}
+	// #11134/#41092 -end-
+
+	// Bug #40798@Syazani 21/09/2026 -- Start
+	public boolean isSaveTemplate() {
+		return isSaveTemplate;
+	}
+
+	public void setSaveTemplate(boolean isSaveTemplate) {
+		this.isSaveTemplate = isSaveTemplate;
+	}
+	// Bug #40798@Syazani 21/09/2026 -- End
+	
 }

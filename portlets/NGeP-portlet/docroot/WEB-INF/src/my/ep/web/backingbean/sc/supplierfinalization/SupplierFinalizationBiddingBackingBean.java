@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -3228,7 +3229,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 			// #25651 - Start
 			reqDTO.setDocumentCategory(ParameterConst.DOCUMENT_CATEGORY_BRIEFING_PAPER);
 			reqDTO.setExcludedDocNames(SupplierFinalizationBiddingManagedBean.getDirectdownloaddocdefkeys());
-			List<ScQtFinalizationReportDetail> finalizationReportsDetail = qtSuppFinalizationSO.retriveFinalizationReportDetail(reqDTO).getScQtFinalizationReportDetails();
+			List<ScQtFinalizationReportDetail> finalizationReportsDetail = qtSuppFinalizationSO
+					.retriveFinalizationReportDetail(reqDTO).getScQtFinalizationReportDetails();
 			this.getManagedBean().setScQtFinalizationReportDetail(finalizationReportsDetail);
 			// #25651 - End
 			
@@ -3397,7 +3399,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 * @return ScAttachment
 	 */
 	private ScAttachment generateDocumentAttachment(String docDefinitionKey, String fileReportName) throws Exception {
-		debugLogger("generateDocumentAttachment");
 		
 		ScAttachment reportAttachment = new ScQtFinalizationReportDetailAttachment();
 		ScQt scQt = getManagedBean().getScQt();
@@ -3438,27 +3439,40 @@ public class SupplierFinalizationBiddingBackingBean extends
 		// 37623 - end
 		
 		//#25651 - Start
-		attachments.addAll(scAttachments);
-		List<Object[]> reportDetailList = reportDetailAttachmentType();
-		List<ScQtFinalizationReportDetail> scQtFinalizationReportDetail = this.getManagedBean().getScQtFinalizationReportDetail();
-		if (CollectionUtils.isNotEmpty(scQtFinalizationReportDetail)) {
-			for(ScQtFinalizationReportDetail finalizationreport:scQtFinalizationReportDetail){
-				if(ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equalsIgnoreCase(finalizationreport.getDefinationType().getParameterCode())){
-					for (Object[] reportDetail : reportDetailList) {
-						String codeReportName = (String) reportDetail[0];
-						String fileReportName = (String) reportDetail[1];
-					    if(codeReportName.equals(finalizationreport.getPmDocument().getDocDefinitionKey())){
-					    	attachments.add(generateDocumentAttachment(codeReportName, fileReportName));
-					    }
-					}
-				}
-			}
-		}
+		attachments.addAll(scAttachments); 
+		attachments.addAll(getScqtFinalizationUploadReportDetails());
 		//#25651 - Start
 		
 		downloadAllFiles(SourcingConstants.LAPORAN_KERTAS_TAKLIMAT, attachments); //#25651
 
 	}
+	
+	// #25651 - Start
+	/**
+	 * To download briefing reports detail under Briefing Report tab.
+	 * 
+	 * @throws Exception
+	 *             the exception that would be thrown in case of any error while
+	 *             downloading the report(s)
+	 */
+	private List<ScAttachment> getScqtFinalizationUploadReportDetails() throws Exception {
+
+		List<ScAttachment> attachments = new ArrayList<>();
+		List<ScQtFinalizationReportDetailAttachment> scAttachmentsDetail = new ArrayList<>();
+
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getScQtFinalizationReportDetail())) {
+			for (ScQtFinalizationReportDetail uploadedSfReportDetail : this.getManagedBean().getScQtFinalizationReportDetail()) {
+				if (uploadedSfReportDetail.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)
+						&& null != uploadedSfReportDetail.getScQtFinalizationReportDetailAttachment()) {
+					scAttachmentsDetail.add(uploadedSfReportDetail.getScQtFinalizationReportDetailAttachment());
+				}
+			}
+		}
+		attachments.addAll(scAttachmentsDetail);
+		return attachments;
+	}
+
+	// #25651 - End
 	
 	// 25037 - start
 	/**

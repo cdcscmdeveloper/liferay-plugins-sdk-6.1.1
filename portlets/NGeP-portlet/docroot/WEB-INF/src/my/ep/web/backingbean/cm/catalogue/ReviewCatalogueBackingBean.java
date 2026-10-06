@@ -23,6 +23,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.bean.ManagedProperty; //#34447
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
@@ -660,4 +661,40 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
 				.getExternalContext();
 		externalContext.redirect(commonUrl + "/catalogue-maintenance-file");
 	}
+
+	//#34447 - Start
+    /**
+     * Validate reject remark before displaying popup
+     */
+    @ManagedProperty(value = "#{catalogueBackingBean}")
+    private CatalogueBackingBean catalogueBackingBean;
+
+    public void setCatalogueBackingBean(CatalogueBackingBean catalogueBackingBean) {
+        this.catalogueBackingBean = catalogueBackingBean;
+    }
+
+    public void validateRejectBeforePopup() {
+        ArrayList<Long> rejectReasonIds = catalogueBackingBean.getManagedBean().getRejectReasonIds();
+        String rejectReason = catalogueBackingBean.getManagedBean().getRejectReason();
+		if (rejectReasonIds.isEmpty()) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "", MessageUtils.getMessage(
+							MessageConst.ERROR_715057, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+			return;
+		}
+        for (Object obj : rejectReasonIds) {
+            Long id = Long.valueOf(String.valueOf(obj));
+            if (id.equals(CmConst.REJECT_REASON_OTHER) &&
+                (rejectReason == null || rejectReason.isEmpty())) {
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "", MessageUtils.getMessage(
+								MessageConst.ERROR_715056, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+				return;
+            }
+        }
+        RequestContext.getCurrentInstance().execute("rejectCatConfirmPopup.show();");
+    }
+    //#34447 - End
 }
