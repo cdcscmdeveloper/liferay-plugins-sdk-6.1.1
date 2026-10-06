@@ -3455,8 +3455,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 					Exception ex = new Exception("Invalid inactive user SP status: " + spStatus);
 
 					SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROCUREMENT_PLAN, SLA_TXN_SAVEPLAN,
-							ppPlan.getPlanNo(), SLA_SERVICE_SAVEPLAN, new FacesScopes().getUserSessionBean().getUserId(),
-							ex);
+							ppPlan.getPlanNo(), SLA_SERVICE_SAVEPLAN,
+							new FacesScopes().getUserSessionBean().getUserId(), ex);
 
 					FacesContext.getCurrentInstance().addMessage(null,
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, inactiveUserResDTO.getMessage()));
@@ -3655,10 +3655,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			
 			if (resDTO.isSuccessful()) {
 				//LOG : 26549 : SLA Monitoring
-				
-				SLAUtils.getInstance().logSLAInfo("PM","PS",
-						SLA_SERVICE_SAVEPLAN, startTime);  // #33690
-
+				SLAUtils.getInstance().logSLAInfo("PM", "PS", SLA_SERVICE_SAVEPLAN, startTime); // #33690
 				log.info("Record saved successfully");
 				
 				//#35502 Start - For Audit Trail to SP
