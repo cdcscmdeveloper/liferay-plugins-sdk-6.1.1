@@ -49,6 +49,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.BidStatusConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.constant.tpl.TemplateDocConst;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.common.approveauthority.AuthorityCommitteeReqDTO;
 import my.ep.dto.pm.common.approveauthority.AuthorityCommitteeResDTO;
@@ -235,7 +236,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 
 				getManagedBean().setCommitteeType(ParameterConst.COMMITTEE_TYPE_MINISTRY_OF_FINANCES);
 				loadRecordTabDetails();
-
+				this.getManagedBean().setSecretaryUser(true);
 				// #27502 - New DO MOF Role and Process - end
 				
 				navigateToBriefingPaperTab();
@@ -929,7 +930,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	public void navigateToBiddingSummaryTab() {
 		int activeIndex;
 		if (mofFinal) {// #27502 - Start
-		  activeIndex = 1;
+		  activeIndex = ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_SUMMARY;
 		} else {
     		if (getManagedBean().isOnlineBiddingEscalation()) {
     			activeIndex = ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_SUMMARY;
@@ -1547,8 +1548,16 @@ public class SupplierFinalizationBiddingBackingBean extends
 			// meeting.setPmStatus(new PmStatus());
 			meeting.setQtCommittee(this.getManagedBean().getScQtCommittee());
 			setUserDetails(meeting);
-			meeting.setMeetingStatus(getPmStatusByStatusId(QTStatusConst.MS_PENDING));
-
+			 //#27502 - New DO MOF Role and Process - Start
+			if (mofFinal){
+				meeting.setMeetingStatusStr(QTStatusConst.MS_DONE);
+			    meeting.setMeetingStatus(getPmStatusByStatusId(QTStatusConst.MS_DONE));	
+			    meeting.setMeetingLocation(TemplateDocConst.PARAM_SPACE);
+			}else{
+				meeting.setMeetingStatus(getPmStatusByStatusId(QTStatusConst.MS_PENDING));
+			}
+			 //#27502 - New DO MOF Role and Process - End
+		
 			meetingList.add(meeting);
 		} finally {
 
@@ -2119,7 +2128,9 @@ public class SupplierFinalizationBiddingBackingBean extends
 //			retrieveOnlineBiddingEndorsement(qtId);
 			renewSessionAndRetrieve();			
 			// 25037 - start
-			prepareUpdateCommitteeMember();
+			if(!mofFinal){// #27502 - Excluded if MOF
+				prepareUpdateCommitteeMember(); // 25037
+			}
 			if (!skipValidation) {
 				String variable1 = getParameterDesc(
 						ParameterTypeConst.DOCUMENT_TYPES,
@@ -2610,8 +2621,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 					if (!atleastOneMeetingIsDone) {
 						epException = new EpException(MessageConst.ERROR_760292);
 					}
-				} else if(mofFinal){// #27502
-					epException = null;
 				} else {
 					epException = new EpException(MessageConst.ERROR_760291);
 				}
@@ -2851,6 +2860,21 @@ public class SupplierFinalizationBiddingBackingBean extends
 		
 		setTaskDetails(taskId, dataType, outComes, processName, currentStatusId, committeeType,
 				onlineBiddingActiveIndex, meetingActiveIndex, taskName); // 25037	
+		
+		// #27502 - New DO MOF Role and Process - Start
+		if (null != dataType.getIsMofFinalization()) {
+			mofFinal = dataType.getIsMofFinalization();
+			getManagedBean().setMofFinalization(mofFinal);
+			if (mofFinal) {
+				if (currentStatusId.equals(QTStatusConst.SF_MOF_COMMITTEE_BIDDING)) {
+					getManagedBean().setMofSelection(true);
+				}
+				getManagedBean().setCommitteeType(ParameterConst.COMMITTEE_TYPE_MINISTRY_OF_FINANCES);
+				loadRecordTabDetails();
+				this.getManagedBean().setSecretaryUser(true);
+			}
+		}
+		// #27502 - New DO MOF Role and Process - end
 	}
 
 	private void setTaskDetails(String taskId, SCEvaluationDataType dataType, String[] outComes, String processName,
@@ -2992,7 +3016,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	public int getOnlineBiddingActiveIndexSummary() {
 		int activeIndex;
 		if(mofFinal){// #27502 - Start
-			activeIndex = 1;
+			activeIndex = ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_SUMMARY;
 		} else
 		if (this.getManagedBean().isOnlineBiddingEscalation()) {
 			activeIndex = ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_SUMMARY;
@@ -3076,7 +3100,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 		 */
 	public void navigateToBriefingPaperTab() {
 		if (mofFinal) {// #27502 - Start
-			this.getManagedBean().setOnlineBiddingActiveIndex(0);
+			this.getManagedBean().setOnlineBiddingActiveIndex(ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_BRIEFING);
 		} else {
 			this.getManagedBean().setOnlineBiddingActiveIndex(
 					this.getManagedBean().isOnlineBiddingEscalation() ? ONLINE_BIDDING_ACTIVE_INDEX_ESCLATION_BRIEFING
@@ -3092,7 +3116,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 */
 	public int getOnlineBiddinBriefingPaperActiveIndex() {
 		if (mofFinal) {// #27502 - Start
-			return 0;
+			return ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_BRIEFING;
 		} else 
 			if (getManagedBean().isOnlineBiddingEscalation()) {
 			return ONLINE_BIDDING_ACTIVE_INDEX_ESCLATION_BRIEFING;
