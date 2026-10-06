@@ -2,6 +2,8 @@ package my.ep.web.backingbean.sm.ai;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -513,6 +515,28 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		return null;
 	}
 	
+	/**
+	 * The DB is WE8MSWIN1252, which stores anything outside it as 0xBF and loses it for good.
+	 * Escape those as JSON backslash-u units so the stored JSON still parses to what the AI sent.
+	 * @param json
+	 * @return
+	 */
+	private static String escapeNonDbChars(String json) {
+		if (json == null) {
+			return null;
+		}
+		CharsetEncoder dbCharset = Charset.forName("windows-1252").newEncoder();
+		StringBuilder sb = new StringBuilder(json.length());
+		for (char c : json.toCharArray()) {
+			if (dbCharset.canEncode(c)) {
+				sb.append(c);
+			} else {
+				sb.append(String.format("\\u%04x", (int) c));
+			}
+		}
+		return sb.toString();
+	}
+
 	private static AIApiResponse saveResponse(SmAppl smAppl, JsonWrapper jsonWrapper, String fileName, String filePath){
 		AIApiResponse apiResp = new AIApiResponse();
 
@@ -523,7 +547,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		apiResp.setFileName(fileName);
 		apiResp.setFilePath(filePath);
 
-		apiResp.setJsonResponse(jsonWrapper.rawContent);
+		apiResp.setJsonResponse(escapeNonDbChars(jsonWrapper.rawContent));
 		apiResp.setTimeTakenMs(jsonWrapper.timeTakenMs);
 		apiResp.setOcrType(jsonWrapper.ocrType);
 		apiResp.setApiName("test");		//temp
