@@ -1100,11 +1100,13 @@ public class SpecificationBackingBean extends
 					SCProcessNameConst.UPDATE_SCORING, SCProcessNameConst.VIEW_SCORING,
 					SCProcessNameConst.SPEC_MAINTENANCE_REVISE_SCORING //1873 note 149
 				};
-			
-			// #34656 move validation position ,trigger before popup-start
-			specSo.validateSpecZoneQtyZero(specReqDTO);
-			// #34656 move validation position -end
-			
+
+			// #34656, #41460 -start
+			if (activeIndex >= 2) {
+				specSo.validateSpecZoneQtyZero(specReqDTO);
+			}
+			// #34656, #41460 -end
+
 			if (Arrays.asList(allowedTaskName).contains(taskName)
 					|| (StringUtils.isEmpty(taskName) && !this.getManagedBean().isReadOnly())) {
 				if (isTechnicalTemplatesEdited() && !this.getManagedBean().isFromSubmit()) {
