@@ -3934,6 +3934,7 @@ public class SupplierFinalizationBackingBean extends
 
 			// 38523 - start
 			this.downloadAllBriefingPaperReports(true);
+			
 			// 38523 - end
 			
 			// #27502 -- Start
@@ -12692,7 +12693,13 @@ public class SupplierFinalizationBackingBean extends
 				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType)
 				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE.equals(committeeType)) {
 			return new BigDecimal(SourcingConstants.QT_BELOW_500K);
-		}		
+		}	
+		
+		// #41184 - Start
+		if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equals(committeeType)
+				|| ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equals(committeeType)) {
+			return new BigDecimal(SourcingConstants.QT_BELOW_30MILL);
+		} // #41184 - End
 
 		return null;
 	}
@@ -12762,12 +12769,20 @@ public class SupplierFinalizationBackingBean extends
 	private void throwCommitteeException(final String committeeType) {		
 		final String offeredPrice = getManagedBean().getSelectedSupplierOfferedPrice();
 		String procurementMode = this.getParameterDesc(getManagedBean().getScQt().getProcurementMode());
+		String committeeName = getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE, committeeType);		
 
 		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType)
 				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType)
 				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE.equals(committeeType)) {
 			throw new EpException(MessageConst.ERROR_760710, new String[] { procurementMode, offeredPrice });
 		}
+		
+		// #41184 - Start
+		if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equals(committeeType)
+				|| ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equals(committeeType)) {
+			throw new EpException(MessageConst.ERROR_760723, new String[] { committeeName, procurementMode,
+					offeredPrice });
+		} // #41184 - End
 		
 	}
 	
