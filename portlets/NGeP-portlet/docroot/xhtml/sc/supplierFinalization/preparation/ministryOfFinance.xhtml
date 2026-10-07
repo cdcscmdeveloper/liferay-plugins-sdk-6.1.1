@@ -38,7 +38,8 @@
 			</h:column>
 			<h:column>
 							<p:selectOneMenu id="approvalAuth"  label="#{lbl['lbl.sc.sf.mof.approval.auth']}"
-							value="#{suppFinalizationBackingBean.managedBean.approvalAuthority.authId}" style="width:333px;">
+							value="#{suppFinalizationBackingBean.managedBean.approvalAuthority.authId}" style="width:333px;"
+							disabled="#{suppFinalizationBackingBean.managedBean.readOnly}" >
 							       <p:ajax process="@this"
 									  update="approvalAuthComm"
 						              listener="#{suppFinalizationBackingBean.changeApprovalAuth()}" />
@@ -65,7 +66,7 @@
 			</h:column>
 			<h:column>
 							<p:selectOneMenu id="approvalAuthComm"  label="#{lbl['lbl.sc.sf.mof.comm.name']}" 
-							disabled="#{null eq suppFinalizationBackingBean.managedBean.approvalAuthority.authId}"
+							disabled="#{suppFinalizationBackingBean.managedBean.readOnly or null eq suppFinalizationBackingBean.managedBean.approvalAuthority.authId}"
 							required="true"
 							requiredMessage="#{lbl['lbl.sc.sf.mof.validate.message']}" 
 							value="#{suppFinalizationBackingBean.managedBean.approvalAuthCommittee.authCommitteeId}" 
