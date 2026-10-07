@@ -2293,7 +2293,7 @@ public class SupplierFinalizationBackingBean extends
 					reqDTO.setScQtCommittee(scQtCommittee);
 					reqDTO.setSubmit(this.getManagedBean().isSubmit());
 					// 25037 - start
-					if (!skipValidation) {
+					if (!skipValidation && !getManagedBean().isMofFinalization() ) { // #27502 - New DO MOF Role and Process
 						qtSuppFinalizationSO.validatePreparation(reqDTO);
 					}
 					// 25037 - end
@@ -6658,7 +6658,7 @@ return	remarksNotFound;
 	public void signOff() {
 		log.info("signOff");
 		if (StringUtils.isNotBlank(
-				getManagedBean().getCommitteeType())) {
+				getManagedBean().getCommitteeType()) && getManagedBean().getCommitteeList() != null  ) {// #27502 - New DO MOF Role and Process
 			for (ScQtCommitteeActivity scQtCommitteeActivity 
 						: getManagedBean().getCommitteeList()) {
 				if (scQtCommitteeActivity.getScCommitteeMember().getPmUser().getUserId()

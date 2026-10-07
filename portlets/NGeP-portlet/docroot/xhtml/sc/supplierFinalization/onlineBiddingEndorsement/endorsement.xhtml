@@ -81,7 +81,12 @@
 				<p:menuitem value="#{lbl['lbl.sc.preparation']}"
 					action="#{suppFinalBiddingBackingBean.navigateToBiddingFinalizationMeetingTab}"
 					update="@form" rendered="#{isOnlineBiddingEndorseMeeting}" />
-			</c:if>	
+			</c:if>
+			<c:if test="#{isMofFinalization}">
+				<p:menuitem value="#{lbl['lbl.sc.preparation']}"
+					action="#{suppFinalBiddingBackingBean.navigateToBiddingFinalizationMeetingTab}"
+					update="@form" />
+			</c:if>
 			<p:menuitem value="#{lbl['lbl.sc.briefing.paper.preparation']}"
 				action="#{suppFinalBiddingBackingBean.navigateToBriefingPaperTab}"
 				update="@form"/>
