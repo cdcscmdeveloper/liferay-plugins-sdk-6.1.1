@@ -128,6 +128,10 @@ public class OrgProfileSearchBackingBean extends
 			getManagedBean().setMinistryProfileId(orgProfileId);
 			getManagedBean().setDisabledMinistry(true);
 		}
+		
+		// #27502 - Start
+		getManagedBean().setMinistrySearching(true);
+		// #27502 - End
 	}
 
 	public void initPtjPopup(){
@@ -142,11 +146,11 @@ public class OrgProfileSearchBackingBean extends
 
 		PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
 		
-		// 27502 - Start
-		if (pmOrgProfile.getPmZone() != null) {
+		// #27502 - Start
+		if (getManagedBean().isMinistrySearching() && pmOrgProfile.getPmZone() != null) {
 			getManagedBean().setZone(pmOrgProfile.getPmZone().getZoneId());
 		}
-		// 27502 - End
+		// #27502 - End
 		this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
 		//Internal Auditor (report) same authorization as Ministry Admin 
 		if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
@@ -374,24 +378,24 @@ public class OrgProfileSearchBackingBean extends
 				searchBean.getDataFilterBeans().add(filterBean);
 			}
 		}
-		//27502 - Start
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean(QTSearchBeanConst.SEARCH_BPK,
-						SearchOperator.OPERATOR_EQUALS.value(), true));
-		List<Long> zoneIds = new ArrayList<>();
+		// #27502 - Start
+		if (getManagedBean().isMinistrySearching()) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(QTSearchBeanConst.SEARCH_BPK, SearchOperator.OPERATOR_EQUALS.value(), true));
+			List<Long> zoneIds = new ArrayList<>();
 
-		zoneIds.add(getManagedBean().getZone());
+			zoneIds.add(getManagedBean().getZone());
 
-		String portletName = (String) getFacesScopes().getRequest().getAttribute(QTConstants.PORTLET_ID);
-		if (!zoneIds.contains(new Long(SupplierManagementConst.PM_ZONE_SEMENANJUNG))
-				&& StringUtils.isNotBlank(portletName) && portletName.toLowerCase().contains(CommonConstants.LOA)) {
-			zoneIds.add(new Long(SupplierManagementConst.PM_ZONE_SEMENANJUNG));
+			String portletName = (String) getFacesScopes().getRequest().getAttribute(QTConstants.PORTLET_ID);
+			if (!zoneIds.contains(new Long(SupplierManagementConst.PM_ZONE_SEMENANJUNG))
+					&& StringUtils.isNotBlank(portletName) && portletName.toLowerCase().contains(CommonConstants.LOA)) {
+				zoneIds.add(new Long(SupplierManagementConst.PM_ZONE_SEMENANJUNG));
+			}
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(QTSearchBeanConst.SEARCH_PMZONE_ZONEID, SearchOperator.OPERATOR_IN.value(),
+							zoneIds));
 		}
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean(QTSearchBeanConst.SEARCH_PMZONE_ZONEID,
-				SearchOperator.OPERATOR_IN.value(),
-				zoneIds));
-		//27502 - End
+		// #27502 - End
 		return searchBean;
 	}
 	
