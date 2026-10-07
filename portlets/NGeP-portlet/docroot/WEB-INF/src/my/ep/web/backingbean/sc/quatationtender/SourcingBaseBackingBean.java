@@ -137,6 +137,7 @@ import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.common.PmAppVersion; //#38151
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
@@ -7607,4 +7608,49 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 	// #35320 - END
+
+	// #38151 Start
+	/**
+	 * Shared WIP (weightage 35384) check for Evaluation, LOI, Supplier Finalization
+	 * and Consolidation Report.
+	 * 
+	 * @return true when the QT follows the old (WIP) weightage calculation
+	 */
+	protected boolean isWeightage35384WIP(ScQt qt) {
+		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTDetailSO.class);
+		Date publishDate = qt.getPublishDate();
+		Date createdDate = qt.getCreatedDate();
+
+		// #38151 4ser max score setting: < 7 (no Technical By Item) = WIP candidate
+		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+		EvaluationReqDTO req4SerDTO = new EvaluationReqDTO();
+		req4SerDTO.setQtId(qt.getQtId());
+		int wipstatus = evaluationSO.checkWipScoreSettingMax(req4SerDTO);
+		boolean checkStatusWip = isWipScoreFlagSaved(qt.getQtId());
+
+		QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+		qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
+		qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
+		PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
+		Date effDate = appVerDtls.getEffDate();
+
+		if (null == publishDate) {
+			return createdDate.before(new Timestamp(effDate.getTime()));
+		}
+		if (publishDate.before(effDate)) {
+			return true;
+		}
+		return publishDate.after(effDate) && wipstatus < SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM
+				&& !checkStatusWip;
+	}
+
+	// #38151 true = score setting saved with OVERALL_OTHER_FLAG (non-WIP)
+	private boolean isWipScoreFlagSaved(Long qtId) {
+		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTSpecSO.class);
+		return specSo.checkWipScoreFlag(qtId);
+	}
+	// #38151 End
 }

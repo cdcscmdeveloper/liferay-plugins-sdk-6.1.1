@@ -39,6 +39,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
+import my.ep.biz.service.sc.quationtender.IQTEvaluationSO; //#38151
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;//#38151
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
@@ -65,6 +66,7 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
+import my.ep.dto.sc.quationtender.EvaluationReqDTO; //#38151
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierResDTO;
@@ -7898,37 +7900,8 @@ public class LOIDetailBackingBean extends
 
 	// #38151 Start
 	private void checkWeightage35384WIP() {
-		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-				IQTDetailSO.class);
-		ScQt qt = this.getManagedBean().getScQt();
-		Date publishDate = qt.getPublishDate();
-		Date createdDate = qt.getCreatedDate();
-
-		if (null == publishDate) {
-			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
-			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
-			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
-
-			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
-
-			Date effDate = appVerDtls.getEffDate();
-			Timestamp effTimestamp = new Timestamp(effDate.getTime());
-
-			if (createdDate.before(effTimestamp)) {
-				this.getManagedBean().setWeightage35384WIP(true);
-			}
-		} else {
-			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
-			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
-			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
-
-			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
-
-			Date effDate = appVerDtls.getEffDate();
-
-			if (publishDate.before(effDate)) {
-				this.getManagedBean().setWeightage35384WIP(true);
-			}
+		if (isWeightage35384WIP(this.getManagedBean().getScQt())) { //#38151 shared in SourcingBaseBackingBean
+			this.getManagedBean().setWeightage35384WIP(true);
 		}
 	}
 	// #38151 End
