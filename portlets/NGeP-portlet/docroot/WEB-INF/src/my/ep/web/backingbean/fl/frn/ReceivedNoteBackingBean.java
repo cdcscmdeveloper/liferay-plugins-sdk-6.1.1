@@ -660,7 +660,13 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
 									MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES,
 									getFacesScopes().getUserLocale())));
-				}
+				} else if (resDTOInvoice.isContractAmountExceeded()) { //#41385 - Start
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+									MessageConst.INFO_745090, null, MessageUtils.BUNDLE_COMMON_MESSAGES,
+									getFacesScopes().getUserLocale())));
+				} //#41385 - End
 			}
 			/*#14650 - Ending*/
 			
