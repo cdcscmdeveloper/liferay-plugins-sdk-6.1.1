@@ -2911,7 +2911,16 @@ public class ConsolidationReportBackingBean extends
 		ScQt qt = this.getManagedBean().getScQt();
 		Date publishDate = qt.getPublishDate();
 		Date createdDate = qt.getCreatedDate();
-		
+
+		// #38151 4ser max score setting: < 7 (no Technical By Item) = WIP
+		// candidate
+		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+		EvaluationReqDTO req4SerDTO = new EvaluationReqDTO();
+		req4SerDTO.setQtId(qt.getQtId());
+		int wipstatus = evaluationSO.checkWipScoreSettingMax(req4SerDTO);
+		boolean checkStatusWip = checkWipScoreSettingFlag(qt.getQtId()); //#38151
+
 		if (null == publishDate) {
 			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
 			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
@@ -2921,11 +2930,11 @@ public class ConsolidationReportBackingBean extends
 
 			Date effDate = appVerDtls.getEffDate();
 			Timestamp effTimestamp = new Timestamp(effDate.getTime());
-			
+
 			if (createdDate.before(effTimestamp)) {
 				this.getManagedBean().setWeightage35384WIP(true);
 			}
-		}else{
+		} else {
 			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
 			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
 			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
@@ -2936,8 +2945,19 @@ public class ConsolidationReportBackingBean extends
 
 			if (publishDate.before(effDate)) {
 				this.getManagedBean().setWeightage35384WIP(true);
+			} else if (publishDate.after(effDate) && wipstatus < SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM
+					&& !checkStatusWip) {
+				this.getManagedBean().setWeightage35384WIP(true);
 			}
 		}
+
+	}
+
+	// #38151 true = score setting saved with OVERALL_OTHER_FLAG (non-WIP)
+	private boolean checkWipScoreSettingFlag(Long qtId) {
+		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTSpecSO.class);
+		return specSo.checkWipScoreFlag(qtId);
 	}
 	//#38151 End
 }
