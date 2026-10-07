@@ -264,27 +264,27 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 		// Single selected user and inactive
 		if (userStatusResults.size() == 1 && !inactiveUsers.isEmpty()) {
 			log.info("Single selected user and inactive");
-			throw new EpException(MessageConst.ERROR_100068);
+			throw new EpException(MessageConst.ERROR_750096);
 		}
 
 		// Mixed active and inactive
 		if (activeUserCount > 0 && !inactiveUsers.isEmpty()) {
 			log.info("Mixed active and inactive");
 			String userNames = getInactiveUserNames(inactiveUsers);
-			throw new EpException(MessageConst.ERROR_100068,
+			throw new EpException(MessageConst.ERROR_750096,
 					new String[] { userNames });
 		}
 
 		// All inactive (2,3,4)
 		if (activeUserCount == 0 && !inactiveUsers.isEmpty()) {
 			log.info("All inactive (2,3,4)");
-			throw new EpException(MessageConst.ERROR_100068);
+			throw new EpException(MessageConst.ERROR_750096);
 		}
 
 		// All status = 5
 		if (Long.valueOf(5L).equals(userStatusResults.get(0).getStatus())) {
 			log.info("All status = 5");
-			throw new EpException(MessageConst.ERROR_100073);
+			throw new EpException(MessageConst.ERROR_750100);
 		}
 
 		// Single active or all active
@@ -367,15 +367,15 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 	private String[] getInactiveUserMessageKeys(String errorCode,
 			String circularNo, String selectedUserNames, String[] parameters) {
 
-		if (MessageConst.ERROR_100068.equals(errorCode)
-				|| MessageConst.ERROR_100070.equals(errorCode)) {
+		if (MessageConst.ERROR_750096.equals(errorCode)
+				|| MessageConst.ERROR_750098.equals(errorCode)) {
 			if (parameters != null) {
 				return parameters;
 			}
 			return new String[] { selectedUserNames };
 		}
 
-		if (MessageConst.ERROR_100069.equals(errorCode)) {
+		if (MessageConst.ERROR_750097.equals(errorCode)) {
 			if (parameters != null) {
 				List<String> result = new ArrayList<String>();
 				result.add(circularNo);
@@ -385,8 +385,8 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 			return new String[] { circularNo, selectedUserNames };
 		}
 
-		if (MessageConst.ERROR_100071.equals(errorCode)
-				|| MessageConst.ERROR_100073.equals(errorCode)) {
+		if (MessageConst.ERROR_750099.equals(errorCode)
+				|| MessageConst.ERROR_750100.equals(errorCode)) {
 			if (parameters != null) {
 				return parameters;
 			}

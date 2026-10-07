@@ -509,15 +509,15 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
     	}
     	String contractNo = ctContract.getContractNo();
     	
-        if (MessageConst.ERROR_100068.equals(errorCode)
-        		|| MessageConst.ERROR_100070.equals(errorCode)) {
+        if (MessageConst.ERROR_750096.equals(errorCode)
+        		|| MessageConst.ERROR_750098.equals(errorCode)) {
         	if(parameters != null){
         		return parameters;
         	}
             return new String[]{selectedUserNames};
         }
 
-        if (MessageConst.ERROR_100069.equals(errorCode)) {
+        if (MessageConst.ERROR_750097.equals(errorCode)) {
             if (parameters != null) {
             	List<String> result = new ArrayList<>();
             	result.add(contractNo);
@@ -527,8 +527,8 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
             return new String[] {contractNo, selectedUserNames};
         }
 
-        if ((MessageConst.ERROR_100071.equals(errorCode)
-        		|| MessageConst.ERROR_100073.equals(errorCode)) && parameters != null) {
+        if ((MessageConst.ERROR_750099.equals(errorCode)
+        		|| MessageConst.ERROR_750100.equals(errorCode)) && parameters != null) {
         	return parameters;
         }
         
@@ -580,14 +580,14 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
         
         // Single selected user and inactive
         if (userStatusResults.size() == 1 && !inactiveUsers.isEmpty()) {
-        	String message = MessageConst.ERROR_100068;
+        	String message = MessageConst.ERROR_750096;
         	String[] parameters = null;
             if (CTProcessNameConst.REVIEW_FA_HT_NAME.equalsIgnoreCase(getTaskName())){
-            	message = MessageConst.ERROR_100070;
+            	message = MessageConst.ERROR_750098;
             	parameters = new String[] { userNames };
             }
             else if (CTProcessNameConst.ACK_FA_HT_NAME.equalsIgnoreCase(getTaskName())){
-            	message = MessageConst.ERROR_100069;
+            	message = MessageConst.ERROR_750097;
             	parameters = new String[] { userNames };
             }
         	throw new EpException(message, parameters);
@@ -596,25 +596,25 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
         // Mixed active and inactive
         if (activeUserCount > 0 && !inactiveUsers.isEmpty()) {
         	if (CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME.equalsIgnoreCase(getTaskName())){
-        		throw new EpException(MessageConst.ERROR_100071, new String[] { buildInactiveCommitteeUserParameters(inactiveUsers) });
+        		throw new EpException(MessageConst.ERROR_750099, new String[] { buildInactiveCommitteeUserParameters(inactiveUsers) });
         	} else {
-                throw new EpException(MessageConst.ERROR_100068, new String[] { userNames });
+                throw new EpException(MessageConst.ERROR_750096, new String[] { userNames });
         	}
         }
 
         // All inactive (2,3,4)
         if (activeUserCount == 0 && !inactiveUsers.isEmpty()) {
         	if (CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME.equalsIgnoreCase(getTaskName())){
-        		throw new EpException(MessageConst.ERROR_100071, new String[] { buildInactiveCommitteeUserParameters(inactiveUsers) });
+        		throw new EpException(MessageConst.ERROR_750099, new String[] { buildInactiveCommitteeUserParameters(inactiveUsers) });
         	} else {
-                throw new EpException(MessageConst.ERROR_100068, new String[] { userNames });
+                throw new EpException(MessageConst.ERROR_750096, new String[] { userNames });
         	}
         }
 
         // All status = 5
         if (Long.valueOf(5L).equals(userStatusResults.get(0).getStatus())) {
         	String[] parameters = new String[] { userStatusResults.get(0).getUserRoleDesc() , ctContract.getOwnerOrgProfile().getOrgValidity().getOrgName()};
-            throw new EpException(MessageConst.ERROR_100073, parameters);
+            throw new EpException(MessageConst.ERROR_750100, parameters);
         }
 
         return;
