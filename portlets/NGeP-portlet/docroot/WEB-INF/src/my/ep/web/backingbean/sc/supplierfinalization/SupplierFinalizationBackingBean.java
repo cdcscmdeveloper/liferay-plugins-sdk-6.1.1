@@ -12602,58 +12602,9 @@ public class SupplierFinalizationBackingBean extends
 		
 	//#38151 Start
 	private void checkWeightage35384WIP() {
-		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-				IQTDetailSO.class);
-		ScQt qt = this.getManagedBean().getScQt();
-		Date publishDate = qt.getPublishDate();
-		Date createdDate = qt.getCreatedDate();
-
-		// #38151 4ser max score setting: < 7 (no Technical By Item) = WIP
-		// candidate
-		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-		EvaluationReqDTO req4SerDTO = new EvaluationReqDTO();
-		req4SerDTO.setQtId(qt.getQtId());
-		int wipstatus = evaluationSO.checkWipScoreSettingMax(req4SerDTO);
-		boolean checkStatusWip = checkWipScoreSettingFlag(qt.getQtId()); //#38151
-
-		if (null == publishDate) {
-			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
-			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
-			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
-
-			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
-
-			Date effDate = appVerDtls.getEffDate();
-			Timestamp effTimestamp = new Timestamp(effDate.getTime());
-
-			if (createdDate.before(effTimestamp)) {
-				this.getManagedBean().setWeightage35384WIP(true);
-			}
-		} else {
-			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
-			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
-			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
-
-			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
-
-			Date effDate = appVerDtls.getEffDate();
-
-			if (publishDate.before(effDate)) {
-				this.getManagedBean().setWeightage35384WIP(true);
-			} else if (publishDate.after(effDate) && wipstatus < SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM
-					&& !checkStatusWip) {
-				this.getManagedBean().setWeightage35384WIP(true);
-			}
+		if (isWeightage35384WIP(this.getManagedBean().getScQt())) { //#38151 shared in SourcingBaseBackingBean
+			this.getManagedBean().setWeightage35384WIP(true);
 		}
-
-	}
-
-	// #38151 true = score setting saved with OVERALL_OTHER_FLAG (non-WIP)
-	private boolean checkWipScoreSettingFlag(Long qtId) {
-		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-				IQTSpecSO.class);
-		return specSo.checkWipScoreFlag(qtId);
 	}
 	//#38151 End
 }
