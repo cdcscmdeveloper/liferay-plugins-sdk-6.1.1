@@ -3375,6 +3375,7 @@ public class SupplierFinalizationBackingBean extends
 			}
 		} else {
 			/*#34444 - Start*/
+			getManagedBean().prepareAction(outcome);
 			RequestContext.getCurrentInstance().execute("popupConfirmInfoDlg.show()");
 			/*#34444 - End*/
 		}
