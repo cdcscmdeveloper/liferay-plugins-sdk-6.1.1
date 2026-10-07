@@ -42,6 +42,10 @@ public class OrgProfileSearchManagedBean extends BaseManagedBean{
 	private boolean specialItemSearching = false;
 	//end - 27868	
 	
+	//27502 - Start
+	private Long zone;
+	//27502 - End
+	
 	public OrgProfileSearchManagedBean() {
 
 	}
@@ -239,4 +243,13 @@ public class OrgProfileSearchManagedBean extends BaseManagedBean{
 		this.specialItemSearching = specialItemSearching;
 	}
 	//end - #27868	
+	//27502 - Start
+	public Long getZone() {
+		return zone;
+	}
+
+	public void setZone(Long zone) {
+		this.zone = zone;
+	}
+	//27502 - End
 }
