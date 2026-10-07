@@ -607,6 +607,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean showDifferenceRejection;
 	// #30974 && 37896 - END
 	
+	//29727
+	private String deleteBranchMsg;
+	
 	private boolean poApproverEquityErr;//#31461-start
 	private String msgEquityErr;//#31461-end
 	//13362
@@ -4591,6 +4594,17 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.displayBranches = displayBranches;
 	}
 	//#34135 END
+
+	// 29727 - START
+	public String getDeleteBranchMsg() {
+		return deleteBranchMsg;
+	}
+
+	public void setDeleteBranchMsg(String deleteBranchMsg) {
+		this.deleteBranchMsg = deleteBranchMsg;
+	}
+	// 29727 - END
+	
 		//13362 START
 	public List<SmBulkApplOverlapCatVO> getOverlapCategoryListMalay() {
 		return overlapCategoryListMalay;

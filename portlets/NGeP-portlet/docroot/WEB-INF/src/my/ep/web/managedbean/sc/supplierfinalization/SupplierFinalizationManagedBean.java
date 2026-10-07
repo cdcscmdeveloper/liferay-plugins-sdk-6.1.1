@@ -36,6 +36,7 @@ import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationMeetingBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -250,6 +251,13 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	// #11134 - Start
 	private boolean haveSupplierRejection;
 	// #11134 - End
+	
+	// #28777 & #29729 - Start
+	private List<SmSupplierBranch> supplierBranchList;
+	private IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersByRecommendType;
+	private IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersByEvalStage;	
+	private boolean flagBranchDeleted = false;
+	// #28777 & #29729 - End
 	
 	// 28834 starts
 	private boolean disableBfButton;
@@ -2161,6 +2169,43 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.haveSupplierRejection = haveSupplierRejection;
 	}
 	// #11134 -end-
+	
+	// #28777 & #29729 - Start
+	public List<SmSupplierBranch> getSupplierBranchList() {
+		return supplierBranchList;
+	}
+
+	public void setSupplierBranchList(List<SmSupplierBranch> supplierBranchList) {
+		this.supplierBranchList = supplierBranchList;
+	}
+
+	public IPagingDataModel<ScQtEvaluationResultDtl> getDisqualifiedSuppliersByRecommendType() {
+		return disqualifiedSuppliersByRecommendType;
+	}
+
+	public void setDisqualifiedSuppliersByRecommendType(
+			IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersByRecommendType) {
+		this.disqualifiedSuppliersByRecommendType = disqualifiedSuppliersByRecommendType;
+	}
+
+	public IPagingDataModel<ScQtEvaluationResultDtl> getDisqualifiedSuppliersByEvalStage() {
+		return disqualifiedSuppliersByEvalStage;
+	}
+
+	public void setDisqualifiedSuppliersByEvalStage(
+			IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersByEvalStage) {
+		this.disqualifiedSuppliersByEvalStage = disqualifiedSuppliersByEvalStage;
+	}
+	
+	public boolean isFlagBranchDeleted() {
+		return flagBranchDeleted;
+	}
+
+	public void setFlagBranchDeleted(boolean flagBranchDeleted) {
+		this.flagBranchDeleted = flagBranchDeleted;
+	}
+	
+	// #28777 & #29729 - End
 	
 	// 28834 start
 	public boolean isDisableBfButton() {

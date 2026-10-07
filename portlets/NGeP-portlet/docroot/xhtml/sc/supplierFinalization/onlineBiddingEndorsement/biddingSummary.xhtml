@@ -36,6 +36,11 @@
 									suppFinalBiddingBackingBean.managedBean.scQtFinalization.recommendedTypeId)}" />			
 		</h:column>
 	</h:panelGrid>
+	
+	<ui:remove> 28777,29729 - Start </ui:remove>
+	<ui:param name="isDisqualified"
+		value="#{suppFinalBiddingBackingBean.checkListDisqualifiedSupplierBranchDeleted(suppFinalBiddingBackingBean.managedBean.scQt.qtId)}"></ui:param>
+	<ui:remove> 28777,29729 - End </ui:remove>
 
 	<p:outputPanel id="itemSupplierPanel">
 		<table style="border: 0px;width:100%;">
@@ -66,6 +71,11 @@
 			</tr>
 		</table>	
 	</p:outputPanel>	
+	
+    <ui:remove> 28777,29729 - Start </ui:remove>
+	<ui:include
+		src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/supplierBranchListPopup.xhtml" />
+	<ui:remove> 28777,29729 - End </ui:remove>
 
 	<!-- 25638 start -->
 	<p:panel header="#{lbl['lbl.sc.remarks']}" toggleable="true">
