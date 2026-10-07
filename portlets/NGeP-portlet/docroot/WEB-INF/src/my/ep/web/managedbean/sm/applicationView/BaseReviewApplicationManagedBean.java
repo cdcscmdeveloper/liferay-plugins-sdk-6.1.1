@@ -391,6 +391,22 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	
 	//28637
 	private boolean viewCatCode;
+	// 36504 - START
+	private boolean updateRecordTC;
+	private boolean otherDescChangePO;
+	private boolean otherDescChangeApprover;
+	private boolean otherDescChangeSupplier;
+	private boolean otherDescChangeSupPO;
+	private boolean otherDescChangeSupApprover;
+	private boolean otherDescChangeMaintenance;
+	private boolean authoriseUser;
+	private String otherDescEdited;
+	private String otherDescOld;
+	private SmSupplierCategory historySuppCategory;
+	private SmSupplierCategory selectedCategory;
+	private List<SmSupplierCategory> historyOtherDescList;
+	private List<SmSupplierCategory> supProfileHistoryOtherDesc;
+	// 36504 - END
 	
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
@@ -2643,4 +2659,205 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.viewCatCode = viewCatCode;
 	}
 		
+	// 36504 - START
+	/**
+	 * @return the updateRecordTC
+	 */
+	public boolean isUpdateRecordTC() {
+		return updateRecordTC;
+	}
+
+	/**
+	 * @param updateRecordTC
+	 *            the updateRecordTC to set
+	 */
+	public void setUpdateRecordTC(boolean updateRecordTC) {
+		this.updateRecordTC = updateRecordTC;
+	}
+
+	/**
+	 * @return the otherDescEdited
+	 */
+	public String getOtherDescEdited() {
+		return otherDescEdited;
+	}
+
+	/**
+	 * @param otherDescEdited
+	 *            the otherDescEdited to set
+	 */
+	public void setOtherDescEdited(String otherDescEdited) {
+		this.otherDescEdited = otherDescEdited;
+	}
+
+	/**
+	 * @return the otherDescChangePO
+	 */
+	public boolean isOtherDescChangePO() {
+		return otherDescChangePO;
+	}
+
+	/**
+	 * @param otherDescChangePO the otherDescChangePO to set
+	 */
+	public void setOtherDescChangePO(boolean otherDescChangePO) {
+		this.otherDescChangePO = otherDescChangePO;
+	}
+
+	/**
+	 * @return the otherDescChangeApprover
+	 */
+	public boolean isOtherDescChangeApprover() {
+		return otherDescChangeApprover;
+	}
+
+	/**
+	 * @param otherDescChangeApprover the otherDescChangeApprover to set
+	 */
+	public void setOtherDescChangeApprover(boolean otherDescChangeApprover) {
+		this.otherDescChangeApprover = otherDescChangeApprover;
+	}
+	
+	/**
+	 * @return the otherDescChangeSupplier
+	 */
+	public boolean isOtherDescChangeSupplier() {
+		return otherDescChangeSupplier;
+	}
+
+	/**
+	 * @param otherDescChangeSupplier the otherDescChangeSupplier to set
+	 */
+	public void setOtherDescChangeSupplier(boolean otherDescChangeSupplier) {
+		this.otherDescChangeSupplier = otherDescChangeSupplier;
+	}
+
+	/**
+	 * @return the otherDescChangeSupPO
+	 */
+	public boolean isOtherDescChangeSupPO() {
+		return otherDescChangeSupPO;
+	}
+
+	/**
+	 * @param otherDescChangeSupPO the otherDescChangeSupPO to set
+	 */
+	public void setOtherDescChangeSupPO(boolean otherDescChangeSupPO) {
+		this.otherDescChangeSupPO = otherDescChangeSupPO;
+	}
+
+	/**
+	 * @return the otherDescChangeSupApprover
+	 */
+	public boolean isOtherDescChangeSupApprover() {
+		return otherDescChangeSupApprover;
+	}
+
+	/**
+	 * @param otherDescChangeSupApprover the otherDescChangeSupApprover to set
+	 */
+	public void setOtherDescChangeSupApprover(boolean otherDescChangeSupApprover) {
+		this.otherDescChangeSupApprover = otherDescChangeSupApprover;
+	}
+	
+	/**
+	 * @return the historySuppCategory
+	 */
+	public SmSupplierCategory getHistorySuppCategory() {
+		return historySuppCategory;
+	}
+
+	/**
+	 * @param historySuppCategory the historySuppCategory to set
+	 */
+	public void setHistorySuppCategory(SmSupplierCategory historySuppCategory) {
+		this.historySuppCategory = historySuppCategory;
+	}
+	
+	/**
+	 * @return the selectedCategory
+	 */
+	public SmSupplierCategory getSelectedCategory() {
+		return selectedCategory;
+	}
+
+	/**
+	 * @param selectedCategory the selectedCategory to set
+	 */
+	public void setSelectedCategory(SmSupplierCategory selectedCategory) {
+		this.selectedCategory = selectedCategory;
+	}
+	
+	/**
+	 * @return the historyOtherDescList
+	 */
+	public List<SmSupplierCategory> getHistoryOtherDescList() {
+		return historyOtherDescList;
+	}
+
+	/**
+	 * @param historyOtherDescList the historyOtherDescList to set
+	 */
+	public void setHistoryOtherDescList(
+			List<SmSupplierCategory> historyOtherDescList) {
+		this.historyOtherDescList = historyOtherDescList;
+	}
+	
+	/**
+	 * @return the otherDescOld
+	 */
+	public String getOtherDescOld() {
+		return otherDescOld;
+	}
+
+	/**
+	 * @param otherDescOld the otherDescOld to set
+	 */
+	public void setOtherDescOld(String otherDescOld) {
+		this.otherDescOld = otherDescOld;
+	}
+	
+	/**
+	 * @return the otherDescChangeMaintenance
+	 */
+	public boolean isOtherDescChangeMaintenance() {
+		return otherDescChangeMaintenance;
+	}
+
+	/**
+	 * @param otherDescChangeMaintenance the otherDescChangeMaintenance to set
+	 */
+	public void setOtherDescChangeMaintenance(boolean otherDescChangeMaintenance) {
+		this.otherDescChangeMaintenance = otherDescChangeMaintenance;
+	}
+	
+	/**
+	 * @return the supProfileHistoryOtherDesc
+	 */
+	public List<SmSupplierCategory> getSupProfileHistoryOtherDesc() {
+		return supProfileHistoryOtherDesc;
+	}
+
+	/**
+	 * @param supProfileHistoryOtherDesc the supProfileHistoryOtherDesc to set
+	 */
+	public void setSupProfileHistoryOtherDesc(
+			List<SmSupplierCategory> supProfileHistoryOtherDesc) {
+		this.supProfileHistoryOtherDesc = supProfileHistoryOtherDesc;
+	}
+	
+	/**
+	 * @return the authoriseUser
+	 */
+	public boolean isAuthoriseUser() {
+		return authoriseUser;
+	}
+
+	/**
+	 * @param authoriseUser the authoriseUser to set
+	 */
+	public void setAuthoriseUser(boolean authoriseUser) {
+		this.authoriseUser = authoriseUser;
+	}
+	// 36504 - END
 }
