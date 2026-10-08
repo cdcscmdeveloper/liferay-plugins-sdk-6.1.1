@@ -84,6 +84,10 @@ public class SupplierManagedBean extends BaseManagedBean {
 	// Start Fix - #33856
 	private Long applID;
 	// End Fix - #33856
+	
+	//30737 - start
+	private boolean prepareGroupTask = false;
+	//30737 - end
 
 	@ManagedProperty(value="#{spkiBackingBean}")
 	private SpkiBackingBean spkiBackingBean;
@@ -680,7 +684,16 @@ public class SupplierManagedBean extends BaseManagedBean {
 	}
 	// End Fix - #33856
 
+	//30737 - start
+	public boolean isPrepareGroupTask() {
+		return prepareGroupTask;
+	}
 
+	public void setPrepareGroupTask(boolean prepareGroupTask) {
+		this.prepareGroupTask = prepareGroupTask;
+	}
+	//30737 - end
 
+	
 
 }
