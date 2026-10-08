@@ -8003,6 +8003,43 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	// 29661 -end-
+	
+	// 29661 && 41511 -start-
+	/**
+	 * check loa viewable for ep awarded experience.
+	 * 
+	 * @param prpExp
+	 * @return true/false.
+	 */
+	public boolean loaViewCheck(ScQtPRPExperience prpExp) {
+		if (null == prpExp || null == prpExp.getSourceType()) {
+			return Boolean.FALSE;
+		}
+
+		return SourcingConstants.SOURECE_TYPE_QT_ID.equals(prpExp
+				.getSourceType().getParameterId())
+				&& isQuotationLoa(prpExp.getScLoa());
+	}
+	// 29661 && 41511 -end-
+
+	// 29661 && 41511 -start-
+	/**
+	 * loa raised from a quotation and viewable.
+	 * 
+	 * @param scLoa
+	 * @return true/false.
+	 */
+	private boolean isQuotationLoa(ScLoa scLoa) {
+		if (null == scLoa || null == scLoa.getLoaId()
+				|| null == scLoa.getScLoiLoa()) {
+			return Boolean.FALSE;
+		}
+
+		return ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa()
+				.getDocType());
+	}
+
+	// 29661 && 41511 -end-
 
 	// 29661 -start-
 	/**
