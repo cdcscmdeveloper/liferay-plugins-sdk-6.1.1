@@ -4786,6 +4786,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 					this.getManagedBean().setSpecMasterList(masterList);
 				}
 				// #25138-end
+				templateSpecBean.setWeightage35384WIP(this.getManagedBean().isWeightage35384WIP()); //#38151 pass WIP so getTemplateMaster keeps old calculation (no divide)
 				specBB.retrieveTemplateSpecMaster(templateSpecBean);
 				//#29187 Start Vinod
 				for (TplSpecAnswer answer : specBB.getManagedBean().getTemplateSpecBean().getSpecAnswerList()) {
