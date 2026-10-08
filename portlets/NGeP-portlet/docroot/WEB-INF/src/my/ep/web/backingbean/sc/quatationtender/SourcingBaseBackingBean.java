@@ -6332,7 +6332,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 			for (String s : stateCodeList) {
 				List<Object[]> pjtcode = addressSO.getSabahSarawakPTJ(scQt.getOrgProfileId(), s);
-
 				if (pjtcode != null && !pjtcode.isEmpty()) {
 					isSbhOrSrwk = true;
 					break;
