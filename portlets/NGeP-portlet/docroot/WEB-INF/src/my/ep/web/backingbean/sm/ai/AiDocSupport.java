@@ -523,8 +523,9 @@ public final class AiDocSupport {
 
 					if (entityId.startsWith("employee-")) {
 						AiEpfResultDTO.AiEmployeeDTO emp = toEmployee(properties);
-						// a row the AI could not read a name or IC/passport for is dropped
-						if (StringUtils.isNotBlank(emp.getEmployeeName()) && StringUtils.isNotBlank(emp.getIdNo())) {
+						// a row the AI could not read a name, IC/passport or EPF No. for is dropped
+						if (StringUtils.isNotBlank(emp.getEmployeeName()) && StringUtils.isNotBlank(emp.getIdNo())
+								&& StringUtils.isNotBlank(emp.getKwspNumber())) {
 							employees.add(emp);
 						}
 					} else if (entityId.startsWith("employer-")) {
