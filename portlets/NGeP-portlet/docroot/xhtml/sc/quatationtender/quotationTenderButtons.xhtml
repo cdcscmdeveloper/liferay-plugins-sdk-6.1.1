@@ -294,6 +294,33 @@
 		</div>
 	</p:dialog>
 	<!-- #25635 -end- -->	
+	
+	<ui:remove>#34718 - Start</ui:remove>
+	<p:dialog id="submissionConfirmId" widgetVar="submissionConfirmPopUp"
+		header="#{lbl['lbl.sc.approval.confirm']}" resizable="false"
+		width="30%" height="100" closable="false">
+		<table>
+			<tr>
+				<td align="center"><p:outputLabel
+						value="#{lbl['lbl.sc.approval.dialog.confirm']}" /></td>
+			</tr>
+		</table>
+		<p:spacer height="1" />
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}" 
+				onclick="submissionConfirmPopUp.hide(); blockWidget.show();"
+				oncomplete="blockWidget.hide();"
+				 partialSubmit="true" process="@form" update="@form" 
+				action="#{qTDetailBB.updateBpmTask(bpAction)}">
+				<ui:remove>start 9019 - Reopen #note-289</ui:remove>
+				<f:param name="skipsubmitvalidation" value="0" />
+			</p:commandButton>    
+				<ui:remove>end 9019 - Reopen #note-289</ui:remove>
+			<p:commandButton value="#{lbl['lbl.btn.no']}" 
+				onclick="submissionConfirmPopUp.hide();" type="button" partialSubmit="true"  process="@this"/>
+		</div>
+	</p:dialog>
+	<ui:remove>#34718 - End</ui:remove>
 		<p:dialog id="cancelQTDlg" widgetVar="cancelQTDlg"
 			header="#{lbl['lbl.sc.cancel.confirm']}" resizable="false"
 			width="30%" height="100" closable="false">
