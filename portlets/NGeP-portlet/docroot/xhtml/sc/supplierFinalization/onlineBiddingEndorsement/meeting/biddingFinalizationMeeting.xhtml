@@ -6,36 +6,80 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<table style="border: 0px;width:100%;">
-		<tr>
-			<td width="20%" class="sidemenutd" valign="top">
-				<p:tabMenu styleClass="sidemenu"
-					activeIndex="#{suppFinalBiddingBackingBean.managedBean.meetingActiveIndex}">
-					
-					<p:menuitem value="#{lbl['lbl.sc.meeting.details']}"
-						action="#{suppFinalBiddingBackingBean.navigateToMeetingDtls}"
-						process="@form" update="@form" />
-					<p:menuitem value="#{suppFinalBiddingBackingBean.managedBean.committeeTabLabel}"
-						action="#{suppFinalBiddingBackingBean.navigateToCommitteeDtls}"
-						process="@form" update="@form" />
-					<p:menuitem value="#{lbl['lbl.sc.join.in']}"
-						action="#{suppFinalBiddingBackingBean.navigateToMeetingAttendanceDtls}"
-						process="@form" update="@form" />
-				</p:tabMenu>
-			</td>
-			
-			<td style="width:80%;">
-				<c:if test="#{suppFinalBiddingBackingBean.managedBean.meetingActiveIndex eq '0'}">
-					<ui:include src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/meeting/meetingDtls.xhtml"/>
-				</c:if> 
-				<c:if test="#{suppFinalBiddingBackingBean.managedBean.meetingActiveIndex eq '1'}">
-					<ui:include src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/meeting/committeeDtls.xhtml"/>
-				</c:if> 
-				<c:if test="#{suppFinalBiddingBackingBean.managedBean.meetingActiveIndex eq '2'}">
-					<ui:include src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/meeting/meetingAttendanceDtls.xhtml"/>
-				</c:if> 
-			</td>
-		</tr>
+	<table style="border: 0px; width: 100%;">
+		<ui:remove>
+		#27502 - New DO MOF Role and Process - Start
+	</ui:remove>
+		<c:if
+			test="#{!isMofFinalization}">
+			<ui:remove>
+		#27502 - New DO MOF Role and Process - End
+	</ui:remove>
+			<tr>
+				<td width="20%" class="sidemenutd" valign="top"><p:tabMenu
+						styleClass="sidemenu"
+						activeIndex="#{suppFinalBiddingBackingBean.managedBean.meetingActiveIndex}">
+
+						<p:menuitem value="#{lbl['lbl.sc.meeting.details']}"
+							action="#{suppFinalBiddingBackingBean.navigateToMeetingDtls}"
+							process="@form" update="@form" />
+						<p:menuitem
+							value="#{suppFinalBiddingBackingBean.managedBean.committeeTabLabel}"
+							action="#{suppFinalBiddingBackingBean.navigateToCommitteeDtls}"
+							process="@form" update="@form" />
+						<p:menuitem value="#{lbl['lbl.sc.join.in']}"
+							action="#{suppFinalBiddingBackingBean.navigateToMeetingAttendanceDtls}"
+							process="@form" update="@form" />
+					</p:tabMenu></td>
+
+				<td style="width: 80%;"><c:if
+						test="#{suppFinalBiddingBackingBean.managedBean.meetingActiveIndex eq '0'}">
+						<ui:include
+							src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/meeting/meetingDtls.xhtml" />
+					</c:if> <c:if
+						test="#{suppFinalBiddingBackingBean.managedBean.meetingActiveIndex eq '1'}">
+						<ui:include
+							src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/meeting/committeeDtls.xhtml" />
+					</c:if> <c:if
+						test="#{suppFinalBiddingBackingBean.managedBean.meetingActiveIndex eq '2'}">
+						<ui:include
+							src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/meeting/meetingAttendanceDtls.xhtml" />
+					</c:if></td>
+			</tr>
+
+			<ui:remove>
+		#27502 - New DO MOF Role and Process - Start
+	</ui:remove>
+		</c:if>
+		<c:if
+			test="#{isMofFinalization}">
+			<tr>
+				<td width="20%" class="sidemenutd" valign="top"><p:tabMenu
+						styleClass="sidemenu"
+						activeIndex="#{suppFinalBiddingBackingBean.managedBean.meetingActiveIndex}">
+
+						<p:menuitem value="#{lbl['lbl.sc.meeting.details']}"
+							action="#{suppFinalBiddingBackingBean.navigateToMeetingDtls}"
+							process="@form" update="@form" />
+						<p:menuitem value="#{lbl['lbl.sc.mof']}"
+							action="#{suppFinalBiddingBackingBean.retrieveCommitteeMOFDtls}"
+							process="@form" update="@form" />
+					</p:tabMenu></td>
+
+				<td style="width: 80%;" valign="top"><c:if
+						test="#{suppFinalBiddingBackingBean.managedBean.meetingActiveIndex eq '0'}">
+						<ui:include
+							src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/meeting/meetingDtls.xhtml"></ui:include>
+					</c:if> <c:if
+						test="#{suppFinalBiddingBackingBean.managedBean.meetingActiveIndex eq '1'}">
+						<ui:include
+							src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/meeting/ministryOfFinance.xhtml"></ui:include>
+					</c:if></td>
+			</tr>
+		</c:if>
+		<ui:remove>
+		#27502 - New DO MOF Role and Process - End
+	</ui:remove>
 	</table>
 
 </ui:composition>
