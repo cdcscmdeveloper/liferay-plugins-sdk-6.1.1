@@ -245,7 +245,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 			if(assignedSDO.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED){
 				reqDTO.setPreviousAssignee(userId);
 				reqDTO.setCurrentSdoUserId(assignedSDO.getUserId());
-				reqDTO.setCurrentSdoUserName(assignedSDO.getUserName());	
+				reqDTO.setCurrentSdoUserName(assignedSDO.getUserName());
 			}
 			
 			List<PmUserOrg> userOrgLs =PmCommonUtil.retrieveActiveOrg(Long.valueOf(userId));

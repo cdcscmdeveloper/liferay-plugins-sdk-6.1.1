@@ -12554,6 +12554,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							}
 							
 							// #33694 - End
+						}
 					}else{
 						successMsg = SmCommonUtil.getOutputMsgBundle(
 								MessageConst.INFO_700014,

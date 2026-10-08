@@ -723,7 +723,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			
 			// #33694 - Start
 			PmUser assignedPO = PmCommonUtil.retrieveUserByLoginId(loginId);
-			reqDTO.setCurrentAssignee(loginId);
+			reqDTO.setCurrentAssignee(assignedPO.getUserId().toString());
 			List<PmUserOrg> userOrgLs = PmCommonUtil.retrieveActiveOrg(assignedPO.getUserId());
 			for (PmUserOrg pmUserOrg : userOrgLs) {
 				reqDTO.setCurrentOrgName(pmUserOrg.getPmOrgProfile().getPmOrgValidity().getOrgName());
