@@ -240,6 +240,7 @@ public class TemplateSpecBackingBean extends
 			}
 			reqDTO.setScQt(this.getManagedBean().getScQt());
 			reqDTO.setDocType(this.getManagedBean().getDocType());
+			reqDTO.setWeightage35384WIP(templateSpecBean.isWeightage35384WIP()); //#38151 WIP from caller (e.g. Evaluation): no divide of manual score
 			TemplateSpecResDTO resDTO = templateSpecSO
 					.getTemplateMaster(reqDTO);
 			if (resDTO.isSuccessful()) {
