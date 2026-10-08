@@ -467,7 +467,7 @@ public class RuleCatalogueBackingBean extends
 			getManagedBean().setOriginalConfigRuleDescList(list);
 			getManagedBean().setOriginalConfigRuleValueList(getManagedBean().getSelectedRuleDescType().getRuleType().getConfigRuleValues());
 			//#36738 End
-			} finally {
+		} finally {
 			cgeneralSO = null;
 		}
 	}
@@ -5930,6 +5930,11 @@ public class RuleCatalogueBackingBean extends
 	}
 	
 	/* 27827 - START */
+	/**
+	 * Adds the selected PTJ configuration rule values to the current rule.
+	 *
+	 * @throws EpException if no PTJ is selected or if the selected PTJ has already been added
+	 */
 	public void addPTJCRValues(){
 		log.info("addPTJCRValues");
 		
