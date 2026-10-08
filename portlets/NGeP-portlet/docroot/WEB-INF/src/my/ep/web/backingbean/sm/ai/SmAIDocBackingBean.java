@@ -803,10 +803,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				jsonWrappers.add(result);
 			}
 		}
-		boolean hasError = showErrorMessage(TYPE_TENANCY, jsonWrappers);
-		if (!hasError){
-			validateTenancy(appl);
-		}
+		showErrorMessage(TYPE_TENANCY, jsonWrappers);
+		validateTenancy(appl);
 	}
 	
 	public static void validateBank(SmAppl appl){
@@ -882,7 +880,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	private static void validateTenancyFiles(SmAppl appl, List<AIApiResponse> responses, SmFacility hqFacility){
 		for (AIApiResponse response : responses){
 			if (AiDocParser.isUnavailable(response)){
-				markProjectedFile(appl, response, AiDocParser.unavailableLabel(), 2);
+				markProjectedFile(appl, response, AiDocParser.unavailableLabel(), 3);
 				continue;
 			}
 			JSONArray fields = AiDocParser.parseFields(response.getJsonResponse());
@@ -1285,7 +1283,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		if (AiDocParser.isUnavailable(response)){
 			docFile.setMappedFieldAI(AiDocParser.unavailableLabel());
-			docFile.setValidatedAI(2);
+			docFile.setValidatedAI(3);
 			return;
 		}
 		AiEpfResultDTO ee = validatedEpf(appl, response.getApiResponseId(),

@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.ct.amendment;
 
@@ -1896,10 +1896,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				
 				ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemList());
 				ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemServiceList());
-
-			}
-			// for Fixing Enhancement #20997 and #Bug #28339 - End	
-			log.info("Check Putra CtContractItems :"+ctBackingBean.getManagedBean().getContractVer().getCtContractItems().size());
+				// Start Fix - #41435
+				if (getManagedBean().getSelectedItem() != null && getManagedBean().getSelectedItem().getCtItemPrices() != null) {
+					for (CtItemPrice itemPrice : getManagedBean().getSelectedItem().getCtItemPrices()) {
+						 BigDecimal unitPrice = itemPrice.getUnitPrice();
+						if (unitPrice != null && unitPrice.scale() > CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT) {
+							unitPrice = unitPrice.setScale(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT,RoundingMode.HALF_UP);
+							itemPrice.setUnitPrice(unitPrice);
+						}
+					}
+				}
+				// End Fix - #41435
+		}
+		// for Fixing Enhancement #20997 and #Bug #28339 - End	
+		log.info("Check Putra CtContractItems :"+ctBackingBean.getManagedBean().getContractVer().getCtContractItems().size());
 
 			// Change Code #20997 End
 			
