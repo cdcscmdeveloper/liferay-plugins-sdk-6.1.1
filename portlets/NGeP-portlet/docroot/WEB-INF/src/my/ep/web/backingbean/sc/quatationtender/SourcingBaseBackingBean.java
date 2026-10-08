@@ -137,6 +137,7 @@ import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.common.PmAppVersion; //#38151
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
@@ -2173,28 +2174,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		if(isDirectLoa) {
 			//#24540 - start -
 			boolean setBondReq = true;
-			
-			if (null != scLoa.getQtType() 
-					&& null != scLoa.getQtType().getParameterId() 
-					&& scLoa.getQtType().getParameterCode().equals(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7)  
-					&& null != scLoa.getScQt() 
-					&& null != scLoa.getScQt().getFulfilmentType()
-					&& null != scLoa.getScQt().getFulfilmentType().getParameterId()
-					&& scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF)  
-					&& null != scLoa.getContractType() 
-					&& null != scLoa.getContractType().getParameterId()
-					&& scLoa.getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-				setBondReq = false;
-			}
-			
-			if (null != scLoa.getQtType() 
-					&& null != scLoa.getQtType().getParameterId() 
-					&& scLoa.getQtType().getParameterCode().equals(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7)  
-					&& null != scLoa.getScQt() 
-					&& null != scLoa.getScQt().getFulfilmentType()
-					&& null != scLoa.getScQt().getFulfilmentType().getParameterId()
-					&& (scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
-					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN))) {
+			//#25726 - Start
+				
+			boolean isQTtypePK7 = null != scLoa.getQtType() && null != scLoa.getQtType().getParameterId()
+					&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(scLoa.getQtType().getParameterCode());
+		
+			if (isQTtypePK7 ) {
+		
+			//#25726 - End
+
 				setBondReq = false;
 			}
 			
@@ -7620,4 +7608,49 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 	// #35320 - END
+
+	// #38151 Start
+	/**
+	 * Shared WIP (weightage 35384) check for Evaluation, LOI, Supplier Finalization
+	 * and Consolidation Report.
+	 * 
+	 * @return true when the QT follows the old (WIP) weightage calculation
+	 */
+	protected boolean isWeightage35384WIP(ScQt qt) {
+		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTDetailSO.class);
+		Date publishDate = qt.getPublishDate();
+		Date createdDate = qt.getCreatedDate();
+
+		// #38151 4ser max score setting: < 7 (no Technical By Item) = WIP candidate
+		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+		EvaluationReqDTO req4SerDTO = new EvaluationReqDTO();
+		req4SerDTO.setQtId(qt.getQtId());
+		int wipstatus = evaluationSO.checkWipScoreSettingMax(req4SerDTO);
+		boolean checkStatusWip = isWipScoreFlagSaved(qt.getQtId());
+
+		QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+		qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
+		qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
+		PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
+		Date effDate = appVerDtls.getEffDate();
+
+		if (null == publishDate) {
+			return createdDate.before(new Timestamp(effDate.getTime()));
+		}
+		if (publishDate.before(effDate)) {
+			return true;
+		}
+		return publishDate.after(effDate) && wipstatus < SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM
+				&& !checkStatusWip;
+	}
+
+	// #38151 true = score setting saved with OVERALL_OTHER_FLAG (non-WIP)
+	private boolean isWipScoreFlagSaved(Long qtId) {
+		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTSpecSO.class);
+		return specSo.checkWipScoreFlag(qtId);
+	}
+	// #38151 End
 }
