@@ -5497,6 +5497,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 											});
 									Map<String, String> map = null;
 									for (TplSpecQuestion q : specMaster.getTplSpecQuestions()) {
+										
+										//#26059 - Start
+										CommonUtils commonUtils = new CommonUtils();
+										q.setClItem(commonUtils.removeItemNameNA(q.getClItem()));
+										//#26059 - End
+										
 										List<Map<String, String>> listPRQuestion = new ArrayList<>();
 										if (q.getSpecQuestionId().equals(
 												sstItem.getScRequestItem().getTplSpecQuestion().getSpecQuestionId())
@@ -5605,6 +5611,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 									for (TplSpecQuestion q : specMaster.getTplSpecQuestions()) {
 										List<Map<String, String>> listPRQuestion = new ArrayList<>();
 										map = new HashMap<>();
+										
+										//#26059 - Start
+										CommonUtils commonUtils = new CommonUtils();
+										q.setClItem(commonUtils.removeItemNameNA(q.getClItem()));
+										//#26059 - End
+										
 										if (q.getQuestionType().equalsIgnoreCase(
 												ParameterConst.TPL_SPEC_QUESTION_TYPE_ITEM)) {
 											if (q.getSpecQuestionId()
