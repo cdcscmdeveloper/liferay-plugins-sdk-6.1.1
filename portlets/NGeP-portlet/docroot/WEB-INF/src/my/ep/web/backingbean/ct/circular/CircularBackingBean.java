@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.ct.circular;
 
@@ -753,6 +753,31 @@ public class CircularBackingBean extends CircularBaseBackingBean<CircularManaged
 				|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value());
 	}
 	//#35506 - End
+
+	//#30737 - Start
+	@Override
+	protected CtCircularVer getCircularVer() {
+		String docType = getManagedBean().getSearchCircularDocType();
+		if (docType == null) {
+			return null;
+		}
+		if (docType.equals(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR)) {
+			return getManagedBean().getCircularCqCentralContractList();
+		} else if (docType.equals(ParameterConst.DOCTYPE_PANEL_CIRCULAR)
+				|| docType.equals(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY)) {
+			String procurementModeCode = getManagedBean().getProcurementModeCode();
+			if (procurementModeCode != null) {
+				if (procurementModeCode.equals(ParameterConst.PROCUREMENT_MODE_QUOTATION)
+						|| procurementModeCode.equals(ParameterConst.PROCUREMENT_MODE_TENDER)) {
+					return getManagedBean().getCircularPqQtList();
+				} else if (procurementModeCode.equals(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+					return getManagedBean().getCircularPqDirectPurchaseList();
+				}
+			}
+		}
+		return null;
+	}
+	//#30737 - End
 	
 	//#37620,#34367 - Start
 	/**

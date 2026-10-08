@@ -1,5 +1,5 @@
 /**
- * Copyright ï¿½ 2013 Archisoft. All rights reserved.
+ * Copyright © 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.managedbean.ct.amendment;
 
@@ -191,6 +191,10 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	
 	//24336
 	private Date initialNewAmtEffDate;
+	
+	//30737 - start
+	private Long userStatusCheckResult;
+	//30737 - end
 	
 	public void reassignValue(boolean value) 
 	{
@@ -1718,4 +1722,19 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	}
 	//#24336 - End
 	
+	
+	//30737 - start
+	/**
+	 * @return the userStatusCheckResult
+	 */
+	public Long getUserStatusCheckResult() {
+		return userStatusCheckResult;
+	}
+	/**
+	 * @param userStatusCheckResult the userStatusCheckResult to set
+	 */
+	public void setUserStatusCheckResult(Long userStatusCheckResult) {
+		this.userStatusCheckResult = userStatusCheckResult;
+	}
+	//30737 - end
 }
