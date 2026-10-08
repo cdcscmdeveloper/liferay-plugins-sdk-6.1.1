@@ -203,7 +203,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			} else {
 				getManagedBean().setReasonApplicabilityDuplicate(false); // 39618
 			}
-
 		}
 	}
 	
@@ -255,7 +254,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			this.getManagedBean().setSuppComCheck(Boolean.FALSE);
 			this.getManagedBean().setSuppTypeCheck(Boolean.FALSE);
 			this.getManagedBean().setReasonApplicabilityDuplicate(Boolean.FALSE); //39618 
-			
 	
 			if(id!=null && id>0){
 				loadRejectReason(id);
@@ -2495,11 +2493,23 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					// maintained: add new supplier item
 					ensureTargetListExists();
 					this.getManagedBean().getSelectedReason().addPmReasonRestr(tempReason);
+					// 28962 - audit start
+					if (this.getManagedBean().getAuditAddSupplAcctType() == null) {
+						this.getManagedBean().setAuditAddSupplAcctType(new ArrayList<PmReasonRestr>());
+					}
+					this.getManagedBean().getAuditAddSupplAcctType().add(tempReason);
+					// 28962 - audit end
 				}
 			} else {
 				if (hasSuppAccTypeKey(tempReason)) {
 					log.info("update supplier account type");
 					List<PmReasonRestr> target = getManagedBean().getSelectedReason().getPmReasonRestr();
+					// 28962 - audit start
+					if (this.getManagedBean().getAuditUpdateSupplAcctType() == null) {
+						this.getManagedBean().setAuditUpdateSupplAcctType(new ArrayList<PmReasonRestr>());
+					}
+					this.getManagedBean().getAuditUpdateSupplAcctType().add(tempReason);
+					// 28962 - audit end
 					updateExtById(target, tempReason);
 				}
 			}
@@ -2513,6 +2523,12 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 				if (hasValidAgencyKey(agency)) {
 					ensureTargetListExists();
 					this.getManagedBean().getSelectedReason().addPmReasonRestr(agency);
+					// 28962 - audit start
+					if (this.getManagedBean().getAuditAddAgency() == null) {
+						this.getManagedBean().setAuditAddAgency(new ArrayList<PmReasonRestr>());
+					}
+					this.getManagedBean().getAuditAddAgency().add(agency);
+					// 28962 - audit end
 				}
 			}
 		}
@@ -2530,6 +2546,13 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					List<PmReasonRestr> target = getManagedBean().getSelectedReason().getPmReasonRestr();
 					updateExtById(target, tempReason);
 				}
+				
+				// 28962 - audit start
+				if (this.getManagedBean().getAuditDeleteSupplAcctType() == null) {
+					this.getManagedBean().setAuditDeleteSupplAcctType(new ArrayList<PmReasonRestr>());
+				}
+				this.getManagedBean().getAuditDeleteSupplAcctType().add(tempReason);
+				// 28962 - audit end
 			}
 		}
 	}
@@ -2546,6 +2569,12 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					List<PmReasonRestr> target = getManagedBean().getSelectedReason().getPmReasonRestr();
 					updateExtById(target, delAgency);
 				}
+				// 28962 - audit start
+				if (this.getManagedBean().getAuditDeleteAgency() == null) {
+					this.getManagedBean().setAuditDeleteAgency(new ArrayList<PmReasonRestr>());
+				}
+				this.getManagedBean().getAuditDeleteAgency().add(delAgency);
+				// 28962 - audit end
 			}
 		}
 	}
