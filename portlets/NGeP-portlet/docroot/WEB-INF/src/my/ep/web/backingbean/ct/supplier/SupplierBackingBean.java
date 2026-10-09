@@ -1552,7 +1552,6 @@ public void selectFinancialAcc(){
 	 * contract owner organization profile when the loa's administrator 
 	 * is invalid.
 	 */
-	@SuppressWarnings("unchecked")
 	private void getContractAdminlist() {
 		IUserSO userSO = null;
 		UserReqDTO userReqDTO = null;
