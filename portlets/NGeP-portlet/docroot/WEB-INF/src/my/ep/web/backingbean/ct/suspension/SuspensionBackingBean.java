@@ -26,6 +26,7 @@ import my.ep.biz.service.ct.suspension.IContractSuspensionSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.InactiveUserConst; //#30737
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
@@ -40,6 +41,7 @@ import my.ep.dto.ct.audit.AuditContractReqDTO; //35506
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
+import my.ep.dto.pm.authorization.user.UserStatusCheckDTO; // #30737
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.suspension.CTContractSuspensionDataType;
 import my.ep.persistence.entity.ct.CtActor;
@@ -88,11 +90,27 @@ import com.liferay.portal.util.PortalUtil;
 @RequestScoped
 public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionManagedBean> {
 
-	private static final long serialVersionUID = 1L;
 	private ContractBackingBean ctBB = null;
 	private static Logger log = Logger.getLogger(SuspensionBackingBean.class);
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
 
+	//#30737 - Start 
+    @Override
+    protected List<PmUser> getSelectedApprovers() {
+        return getManagedBean().getApproverModel().getTarget();
+    }
+    
+    @Override
+    protected CtContractVer getContractVer() {
+    	return getManagedBean().getContractVer();
+    }
+    
+    @Override
+    protected String getTaskName() {
+    	return getManagedBean().getTaskName();
+    }
+    //#30737 - End
+    
 	private String confirmationContentMsg;//34442 
 
 	/**
@@ -533,7 +551,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 						getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 			}
 			
-			validateSuspensionDetails(outcome);		
+			validateSuspensionDetails(outcome);	
 			contractSuspensionSO = (IContractSuspensionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSuspensionSO.class);
 			//#39038 - Start
 			// Step 1: Ambil updateItemMap yang menyimpan perubahan dari semua halaman
@@ -600,6 +618,12 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			if(this.getManagedBean().getPmDigiSign() !=null){
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}
+			
+			//#30737 - start
+			reqDTO.setScLoa(getManagedBean().getContractVer().getCtContract().getLoa());
+			reqDTO.setUserStatusCheckResult(getManagedBean().getUserStatusCheckResult());
+	        //#30737 - end 
+			
 			resDTO = contractSuspensionSO.saveContractSuspensionDetails(reqDTO);
 			if(resDTO.isSuccessful()) {
 				log.debug("Record saved successfully");
@@ -717,8 +741,37 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 				&& getManagedBean().getApproverModel().getTarget().size()==0) {
 			throw new EpException(MessageConst.ERROR_750010); 
 		}
-	}
+		
+		//#30737 - Start
+		CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
+		
+		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
+		    List<UserStatusCheckDTO> userStatusResults = 
+	        		checkUserStatus(determineContractApproverRole(), getSelectedApprovers(), getManagedBean().getContractVer().getDocType(), null);
+	        handleInactiveUserValidation(userStatusResults);
+		}
+		
+		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
+		    List<UserStatusCheckDTO> userStatusResults =
+		    		getContractAdminUserStatus(
+		    				ctContractVer.getContractVerId(),
+		    				ctContractVer.getDocType());
 
+		    if (userStatusResults != null && !userStatusResults.isEmpty()) {
+
+		        UserStatusCheckDTO userStatusResult = userStatusResults.get(0);
+	            Long userStatus = userStatusResult.getStatus();
+	            getManagedBean().setUserStatusCheckResult(userStatus);
+
+	            if (InactiveUserConst.INACTIVE_USER_5.equals(userStatus)) {
+	                handleInactiveUserValidation(userStatusResults);
+	            }
+		    }
+		}
+		//#30737 - End
+		
+	}
+	
 	/**
 	 * Method to set user role as per user login
 	 * User role used in BPM to identify the task
@@ -1106,4 +1159,5 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	    this.confirmationContentMsg = confirmationContentMsg;
 	}
 	//34442 - end
+	
 }

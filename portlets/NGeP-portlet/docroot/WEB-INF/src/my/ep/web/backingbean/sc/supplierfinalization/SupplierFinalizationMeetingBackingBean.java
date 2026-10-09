@@ -2414,19 +2414,27 @@ if (CollectionUtils.isNotEmpty(
 		IQTAuditTrailSO qtAuditTrailSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailSO.class);
 		IAuditTrailSO auditTrailsSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.AUDIT, IAuditTrailSO.class);		
+				ModuleCodeConst.AUDIT, IAuditTrailSO.class);
+		// #35500 bug fix 2nd Oct Start
+		IQTDetailSO qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION,IQTDetailSO.class);
+		// #35500 bug fix 2nd Oct End
 
 		if (auditTrailsSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID) && MapUtils.isNotEmpty(committeeModifiedRole)){
 			ArrayList<AuditTrailReqDTO> auditReqList = new ArrayList<>();
 			AuditTrailResDTO auditResDTO = new AuditTrailResDTO();
-			
+			//#35500 bug fix 2nd Oct Start
+			Long docId = this.getManagedBean().getScQt().getQtId();
+			String docNo = this.getManagedBean().getScQt().getQtNo();			
+			Long userId = getUserIdSessionFromLoginId();
+			ScWorkFlowStatus scWorkFlowStatus = qtDetailSO.retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION, docId, docNo, userId);
+
 			auditResDTO.setDocTypeId(this.getManagedBean().getScQt().getProcurementMode().getParameterId());
-			auditResDTO.setDocId(this.getManagedBean().getScQt().getQtId());
-			auditResDTO.setDocNo(this.getManagedBean().getScQt().getQtNo());
-			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
-			auditResDTO.setStatusId(this.getManagedBean().getCurrentStatusId() != null ?
-					this.getManagedBean().getCurrentStatusId() : 
-					this.getManagedBean().getScQt().getCurrentWorkFlowStatus().getPmStatus().getStatusId());
+			auditResDTO.setDocId(docId);
+			auditResDTO.setDocNo(docNo);
+			auditResDTO.setCreatedBy(userId);
+			auditResDTO.setStatusId(scWorkFlowStatus.getPmStatus().getStatusId());
+			//#35500 bug fix 2nd Oct End
 			auditResDTO.setRoleCode(checkRolesForAuditTrail());
 			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_QC);
 			auditResDTO.setActionType(QTAuditConstant.AU_TYPE_MODIFY);

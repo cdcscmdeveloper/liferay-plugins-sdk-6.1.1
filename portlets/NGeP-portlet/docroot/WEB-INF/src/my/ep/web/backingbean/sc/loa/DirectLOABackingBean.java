@@ -6130,19 +6130,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			
 			// 33222 - start
 			String taskName = this.getManagedBean().getTaskName();
-			if (Arrays.asList(SCProcessNameConst.APPROVE_MANUAL_LOA, SCProcessNameConst.ACCEPT_MANUAL_LOA).contains(
-					taskName)
-					&& Arrays.asList(BpmOutcomeConst.BPM_ACCEPT, BpmOutcomeConst.BPM_REVISE).contains(outcome)) {
-				try {
-					String deskofficerUserId = validateDeskofficerProfileRoleStatus(this.getManagedBean().getScQt(),
-							true);
-					reqDTO.setReplacementDeskofficer(deskofficerUserId);
-				} catch (Exception e) {
-					if (!BpmOutcomeConst.BPM_ACCEPT.equals(outcome)) {
-						throw e;
-					}
-				}
-
+			if (SCProcessNameConst.APPROVE_MANUAL_LOA.equals(taskName) && BpmOutcomeConst.BPM_REVISE.equals(outcome)) {
+				String deskofficerUserId = validateDeskofficerProfileRoleStatus(this.getManagedBean().getScQt(), true);
+				reqDTO.setReplacementDeskofficer(deskofficerUserId);
 			} else if (Arrays.asList(SCProcessNameConst.VERIFY_MANUAL_LOA, SCProcessNameConst.VERIFY_LOA).contains(
 					taskName)) {
 				validateContractAdminProfileRoleStatus(scLoa);
@@ -6184,6 +6174,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				scLoa = resDTO.getLoa();
 
 				String messageCode = null;
+                // 33222 - start
+                List<String> params = new ArrayList<>();
+                params.add(this.getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD));
+                params.add(scLoa.getLoaNo());
+                // 33222 - end
 				if (QTStatusConst.LOA_PENDING_APPROVAL.equals(statusId)
 						|| QTStatusConst.LOA_PENDING_REVISION_APPROVAL.equals(statusId)) {
 					if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
@@ -6200,6 +6195,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						insertSupplierCategoryCodeToScQtCategory(getManagedBean().getAddedCategoryList());
 						// 29661 - end
 						messageCode = MessageConst.INFO_700009;
+						// 33222 - start
+	                    if (null != resDTO.getDeskofficerName()) {
+	                            messageCode = MessageConst.INFO_700128;
+	                            params.add(resDTO.getDeskofficerName());
+	                    }
+	                    // 33222 - end
 					}
 
 				} else if (QTStatusConst.LOA_PENDING_REVISION.equals(statusId)) {
@@ -6225,8 +6226,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					//}
 						//#29164 CR 26474: Static Code Analysis End
 				}
-				successMessage(messageCode, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD,
-						scLoa.getLoaNo(), Boolean.TRUE);
+				 // 33222 - start
+                String[] paramArr = params.toArray(new String[params.size()]);
+                successMessage(messageCode, paramArr, Boolean.TRUE);
+                // 33222 - end
 			}
 
 		} finally {

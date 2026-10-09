@@ -98,7 +98,8 @@
 		  <f:event listener="#{amendmentBackingBean.preRenderView}" type="preRenderView" />
 
 		<h:panelGroup id="panelHeaderException">
-		  	 <p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{amendmentBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info, warn" />
+		  	 <p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{amendmentBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info, warn" 
+		  	 	escape="false" /> <!-- #30737 -->
 			 <ui:include src="amendmentButtons.xhtml" />
 			 <!-- Enhancement 15851 - shaqimi start -->
 			 <ui:fragment rendered="#{!ctBackingBean.managedBean.viewSCL}">
