@@ -178,7 +178,7 @@
 				<p:commandLink oncomplete="#{cc.attrs.uploadDialogId}AI.show();return false;"
 					process="@this" partialSubmit="true"
 					rendered="#{cc.attrs.hasAI and backingBean.isAiUploadDocRow(table.pmDocument)}"
-					update="@([id$=#{cc.attrs.uploadDialogId}])"
+					update="@([id$=#{cc.attrs.uploadDialogId}AI])"
 					action="#{backingBean.assignSelectedSupportDocIndex(table,index)}">
 					<p:graphicImage value="/css/images/ai/upload.png"
 						style="margin-right:2px;" />
