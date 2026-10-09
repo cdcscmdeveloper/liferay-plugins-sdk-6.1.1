@@ -6828,7 +6828,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							validCat = true;
 						} else {
 							// #RUU
-							// Removed code block
+							// Removed code
 //							throw new EpException(MessageConst.ERROR_722563);
 							validCat = true;
 						}
@@ -20479,11 +20479,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			getManagedBean().getPaymentDetailsVOList().add(regPaymentVO);
 		}
 
-		SmPaymentDetailsVO proPaymentVO = new SmPaymentDetailsVO();
-		proPaymentVO.setDetails(proDetails);
-		proPaymentVO.setPrice(SmRuleHelper.getInstance().getProcessingFee());
-		proPaymentVO.setTotalAmount(proPaymentVO.getPrice());
-		getManagedBean().getPaymentDetailsVOList().add(proPaymentVO);
+		if (!getManagedBean().getSmAppl().isResubmit()) {	
+			SmPaymentDetailsVO proPaymentVO = new SmPaymentDetailsVO();
+			proPaymentVO.setDetails(proDetails);
+			proPaymentVO.setPrice(SmRuleHelper.getInstance().getProcessingFee());
+			proPaymentVO.setTotalAmount(proPaymentVO.getPrice());
+			getManagedBean().getPaymentDetailsVOList().add(proPaymentVO);
+		}
 		
 		if(getManagedBean().isLateRenewFee()){
 			SmPaymentDetailsVO latePaymentVO = new SmPaymentDetailsVO();
