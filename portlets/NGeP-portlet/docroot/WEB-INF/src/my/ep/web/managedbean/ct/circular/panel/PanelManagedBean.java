@@ -18,6 +18,7 @@ import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.ct.CtAttachment;
+import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.circular.CtCancelCircularReq;
 import my.ep.persistence.entity.ct.circular.CtCircular;
@@ -145,6 +146,10 @@ public class PanelManagedBean extends BaseManagedBean {
 	//#30014 - Start
 	private List<CtPanelCategory> selectedCategoryList;
 	//#30014 - End
+	
+	//#30737 start
+	private Long userStatusCheckResult;
+	//#30737 end
 	
 	/**
 	 * @return the circular
@@ -1117,4 +1122,22 @@ public class PanelManagedBean extends BaseManagedBean {
 		this.circularType = circularType;
 	}
 	//#37620,#34367 - End
+
+	//#30737 - start
+	/**
+	 * @return the userStatusCheckResult
+	 */
+	public Long getUserStatusCheckResult() {
+		return userStatusCheckResult;
+	}
+
+	/**
+	 * @param userStatusCheckResult the userStatusCheckResult to set
+	 */
+	public void setUserStatusCheckResult(Long userStatusCheckResult) {
+		this.userStatusCheckResult = userStatusCheckResult;
+	}
+	//#30737 - end
+	
+	
 }
