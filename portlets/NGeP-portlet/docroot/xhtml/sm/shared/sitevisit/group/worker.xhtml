@@ -1,0 +1,95 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<p:panel header="#{lbl['lbl.sm.worker.employee']} (#{workshopName})" >
+		<p:dataTable value="#{workshop.smSvWorkers}" var="svWorker" 
+			selection="#{workshop.selectedWorkers}"
+			rowKey="#{svWorker}#{workshopId}" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" 
+			id="a#{workshopId}workTbl"
+			listener="#{svoSiteVisitBackingBean.setSelectedWorkers(workshop)}">
+			<p:column selectionMode="multiple" style="width:2%" rendered="#{!viewFlag}" />
+			<p:ajax event="rowSelectCheckbox" update="@parent" 
+				listener="#{svoSiteVisitBackingBean.setSelectedWorkers(workshop)}"/>
+			<p:ajax event="rowUnselectCheckbox" update="@parent" 
+				listener="#{svoSiteVisitBackingBean.setSelectedWorkers(workshop)}"/>
+			<p:ajax event="rowSelect" update="@parent" 
+				listener="#{svoSiteVisitBackingBean.setSelectedWorkers(workshop)}"/>
+	        <p:ajax event="rowUnselect" update="@parent" 
+	        	listener="#{svoSiteVisitBackingBean.setSelectedWorkers(workshop)}"/>
+	        <p:ajax event="toggleSelect" update="@parent" 
+	        	listener="#{svoSiteVisitBackingBean.setSelectedWorkers(workshop)}"/>
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.sm.worker.specialization']}
+				</f:facet>
+				<h:outputText value="#{svWorker.expertise}" style="float: left;white-space: normal;" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.sm.worker.name']}
+				</f:facet>
+				<h:outputText value="#{svWorker.name}" style="float: left;white-space: normal;" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.sm.employee.idtype']}
+				</f:facet>
+				<h:outputText value="#{svoSiteVisitBackingBean.getIdentificationType(svWorker.identificationTypeId)}" 
+					style="float: left;white-space: normal;" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.sm.worker.icno']}
+				</f:facet>
+				<h:outputText value="#{svWorker.identificationNo}" style="float: left;white-space: normal;" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.sm.worker.experience']}
+				</f:facet>
+				<h:outputText value="#{svWorker.workExpYear}" style="float: left;white-space: normal;" >
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				</h:outputText>
+			</p:column>
+			<p:column rendered="#{!viewFlag}">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sm.action']}" />
+				</f:facet>
+				<p:commandLink update=":#{p:component('workerDlg')}" rendered="#{!viewFlag}"
+					actionListener="#{svoSiteVisitBackingBean.managedBean.setWorkshopObject(workshop)}"
+					action="#{svoSiteVisitBackingBean.editWorkshopWorker(svWorker)}" process="@this"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide();workerDlg.show();"
+					partialSubmit="true">
+					<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}"/>
+				</p:commandLink>
+			</p:column>
+		</p:dataTable>		
+		
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.add']}" rendered="#{!viewFlag}"
+				actionListener="#{svoSiteVisitBackingBean.managedBean.setWorkshopObject(workshop)}"
+				action="#{svoSiteVisitBackingBean.addWorkshopWorkerGroup()}"
+				update="@parent,:#{p:component('workerDlg')}" oncomplete="workerDlg.show();"/>
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				id="deleteEmpBtnId#{workshopId}" rendered="#{!viewFlag}" 
+				action="#{svoSiteVisitBackingBean.managedBean.setWorkshopObject(workshop)}"
+				oncomplete="workerDeletePopUp#{workshopId}.show();"
+				disabled="#{empty workshop.selectedWorkers}">
+				<f:param name="disabledValidation" value="true" />
+			</p:commandButton>
+		</div>
+	</p:panel>
+	<ac:confirmationPopup id="workerDeletePopUp#{workshopId}"
+		widget="workerDeletePopUp#{workshopId}"
+		okAction="svoSiteVisitBackingBean.removeWorkshopWorkerGroup()"
+		width="400" height="100"
+		title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirm.delete']}" 
+		update="@([id$=categoryTypeGroupPanel])"/>
+</ui:composition>
