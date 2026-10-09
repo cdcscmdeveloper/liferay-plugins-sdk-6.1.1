@@ -199,15 +199,19 @@
 						</ui:repeat>
 					</c:when>
 					<c:when test="#{qTDetailBB.managedBean.createQt or isQTStatusPendingQtSubmission}">
+						<!-- #25635 -start- -->
 						<p:commandButton value="#{lbl['lbl.btn.submit']}"
 							action="#{qTDetailBB.submitQTDetailsAction}" process="@form"
-							update="@all"
-							onclick="blockWidget.show();"
-							oncomplete="blockWidget.hide();" disabled="#{!qTDetailBB.managedBean.ptjPresent}">
-							<ui:remove>9019 -start</ui:remove>
-							<f:param name="skipsubmitvalidation" value="0" />
-						</p:commandButton>
-							<ui:remove>9019 -end</ui:remove>
+							update="@all" onclick="blockWidget.show();"
+							rendered="#{!isClone1 and !isClone2}"
+							oncomplete="blockWidget.hide();"
+							disabled="#{!qTDetailBB.managedBean.ptjPresent}" />
+
+						<p:commandButton value="#{lbl['lbl.btn.submit']}"
+							onclick="submitConfirmPopUp.show();"
+							update="@([id$=#{submitConfirmId}])" rendered="#{isClone1}"
+							disabled="#{!qTDetailBB.managedBean.ptjPresent}" />
+						<!-- #25635 -end- -->
 					</c:when>
 						<c:otherwise>
 							<!-- 25037 Start -->
