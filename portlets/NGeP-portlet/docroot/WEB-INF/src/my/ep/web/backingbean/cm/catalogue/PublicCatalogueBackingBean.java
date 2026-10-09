@@ -48,7 +48,7 @@ import org.primefaces.context.RequestContext;
 @ManagedBean(name = "pCatalogueBackingBean")
 @RequestScoped
 public class PublicCatalogueBackingBean extends
-BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
+	BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 
 	/**
 	 * 

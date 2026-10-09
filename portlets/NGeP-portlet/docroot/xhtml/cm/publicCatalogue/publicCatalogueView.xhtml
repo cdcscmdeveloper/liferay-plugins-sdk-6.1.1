@@ -331,7 +331,7 @@
 										rendered="#{!pCatalogueBackingBean.managedBean.keyWord}"
 										style="font-weight:bold;float:left;font-size:15px;"
 										value="#{pCatalogueBackingBean.managedBean.totalRecord} #{lbl['lbl.cm.pub.catalog.result.title']} #{pCatalogueBackingBean.managedBean.unspscTitle}"></p:outputLabel>
-
+										
 									<!-- #10747, #35739 - Start -->
 								    <h:panelGroup rendered="#{!pCatalogueBackingBean.managedBean.keyWord and pCatalogueBackingBean.managedBean.unspscTitle.length() > 12 || pCatalogueBackingBean.managedBean.itemName.length() > 12}">
 								    <br />
@@ -539,7 +539,7 @@
 									</h:panelGroup>
 									</td>
 							</h:panelGroup>
-
+							
 							<!-- #10747 - Shafie - End  -->
 						</tr>
 

@@ -40,7 +40,7 @@ import org.primefaces.context.RequestContext;
 @ManagedBean(name = "pCatalogueMB")
 @SessionScoped
 public class PublicCatalogueManagedBean extends BaseManagedBean {
-
+	
 	//#10747,#35739 and SonarLint fixing - Start
 	private static Logger log = Logger
 			.getLogger(PublicCatalogueManagedBean.class);
@@ -66,7 +66,7 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 
 	/** The price to. */
 	private BigDecimal priceTo;
-
+	
 	//#10747 - Shafie, Soo - Start
 	/** The delivery from. */
 	private Integer deliveryFrom;
@@ -127,7 +127,7 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 	
 	private boolean converterVisible = false;
 	//#10747,#35739 and SonarLint fixing - End
-
+	
 	private SearchFilterBean keyWordFilterBean = new SearchFilterBean(
 			SearchOperator.OPERATOR_LIKE.value());
 
