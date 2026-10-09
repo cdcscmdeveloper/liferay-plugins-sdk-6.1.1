@@ -420,11 +420,11 @@ private class SpecMaintenanceSearchQtDataModel extends
 				
 				// temporary while awaiting #29474 close in SIT -start-
 				// remove when #29474 ready for UAT
-				specBB.qtChecklistTabChange(9);
+				specBB.qtChecklistTabChange(10);//+1 from original no due to #29661
 				// temporary while awaiting #29474 close in SIT -end-
 				
 				// use this when #29474 ready for UAT -start-
-//				specBB.qtChecklistTabChange(10);
+//				specBB.qtChecklistTabChange(11);
 				// use this when #29474 ready for UAT -end-
 
 				RequestContext.getCurrentInstance().execute("inactiveSCMembersPopup.show()");

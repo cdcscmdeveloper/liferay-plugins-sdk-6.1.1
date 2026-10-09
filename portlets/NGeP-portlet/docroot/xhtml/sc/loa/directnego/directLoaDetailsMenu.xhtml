@@ -455,6 +455,11 @@ a:hover.blue_font {
 						label="#{lbl['lbl.sc.qt.fileno']}" size="28" maxlength="50" >
 					 <ui:remove>39995 End</ui:remove>
 						<p:ajax event="blur" process="fileNoId" update="fileNoId"/>
+						<!-- #29661 start -->
+						<p:ajax event="blur" process="fileNoId" update="fileNoId"
+						partialSubmit="true" 
+						listener="#{createQtBB.setFileNo(directLOABackingBean.managedBean.scQt)}"/>
+						<!-- #29661 end -->
 						</p:inputText>
 						 <p:spacer width="1px" />
 						
@@ -463,6 +468,12 @@ a:hover.blue_font {
 						value="#{directLOABackingBean.managedBean.scLoa.fileExtNo}"
 						size="1" label="#{lbl['lbl.sc.loiloa.file.extension.no']}"
 						maxlength="3" disabled="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" >
+						<!-- 29661 start -->
+						<p:ajax event="blur"  process="@this" 
+						partialSubmit="true" update="@this"
+						listener="#{directLOABackingBean.setFileExtNo(directLOABackingBean.managedBean.scLoa)}">
+						</p:ajax>
+						<!-- 29661 end -->
 						<p:ajax event="blur" process="fileExtNo" update="fileExtNo"/>
 						</p:inputText>
 						 <p:message

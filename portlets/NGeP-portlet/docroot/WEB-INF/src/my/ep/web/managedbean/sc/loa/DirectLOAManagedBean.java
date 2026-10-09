@@ -333,6 +333,14 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	private List<TplSpecAnswer> tplSpecAnswerList;
 	/*#29007 End Vinod*/
 	
+	// #29661 start
+	private List<SmSupplierCategory> supplierCategoryList;
+	private List<SmSupplierCategory> selectedCategoryList;
+	private List<SmSupplierCategory> addedCategoryList;
+	private List<SmSupplierCategory> procurementRelatedCategoryList;
+	private List<SmSupplierCategory> deletedCategoryList;
+	private boolean showCategoryCode;
+	// #29661 end
 	private SmSupplier tempSmSupplier;	// Bug #40022@Syazani -- 16/02/2026
 
 	// #25726 START 
@@ -2035,6 +2043,55 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 	/*#29007 End Vinod*/
 
+	//#29661 Start
+	public List<SmSupplierCategory> getSupplierCategoryList() {
+		return supplierCategoryList;
+	}
+
+	public void setSupplierCategoryList(List<SmSupplierCategory> supplierCategoryList) {
+		this.supplierCategoryList = supplierCategoryList;
+	}
+
+	public List<SmSupplierCategory> getSelectedCategoryList() {
+		return selectedCategoryList;
+	}
+
+	public void setSelectedCategoryList(List<SmSupplierCategory> selectedCategoryList) {
+		this.selectedCategoryList = selectedCategoryList;
+	}
+
+	public List<SmSupplierCategory> getProcurementRelatedCategoryList() {
+		return procurementRelatedCategoryList;
+	}
+
+	public void setProcurementRelatedCategoryList(List<SmSupplierCategory> procurementRelatedCategoryList) {
+		this.procurementRelatedCategoryList = procurementRelatedCategoryList;
+	}
+
+	public List<SmSupplierCategory> getDeletedCategoryList() {
+		return deletedCategoryList;
+	}
+
+	public void setDeletedCategoryList(List<SmSupplierCategory> deletedCategoryList) {
+		this.deletedCategoryList = deletedCategoryList;
+	}
+
+	public List<SmSupplierCategory> getAddedCategoryList() {
+		return addedCategoryList;
+	}
+
+	public void setAddedCategoryList(List<SmSupplierCategory> addedCategoryList) {
+		this.addedCategoryList = addedCategoryList;
+	}
+	
+	public boolean isShowCategoryCode() {
+		return showCategoryCode;
+	}
+
+	public void setShowCategoryCode(boolean showCategoryCode) {
+		this.showCategoryCode = showCategoryCode;
+	}
+	//#29661 End
 	// Bug #40022@Syazani -- 16/02/2026 -- Start
 	public SmSupplier getTempSmSupplier() {
 		return tempSmSupplier;

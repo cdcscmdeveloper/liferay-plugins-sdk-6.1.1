@@ -314,6 +314,11 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 
 	private Boolean readOnlyLOADownload = true;
 	// Bug #35078@Syazani -- 22/09/2023 -- End
+	// #29661 start
+	private List<SmSupplierCategory> supplierCategoryList;
+	private List<SmSupplierCategory> procurementRelatedCategoryList;
+	private List<ScQtCategory> qtCategoryList;
+	// #29661 end
 
 	//#29006 - start
 	private boolean specificationAndSupplierDialogFlag = false;
@@ -2275,4 +2280,29 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	//#25725 end
 
 	
+	// #29661 start
+	public List<SmSupplierCategory> getSupplierCategoryList() {
+		return supplierCategoryList;
+	}
+
+	public void setSupplierCategoryList(List<SmSupplierCategory> supplierCategoryList) {
+		this.supplierCategoryList = supplierCategoryList;
+	}
+
+	public List<SmSupplierCategory> getProcurementRelatedCategoryList() {
+		return procurementRelatedCategoryList;
+	}
+
+	public void setProcurementRelatedCategoryList(List<SmSupplierCategory> procurementRelatedCategoryList) {
+		this.procurementRelatedCategoryList = procurementRelatedCategoryList;
+	}
+
+	public List<ScQtCategory> getQtCategoryList() {
+		return qtCategoryList;
+	}
+
+	public void setQtCategoryList(List<ScQtCategory> qtCategoryList) {
+		this.qtCategoryList = qtCategoryList;
+	}
+	// #29661 end
 }

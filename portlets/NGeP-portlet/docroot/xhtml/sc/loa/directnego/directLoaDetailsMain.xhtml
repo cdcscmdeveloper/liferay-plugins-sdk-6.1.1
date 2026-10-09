@@ -43,6 +43,12 @@
 			title="#{lbl['lbl.sc.dialog.confirm.loa.approve.header']}"
 			content="#{lbl['lbl.sc.dialog.confirm.loa.approve.dtls']}"
 			update="@form" />
+							<!-- #29661 start -->
+							<p:menuitem value="#{lbl['lbl.sc.sr.cat.code']}"
+								update="@form"
+								action="#{directLOABackingBean.tabChangeActionDirectLOA(1)}"
+								rendered="#{directLOABackingBean.managedBean.showCategoryCode}" /><!-- #29661 #40096 adli  -->
+							<!-- #29661 end -->
 		<!-- 20190405@asyrafhaziq - CR(25062)- End -->
 		<ac:gpkiPopup textBeforeSign="#{directLOABackingBean.textBeforeSign}"
 			postSignAction="#{directLOABackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" 
@@ -120,6 +126,12 @@
 							test="#{directLOABackingBean.managedBean.selectedTabIndex == 0}">
 							<ui:include src="directLoaDetailsMenu.xhtml" />
 						</c:if>
+						<!-- #29661 start -->
+						<c:if
+							test="#{directLOABackingBean.managedBean.showCategoryCode and directLOABackingBean.managedBean.selectedTabIndex == 1}"> <!-- #40974  -->
+							<ui:include src="directLOACategoryCodeSelection.xhtml" />
+						</c:if>
+						<!-- #29661 end -->
 						
 						<c:if
 							test="#{directLOABackingBean.managedBean.selectedTabIndex == 1}">

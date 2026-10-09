@@ -45,6 +45,16 @@
 								value="0" />
 							<f:param name="disableValidation" value="true" />
 						</p:menuitem>
+						<!-- #29661 Start -->
+						<p:menuitem value="#{lbl['lbl.sc.sr.cat.code']}"
+							update="@form"
+							rendered="#{directLOABackingBean.managedBean.showCategoryCode}">							
+							<f:setPropertyActionListener
+								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
+								value="1" />
+							<f:param name="disableValidation" value="true" />
+						</p:menuitem>
+						<!-- #29661 End -->
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.contents']}"
 							update="@form"
 							actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}">
@@ -96,6 +106,12 @@
 							test="#{directLOABackingBean.managedBean.selectedTabIndex == 0}">
 							<ui:include src="/xhtml/sc/loa/directnegosuppresponse/directLoaDetailsSupplierMenu.xhtml" />
 						</c:if>
+						<!-- #29661 Start -->
+						<c:if
+							test="#{directLOABackingBean.managedBean.selectedTabIndex == 1}">
+							<ui:include src="/xhtml/sc/loa/directnegosuppresponse/directLOASupplierCategoryCodeSelection.xhtml" />
+						</c:if>
+						<!-- #29661 End -->
 						<c:if
 							test="#{directLOABackingBean.managedBean.selectedTabIndex == 1}">
 							<ui:include
