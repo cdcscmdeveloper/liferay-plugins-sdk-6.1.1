@@ -20,7 +20,8 @@
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend}"
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL or !amendmentBackingBean.validExtensionDate() or ctBackingBean.managedBean.contractExpired
 					or amendmentBackingBean.isContractAmountAmend()}"><!-- Enhancement 15851 - shaqimi -->
-					<p:ajax event="change" update=":form:typesOfAmend,:form:instruction,:form:itemId,:form:serviceId,:form:approvingAuthorityPanel"
+					<!-- #24336 add update :form:newAmtEffDate -->
+					<p:ajax event="change" update=":form:typesOfAmend,:form:instruction,:form:itemId,:form:serviceId,:form:approvingAuthorityPanel,:form:newAmtEffDate"
 						process="@all" onstart="blockWidget.show();" 
 					   oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onContractExtensionChecked}" />
 				</p:selectBooleanCheckbox>
@@ -180,7 +181,8 @@
 					onblur="this.value = this.value.trim() == '' ? '0' : this.value;"
     				onchange="this.value = this.value.trim() == '' ? '0' : this.value;"
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
-					<p:ajax event="change" update="extStartDate, extEndDate,extendMonthsId, :form:itemId, :form:serviceId" listener="#{amendmentBackingBean.onExtensionPeriodChanged}"/>
+					<!-- #24336 add update :form:newAmtEffDate -->
+					<p:ajax event="change" update="extStartDate, extEndDate,extendMonthsId, :form:itemId, :form:serviceId, :form:newAmtEffDate" listener="#{amendmentBackingBean.onExtensionPeriodChanged}"/>
 					</p:inputText>
 					<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.months']}" />
@@ -191,7 +193,8 @@
 					onblur="this.value = this.value.trim() == '' ? '0' : this.value;"
     				onchange="this.value = this.value.trim() == '' ? '0' : this.value;"
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL}"><!-- Enhancement 15851 - shaqimi -->
-					<p:ajax event="change" update="extStartDate, extEndDate, extendDaysId, :form:itemId, :form:serviceId" listener="#{amendmentBackingBean.onExtensionPeriodChanged}"/>
+					<!-- #24336 add update :form:newAmtEffDate -->
+					<p:ajax event="change" update="extStartDate, extEndDate, extendDaysId, :form:itemId, :form:serviceId, :form:newAmtEffDate" listener="#{amendmentBackingBean.onExtensionPeriodChanged}"/>
 					</p:inputText>
 				<p:outputLabel value="#{lbl['lbl.ct.days']}" />
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.period.day']}" style="text-align:left"/>
