@@ -32,6 +32,19 @@
 				<p:graphicImage value="/css/images/design/ico-viewnedit.png"
 				id="supplierUpdateInstructionIconQT" rendered="#{lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlagQT &amp;&amp; isDocTypeQuotation &amp;&amp; lOADetailBackingBean.managedBean.supPropSpecUpdate}"
 				style="max-width: 16px; padding-right: 7px; padding-left: 7px;" />
+			<ui:remove>
+			    #26059 - Start 
+			    Add Instruction at QT will be cater after FRS 29362 is deployed.
+			</ui:remove>
+			<h:panelGroup rendered="#{!isDocTypeQuotation}" layout="block">
+				<br />
+				<h:outputText styleClass="instruction"
+					value="#{lbl['lbl.sc.loa.agency.instruction.verification']}" />
+				<br />
+				<h:outputText styleClass="instruction"
+					value="#{lbl['lbl.sc.loa.agency.instruction.verification2']}" />
+			</h:panelGroup>
+			<ui:remove>#26059 - End</ui:remove>
 			<p:spacer height="10" />
 			<p:panel id="supplierSearchCriteria" rendered="#{!isDocTypeQuotation}"
 				header="#{lbl['lbl.sc.notice.board.searchCriteria']}" toggleable="true">
@@ -290,6 +303,17 @@
 				<ui:remove>Bug #34757, 35284, 29007 -end-</ui:remove>
 			</p:column>
 			<ui:remove>#34242, #29007 -start-</ui:remove>
+			<ui:remove>#26059 - Start</ui:remove>
+			<p:column rendered="#{isSupplierAckStatus}">
+				<f:facet name="header">
+					#{lbl['lbl.sc.action']}
+				</f:facet>
+				<p:commandButton value="#{lbl['lbl.btn.assign']}" 
+					disabled="#{lOADetailBackingBean.validateAssignButton(lOADetailBackingBean.managedBean.readOnly , scLoiLoaItem)}"
+					action="#{lOADetailBackingBean.assignProductCode(scLoiLoaItem)}"
+					rendered="#{lOADetailBackingBean.isShowAssignButton(scLoiLoaItem)}" /><ui:remove>Bug #34757</ui:remove>
+			</p:column>
+			<ui:remove>#26059 - End</ui:remove>
 			<p:ajax event="page"
 				listener="#{lOADetailBackingBean.retainAwardPage()}" process="@this"
 				update="@this" />
