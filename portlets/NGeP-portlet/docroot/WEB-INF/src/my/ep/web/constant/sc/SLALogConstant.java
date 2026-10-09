@@ -19,6 +19,7 @@ public class SLALogConstant {
 	public static final String QT_LOA_DETAIL_BACKINGBEAN = "LOADetailBackingBean"; // #29007
 	public static final String QT_DIRECT_LOA_DETAIL_BACKINGBEAN = "DirectLOABackingBean"; // #29007
 	public static final String QT_SUPPLIER_FINALIZATION_MEETING_BACKINGBEAN = "SupplierFinalizationMeetingBackingBean"; //#12471 commited under #35500
+	public static final String COMMON_BASE_BACKINGBEAN = "BaseBackingBean";
 	public static final String QT_EVALUATION_BACKINGBEAN = "EvaluationBackingBean";
 	// 25037 - start
 	public static final String QT_APPROVAL_BACKINGBEAN = "ApprovalBackingBean";
@@ -64,6 +65,11 @@ public class SLALogConstant {
 	public static final String VIEW_QT_LOA_CONTRACT_DTLS = "viewQTLOAContractDtls";
 	public static final String VIEW_QT_BID_SCHEDULES_DATA_MODEL = "ScheduleBiddingPagingDataModel";
 	// 25791-end
+	
+	// #27868 - start
+	public static final String DP_GET_RADIOBUTTON_CODEVALUES_COMBINE_WIP_PARAM = "getDropDownValuesCombineWIPParameter";
+	public static final String DP_GET_RADIOBUTTON_CODEVALUES = "getReasonCodeDropdownValues";
+	// #27868 - end
 
 	private SLALogConstant() {
 
