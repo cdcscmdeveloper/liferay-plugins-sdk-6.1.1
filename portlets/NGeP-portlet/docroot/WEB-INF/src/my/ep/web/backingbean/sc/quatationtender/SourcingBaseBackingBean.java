@@ -91,6 +91,7 @@ import my.ep.constant.CompositeValidityConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.common.PrcCheckUserProfileStatus;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -9798,11 +9799,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		Locale locale = this.getFacesScopesGen().getUserLocale();
 		InactiveUserResDTO resDTO = InactiveUserValidator.getInstance().evaluateUsers(reqDTO);
 		String status = resDTO.getStatus();
-		if ("5".equals(status)) {
+		if (Arrays.asList("6", PrcCheckUserProfileStatus.ADMIN_USER_NOT_FOUND).contains(status)) {
+			throw new EpException("No PTJ_ADMIN existed");
+		} else if (Integer.toString(PrcCheckUserProfileStatus.NO_AGENCY_NO_ROLE_NO_ACTIVE_USER).equals(status)) {
 			String roleDesc = RoleHelper.getInstance().getRoleDescByCode(deskofficerRoleCode).getRoleName();
 			throw new EpException(MessageUtils.getMessage(MessageConst.ERROR_700128, new String[] { roleDesc,
 					scQt.getOwnerOrgProfile().getOrgName() }, MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
-		} else if (!"1".equals(status)) {
+		} else if (!Integer.toString(PrcCheckUserProfileStatus.MATCH_AGENCY_MATCH_ROLE).equals(status)) {
 			if (!rerouteWhenAvailable) {
 				throw new EpException(MessageUtils.getMessage(MessageConst.ERROR_761000, new String[] {
 						deskofficerActor.getUserName(), scQt.getOwnerOrgProfile().getOrgName() },
