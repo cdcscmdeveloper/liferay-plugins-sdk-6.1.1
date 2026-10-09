@@ -4034,6 +4034,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					log.info("******* This is facility for special category page ********");
 					SmApplicationUtil
 							.handleShowOrHideFacilityPanels(getManagedBean());
+					//#28775 - start
+					if (getManagedBean().getSmAppl().getPmStatus() != null
+							&& getManagedBean().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION) {
+						getManagedBean().getSmAppl().setSiteVisitGroup(true);
+					}
+					//#28775 - end
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP:
 					getManagedBean().setMachineCategoryVOList(
@@ -7124,7 +7130,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			getManagedBean().getSelectedWorkShopFacility().setSmSvWorkers(new ArrayList<SmSvWorker>());
 		}
 		getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
-		if (getManagedBean().isSupplierUser()) {
+		if (getManagedBean().getSmAppl().getPmStatus() != null
+				&& getManagedBean().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION) {
 			getManagedBean().getSmAppl().setSiteVisitGroup(true);
 		}
 		// 29379 - Site Visit Grouping Enhancement -28775 - end
@@ -8028,6 +8035,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					: getManagedBean().getSelectedShareHolder().getEmail();
 			SmCommonUtil.checkEmailDomainWithExceptionMsg(getManagedBean()
 					.getSelectedShareHolder().getName(), email);
+			// #28720 Start
+			if (!getManagedBean().isDisableIcEmail() && (email.contains("@yahoo.com") || email.contains("@ymail.com") || email.contains("@rocketmail.com"))) {
+				getManagedBean().getSelectedShareHolder().setEmail("");
+				RequestContext.getCurrentInstance().execute("emailPopUpWidgetVar.show()");
+				return;
+			}
+			// #28720 End
 		}
 
 		// if not authorized, clear justification
@@ -9832,7 +9846,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		validateNoChangesBeenMadeToApplication();
 		//#28775 - Site Grouping Enhancement
 		validateAllWorkshops();
-		getManagedBean().getSmAppl().setSiteVisitGroup(true);
+		if (getManagedBean().getSmAppl().getPmStatus() != null
+				&& getManagedBean().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION) {
+			getManagedBean().getSmAppl().setSiteVisitGroup(true);
+		}
 		//#28775 end
 
 		// try {
