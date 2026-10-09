@@ -10541,6 +10541,14 @@ public class SpecificationBackingBean extends
 		}
 
 		PmUser curLogedInUser = facesScopes.getUserSessionBean();
+		
+		// 35056 - 4serangkai - start
+		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
+		specReqDTO.setQtId(quotationTenderDataType.getQtId().longValue());
+		specReqDTO.setPmUser(curLogedInUser);
+		this.getSpecSO().insertTechnicalItemQtScoreSetting(specReqDTO);
+		// 35056 - 4serangkai - end
+
 		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						ICommitteSO.class);
