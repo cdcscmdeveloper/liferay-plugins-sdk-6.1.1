@@ -3227,7 +3227,22 @@ public class NoticeBoardBackingBean extends
 	}
 	
 	//Bug #32512 end	
-	
+
+	/**
+	 * Will be called up on tab change of show Award Details screen.
+	 * 
+	 * @param changeEvent
+	 *            the instance of TabChangeEvent
+	 */
+	public void awardSupplierTabChange(TabChangeEvent changeEvent) {
+
+		TplSpecZoneDtl zoneDtl = (TplSpecZoneDtl) changeEvent.getData();
+		Long qtId = this.getManagedBean().getScQt().getQtId();
+		List<ScLoa> scLoaList = retrieveLOA(qtId, zoneDtl.getSpecZoneId());
+		this.getManagedBean().setAwardedItems(getAwardedItemDetails(scLoaList, qtId));
+
+	}
+
 	/**
 	 * Download the documents from repository on click of download all button
 	 * 
