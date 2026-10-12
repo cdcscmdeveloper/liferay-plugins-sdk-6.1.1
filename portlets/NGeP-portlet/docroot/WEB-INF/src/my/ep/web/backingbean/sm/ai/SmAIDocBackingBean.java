@@ -78,6 +78,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	private static final String EL_BACKING_BEAN = "#{backingBean}";
 	private static final String LBL_DOC_INVALID = "lbl.sm.ai.doc.invalid";
 	private static final String LBL_EPF_MISMATCH = "lbl.sm.ai.epf.mismatch";
+	private static final String RA_DIALOG_MESSAGES = "smAiDialogMessages";
 
 	private List<AiEpfResultDTO> epfs;
 	private AiTenancyDTO tenancy;
@@ -566,6 +567,18 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 
 	private static void addMessageOnce(FacesMessage.Severity severity, String key){
 		String detail = AiDocParser.label(key);
+		// Supporting Documents has no dialog, so its messages stay with the page
+		if (!isSupportDocPage()){
+			List<FacesMessage> msgs = dialogMessages();
+			for (FacesMessage existing : msgs){
+				if (existing.getSeverity() == severity
+						&& StringUtils.equals(existing.getDetail(), detail)){
+					return;
+				}
+			}
+			msgs.add(new FacesMessage(severity, null, detail));
+			return;
+		}
 		Iterator<FacesMessage> it = FacesContext.getCurrentInstance().getMessages("ai");
 		while (it.hasNext()){
 			FacesMessage existing = it.next();
@@ -578,14 +591,35 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	/**
-	 * True while the AI Assistant dialog holds messages of its own. The page-level p:messages shows
-	 * every clientId, so it repeats them above the form unless it is switched to globalOnly.
-	 * Supporting Documents has no dialog and takes a Tenancy Agreement too, so the page decides.
+	 * The AI Assistant dialog's messages. They are kept in the request, not the FacesContext, because
+	 * any page-level p:messages without for/globalOnly would repeat a FacesContext message outside the dialog.
 	 * @return
 	 */
-	public boolean isAiMessagePending(){
-		return docType != null && !isSupportDocPage()
-				&& FacesContext.getCurrentInstance().getMessages("ai").hasNext();
+	@SuppressWarnings("unchecked")
+	private static List<FacesMessage> dialogMessages(){
+		Map<String, Object> req = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
+		List<FacesMessage> msgs = (List<FacesMessage>) req.get(RA_DIALOG_MESSAGES);
+		if (msgs == null){
+			msgs = new ArrayList<>();
+			req.put(RA_DIALOG_MESSAGES, msgs);
+		}
+		return msgs;
+	}
+
+	/**
+	 * Dialog message texts of one severity, "error" or "warn".
+	 * @param severity
+	 * @return
+	 */
+	public List<String> getDialogMessages(String severity){
+		FacesMessage.Severity sev = "warn".equals(severity) ? FacesMessage.SEVERITY_WARN : FacesMessage.SEVERITY_ERROR;
+		List<String> details = new ArrayList<>();
+		for (FacesMessage msg : dialogMessages()){
+			if (msg.getSeverity() == sev){
+				details.add(msg.getDetail());
+			}
+		}
+		return details;
 	}
 
 	// docType is re-seeded per page but never cleared, so it cannot say where we are
@@ -600,9 +634,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 
 	private static boolean hasErrorMessage(){
 		String soft = AiDocParser.label(LBL_EPF_MISMATCH);
-		Iterator<FacesMessage> it = FacesContext.getCurrentInstance().getMessages("ai");
-		while (it.hasNext()){
-			FacesMessage msg = it.next();
+		for (FacesMessage msg : dialogMessages()){
 			if (msg.getSeverity() == FacesMessage.SEVERITY_ERROR
 					&& !StringUtils.equals(msg.getDetail(), soft)){
 				return true;
