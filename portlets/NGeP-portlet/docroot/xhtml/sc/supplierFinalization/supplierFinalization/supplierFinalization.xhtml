@@ -248,6 +248,7 @@
 										or suppFinalizationBackingBean.isQTMaintenanceScreen()
 										or supplierFinalizationReadOnly}"
 						action="#{suppFinalizationBackingBean.addHigherSecretaryAction()}"
+						update="@([id$=addHigherAuthorityid])"
 						oncomplete="addHigherAuthority.show();" />
 					<ui:remove>#37809 End Vinod 21092026</ui:remove>
 					<p:commandLink id="haSecName"

@@ -15,6 +15,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.bean.sc.QtEvaluationResultDtlBean;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAuthority;
 import my.ep.persistence.entity.pm.common.PmAuthorityCommittee;
@@ -384,6 +385,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private PmUser selectedHigherSecretary;
 	private boolean ministryNotNegeri;
 	private boolean disableFinalizationCommittee;
+	private PmOrgProfile deskOfficerPtj;
 	// #37809 End Vinod
 	//#34860 Start
 	private List<String> justificationReasonList;
@@ -2875,6 +2877,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 
 	public void setDisableFinalizationCommittee(boolean disableFinalizationCommittee) {
 		this.disableFinalizationCommittee = disableFinalizationCommittee;
+	}
+
+	public PmOrgProfile getDeskOfficerPtj() {
+		return deskOfficerPtj;
+	}
+
+	public void setDeskOfficerPtj(PmOrgProfile deskOfficerPtj) {
+		this.deskOfficerPtj = deskOfficerPtj;
 	}
 	
 	// #37809 End Vinod
