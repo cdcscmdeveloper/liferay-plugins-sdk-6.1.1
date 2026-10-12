@@ -599,7 +599,9 @@ public interface QTConstants {
 	public static final String LBL_SC_COMMITTEE_ADD_MEMBER_SEARCH_PTJ_FULL = "lbl.sc.committee.add.member.search.ptj.full";
 	public static final String LBL_SC_COMMITTEE_ADD_MEMBER_SEARCH_OTHER = "lbl.sc.committee.add.member.search.other";
 	public static final String LBL_SC_SF_HIGHER_AUTHORITY = "lbl.sc.sf.higher.authority";
+	// #37809 Start Vinod 12102026
 	public static final String LBL_SC_FINALIZATION_COMMITTEE_HIGHER_AUTHORITY = "lbl.sc.finalization.committee.higher.authority";
+	// #37809 End Vinod 12102026
 	// #37809 End Vinod
 	
 	// #29580-start

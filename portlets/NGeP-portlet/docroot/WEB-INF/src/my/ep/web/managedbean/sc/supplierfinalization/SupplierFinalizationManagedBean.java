@@ -385,7 +385,9 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private PmUser selectedHigherSecretary;
 	private boolean ministryNotNegeri;
 	private boolean disableFinalizationCommittee;
+	// #37809 Start Vinod 12102026
 	private PmOrgProfile deskOfficerPtj;
+	// #37809 End Vinod 12102026
 	// #37809 End Vinod
 	//#34860 Start
 	private List<String> justificationReasonList;
@@ -2879,6 +2881,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.disableFinalizationCommittee = disableFinalizationCommittee;
 	}
 
+	// #37809 Start Vinod 12102026
 	public PmOrgProfile getDeskOfficerPtj() {
 		return deskOfficerPtj;
 	}
@@ -2886,6 +2889,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setDeskOfficerPtj(PmOrgProfile deskOfficerPtj) {
 		this.deskOfficerPtj = deskOfficerPtj;
 	}
+	// #37809 End Vinod 12102026
 	
 	// #37809 End Vinod
 

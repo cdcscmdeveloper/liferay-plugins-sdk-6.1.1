@@ -6931,8 +6931,10 @@ return	remarksNotFound;
 		
 		SelectItem[] items = null;
 		// #37809 Start Vinod
+		// #37809 Start Vinod 12102026
 		finalizationCommitteeList.removeAll(Arrays.asList(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE,
 				ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A, ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B));
+		// #37809 End Vinod 12102026
 		if (CollectionUtils.isNotEmpty(finalizationCommitteeList)
 				&& !finalizationCommitteeList.contains(SourcingConstants.FC_COMMITTEE_TYPE_MOF)) {
 			searchBean.getDataFilterBeans().add(
@@ -14065,14 +14067,18 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	public void addHigherSecretaryAction() {
 		UserCommitteeSearchBean userCommitteeSearchBean = this.getManagedBean().getCommitteeSearchBean() != null ? this
 				.getManagedBean().getCommitteeSearchBean() : new UserCommitteeSearchBean();
+		// #37809 Start Vinod 12102026
 		this.getManagedBean().setCommitteeSearchBean(userCommitteeSearchBean);
 		getManagedBean().setDeskOfficerPtj(getPTJOrgProfileByLoginUser());
 		getManagedBean().setSelectedHigherSecretary(null);
+		// #37809 End Vinod 12102026
 
 		SelectItem[] finalizationCommittees = getFinalizationCommitteeDropDown();
 		updateFinalizationCommittee(finalizationCommittees, null);
+		// #37809 Start Vinod 12102026
 		updateFcSecretaryDataModel(userCommitteeSearchBean);
 		applyHigherCommitteeSearchCriteria();
+		// #37809 End Vinod 12102026
 	}
 	// #37809 End Vinod 21092026
 
@@ -14112,13 +14118,17 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 
 		if (finalizationCommitteeTypeId == null) {
 			getManagedBean().setFinalizationSecratary(fcCommitteeTypes);
+			// #37809 Start Vinod 12102026
 			if (isDoSBHorSWK) {
 				this.getManagedBean().getCommitteeSearchBean().setFinalizationCommitteeTypeId(null);
 				scQtFinalization.setHigherCommitte(new PmParameter());
 			}
+			// #37809 End Vinod 12102026
 		}
 
+		// #37809 Start Vinod 12102026
 		getManagedBean().setDisableFinalizationCommittee(!isDoSBHorSWK);
+		// #37809 End Vinod 12102026
 	}
 
 	// #37809 End Vinod
@@ -14171,14 +14181,17 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		Long finalizationCommitteeTypeId = (Long) event.getComponent().getAttributes()
 				.get(QTConstants.TEMPLATE_CHANGE_VALUE);
 
+		// #37809 Start Vinod 12102026
 		updateFcSecretaryDataModel(this.getManagedBean().getCommitteeSearchBean());
 		updateFinalizationCommittee(getManagedBean().getFinalizationSecratary(), finalizationCommitteeTypeId);
 		getManagedBean().setSelectedHigherSecretary(null);
 
 		applyHigherCommitteeSearchCriteria();
 		getManagedBean().getUserSearchHigherAuthoritySecretaryDataModel().resetData();
+		// #37809 End Vinod 12102026
 	}
 
+	// #37809 Start Vinod 12102026
 	/**
 	 * Sets the search criteria and title for the selected higher committee.
 	 * Ministry, PTJ group and PTJ apply to the Procurement Board only.
@@ -14233,6 +14246,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		getManagedBean().setMinistryNotNegeri(!SourcingConstants.MINISTRY_CODE_NEGERI.equals(ministry.getOrgCode()));
 		removeSelectAllFromDD();
 	}
+	// #37809 End Vinod 12102026
 
 	// #37809 End Vinod
 	// #37809 Start Vinod
@@ -14297,10 +14311,12 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				log.debug("pageChangeListener");
 			}
 
+			// #37809 Start Vinod 12102026
 			PmParameter higherCommitte = getManagedBean().getScQtFinalization().getHigherCommitte();
 			if (higherCommitte == null || StringUtils.isBlank(higherCommitte.getParameterCode())) {
 				return new SearchResultBean<PmUser>();
 			}
+			// #37809 End Vinod 12102026
 
 			ICommitteSO committeSO;
 			try {
@@ -14308,9 +14324,11 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 						ICommitteSO.class);
 				CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 				committeReqDTO.setScQt(getManagedBean().getScQt());
+				// #37809 Start Vinod 12102026
 				committeReqDTO.setIshigerCommitte(true);
 				committeReqDTO.setCommitteeType(higherCommitte.getParameterCode());
 				committeReqDTO.setPmOrgProfile(getManagedBean().getDeskOfficerPtj());
+				// #37809 End Vinod 12102026
 
 				if (null != userCommitteeSearchBean) {
 					populateUserSearchCriteria(userCommitteeSearchBean, searchBean);
@@ -14405,10 +14423,12 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		PmUser selectedUser = getManagedBean().getSelectedHigherSecretary();
 
 		if (selectedUser != null) {
+			// #37809 Start Vinod 12102026
 			ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
 			scQtFinalization.setHigherSecretary(selectedUser);
 			scQtFinalization.setHigherCommitteStr(scQtFinalization.getHigherCommitte().getParameterCode());
 			getManagedBean().getScQt().setFinalizationCommitte(scQtFinalization.getHigherCommitte());
+			// #37809 End Vinod 12102026
 			getManagedBean().setSelectedHigherSecretary(null);
 		}
 	}
@@ -14427,7 +14447,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	 * Reset.
 	 */
 	public void resetHigherSecretarySearchCriteriaAction() {
+		// #37809 Start Vinod 12102026
 		resetHigherSecretarySearchBean();
+		// #37809 End Vinod 12102026
 		getManagedBean().getUserSearchHigherAuthoritySecretaryDataModel().resetData();
 	}
 	// #37809 End Vinod
