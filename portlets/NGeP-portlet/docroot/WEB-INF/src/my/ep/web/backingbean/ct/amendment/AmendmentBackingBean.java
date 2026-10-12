@@ -6766,21 +6766,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public void downloadSupplementalLetter(CtAttachment ctAttchment) {
 		try {
-			
-			getManagedBean().setAllowAcknowledge(true);
-//			commonDownload(ctAttchment.getFilePath(), ctAttchment.getFileName());
-//
-//			// Supplier only allow to acknowledge after letter is downloaded 
-//			if (getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)) {
-//				BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
-//				if (bb.getManagedBean().getClaim()) {
-//					getManagedBean().setAllowAcknowledge(true);
-//				} else {
-//					getManagedBean().setAllowAcknowledge(false);
-//				}
-//			} else {
-//				getManagedBean().setAllowAcknowledge(false);
-//			}
+			commonDownload(ctAttchment.getFilePath(), ctAttchment.getFileName());
+
+			// Supplier only allow to acknowledge after letter is downloaded 
+			if (getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)) {
+				BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
+				if (bb.getManagedBean().getClaim()) {
+					getManagedBean().setAllowAcknowledge(true);
+				} else {
+					getManagedBean().setAllowAcknowledge(false);
+				}
+			} else {
+				getManagedBean().setAllowAcknowledge(false);
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
