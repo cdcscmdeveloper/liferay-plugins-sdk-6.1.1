@@ -5790,8 +5790,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			// #29766 Start Vinod
 			boolean isQTTypePK7Inactive = checkQTTypeItemPK7Selected();
 			if (isQTTypePK7Inactive) {
-				RequestContext.getCurrentInstance().update(QTConstants.UPDATE_REVISE_FOR_PK7_ID);
-				RequestContext.getCurrentInstance().execute(QTConstants.REVISE_FOR_PK7_POPUP);
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								this.getManagedBean().getAlertForInactivePK7()));
 				return;
 			}
 			// #29766 End Vinod
@@ -5886,9 +5888,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			ScActorReqDTO actorReqDTO=new ScActorReqDTO();
 			actorSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScActorSO.class);
 			reqDTO.setScLoa(this.getManagedBean().getScLoa());
-			// #29766 Start Vinod.
-			boolean autoRevise = this.getManagedBean().isAutoRevise();
-			// #29766 End Vinod.
 			//#26474 - start
 			if(getManagedBean().getContractSignerUser() != null){
 				reqDTO.getScLoa().setContractSigner(getManagedBean().getContractSignerUser());
@@ -5977,13 +5976,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						successMessage(MessageConst.INFO_700078, param);
 						break;
 					case ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO:
-						// #29766 Start Vinod.
-						if (StringUtils.equalsIgnoreCase(outcome, BpmOutcomeConst.BPM_REVISE) && autoRevise) {
-							successMessage(MessageConst.INFO_700009, ParameterTypeConst.DOCUMENT_TYPES,
-									ParameterConst.DOCTYPE_LETTER_OF_AWARD, reqDTO.getScLoa().getLoaNo(), Boolean.TRUE);
-							break;
-						}
-						// #29766 End Vinod.
 						if (null != loaProcurementMode
 								&& loaProcurementMode.getParameterCode().equalsIgnoreCase(
 										ParameterConst.PROCUREMENT_MODE_QUOTATION)) {
@@ -14380,20 +14372,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			return isNewPK7ReasonInactive;
 		}
 		return false;
-	}
-
-	// #29766 End Vinod
-	// #29766 Start Vinod
-	/**
-	 * This method will call when user click ok in conformation popup for QT
-	 * type "Special Item/Item In PK7".
-	 * 
-	 * @param
-	 * @return
-	 */
-	public void reviseForQTTypeItemInPK7() {
-		this.getManagedBean().setAutoRevise(true);
-		this.updateReviseBPMTaskAction(BpmOutcomeConst.BPM_REVISE);
 	}
 
 	// #29766 End Vinod
