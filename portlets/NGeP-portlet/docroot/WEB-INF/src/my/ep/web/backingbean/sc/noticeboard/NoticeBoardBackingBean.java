@@ -7,8 +7,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.Collections;//#28188
+import java.util.Comparator;//#28188
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -92,7 +92,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.pm.common.PmStatus;//#28188
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
@@ -146,7 +146,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.commons.lang.builder.CompareToBuilder;//#28188
 import org.apache.log4j.Logger;
 import org.primefaces.component.autocomplete.AutoComplete;
 import org.primefaces.component.menuitem.MenuItem;
@@ -1235,7 +1235,7 @@ public class NoticeBoardBackingBean extends
 	
 				
 				//start Bug #26764
-				if(!supplierResDTO.isSuccessful()){			
+				if(!supplierResDTO.isSuccessful()){
 					supplierReqDTO.setSmSupplier(supplier);					
 					NoticeBoardResDTO suppMissingLinkResDTO = boardSO.inviteMissingSupplier(supplierReqDTO);
 					if (suppMissingLinkResDTO.isSuccessful()){
@@ -3227,7 +3227,22 @@ public class NoticeBoardBackingBean extends
 	}
 	
 	//Bug #32512 end	
-	
+
+	/**
+	 * Will be called up on tab change of show Award Details screen.
+	 * 
+	 * @param changeEvent
+	 *            the instance of TabChangeEvent
+	 */
+	public void awardSupplierTabChange(TabChangeEvent changeEvent) {
+
+		TplSpecZoneDtl zoneDtl = (TplSpecZoneDtl) changeEvent.getData();
+		Long qtId = this.getManagedBean().getScQt().getQtId();
+		List<ScLoa> scLoaList = retrieveLOA(qtId, zoneDtl.getSpecZoneId());
+		this.getManagedBean().setAwardedItems(getAwardedItemDetails(scLoaList, qtId));
+
+	}
+
 	/**
 	 * Download the documents from repository on click of download all button
 	 * 

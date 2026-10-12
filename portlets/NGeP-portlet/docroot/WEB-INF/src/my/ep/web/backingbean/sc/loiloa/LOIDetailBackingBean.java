@@ -91,6 +91,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAppVersion; //#38151
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScAddress;
@@ -2248,6 +2249,17 @@ public class LOIDetailBackingBean extends
 											scLoi != null ?scLoi.getScLoiLoa().getPmOrgProfile()
 											.getOrgProfileId():null).getOrgProfileId()); //20230712@asyrafhaziq- SQUBE Bug NullPointer#3
 
+		//@asyrafhaziq #27502 - New DO MOF Role and Process - start
+		Long contractType = resDTO.getScQt().getContractType().getParameterId();
+
+		if (contractType != null && contractType.equals(SourcingConstants.CENTRAL_CONTRACT)) {
+			PmZone zone = SmCommonUtil.getInstance().getUserZone();
+			if (zone != null) {
+				userReqDTO.setZoneCode(zone.getZoneCode());
+			}
+			userReqDTO.setBpk(true);
+		}
+		//@asyrafhaziq #27502 - New DO MOF Role and Process - End
 		//20210406@asyrafhaziq - Bug #30662 - End
 		UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 

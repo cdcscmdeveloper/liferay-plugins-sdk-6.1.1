@@ -32,6 +32,10 @@
 		<p:column style="width:10%;white-space: normal;word-wrap: break-word;"
 			headerText="#{lbl['lbl.sc.fin.file.ref.no']}">
 			<h:outputText value="#{experience.fileRefrenceNo} " />
+			<!-- #29661 #41255 - Start -->
+			<p:spacer width="3px" />
+			<h:outputText value="#{experience.fileExtensionNo}" />
+			<!-- #29661 #41255 - End -->
 		</p:column>
 		<p:column style="width:10%;white-space: normal;"
 			headerText="#{lbl['lbl.sc.fin.letter.accept.no']}">
@@ -103,10 +107,19 @@
 				style="background-color:transparent !important; border:0px none;"
 				action="#{evaluationBackingBean.downloadCompExpLOAReports(experience)}">
 			</p:commandButton>
+			
+			<ui:remove> #29661 #41511 - Start </ui:remove>
+			<p:commandLink process="@this" partialSubmit="true"
+				styleClass="commandLink_link"
+				rendered="#{evaluationBackingBean.loaViewCheck(experience)  and isTerminated}"
+				action="#{evaluationBackingBean.viewLOADetailsPage(experience, view.viewId)}">
+				<h:outputText value="#{experience.loaNo}" escape="false" />
+			</p:commandLink>
+			
 
 			<h:outputText value="#{evaluationBackingBean.getLabelContent(' ')}"
-				rendered="#{!evaluationBackingBean.loaReportCheck(experience)}"></h:outputText>
-
+				rendered="#{!evaluationBackingBean.loaReportCheck(experience)  and !evaluationBackingBean.loaViewCheck(experience)}"></h:outputText>
+                <ui:remove> #29661 #41511 - end </ui:remove> 
 
 		</p:column>
 	</p:dataTable>

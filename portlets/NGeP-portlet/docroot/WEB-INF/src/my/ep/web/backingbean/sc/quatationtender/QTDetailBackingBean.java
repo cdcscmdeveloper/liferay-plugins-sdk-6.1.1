@@ -20,15 +20,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;//#28188
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -907,9 +904,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#28784
 			checkDemoPresentationByStatus();
 			//#10141 Start Vinod
+			this.getManagedBean().setShowInactiveChecklistWarning(inactiveCLWarn);
+			this.getManagedBean().setInActiveChecklistNotificationText(notifyText);
 			if(isSendNotificationButton){
-				this.getManagedBean().setShowInactiveChecklistWarning(inactiveCLWarn);
-				this.getManagedBean().setInActiveChecklistNotificationText(notifyText);
 				this.getManagedBean().setSaveForSendNotification(false);
 				FacesContext.getCurrentInstance().addMessage(
 						null,
@@ -918,10 +915,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 										.getManagedBean().getInActiveChecklistNotificationText() },
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 				
-				return;
-			} else if (!isSendNotificationButton && inactiveCLWarn) {
-				checkInactiveChecklistAndDisplayWarning(this.getManagedBean()
-						.getTaskName());
 				return;
 			}
 			//#10141 End Vinod
@@ -3454,8 +3447,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		Long qtId = scQt.getQtId();
 		
 		//#27502 -Start	
-		boolean isBpkCentralContract = false;
-		isBpkCentralContract = isBpkCentralContract(scQt);
+		boolean isBpkCentralContract = isBpkCentralContract(scQt);
 		//#27502 -End
 		
 		String taskName = this.getManagedBean().getTaskName() == null ? "" : this.getManagedBean().getTaskName();  // 25037 - note 372
@@ -3659,40 +3651,44 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					committeTabs.add(new TabBean(fcTitleName, tabType, null));
 				}
 			}
-		} else {		
-			if (isBpkCentralContract) {
-				List<TabBean> newCommitteTabs = new ArrayList<TabBean>();
-				if (!scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_QT_SUBMISSION) 
-						&& !scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL) 
-						&& !Arrays.asList(QTStatusConst.CMT_APPROVAL_GROUP).contains(scQt.getQtStatus().getStatusId())) {
-					for (TabBean t : committeTabs) {
-						if (t.getTabType().equals(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)) {
-							newCommitteTabs.add(t);
-						} else if (t.getTabType().equals(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE)) {
-							newCommitteTabs.add(t);
-						}
-						else if (t.getTabType().equals(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE)) {//32775-start related to 27502
-							newCommitteTabs.add(t);
-						}
-						else if (t.getTabType().equals(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE)) {
-							newCommitteTabs.add(t);
-						}
-						else if (t.getTabType().equals(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE)) {
-							newCommitteTabs.add(t);
-						}//32775-End related to 27502
-					}
+		} else if (isBpkCentralContract) {
+			List<TabBean> newCommitteTabs = new ArrayList<>();
 
-					StringBuilder fcTitleLabel = new StringBuilder("lbl.ministry.finance");
-					String fcTitleName = ResourceBundleUtils.getMessage(fcTitleLabel.toString(),
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-					String tabType = SourcingConstants.COMMITTE_TYPE_MINISTRY_OF_FINANCE;
-					ScQtCommittee mofCommitte = getQtCommiteDtlsByQtIdNType(tabType, qtId);
-					newCommitteTabs.add(new TabBean(fcTitleName, tabType, mofCommitte));
+			// Check the condition for valid statuses
+			Long statusId = scQt.getQtStatus().getStatusId();
+			if (statusId.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)
+					|| statusId.equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)
+					|| Arrays.asList(QTStatusConst.CMT_APPROVAL_GROUP).contains(statusId)) {
+				return; // Exit early if the status is not valid
+			}
 
-					committeTabs = newCommitteTabs;
+			Set<String> validTabTypes = new HashSet<>();
+			validTabTypes.add(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
+			validTabTypes.add(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE);
+			// 32775-start related to 27502
+			validTabTypes.add(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE);
+			validTabTypes.add(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE);
+			validTabTypes.add(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE);
+			// 32775-End related to 27502
+
+			for (TabBean t : committeTabs) {
+				if (validTabTypes.contains(t.getTabType())) {
+					newCommitteTabs.add(t);
+
 				}
-			}//#27502 - End
-		}
+			}
+
+			StringBuilder fcTitleLabel = new StringBuilder("lbl.ministry.finance");
+			String fcTitleName = ResourceBundleUtils.getMessage(fcTitleLabel.toString(),
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			String tabType = SourcingConstants.COMMITTE_TYPE_MINISTRY_OF_FINANCE;
+			ScQtCommittee mofCommitte = getQtCommiteDtlsByQtIdNType(tabType, qtId);
+			newCommitteTabs.add(new TabBean(fcTitleName, tabType, mofCommitte));
+
+			committeTabs = newCommitteTabs;
+
+		}// #27502 - End
+
 		//Bug 32277 - start
 		if(committeeReadOnly){
 			this.getManagedBean().setReadOnlyCommitteeTabBean(committeTabs);
@@ -3706,21 +3702,34 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			this.getManagedBean().setScCommitteeMemberTabList(committeTabs);
 		}
 		//Bug 32277 - end
+		// #27502 - New DO MOF Role and Process - Start
 		for (TabBean tabBean : committeTabs) {
-			if ((!SourcingConstants.COMMITTE_TYPE_FINALIZATION.equals(tabBean
-					.getTabType()) && tabBean.getScQtCommittee()
-					.getScCommittee().getCommitteStatus().getStatusId()
-					.equals(QTStatusConst.CMT_COMPLETED))
-					|| (SourcingConstants.COMMITTE_TYPE_FINALIZATION
-							.equals(tabBean.getTabType())
-							&& scQt.getFinalizationCommitte() != null
-							&& scQt.getFinalizationCommitte().getParameterId() != null
-							&& scQt.getFinalizationSecratery() != null && scQt
-							.getFinalizationSecratery().getUserId() != null) || 
-							SourcingConstants.COMMITTE_TYPE_MINISTRY_OF_FINANCE.equals(tabBean.getTabType())) {//27502
+			String tabType = tabBean.getTabType();
+
+			// Condition 1: If tabType is not FINALIZATION and committee status
+			// is CMT_COMPLETED
+			boolean isTabTypeNotFinalizationAndCompleted = !SourcingConstants.COMMITTE_TYPE_FINALIZATION
+					.equals(tabType)
+					&& QTStatusConst.CMT_COMPLETED.equals(tabBean.getScQtCommittee().getScCommittee()
+							.getCommitteStatus().getStatusId());
+
+			// Condition 2: If tabType is FINALIZATION and necessary fields in
+			// scQt are set
+			boolean isFinalizationWithRequiredFields = SourcingConstants.COMMITTE_TYPE_FINALIZATION.equals(tabType)
+					&& scQt.getFinalizationCommitte() != null
+					&& scQt.getFinalizationCommitte().getParameterId() != null
+					&& scQt.getFinalizationSecratery() != null && scQt.getFinalizationSecratery().getUserId() != null;
+
+			// Condition 3: If tabType is MINISTRY_OF_FINANCE
+			boolean isMinistryOfFinance = SourcingConstants.COMMITTE_TYPE_MINISTRY_OF_FINANCE.equals(tabType);
+
+			// Combine the conditions
+			if (isTabTypeNotFinalizationAndCompleted || isFinalizationWithRequiredFields || isMinistryOfFinance) {
 				tabBean.setIcon("ui-icon-endorse");
 			}
 		}
+		// #27502 - New DO MOF Role and Process - End
+
 		if (!committeTabs.isEmpty()) {
 			// this.getManagedBean().setSelectedTabBean(committeTabs.get(0));
 			this.getManagedBean().setSelectedTabBean(
@@ -3748,18 +3757,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		Long currentStatusId = scQt.getQtStatus().getStatusId();
 		
 		//#35320 - Start;
-		if (scQt.getFinalizationCommitte() != null && scQt.getFinalizationCommitte().getParameterCode() != null) {
-			if (scQt.getFinalizationCommitte().getParameterCode()
-					.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
-					|| scQt.getFinalizationCommitte().getParameterCode()
-							.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
-				if (isStatusTrigger(currentStatusId)) {
-					scQt.setFinalizationCommitte(new PmParameter());
-					scQt.setFinalizationSecratery(new PmUser());
-					this.getManagedBean().setQt(scQt);
-				}
-			}
-		}
+		resetFinalizationCommittee(scQt, currentStatusId);
 		//#35320 - End
 		
 		if (finalizationSecratary == null
@@ -3794,6 +3792,66 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		return finalizationSecratary;
 	}
+	
+	// #35320 - Start;
+		/**
+		 * #35320
+		 * Resets the finalization committee and secretary when the quotation
+		 * is finalized by a supported quotation committee and the current status
+		 * is a trigger status.
+		 *
+		 * @param scQt the quotation object to be updated
+		 * @param currentStatusId the current quotation status identifier
+		 */
+		private void resetFinalizationCommittee(ScQt scQt, Long currentStatusId) {
+		    if (!isValidFinalizationCommittee(scQt)) {
+		        return;
+		    }
+
+		    if (!isQuotationCommittee(scQt.getFinalizationCommitte())) {
+		        return;
+		    }
+
+		    if (!resetCommitteeByStatus(currentStatusId)) {
+		        return;
+		    }
+
+		    scQt.setFinalizationCommitte(new PmParameter());
+		    scQt.setFinalizationSecratery(new PmUser());
+		    this.getManagedBean().setQt(scQt);
+		}
+
+		/**
+		 * #35320
+		 * Checks whether the quotation has a valid finalization committee
+		 * and parameter code.
+		 *
+		 * @param scQt the quotation object
+		 * @return {@code true} if the committee and parameter code are present;
+		 *         {@code false} otherwise
+		 */
+		private boolean isValidFinalizationCommittee(ScQt scQt) {
+		    return scQt != null
+		            && scQt.getFinalizationCommitte() != null
+		            && scQt.getFinalizationCommitte().getParameterCode() != null;
+		}
+
+		/**
+		 * #35320
+		 * Determines whether the supplied parameter represents one of the
+		 * supported quotation committee types.
+		 *
+		 * @param committee the finalization committee parameter
+		 * @return {@code true} if the committee is quotation committee A or B;
+		 *         {@code false} otherwise
+		 */
+		private boolean isQuotationCommittee(PmParameter committee) {
+		    String parameterCode = committee.getParameterCode();
+
+		    return ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(parameterCode)
+		            || ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(parameterCode);
+		}
+		// #35320 - End;
 
 	/**
 	 * Retrieve business owner tab dtl.
@@ -4404,8 +4462,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					.equalsIgnoreCase(taskName)) {
 				
 				//#27502 - Start
-				boolean isBpkCentralContract = false;
-				isBpkCentralContract = isBpkCentralContract(scQt);
+				boolean isBpkCentralContract  = isBpkCentralContract(scQt);
 				if (isBpkCentralContract) {	
 					committeSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
@@ -6375,6 +6432,19 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					}
 					checkDemoPresentationByStatus();//#28784
 				}
+
+				// 41312 -start-
+				if (null != scQt.getQtStatus()
+						&& isQTStatusGreaterThanOrEquals(scQt.getQtStatus()
+								.getStatusId(),
+								QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
+						&& null == scQt.getEstimatedAmount()) {
+					BigDecimal estimatedAmount = checkEstimatedAmount(scQt);
+					scQt.setEstimatedAmount(estimatedAmount);
+
+				}
+				// 41312 -end-
+	
 			} finally {
 				QtDetailsSO = null;
 			}
@@ -7323,6 +7393,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			retrieveSuppQualificationTabDtl();
 			setAmmendMentBean(resDTO.getAmendMentBean());
 			getfulfilmentDtls(resDTO.getQtDetail());//#29474
+			//29661 && 41163 -start-
+			if(this.getManagedBean().getQt().isPanel()){
+				getPanelCategory();
+			}
+			//29661 && 41163 -end-
+			
 			break;
 		case 2:
 			//Added the validation for committee while save - 13342
@@ -7798,6 +7874,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				//#35285 & #25635 - End
 				if(!this.getManagedBean().getQt().isCloneEnabled()){//25635&34502-start
 					//#25077 - Start
+					setOtherApprovalLoaded();// 12471
 					if (!getManagedBean().isApproverTabLoaded()) {
 					    retrieveOthersApprovalTabDtl();
 					}
@@ -15021,19 +15098,11 @@ public void retrieveDemoQtDetails(Long qtId) {
 			this.getManagedBean().setCtPanelCategory(true);
 			//#29661 #40094 Start
 			this.getManagedBean().setShowCategoryCodePanel(true);
-			if (isQTStatusPublished(status)){
-				List<TabBean> committeeTabList = this.getManagedBean().getScCommitteeMemberTabList();//#29661 #40093 27th Apr
-				for (TabBean committeeTab :  committeeTabList != null ? committeeTabList : Collections.<TabBean>emptyList()) {
-					if (!ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE.equals(committeeTab.getTabType())){
-						this.getManagedBean().setShowCategoryCodePanel(false);
-						break;
-					}
-				}
-				//#29661 #40093 27th Apr start
-				if (CollectionUtils.isEmpty(this.getManagedBean().getScCommitteeMemberTabList())){
-					this.getManagedBean().setShowCategoryCodePanel(false);
-				}
-			} //#29661 #40093 27th Apr end
+			//#41068 start
+			if (isQTStatusGreaterThanOrEquals(status, QTStatusConst.QT_CLOSED)){
+				this.getManagedBean().setShowCategoryCodePanel(false);
+			}
+			//#41068 end
 		}
 		//#29661 #40094 End
 	}
@@ -15162,13 +15231,8 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 * @param statusId
 	 * @return boolean
 	 */
-	private static boolean isStatusTrigger(long statusId) {
-        final List<Long> triggerStatuses = Arrays.asList(
-                QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
-                QTStatusConst.QT_REVISION_PUBLICATION,
-                QTStatusConst.QT_PENDING_SCHEDULE_REVISION,
-                QTStatusConst.CMT_PENDING_ASSIGN_FC_SECRETARY
-        );
+	private static boolean resetCommitteeByStatus(long statusId) {
+        final List<Long> triggerStatuses = Arrays.asList(QTStatusConst.RESET_COMMITTEE_BY_STATUS);
         return triggerStatuses.contains(statusId);
 	}
 	
@@ -15321,198 +15385,6 @@ public void retrieveDemoQtDetails(Long qtId) {
 		}
 	}
 	//28188 -end-
-	
-	//#28188 - Start
-	private List<ScQtBsvDtl> groupAndSortSiteVisitList(List<ScQtBsvDtl> inputList) {
-
-	    if (CollectionUtils.isEmpty(inputList)) {
-	        return new ArrayList<ScQtBsvDtl>();
-	    }
-
-	    // STEP 1: Build id -> dtl map for lookup (only non-null IDs)
-		List<Long> parentIdList = new ArrayList<>();
-		for (ScQtBsvDtl dtl : inputList) {
-
-			if (dtl.getParentPostponeId() != null
-					&& !parentIdList.contains(dtl.getParentPostponeId())) {
-
-				parentIdList.add(dtl.getParentPostponeId());
-			}
-		}
-
-	    // STEP 2: Group by root ancestor key (walks up via getParentBsvId).
-	    Map<Long, List<ScQtBsvDtl>> grouped = new LinkedHashMap<Long, List<ScQtBsvDtl>>();
-	    long phantomKey = Long.MIN_VALUE;
-
-	    for (ScQtBsvDtl dtl : inputList) {
-	        Long rootKey = getRootParentBsvId(dtl, parentIdList);
-	       
-	        if (rootKey == null) {
-	            rootKey = phantomKey--;
-	        }
-
-	        if (!grouped.containsKey(rootKey)) {
-	            grouped.put(rootKey, new ArrayList<ScQtBsvDtl>());
-	        }
-	        List<ScQtBsvDtl> list = grouped.get(rootKey);
-	        if(CollectionUtils.isNotEmpty(list)){
-	        	list.add(dtl);
-	        	grouped.put(rootKey, list);
-	        }else{
-	        	grouped.get(rootKey).add(dtl);
-	        }
-	        
-			// 28188 -start-
-			if (null != dtl
-					&& null != dtl.getQtBsvDtlId()
-					&& dtl.getRecordStatusFlg().equals(
-							DbValueConst.RECORD_STATUS_PENDING_ACTIVATION)) {
-				dtl.setBsvStatus(getPmStatusByStatusId(QTStatusConst.BSV_PENDING));
-			}
-			// 28188 -end-
-	        
-	    }
-	    // STEP 3: sort grouped list based on status
-	    for (Map.Entry<Long, List<ScQtBsvDtl>> entry : grouped.entrySet()) {
-            Long key = entry.getKey();
-            List<ScQtBsvDtl> list = entry.getValue();
-            
-            List<ScQtBsvDtl> sortedList = new ArrayList<>();
-            List<ScQtBsvDtl> postponeList = new ArrayList<>();
-            List<ScQtBsvDtl> rejectList = new ArrayList<>();
-            List<ScQtBsvDtl> pendingList = new ArrayList<>();
-            List<ScQtBsvDtl> completedList = new ArrayList<>();
-            List<ScQtBsvDtl> pendingUpdateApprList = new ArrayList<>();
-			for (ScQtBsvDtl scQtBsvDtl : list) {
-				if (scQtBsvDtl.getBsvStatus() != null
-						&& scQtBsvDtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_POSTPONE)) {
-					postponeList.add(scQtBsvDtl);
-				} else if (scQtBsvDtl.getBsvStatus() != null
-						&& scQtBsvDtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_REQUEST_REJECT)) {
-					rejectList.add(scQtBsvDtl);
-				} else if (scQtBsvDtl.getBsvStatus() != null
-						&& scQtBsvDtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING)) {
-					pendingList.add(scQtBsvDtl);
-				} else if (scQtBsvDtl.getBsvStatus() != null
-						&& scQtBsvDtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_COMPLETED)) {
-					completedList.add(scQtBsvDtl);
-				} else if (scQtBsvDtl.getBsvStatus() != null
-						&& scQtBsvDtl.getBsvStatus().getStatusId().equals(QTStatusConst.BSV_PENDING_UPDATE_APPROVAL)) {
-					pendingUpdateApprList.add(scQtBsvDtl);
-				}
-			}
-			
-			if (CollectionUtils.isNotEmpty(rejectList)) {
-				sortedList.addAll(rejectList);
-			}
-            if(CollectionUtils.isNotEmpty(postponeList)){
-            	sortedList.addAll(postponeList);
-	        }
-           
-            if(CollectionUtils.isNotEmpty(pendingList)){
-            	sortedList.addAll(pendingList);
-	        }
-            if(CollectionUtils.isNotEmpty(completedList)){
-            	sortedList.addAll(completedList);
-	        }
-            if(CollectionUtils.isNotEmpty(pendingUpdateApprList)){
-            	sortedList.addAll(pendingUpdateApprList);
-	        }
-            
-            if(CollectionUtils.isNotEmpty(sortedList)){
-	        	grouped.put(key, sortedList);
-	        }
-        }
-
-	    // STEP 4: Flatten - each group kept together, ordered by root ID
-	    List<Map.Entry<Long, List<ScQtBsvDtl>>> list =
-                new LinkedList<Map.Entry<Long, List<ScQtBsvDtl>>>(grouped.entrySet());
-
-        Collections.sort(list, new Comparator<Map.Entry<Long, List<ScQtBsvDtl>>>() {
-            public int compare(Map.Entry<Long, List<ScQtBsvDtl>> o1, Map.Entry<Long, List<ScQtBsvDtl>> o2) {
-                return (o1.getKey()).compareTo(o2.getKey());
-            }
-        });
-
-        Map<Long, List<ScQtBsvDtl>> result = new LinkedHashMap<>();
-        for (Map.Entry<Long, List<ScQtBsvDtl>> entry : list) {
-            result.put(entry.getKey(), entry.getValue());
-        }
-	   
-	    List<ScQtBsvDtl> finalList = new ArrayList<>();
-	    for (List<ScQtBsvDtl> bsvList : result.values()) {
-	        finalList.addAll(bsvList);
-	    }
-
-	    return finalList;
-	}
-	//#28188 - End
-
-	//#28188 - Start
-	private ScQtBsvDtl getRootDtl(List<ScQtBsvDtl> list) {
-
-	    if (CollectionUtils.isEmpty(list)) {
-	        return null;
-	    }
-
-	    for (ScQtBsvDtl dtl : list) {
-	        if (dtl.getParentPostponeId() == null) {
-	            return dtl;
-	        }
-	    }
-
-	    return list.get(0);
-	}
-	//#28188 - End
-
-	//#28188 - Start
-	private int compareById(ScQtBsvDtl dtl1, ScQtBsvDtl dtl2) {
-
-	    Long id1 = dtl1 != null ? dtl1.getQtBsvDtlId() : null;
-	    Long id2 = dtl2 != null ? dtl2.getQtBsvDtlId() : null;
-
-	    if (id1 == null && id2 == null) {
-	        return 0;
-	    }
-
-	    if (id1 == null) {
-	        return 1; // null ID last
-	    }
-
-	    if (id2 == null) {
-	        return -1;
-	    }
-
-	    return id1.compareTo(id2);
-	}
-	//#28188 - End
-
-	//#28188 - Start
-	private Long getRootParentBsvId(ScQtBsvDtl dtl, List<Long> parentIdList) {
-	    if (dtl == null) return null;
-         
-	    if (dtl.getParentPostponeId() == null) {
-	    	  return dtl.getQtBsvDtlId(); // may be null for brand-new roots
-	    }
-	    Long parentId=dtl.getQtBsvDtlId();
-	    
-        if(CollectionUtils.isNotEmpty(parentIdList)){
-        	
-        	if(null!=parentId && parentIdList.contains(parentId)){
-        		 
-        		return parentId;	
-        	}else if(null!=parentId && !parentIdList.contains(parentId)){
-        		
-        		 return dtl.getParentPostponeId();
-        	}else if(null==parentId){
-        		
-        		return dtl.getParentPostponeId();
-        	}
-        }
-	    
-	    return parentId;
-	}
-	//#28188 - End
 	
 	//28188 -start-
 	/**

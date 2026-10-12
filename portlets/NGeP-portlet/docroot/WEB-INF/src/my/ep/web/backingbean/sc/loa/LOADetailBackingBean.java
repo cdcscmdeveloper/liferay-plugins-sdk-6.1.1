@@ -134,6 +134,7 @@ import my.ep.persistence.entity.pm.common.PmReason;//#27868
 import my.ep.persistence.entity.pm.common.PmReasonDesc;//#27868
 import my.ep.persistence.entity.pm.common.PmReasonRestr; //#27868
 import my.ep.persistence.entity.pm.common.PmUom;
+import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;//#27868
 import my.ep.persistence.entity.pm.map.PmPK7Mapping;//#27868
 import my.ep.persistence.entity.sc.common.ScActor;
@@ -8252,7 +8253,21 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 //			sb.append(overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt())); 
 			sb.append("^4");
 		}
-		
+			//@asyrafhaziq #27502 - New DO MOF Role and Process - Start
+			if (scLoa.getContractType().getParameterType().equals(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+				
+				sb.append("|pmUserOrgs.pmOrgProfile.bpk^");
+				sb.append(true);
+				sb.append("^1");	
+				
+				PmZone zone = SmCommonUtil.getInstance().getUserZone();		
+				if (zone != null) {
+
+					sb.append("|pmUserOrgs.pmOrgProfile.pmZone.zoneId^");
+					sb.append(zone.getZoneId()); 
+				}
+			 }
+			//@asyrafhaziq #27502 - New DO MOF Role and Process - End
 		return sb.toString();
 	}
 
@@ -13583,5 +13598,31 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		return false;
 	}
 	// #26059 - End
+	
+	// 41033, 41034 - start
+	/**
+	 * Sorts SC LOA remarks in descending order by created date (latest first).
+	 * 
+	 * @return
+	 */
+	public List<ScLoaRemark> getSortedRemarksByDate() {
+		List<ScLoaRemark> remarks = getManagedBean().getScLoa().getScLoaRemarks();
+
+		if (remarks == null || remarks.isEmpty()) {
+			return remarks;
+		}
+
+		List<ScLoaRemark> sortedList = new ArrayList<>(remarks);
+
+		Collections.sort(sortedList, new Comparator<ScLoaRemark>() {
+			@Override
+			public int compare(ScLoaRemark r1, ScLoaRemark r2) {
+				return DateUtils.compareDatesForRemark(r1.getCreatedDate(), r2.getCreatedDate());
+			}
+		});
+
+		return sortedList;
+	}
+	// 41033,41034 - end
 }
 
