@@ -463,6 +463,10 @@ public interface QTConstants {
 	// #36757 Start Vinod
 	public static final String LBL_TPL_SPEC_CONTENT_UNIT_PRICE = "lbl.tpl.spec.content.unit.price";
 	// #36757 End Vinod
+	// #29766 Start Vinod
+	public static final String REVISE_FOR_PK7_POPUP = "reviseForPK7PopUp.show()";
+	public static final String UPDATE_REVISE_FOR_PK7_ID = "@([id$=reviseForPK7Id])";
+	// #29766 End Vinod
 	
 	// 28188 -start-
 	public static final String BSV_REGISTER_DETAILS_SESSION_MAP = "briefingRegistrationMap";
