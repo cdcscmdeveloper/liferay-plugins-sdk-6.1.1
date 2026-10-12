@@ -3829,7 +3829,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				getManagedBean().getScLoa().setBondReq(false);
 			}
 			getManagedBean().setAgreementReqChange(false);
-			getManagedBean().getScLoa().setScLoaAttachment(null);
 			RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
 		} else {
 			getManagedBean().setBondReqSelectedVal(null);
@@ -3837,7 +3836,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			getManagedBean().getScLoa().setBondReq(false);
 			getManagedBean().getScLoa().setAgreementReq(false);
 			getManagedBean().setAgreementReqChange(false);
-			getManagedBean().getScLoa().setScLoaAttachment(null);
 			RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
 		}
 	}
@@ -3890,13 +3888,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 
 			getManagedBean().setAgreementReqChange(false);
-			getManagedBean().getScLoa().setScLoaAttachment(null);
 			RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
 		} else {
 			getManagedBean().setAgreemetSelectedVal(null);
 			getManagedBean().getScLoa().setAgreementReq(false);
 			getManagedBean().setAgreementReqChange(false);
-			getManagedBean().getScLoa().setScLoaAttachment(null);
 			RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
 		}
 	}
@@ -4925,10 +4921,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		scLoa.setScLoaRemarks(initializeRemarks(scLoa, 
 				scLoa.getCurrentStatus(),
 				scLoa.getScLoaRemarks(), ScLoaRemark.class));
-		
-		// #11134 - start
-		scLoa.setScLoaRemarks(filterSupplierRemarks(scLoa.getScLoaRemarks(), false));
-		// #11134 - end		
+				
+		// #11134/#41092  - start
+		List<ScLoaRemark> supplierRemarks = filterSupplierRemarks(scLoa.getScLoaRemarks(), false);
+		getManagedBean().setSupplierRemarks(supplierRemarks);
+		// #11134/#41092  - end
 		
 		// bond calculation
 		//Enhancement #24259 #24269
@@ -12199,7 +12196,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					|| agreementReqChoice.equalsIgnoreCase(ParameterConst.YES_SELECTED)) {
 				getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
 				getManagedBean().getScLoa().setAgreementReq(true);
-				getManagedBean().getScLoa().setScLoaAttachment(null);
 				RequestContext.getCurrentInstance().update(AGREEMENT_REQ_PG);
 				RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
 			} else {
@@ -12457,5 +12453,32 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	}
 
 	// #25726 - End
+	
+	
+	// 41092 - start
+	/**
+	 * Sorts SC LOA remarks in descending order by created date (latest first).
+	 * 
+	 * @return
+	 */
+	public List<ScLoaRemark> getSortedRemarksByDate() {
+		List<ScLoaRemark> remarks = getManagedBean().getScLoa().getScLoaRemarks();
+
+		if (remarks == null || remarks.isEmpty()) {
+			return remarks;
+		}
+
+		List<ScLoaRemark> sortedList = new ArrayList<>(remarks);
+
+		Collections.sort(sortedList, new Comparator<ScLoaRemark>() {
+			@Override
+			public int compare(ScLoaRemark r1, ScLoaRemark r2) {
+				return DateUtils.compareDatesForRemark(r1.getCreatedDate(), r2.getCreatedDate());
+			}
+		});
+
+		return sortedList;
+	}
+	// 41092 - end
 
 }

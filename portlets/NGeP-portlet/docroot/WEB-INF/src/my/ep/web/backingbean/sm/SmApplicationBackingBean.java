@@ -3123,10 +3123,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				//#32236 end
 				SmApplicationUtil.validateCategoriesBeforeSave(true,
 						getManagedBean(), currentTab);
+				SmApplicationUtil.updateOverlapDocsToSmAppl(getManagedBean()); //#40444- reposition 
 				SmApplicationUtil
 						.validateOverlapCategoryJustificationAndSuppDocs(
 								getManagedBean(), currentPageType);
-				SmApplicationUtil.updateOverlapDocsToSmAppl(getManagedBean());
 				SmApplicationUtil.getInstance()
 						.removeNotApplicableInformationBeforeSave(
 								getManagedBean());
@@ -4034,6 +4034,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					log.info("******* This is facility for special category page ********");
 					SmApplicationUtil
 							.handleShowOrHideFacilityPanels(getManagedBean());
+					//#28775 - start
+					if (getManagedBean().getSmAppl().getPmStatus() != null
+							&& getManagedBean().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION) {
+						getManagedBean().getSmAppl().setSiteVisitGroup(true);
+					}
+					//#28775 - end
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP:
 					getManagedBean().setMachineCategoryVOList(
@@ -7124,7 +7130,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			getManagedBean().getSelectedWorkShopFacility().setSmSvWorkers(new ArrayList<SmSvWorker>());
 		}
 		getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
-		if (getManagedBean().isSupplierUser()) {
+		if (getManagedBean().getSmAppl().getPmStatus() != null
+				&& getManagedBean().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION) {
 			getManagedBean().getSmAppl().setSiteVisitGroup(true);
 		}
 		// 29379 - Site Visit Grouping Enhancement -28775 - end
@@ -8028,6 +8035,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					: getManagedBean().getSelectedShareHolder().getEmail();
 			SmCommonUtil.checkEmailDomainWithExceptionMsg(getManagedBean()
 					.getSelectedShareHolder().getName(), email);
+			// #28720 Start
+			if (!getManagedBean().isDisableIcEmail() && (email.contains("@yahoo.com") || email.contains("@ymail.com") || email.contains("@rocketmail.com"))) {
+				getManagedBean().getSelectedShareHolder().setEmail("");
+				RequestContext.getCurrentInstance().execute("emailPopUpWidgetVar.show()");
+				return;
+			}
+			// #28720 End
 		}
 
 		// if not authorized, clear justification
@@ -9832,7 +9846,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		validateNoChangesBeenMadeToApplication();
 		//#28775 - Site Grouping Enhancement
 		validateAllWorkshops();
-		getManagedBean().getSmAppl().setSiteVisitGroup(true);
+		if (getManagedBean().getSmAppl().getPmStatus() != null
+				&& getManagedBean().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION) {
+			getManagedBean().getSmAppl().setSiteVisitGroup(true);
+		}
 		//#28775 end
 
 		// try {
@@ -10882,6 +10899,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	private void updateRegistrationStatus(SmApplSectionReview latestPOChange) {
 	    Long currentRegStatusId = getCurrRegStatusId();
 	    Long prevRegStatusId = getPreviousRegStatusId(latestPOChange);
+	    if(prevRegStatusId == null){
+	    	prevRegStatusId = currentRegStatusId;
+	    }
 	    
 	    // S1125: Simplified boolean expressions
 	    boolean sdmAfterPOSubmit = prevRegStatusId != null && !prevRegStatusId.equals(currentRegStatusId);
@@ -17583,6 +17603,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			}
 		}
 	}
+	// #28720 Start
+	public void onChangeEmail() {
+		String email = getManagedBean().getSelectedShareHolder().getEmail().toLowerCase();
+		if (email.contains("@yahoo.com") || email.contains("@ymail.com") || email.contains("@rocketmail.com")) {
+			getManagedBean().getSelectedShareHolder().setEmail("");
+			RequestContext.getCurrentInstance().execute("emailPopUpWidgetVar.show()");
+		}
+	}
+	// #28720 End
 	
 	private void updateCompanyExpCatNames(SmCompanyExperience exp) {
 		if (EntityHelper.isCollectionEmpty(exp.getSmCompanyExperienceCats())) {
@@ -17843,12 +17872,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
      * @return the resolved country string
      */
 	private String getCompanyCountry(SmAppl smAppl) {
-        String country = smAppl.getSmCompanyBasic().getSsmCompanyCountry();
-
-        if (country != null && !country.isEmpty()) {
-            return country;
-        }
-
         boolean isRoc = isRocBusinessType(smAppl.getSmSupplier().getBusinessType());
         boolean isForeign = isValidForeignRegNo(smAppl.getSmSupplier().getRegNo());
 
@@ -17856,6 +17879,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
             String localCompany = SupplierManagementConst.SSM_COMPANY_COUNTRY_MALAYSIA;
             smAppl.getSmCompanyBasic().setSsmCompanyCountry(localCompany);
             return localCompany;
+        }
+
+        String country = smAppl.getSmCompanyBasic().getSsmCompanyCountry();
+
+        if (country != null && !country.isEmpty()) {
+            return country;
         }
 
         return SupplierManagementConst.SSM_COMPANY_COUNTRY_DEFAULT;

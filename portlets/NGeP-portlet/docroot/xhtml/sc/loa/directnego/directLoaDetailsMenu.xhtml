@@ -1155,15 +1155,15 @@ a:hover.blue_font {
 		</table>
 	</p:panel>
 	
-	<!-- 11134 -start- -->
+	<!-- #11134/#41092 -start- -->
 	<p:outputPanel id="remarksPanel">
 		<ac:scRemarkAndAttachment
-			rendered="#{not empty directLOABackingBean.managedBean.scLoa.scLoaRemarks}"
-			remarkList="#{directLOABackingBean.managedBean.scLoa.scLoaRemarks}"
+			rendered="#{not empty directLOABackingBean.managedBean.supplierRemarks}"
+			remarkList="#{directLOABackingBean.managedBean.supplierRemarks}"
 			showAttachment="false" readonly="true" />
 	</p:outputPanel>
-	<!-- 11134 -end- -->
-<!-- #25726 START -->
+	<!-- #11134/#41092 -end- -->
+	<!-- #25726 START -->
 	<p:confirmDialog id="qtChangeAgreementReqDlg" widgetVar="qtChangeAgreementReqDlg"  appendToBody="true" 
 		message="#{lbl['lbl.msg.confirm.change']}" 	severity="alert"  closable="false">
 		<div class="ppRightBtn">
@@ -1182,8 +1182,8 @@ a:hover.blue_font {
 		<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false"
 		    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" showButtons="false"
 			fileUploadListener="#{directLOABackingBean.fileUpload}" multiple="false"
-			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="approvalLetterUploadWV"
-			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+			allowTypes="#{CommonConstants.FILE_UPLOAD_AGREEMENT_TYPES}" widgetVar="approvalLetterUploadWV"
+			invalidFileMessage="#{lbl['lbl.txt.upload.agreement.invalid.file']}"
 			invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}" 
 			update=":form:uploadedPage" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadApprovalLetterDlg.hide();" >
 		</p:fileUpload>

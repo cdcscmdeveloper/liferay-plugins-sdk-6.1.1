@@ -47,6 +47,9 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
+//#29642 Start
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
+//#29642 End
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.VPmLocation;
 import my.ep.persistence.logging.LogKey;
@@ -63,6 +66,9 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.pm.location.LocationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+//#29642 Start
+import my.ep.web.util.pm.helper.ParameterHelper;
+//#29642 End
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.log4j.Logger;
@@ -110,6 +116,14 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 	public void searchLocation() {
 		this.getManagedBean().setLazy(true);
+		//#29642 Start
+		if(this.getManagedBean().getLocationSearchBean().getLocationType() == null){
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.pm.location.type", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale())});
+
+		}
+		//#29642 End
 		searchLocation.reloadData();
 	}
 
@@ -212,7 +226,17 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 							getManagedBean().getLocationSearchBean()
 									.getLocationName(), true));
 		}
+		//#29642 Start
+		if (lSearchBean.getAdditionalLocationName() != null
+				&& lSearchBean.getAdditionalLocationName().trim().length() > 0) {
 
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("locationName",
+							SearchOperator.OPERATOR_LIKE.value(),
+							getManagedBean().getLocationSearchBean()
+									.getAdditionalLocationName(), true));
+		}
+		//#29642 End
 		if (lSearchBean.getRecordStatus() != null
 				&& lSearchBean.getRecordStatus().trim().length() > 0) {
 		searchBean.getDataFilterBeans().add(
@@ -225,7 +249,18 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 								.value(), new ArrayList<String>(Arrays.asList(ParameterConst.RECORD_STATUS_INACTIVE, ParameterConst.RECORD_STATUS_ACTIVE))));
 			 
 		 }
-
+		//#29642 Start
+		if (lSearchBean.getAdditionalLocationType() != null && lSearchBean.getRecordAdditional().trim().length() > 0) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("additionalLocationType", SearchOperator.OPERATOR_EQUALS.value(), lSearchBean
+							.getAdditionalLocationType()));
+		} else {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("locationType", SearchOperator.OPERATOR_IN.value(), new ArrayList<String>(
+							Arrays.asList(ParameterConst.LOCATION_LEVEL_STATE, ParameterConst.LOCATION_LEVEL_DIVISION,
+									ParameterConst.LOCATION_LEVEL_DISTRICT, ParameterConst.LOCATION_LEVEL_CITY))));
+		}
+		//#29642 End
 		return searchBean;
 	}
 
@@ -784,6 +819,83 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 		return PmCommonUtil.getCommonStatusOptions();
 	}
+	
+	//#29642 Start
+	public SelectItem[] getDropdownCodeValuesAdditionalLocation(String parameterType, String parameterCode) {
+		
+		ISearchBean<PmParameterDesc> searchBean = super.createSearchBean(PmParameterDesc.class,
+				"tdDropdownCodeValuesAdditionalLocation");
+
+
+		if (parameterCode.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DIVISION)) {
+
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_EQUALS.value(),
+							ParameterConst.LOCATION_LEVEL_STATE));
+
+		} else if (parameterCode.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DISTRICT)) {
+
+			SearchFilterBean bean = new SearchFilterBean();
+			bean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
+			bean.setSearchField("pmParameter.parameterCode");
+			bean.setSearchValue(new ArrayList<String>(Arrays.asList(new String[] { ParameterConst.LOCATION_LEVEL_STATE,
+					ParameterConst.LOCATION_LEVEL_DIVISION })));
+
+			searchBean.getDataFilterBeans().add(bean);
+
+		} else if (parameterCode.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_CITY)) {
+
+			SearchFilterBean bean = new SearchFilterBean();
+			bean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
+			bean.setSearchField("pmParameter.parameterCode");
+			bean.setSearchValue(new ArrayList<String>(Arrays.asList(new String[] { ParameterConst.LOCATION_LEVEL_STATE,
+					ParameterConst.LOCATION_LEVEL_DIVISION, ParameterConst.LOCATION_LEVEL_DISTRICT})));
+
+			searchBean.getDataFilterBeans().add(bean);
+		}
+
+		return getDropdownCodeValuesBySearchBeanAddLoc(parameterType, searchBean);
+	}
+
+	public SelectItem[] getDropdownCodeValuesBySearchBeanAddLoc(String parameterType,
+			ISearchBean<PmParameterDesc> searchBean) {
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+
+		try {
+			
+			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(
+					parameterType, searchBean);
+
+			if (parameterType.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_STATE)) {
+				items = new SelectItem[parameterDescs.size()];
+			 } else {
+				items = new SelectItem[parameterDescs.size() + 1];
+			 }
+			
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+			int i = 1;
+			for (PmParameterDesc parameterDesc : parameterDescs) {
+				items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterCode(),
+						parameterDesc.getCodeName());
+			 }
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+
+		return items;
+	}
+	
+	public void changeLocationType(){
+		log.info("changeLocationType" );
+		this.getManagedBean().getLocationSearchBean().setRecordAdditional(null);
+	}
+	//#29642 End
+	
+
 
 	/**
 	 * reset search bean fields

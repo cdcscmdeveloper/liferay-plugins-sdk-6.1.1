@@ -38,14 +38,23 @@
 					listener="#{softCertBackingBean.unSelectPersonnel}"
 					update=":form:resultPanelId,@([id$=proceedBtnId])"></p:ajax>
 					
+				<!-- #10729 start -->
 				<p:column selectionMode="single" style="width:2%" disabledSelection="#{personnel.disableRowSelection}" 
-					rendered="#{not empty softCertBackingBean.managedBean.authorizedPersonnels}"/>
+					rendered="#{not empty softCertBackingBean.managedBean.authorizedPersonnels 
+					and softCertBackingBean.managedBean.loginUserPersonnelInfo.smAppl.smSupplier.recordStatusFlg ne 5}"/>
+				<!-- #10729 end -->
 
 				<p:column headerText="#{lbl['lbl.sm.userprofile.name']}" style="width : 30%;white-space : normal" 
 					disabledSelection="#{personnel.disableRowSelection}">
 					<h:outputText value="#{personnel.name}" />
 				</p:column>
 
+				<!-- #10729 start -->
+				<p:column headerText="#{lbl['lbl.sm.soft.cert.idno']}"  disabledSelection="#{personnel.disableRowSelection}">
+					<h:outputText value="#{personnel.identificationNo}" />
+				</p:column>
+				<!-- #10729 end -->
+				
 				<p:column headerText="#{lbl['lbl.sm.userprofile.nationality']}"  disabledSelection="#{personnel.disableRowSelection}">
 					<h:outputText value="#{personnel.pmCountry.countryName}" />
 				</p:column>
@@ -66,21 +75,25 @@
 					<ac:smSoftcertStatus personnel="#{personnel}" />
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.sm.userprofile.accountstatus']}" disabledSelection="#{personnel.disableRowSelection}">
+				<!-- #10729 start -->
+				<p:column headerText="#{lbl['lbl.sm.userprofile.accountstatus']}" disabledSelection="#{personnel.disableRowSelection}"
+					rendered="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.smAppl.smSupplier.recordStatusFlg ne 5}">
 					<h:outputText value="#{lbl['lbl.sm.accountstatus.active']}" rendered="#{personnel.recordStatusFlg eq '1'}" />
 					<h:outputText value="#{lbl['lbl.sm.accountstatus.pendingactivation']}" rendered="#{personnel.recordStatusFlg eq '8'}" />
 					<h:outputText value="#{lbl['lbl.sm.accountstatus.inactive']}" rendered="#{personnel.recordStatusFlg eq '9'}" />
 				</p:column>
 				
-				<p:column disabledSelection="#{personnel.disableRowSelection}"
-					headerText="#{lbl['lbl.sm.softcert.no']}">
+				<p:column disabledSelection="#{personnel.disableRowSelection}" headerText="#{lbl['lbl.sm.softcert.no']}"
+					rendered="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.smAppl.smSupplier.recordStatusFlg ne 5}">
 					<h:outputText value="#{personnel.softcertNo}" />
 				</p:column>
 
-				<p:column disabledSelection="#{personnel.disableRowSelection}"
-					headerText="#{lbl['lbl.sm.userprofile.softcertexpirationdate']}">
+				<p:column disabledSelection="#{personnel.disableRowSelection}" 
+					headerText="#{lbl['lbl.sm.userprofile.softcertexpirationdate']}"
+					rendered="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.smAppl.smSupplier.recordStatusFlg ne 5}">
 					<h:outputText value="#{personnel.softcertValidityDate}" />
 				</p:column>
+				<!-- #10729 end -->
 
 			</p:dataTable>
 			
