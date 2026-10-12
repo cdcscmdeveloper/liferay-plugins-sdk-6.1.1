@@ -7693,6 +7693,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		procurementTypeList.add(ProcurementPlanConst.PROCUREMENT_ITEM_TYPE_TD); // TD - Tender
 		procurementTypeList.add(ProcurementPlanConst.SELECTIVE_TENDERING); 	// STR - Selective Tendering
 		procurementTypeList.add(ProcurementPlanConst.REQUEST_FOR_PROPOSAL); // RP - Tender Terbuka Request For Proposal
+		procurementTypeList.add(ProcurementPlanConst.DIRECT_NEGOTIATION); // LTR - Limited Tendering / Rundingan Terus #40858
 		searchBean.getDataFilterBeans().add(new SearchFilterBean("procurementType.parameterCode",SearchOperator.OPERATOR_IN.value(), procurementTypeList));
 		//34233 - End
 			
