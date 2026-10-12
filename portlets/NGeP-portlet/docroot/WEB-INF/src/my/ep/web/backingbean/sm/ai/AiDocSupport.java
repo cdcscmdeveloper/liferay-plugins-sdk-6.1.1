@@ -36,6 +36,7 @@ import my.ep.dto.pm.common.division.DivisionReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.helper.EntityHelper;
+import my.ep.persistence.entity.ai.AIApiResponse;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
@@ -58,6 +59,7 @@ public final class AiDocSupport {
 
 	private static final String BR = "<br/>";
 	private static final String LBL_DOC_INVALID = "lbl.sm.ai.doc.invalid";
+	private static final String LBL_AI_UNAVAILABLE = "lbl.sm.ai.unavailable";
 	private static final String AI_ONOFF = EpPropertiesUtils.getInstance().getProperty("google.doc.ai.onoff");
 	private static final String AI_BANK_OCR = EpPropertiesUtils.getInstance().getProperty("google.doc.bank.co.name.check.onoff");
 	// this filename will always go to API
@@ -279,22 +281,24 @@ public final class AiDocSupport {
 		private static String toDbChars(String json) {
 			CharsetEncoder dbCharset = Charset.forName("windows-1252").newEncoder();
 			StringBuilder sb = new StringBuilder(json.length());
-			for (int i = 0; i < json.length(); i++) {
+			int i = 0;
+			while (i < json.length()) {
 				char c = json.charAt(i);
 				if (c == '\\' && i + 1 < json.length()) {
 					char next = json.charAt(i + 1);
 					if (next == 'u' && i + 5 < json.length()
 							&& !dbCharset.canEncode((char) Integer.parseInt(json.substring(i + 2, i + 6), 16))) {
 						sb.append('\u00bf');
-						i += 5;
-						continue;
+						i += 6;
+					} else {
+						// any other escape is copied whole, so an escaped backslash is not read as an escape
+						sb.append(c).append(next);
+						i += 2;
 					}
-					// any other escape is copied whole, so an escaped backslash is not read as an escape
-					sb.append(c).append(next);
+				} else {
+					sb.append(dbCharset.canEncode(c) ? c : '\u00bf');
 					i++;
-					continue;
 				}
-				sb.append(dbCharset.canEncode(c) ? c : '\u00bf');
 			}
 			return sb.toString();
 		}
@@ -313,11 +317,42 @@ public final class AiDocSupport {
 		}
 		
 		/**
+		 * The AI never read this file: unreachable, an error status, or a body that does not parse.
+		 * 415/422 is the AI rejecting the document, which is a wrong document, not an outage.
+		 * @param res
+		 * @return
+		 */
+		public static boolean isUnavailable(AIApiResponse res) {
+			return isUnavailable(res.getApiResponseId(), res.getResponseStatus(), res.getJsonResponse());
+		}
+
+		public static boolean isUnavailable(Long apiId, Integer status, String jsonContent) {
+			if (status != null && (status == 415 || status == 422)) {
+				return false;
+			}
+			return status == null || status != 200 || !isParseable(apiId, jsonContent);
+		}
+
+		private static boolean isParseable(Long apiId, String jsonContent) {
+			try {
+				new JSONObject(toDbChars(jsonContent));
+				return true;
+			} catch (JSONException | NullPointerException | NumberFormatException e) {
+				log.error("AI_API_RESPONSE " + apiId + " unparseable: " + e);
+				return false;
+			}
+		}
+
+		public static String unavailableLabel() {
+			return label(LBL_AI_UNAVAILABLE);
+		}
+
+		/**
 		 * Tenancy object
 		 * @param entities
 		 * @return
 		 */
-		public static AiTenancyDTO toTenancy(JSONArray entities) {
+		public static AiTenancyDTO toTenancy(Long apiId, JSONArray entities) {
 			AiTenancyDTO dto = new AiTenancyDTO();
 			try {
 				for (int i = 0; i < entities.length(); i++) {
@@ -354,11 +389,13 @@ public final class AiDocSupport {
 					}
 				}
 			} catch (JSONException e) {
-				log.error("Error TenancyEntity", e);
+				log.error("Error TenancyEntity " + apiId, e);
 				dto.setError(true);
+				dto.setUnavailable(true);
 			} catch (NullPointerException e) {
-				log.error("Error TenancyEntity-NPE");
+				log.error("Error TenancyEntity-NPE " + apiId);
 				dto.setError(true);
+				dto.setUnavailable(true);
 			}
 			if (dto.getLandlordsName() == null && dto.getTenantsName() == null
 					&& dto.getMonthlyRental() == null && dto.getPremisesAddress() == null) {
@@ -472,9 +509,12 @@ public final class AiDocSupport {
 		 * @param entities
 		 * @return
 		 */
-		public static AiEpfResultDTO toEpf(JSONArray entities) {
+		public static AiEpfResultDTO toEpf(Long apiId, JSONArray entities) {
 			AiEpfResultDTO dto = new AiEpfResultDTO();
 			List<AiEpfResultDTO.AiEmployeeDTO> employees = new ArrayList<>();
+			if (entities == null) {
+				return dto;
+			}
 			try {
 				for (int i = 0; i < entities.length(); i++) {
 					JSONObject entityObj = entities.getJSONObject(i);
@@ -483,8 +523,9 @@ public final class AiDocSupport {
 
 					if (entityId.startsWith("employee-")) {
 						AiEpfResultDTO.AiEmployeeDTO emp = toEmployee(properties);
-						// a row the AI could not read a name or IC/passport for is dropped
-						if (StringUtils.isNotBlank(emp.getEmployeeName()) && StringUtils.isNotBlank(emp.getIdNo())) {
+						// a row the AI could not read a name, IC/passport or EPF No. for is dropped
+						if (StringUtils.isNotBlank(emp.getEmployeeName()) && StringUtils.isNotBlank(emp.getIdNo())
+								&& StringUtils.isNotBlank(emp.getKwspNumber())) {
 							employees.add(emp);
 						}
 					} else if (entityId.startsWith("employer-")) {
@@ -492,9 +533,11 @@ public final class AiDocSupport {
 					}
 				}
 			} catch (JSONException e) {
-				log.error("Error EPFEntity", e);
+				log.error("Error EPFEntity " + apiId, e);
+				dto.setUnavailable(true);
 			} catch (NullPointerException e) {
-				log.error("Error EPFEntity-NPE");
+				log.error("Error EPFEntity-NPE " + apiId);
+				dto.setUnavailable(true);
 			}
 			dto.setEmployees(employees);
 			return dto;
@@ -577,11 +620,13 @@ public final class AiDocSupport {
 				// deduped in validateBank, so nothing is scored until the duplicates are gone
 				dto.setBankStatements(parsed);
 			} catch (JSONException e) {
-				log.error("Error DocEntity", e);
+				log.error("Error DocEntity " + apiId, e);
 				dto.setError(true);
+				dto.setUnavailable(true);
 			} catch (NullPointerException e) {
-				log.error("Error DocEntity-NPE");
+				log.error("Error DocEntity-NPE " + apiId);
 				dto.setError(true);
+				dto.setUnavailable(true);
 			}
 			return dto;
 		}
@@ -1218,6 +1263,7 @@ public final class AiDocSupport {
 		private List<AiEmployeeDTO> employees = new ArrayList<>();
 
 		private boolean validEmployerName = true;
+		private boolean unavailable;
 
 		public Long getApiId() {
 			return apiId;
@@ -1232,6 +1278,9 @@ public final class AiDocSupport {
 		 * employee rows carry no verdict of their own and are not rendered here.
 		 */
 		public String getLabel() {
+			if (unavailable) {
+				return AiDocParser.unavailableLabel();
+			}
 			// nothing mapped out of this file, same verdict as Bank and Tenancy report
 			if (employerName == null && getEmployees().isEmpty()) {
 				return AiDocParser.label(LBL_DOC_INVALID);
@@ -1254,6 +1303,14 @@ public final class AiDocSupport {
 
 		public void setValidEmployerName(boolean validEmployerName) {
 			this.validEmployerName = validEmployerName;
+		}
+
+		public boolean isUnavailable() {
+			return unavailable;
+		}
+
+		public void setUnavailable(boolean unavailable) {
+			this.unavailable = unavailable;
 		}
 
 		public String getEmployerName() {
@@ -1347,9 +1404,13 @@ public final class AiDocSupport {
 		private boolean validAddress;
 
 		private boolean error;
+		private boolean unavailable;
 
 		// Field labels from the common bundle (locale-sensitive at render time).
 		public String getLabel() {
+			if (this.unavailable) {
+				return AiDocParser.unavailableLabel();
+			}
 			if (this.error) {
 				return AiDocParser.label(LBL_DOC_INVALID);
 			}
@@ -1522,6 +1583,14 @@ public final class AiDocSupport {
 		public void setError(boolean error) {
 			this.error = error;
 		}
+
+		public boolean isUnavailable() {
+			return unavailable;
+		}
+
+		public void setUnavailable(boolean unavailable) {
+			this.unavailable = unavailable;
+		}
 	}
 
 	/**
@@ -1535,6 +1604,7 @@ public final class AiDocSupport {
 		private Long apiId;
 		private List<AiBankStatementDTO> bankStatements = new ArrayList<>();
 		private boolean error;
+		private boolean unavailable;
 
 		public Long getApiId() {
 			return apiId;
@@ -1560,8 +1630,19 @@ public final class AiDocSupport {
 			this.error = error;
 		}
 
+		public boolean isUnavailable() {
+			return unavailable;
+		}
+
+		public void setUnavailable(boolean unavailable) {
+			this.unavailable = unavailable;
+		}
+
 		public String getLabel() {
 			StringBuilder sb = new StringBuilder();
+			if (this.unavailable) {
+				return AiDocParser.unavailableLabel();
+			}
 			if (this.error) {
 				return AiDocParser.label(LBL_DOC_INVALID);
 			}
