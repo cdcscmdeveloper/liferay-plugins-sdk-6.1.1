@@ -7733,29 +7733,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		if (null == prpExp || null == prpExp.getSourceType()) {
 			return Boolean.FALSE;
 		}
-		
-		PmParameter sourceType = prpExp.getSourceType();
-		boolean isSourceType = null != sourceType && null != prpExp.getScLoa();
 
-		boolean isLoaSourceType = isSourceType
-				&& SourcingConstants.SOURECE_TYPE_QT_ID.equals(sourceType
-						.getParameterId())
-				&& CollectionUtils.isNotEmpty(prpExp.getScLoa()
-						.getScLoaReports());
-
-		boolean isSelfSourceType = null != sourceType
-				&& SourcingConstants.SOURECE_TYPE_SELF_ID.equals(sourceType
-						.getParameterId())
+		// 29661 && 41511 -start-
+		return SourcingConstants.SOURECE_TYPE_SELF_ID.equals(prpExp
+				.getSourceType().getParameterId())
 				&& null != prpExp.getSmCompExpMaster()
 				&& CollectionUtils.isNotEmpty(prpExp.getSmCompExpMaster()
 						.getCompExpMasterDocs());
-
-		if (isLoaSourceType || isSelfSourceType) {
-
-			return Boolean.TRUE;
-		}
-
-		return Boolean.FALSE;
+		// 29661 && 41511 -end-
 	}
 
 	// 29661 -end-
