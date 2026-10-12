@@ -652,4 +652,27 @@ public class DateUtils {
 		return new int[] { totalMonths, remainingDays };
 	}
 	// #32418,#40279 - End
+	
+	//41033,41034 - start
+	/**
+	 * Compare two dates with null handling.
+	 * Null dates are treated as "older" than non-null dates.
+	 * 
+	 * @param d1 first date
+	 * @param d2 second date
+	 * @return negative if d1 is newer than d2, positive if d1 is older than d2, 0 if equal
+	 */
+	public static int compareDatesForRemark(Date d1, Date d2) {
+	    if (d1 == null && d2 == null) {
+	        return 0;
+	    }
+	    if (d1 == null) {
+	        return 1; // null is considered older
+	    }
+	    if (d2 == null) {
+	        return -1; // null is considered older
+	    }
+	    return d2.compareTo(d1); // descending order
+	}
+	//41033,41034 - end
 }

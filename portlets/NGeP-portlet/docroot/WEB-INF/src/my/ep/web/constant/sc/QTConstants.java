@@ -429,4 +429,8 @@ public interface QTConstants {
 	public static final String LBL_SC_TEC_COMPLIANCE = "lbl.sc.tec.compliance";
 	public static final String LBL_TPL_SPEC_CONTENT_USER_SCORE = "lbl.tpl.spec.content.user.score";
 	// #29187 End Vinod
+
+	// #25726 - Start
+	public static final String SURAT_SETUJU_TERIMA = "Surat Setuju Terima (Termasuk Lampiran A)";
+	// #25726 - End
 }
