@@ -4786,6 +4786,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 					this.getManagedBean().setSpecMasterList(masterList);
 				}
 				// #25138-end
+				templateSpecBean.setWeightage35384WIP(this.getManagedBean().isWeightage35384WIP()); //#38151 pass WIP so getTemplateMaster keeps old calculation (no divide)
 				specBB.retrieveTemplateSpecMaster(templateSpecBean);
 				//#29187 Start Vinod
 				for (TplSpecAnswer answer : specBB.getManagedBean().getTemplateSpecBean().getSpecAnswerList()) {
@@ -17828,37 +17829,8 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 	
 	//#38151 Start
 	private void checkWeightage35384WIP() {
-		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-				IQTDetailSO.class);
-		ScQt qt = this.getManagedBean().getScQt();
-		Date publishDate = qt.getPublishDate();
-		Date createdDate = qt.getCreatedDate();
-		
-		if (null == publishDate) {
-			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
-			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
-			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
-
-			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
-
-			Date effDate = appVerDtls.getEffDate();
-			Timestamp effTimestamp = new Timestamp(effDate.getTime());
-			
-			if (createdDate.before(effTimestamp)) {
-				this.getManagedBean().setWeightage35384WIP(true);
-			}
-		}else{
-			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
-			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
-			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
-
-			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
-
-			Date effDate = appVerDtls.getEffDate();
-
-			if (publishDate.before(effDate)) {
-				this.getManagedBean().setWeightage35384WIP(true);
-			}
+		if (isWeightage35384WIP(this.getManagedBean().getScQt())) { //#38151 shared in SourcingBaseBackingBean
+			this.getManagedBean().setWeightage35384WIP(true);
 		}
 	}
 	//#38151 End

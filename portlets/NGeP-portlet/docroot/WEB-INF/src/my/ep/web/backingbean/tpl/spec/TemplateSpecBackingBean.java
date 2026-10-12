@@ -42,6 +42,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO; //#38151
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;//#21695
+import my.ep.biz.service.sc.quationtender.IQTSpecSO; //#38151
 import my.ep.biz.service.tpl.spec.ISpecZoneLocSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.MessageConst;
@@ -239,6 +240,7 @@ public class TemplateSpecBackingBean extends
 			}
 			reqDTO.setScQt(this.getManagedBean().getScQt());
 			reqDTO.setDocType(this.getManagedBean().getDocType());
+			reqDTO.setWeightage35384WIP(templateSpecBean.isWeightage35384WIP()); //#38151 WIP from caller (e.g. Evaluation): no divide of manual score
 			TemplateSpecResDTO resDTO = templateSpecSO
 					.getTemplateMaster(reqDTO);
 			if (resDTO.isSuccessful()) {
@@ -4014,17 +4016,26 @@ public class TemplateSpecBackingBean extends
 	
 	// #38151 Start
 	private void checkWeightage35384WIP() {
-		//#30432 - Start
-		//Fix return null during Template Specification Maintenance.
-		if (this.getManagedBean().getTemplateSpecBean().getSpecMaster().getScQtDoc() == null){
+		// #30432 - Start
+		// Fix return null during Template Specification Maintenance.
+		if (this.getManagedBean().getTemplateSpecBean().getSpecMaster().getScQtDoc() == null) {
 			return;
 		}
-		//#30432 - End
+		// #30432 - End
 		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTDetailSO.class);
 		ScQt qt = this.getManagedBean().getTemplateSpecBean().getSpecMaster().getScQtDoc().getScQt();
 		Date publishDate = qt.getPublishDate();
 		Date createdDate = qt.getCreatedDate();
+
+		// #38151 4ser max score setting: < 7 (no Technical By Item) = WIP
+		// candidate
+		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+		EvaluationReqDTO req4SerDTO = new EvaluationReqDTO();
+		req4SerDTO.setQtId(qt.getQtId());
+		int wipstatus = evaluationSO.checkWipScoreSettingMax(req4SerDTO);
+		boolean checkStatusWip = checkWipScoreSettingFlag(qt.getQtId()); //#38151
 
 		if (null == publishDate) {
 			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
@@ -4050,8 +4061,19 @@ public class TemplateSpecBackingBean extends
 
 			if (publishDate.before(effDate)) {
 				this.getManagedBean().setWeightage35384WIP(true);
+			} else if (publishDate.after(effDate) && wipstatus < SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM
+					&& !checkStatusWip) {
+				this.getManagedBean().setWeightage35384WIP(true);
 			}
 		}
+
+	}
+
+	// #38151 true = score setting saved with OVERALL_OTHER_FLAG (non-WIP)
+	private boolean checkWipScoreSettingFlag(Long qtId) {
+		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTSpecSO.class);
+		return specSo.checkWipScoreFlag(qtId);
 	}
 	
 	//#35293 - Start
