@@ -1774,8 +1774,9 @@ public class ConsolidationReportBackingBean extends
 		EvaluationReqDTO req4SerDTO = new EvaluationReqDTO();
 		req4SerDTO.setQtId(qtId);
 		int wipstatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
+		boolean checkStatusWip = isWipScoreFlagSaved(qt.getQtId()); //#38151 true = OVERALL_OTHER_FLAG saved (non-WIP)
 		String reportName = "";
-		if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+		if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE && !checkStatusWip) { //#38151
 			reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_WIP_JSP;
 		} else {
 			reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_JSP;
@@ -1835,8 +1836,9 @@ public class ConsolidationReportBackingBean extends
 		EvaluationReqDTO req4SerDTO = new EvaluationReqDTO();
 		req4SerDTO.setQtId(qtId);
 		int wipstatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
+		boolean checkStatusWip = isWipScoreFlagSaved(qt.getQtId()); //#38151 true = OVERALL_OTHER_FLAG saved (non-WIP)
 		String reportName = "";
-		if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+		if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE && !checkStatusWip) { //#38151
 			reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_WIP_JSP;
 		} else {
 			reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_JSP;
