@@ -12,6 +12,8 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.biz.bean.sc.BidItemBean;
 import my.ep.biz.bean.sc.BidPackageBean;
+import my.ep.persistence.entity.pm.common.PmAuthority;
+import my.ep.persistence.entity.pm.common.PmAuthorityCommittee;
 import my.ep.persistence.entity.sc.bidding.ScBid;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidPrice;
@@ -176,6 +178,14 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	private boolean flagBranchDeleted = false;
 
 	// #28777 & #29729 - End
+	
+	//#27502 - New DO MOF Role and Process - Start
+	private PmAuthority approvalAuthority;
+	private PmAuthorityCommittee approvalAuthCommittee;
+	private List<PmAuthority> listApprovalAuthority;
+	private List<PmAuthorityCommittee> listApprovalAuthCommittee;
+	//#27502 - New DO MOF Role and Process - End
+	
 	
 	/**
 	 * @return the onlineBiddingActiveIndex
@@ -1398,5 +1408,38 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 		this.flagBranchDeleted = flagBranchDeleted;
 	}
 	// #28777 & #29729 - End
+	//#27502 - New DO MOF Role and Process - Start
+	public PmAuthority getApprovalAuthority() {
+		return approvalAuthority;
+	}
+
+	public void setApprovalAuthority(PmAuthority approvalAuthority) {
+		this.approvalAuthority = approvalAuthority;
+	}
+
+	public PmAuthorityCommittee getApprovalAuthCommittee() {
+		return approvalAuthCommittee;
+	}
+
+	public void setApprovalAuthCommittee(PmAuthorityCommittee approvalAuthCommittee) {
+		this.approvalAuthCommittee = approvalAuthCommittee;
+	}
+
+	public List<PmAuthority> getListApprovalAuthority() {
+		return listApprovalAuthority;
+	}
+
+	public void setListApprovalAuthority(List<PmAuthority> listApprovalAuthority) {
+		this.listApprovalAuthority = listApprovalAuthority;
+	}
+
+	public List<PmAuthorityCommittee> getListApprovalAuthCommittee() {
+		return listApprovalAuthCommittee;
+	}
+
+	public void setListApprovalAuthCommittee(List<PmAuthorityCommittee> listApprovalAuthCommittee) {
+		this.listApprovalAuthCommittee = listApprovalAuthCommittee;
+	}
+	//#27502 - New DO MOF Role and Process - End
 	
 }

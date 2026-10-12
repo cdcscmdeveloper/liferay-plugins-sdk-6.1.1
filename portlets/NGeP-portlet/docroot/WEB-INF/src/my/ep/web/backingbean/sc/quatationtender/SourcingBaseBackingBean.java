@@ -32,7 +32,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
+import java.util.LinkedHashMap;//#28188
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -174,7 +174,7 @@ import my.ep.persistence.entity.sc.quationtender.ScFinancialEvaluationReportAtta
 import my.ep.persistence.entity.sc.quationtender.ScOpenCommitteeReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
-import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
+import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;//#28188
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;//#28188
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
@@ -288,6 +288,7 @@ import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.ct.CtContractVer;
+import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.backingbean.sc.loa.QtLOABackingBean;
 import my.ep.persistence.entity.ct.terminate.CtTermination;
@@ -899,8 +900,19 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	// 38523, #35320  - end
-
-
+	
+	// 29661 - start
+	protected IQTSpecSO getQTSpecSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+	}
+	// 29661 - end
+	
+	// 29661 - start
+	protected ICategoryCodeSO getCategoryCodeSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				ICategoryCodeSO.class);
+	}
+	// 29661 - end
 	/**
 	 * To initialize remarks.
 	 * 
@@ -2545,33 +2557,42 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return contractTypes;
 	}
 	
-	// add rule #27502 START
-	public List<PmParameterDesc> getContractTypesForQt(String procurementMode,ScQt scqt) {
-		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+	/**
+	 * add rule #27502 START
+	 * @param procurementMode
+	 * @param scqt
+	 * @return
+	 */
+	public List<PmParameterDesc> getContractTypesForQt(String procurementMode, ScQt scqt) {
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<>();
+
 		// check logged in user allow central contract for qt.
-		boolean isAllowCentralContract =  isAllowCentralContract();
+		boolean isAllowCentralContract = isAllowCentralContract();
 		boolean isRuleBpk = false;
-		
-		if (scqt != null){
-			IRuleSO ruleSO = (IRuleSO) EpEjbBusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
-			List<Object[]> bpkList = ruleSO.getBpkByOrgProfileIdAndRuleType(scqt.getOrgProfileId(), RuleTypeConst.PTJCO);
-			
-			if(bpkList != null){
+
+		if (scqt != null) {
+			IRuleSO ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IRuleSO.class);
+			// #27502 - New DO MOF Role and Process
+			List<Object[]> bpkList = ruleSO.getBpkByOrgProfileIdAndRuleType(scqt.getOrgProfileId(),
+					RuleTypeConst.PTJ_CODE);
+
+			if (bpkList != null) {
+
 				isRuleBpk = true;
 			}
 		}
-	
-		if(!isRuleBpk || !isAllowCentralContract || procurementMode.equals(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)){
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("pmParameter.parameterCode",
-								SearchOperator.OPERATOR_NOT_EQUALS.value(), ParameterConst.CONTRACT_TYPE_CENTRAL));
-			} 
-		
-		List<PmParameterDesc> contractTypes = ParameterHelper.getInstance()
-				.getParameterDescListBySearchBean(
-						ParameterTypeConst.CONTRACT_TYPE, searchBean);
-		
+
+		if (!isRuleBpk || !isAllowCentralContract
+				|| procurementMode.equals(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_NOT_EQUALS.value(),
+							ParameterConst.CONTRACT_TYPE_CENTRAL));
+		}
+
+		List<PmParameterDesc> contractTypes = ParameterHelper.getInstance().getParameterDescListBySearchBean(
+				ParameterTypeConst.CONTRACT_TYPE, searchBean);
+
 		return contractTypes;
 	}
 	// add rule #27502 END
@@ -6288,65 +6309,62 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	// 25037 - end - note 510
 	// 25037 - end
 		
-		/*
-		 * To check if Application fall under MOF Central Contract flows
-		 * #27502		 
-		 */
-		public boolean isBpkCentralContract(ScQt scQt) {
-			boolean isBpkCentralContract = false;
-			boolean isSbhOrSrwk = false;
-			boolean isRuleBpk = false;
-			Long ctType = null;		
-			CommitteReqDTO reqDTO = new CommitteReqDTO();
-			reqDTO.setQtId(scQt.getQtId());
-			if (!scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)
-					&& !scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)
-					&& !Arrays.asList(QTStatusConst.CMT_APPROVAL_GROUP).contains(scQt.getQtStatus().getStatusId())) {//#25037
-				
-					IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance()
-							.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
-					List<String> stateCodeList = new ArrayList<String>();
-					stateCodeList.add(ProfileManagementConst.STATE_CODE_SABAH);
-					stateCodeList.add(ProfileManagementConst.STATE_CODE_SARAWAK);
-					stateCodeList.add(ProfileManagementConst.STATE_CODE_LABUAN);
-					
-					for(String s:stateCodeList){
-						List<Object[]> pjtcode = addressSO.getSabahOrSrwkPtj(scQt.getOrgProfileId(), s);
-						
-						if(pjtcode != null){
-							isSbhOrSrwk = true;
-							break;
-						}					
-					}	
-					
-					IRuleSO ruleSO = (IRuleSO) EpEjbBusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
-					List<Object[]> bpkList = ruleSO.getBpkByOrgProfileIdAndRuleType(scQt.getOrgProfileId(), RuleTypeConst.PTJCO);
-					
-					if(bpkList != null){
-						isRuleBpk = true;
-					}
-					
-					if (scQt.getContractType() == null) {
-						QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
-						qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
-						ctType = qtBackingBean.getManagedBean().getQt().getContractType().getParameterId();
-					} else {
-						ctType = scQt.getContractType().getParameterId();
-					}
-					
-					//#9019 Start #note-445 User unable to open side menu for Committee Appointment and Approval when ctType is null. 
-					//      Contract type is not selected while cancel QT
-					if(ctType != null){
-						if (isRuleBpk && ctType.equals(SourcingConstants.CENTRAL_CONTRACT) && !isSbhOrSrwk) {
-							return isBpkCentralContract = true;
-						}
-					}
-					//9019 End #note-445
+	/**
+	 * #27502
+	 * To check if Application fall under MOF Central Contract flows 
+	 * @param scQt
+	 * @return
+	 */
+	public boolean isBpkCentralContract(ScQt scQt) {
+		boolean isSbhOrSrwk = false;
+		Long ctType;
+		CommitteReqDTO reqDTO = new CommitteReqDTO();
+		reqDTO.setQtId(scQt.getQtId());
+		if (!scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)
+				&& !scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)
+				&& !Arrays.asList(QTStatusConst.CMT_APPROVAL_GROUP).contains(scQt.getQtStatus().getStatusId())) {// #25037
+
+			IAddressSO addressSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAddressSO.class);
+			List<String> stateCodeList = new ArrayList<>();
+			stateCodeList.add(ProfileManagementConst.STATE_CODE_SABAH);
+			stateCodeList.add(ProfileManagementConst.STATE_CODE_SARAWAK);
+			stateCodeList.add(ProfileManagementConst.STATE_CODE_LABUAN);
+
+			for (String s : stateCodeList) {
+				List<Object[]> pjtcode = addressSO.getSabahSarawakPTJ(scQt.getOrgProfileId(), s);
+
+				if (pjtcode != null && !pjtcode.isEmpty()) {
+					isSbhOrSrwk = true;
+					break;
 				}
-			
-			return isBpkCentralContract;
+			}
+
+			IRuleSO ruleSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IRuleSO.class);
+			// #27502 - New DO MOF Role and Process
+			List<Object[]> bpkList = ruleSO.getBpkByOrgProfileIdAndRuleType(scQt.getOrgProfileId(),
+					RuleTypeConst.PTJ_CODE);
+
+			if (scQt.getContractType() == null) {
+				QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+				qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
+				ctType = qtBackingBean.getManagedBean().getQt().getContractType().getParameterId();
+			} else {
+				ctType = scQt.getContractType().getParameterId();
+			}
+
+			// #9019 Start #note-445 User unable to open side menu for Committee
+			// Appointment and Approval when ctType is null.
+			// Contract type is not selected while cancel QT
+
+			if (ctType != null && bpkList != null && ctType.equals(SourcingConstants.CENTRAL_CONTRACT) && !isSbhOrSrwk) {
+				return true;
+			}
+			// 9019 End #note-445
 		}
+		return false;
+	}
 		
 		// #18685-Start.
         /**
@@ -7692,6 +7710,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		if (null == ctContractver) {
 			newCtContractver.setCtTermination(new CtTermination());
 		} else {
+			//41079 && 29661 -start-
+			if(null==ctContractver.getCtTermination()){
+				ctContractver.setCtTermination(new CtTermination());
+			}
+			//41079 && 29661 -end-
 			return ctContractver;
 		}
 
@@ -7711,29 +7734,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		if (null == prpExp || null == prpExp.getSourceType()) {
 			return Boolean.FALSE;
 		}
-		
-		PmParameter sourceType = prpExp.getSourceType();
-		boolean isSourceType = null != sourceType && null != prpExp.getScLoa();
 
-		boolean isLoaSourceType = isSourceType
-				&& SourcingConstants.SOURECE_TYPE_QT_ID.equals(sourceType
-						.getParameterId())
-				&& CollectionUtils.isNotEmpty(prpExp.getScLoa()
-						.getScLoaReports());
-
-		boolean isSelfSourceType = null != sourceType
-				&& SourcingConstants.SOURECE_TYPE_SELF_ID.equals(sourceType
-						.getParameterId())
+		// 29661 && 41511 -start-
+		return SourcingConstants.SOURECE_TYPE_SELF_ID.equals(prpExp
+				.getSourceType().getParameterId())
 				&& null != prpExp.getSmCompExpMaster()
 				&& CollectionUtils.isNotEmpty(prpExp.getSmCompExpMaster()
 						.getCompExpMasterDocs());
-
-		if (isLoaSourceType || isSelfSourceType) {
-
-			return Boolean.TRUE;
-		}
-
-		return Boolean.FALSE;
+		// 29661 && 41511 -end-
 	}
 
 	// 29661 -end-
@@ -7981,6 +7989,61 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	// 29661 -end-
+	
+	// 29661 && 41511 -start-
+	/**
+	 * check loa viewable for ep awarded experience.
+	 * 
+	 * @param prpExp
+	 * @return true/false.
+	 */
+	public boolean loaViewCheck(ScQtPRPExperience prpExp) {
+		if (null == prpExp || null == prpExp.getSourceType()) {
+			return Boolean.FALSE;
+		}
+
+		return !SourcingConstants.SOURECE_TYPE_SELF_ID.equals(prpExp
+				.getSourceType().getParameterId())
+				&& isEpSourcingLoa(prpExp.getScLoa());
+	}
+
+	// 29661 && 41511 -end-
+
+	// 29661 && 41511 -start-
+	/**
+	 * loa raised from a quotation or direct negotiation.
+	 * 
+	 * @param scLoa
+	 * @return true/false.
+	 */
+	private boolean isEpSourcingLoa(ScLoa scLoa) {
+		if (null == scLoa || null == scLoa.getLoaId()
+				|| null == scLoa.getScLoiLoa()) {
+			return Boolean.FALSE;
+		}
+
+		String docType = scLoa.getScLoiLoa().getDocType();
+		String loaNo = scLoa.getLoaNo();
+
+		return (ParameterConst.DOCTYPE_QUOTATION.equals(docType) || ParameterConst.DOCTYPE_DIRECT_NEGO
+				.equals(docType)) && isEpLoaNo(loaNo);
+	}
+
+	// 29661 && 41511 -end-
+	// 29661 && 41511 -start-
+	/**
+	 * loa number issued by ep.
+	 * 
+	 * @param loaNo
+	 * @return true/false.
+	 */
+	private boolean isEpLoaNo(String loaNo) {
+		return StringUtils.isNotBlank(loaNo)
+				&& loaNo.trim().toUpperCase()
+						.startsWith(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+	}
+
+	// 29661 && 41511 -end-
 
 	// 29661 -start-
 	/**
@@ -7997,7 +8060,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			for (SmCompExpMasterDoc compExpDocs : supportingDocuments) {
 				ScLoaReportAttachment attachemnt = new ScLoaReportAttachment();
 				attachemnt.setFileName(compExpDocs.getFileName());
-				attachemnt.setFilePath(compExpDocs.getFilePath());
+				attachemnt.setFilePath(compExpDocs.getFilePath() + compExpDocs.getFileName()); //#41093
 				attachmentList.add(attachemnt);
 
 			}
@@ -8021,22 +8084,22 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			String previousPageUrl) {
 		try {
 			ScLoa scLoa = scQtPRPExperience.getScLoa();
-			if (null != scLoa && null != scLoa.getLoaId()) {
-				EnumMap<MapKeyEnum, Object> loaArgs = new EnumMap<>(
-						MapKeyEnum.class);
-				ScLoaForQt scLoaForQt = new ScLoaForQt();
-				Long loaId = scLoa.getLoaId();
-
-				scLoaForQt.setLoaId(loaId);
-				loaArgs.put(MapKeyEnum.loiLoaSelected, scLoaForQt);
-
-				QtLOABackingBean qtLoaBbean = new QtLOABackingBean();
-
-				loaArgs.put(MapKeyEnum.showTrackingDiary, Boolean.TRUE);
-				ScQt scQt = scLoa.getScQt();
-				qtLoaBbean.preRenderViewForQtMaintenance(scQt, previousPageUrl,
-						loaArgs);
+			// 29661 && 41511 -start-
+			if (null == scLoa || null == scLoa.getLoaId()
+					|| null == scLoa.getScLoiLoa()) {
+				return null;
 			}
+
+			boolean directNego = ParameterConst.DOCTYPE_DIRECT_NEGO
+					.equals(scLoa.getScLoiLoa().getDocType());
+			boolean supplierView =isSupplier();
+			if (directNego) {
+				return openDirectLoaForAgency(scLoa, previousPageUrl);
+			} else {
+				return supplierView ? openQtLoaForSupplier(scLoa, previousPageUrl)
+						: openQtLoaForAgency(scLoa, previousPageUrl);
+			}
+			// 29661 && 41511 -end-
 
 		} catch (Exception e) {
 			Long qtPrpExpId = scQtPRPExperience.getQtPrpExperienceId();
@@ -8054,6 +8117,73 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	// 29661 -end-
+	
+	// 29661 && 41511 -start-
+	/**
+	 * supplier acknowledgement view of a quotation loa.
+	 * 
+	 * @param scLoa
+	 * @param previousPageUrl
+	 * @return the supplier loa page
+	 */
+	private String openQtLoaForSupplier(ScLoa scLoa, String previousPageUrl) {
+		LOADetailBackingBean loaDetailBbean = new LOADetailBackingBean();
+		String page = loaDetailBbean.retrieveSupplierLOADtl(scLoa
+				.getScLoiLoa().getDocId(), scLoa.getLoaId(), previousPageUrl,
+				true);
+
+		loaDetailBbean.getManagedBean().setSelectedTabIndex(
+				QTConstants.TAB_LOA_INDEX);
+
+		return page;
+	}
+
+	// 29661 && 41511 -end-
+	
+	// 29661 && 41511 -start-
+	/**
+	 * agency view of a direct nego loa.
+	 * 
+	 * @param scLoa
+	 * @param previousPageUrl
+	 * @return the direct loa page
+	 */
+	private String openDirectLoaForAgency(ScLoa scLoa, String previousPageUrl) {
+		DirectLOABackingBean directLoaBbean = new DirectLOABackingBean();
+		String page = directLoaBbean.retriveLoaDetails(scLoa.getLoaId(),
+				previousPageUrl, true);
+
+		directLoaBbean.getManagedBean().setSelectedTabIndex(
+				directLoaBbean
+						.newTabIndexDirectLOA(QTConstants.DIRECT_LOA_TAB_INDEX_TWO));
+
+		return page;
+	}
+
+	// 29661 && 41511 -end-
+	// 29661 && 41511 -start-
+	/**
+	 * agency view of a quotation loa.
+	 * 
+	 * @param scLoa
+	 * @param previousPageUrl
+	 * @return null, navigation is handled downstream.
+	 */
+	private String openQtLoaForAgency(ScLoa scLoa, String previousPageUrl) {
+		EnumMap<MapKeyEnum, Object> loaArgs = new EnumMap<>(MapKeyEnum.class);
+		ScLoaForQt scLoaForQt = new ScLoaForQt();
+		scLoaForQt.setLoaId(scLoa.getLoaId());
+
+		loaArgs.put(MapKeyEnum.loiLoaSelected, scLoaForQt);
+		loaArgs.put(MapKeyEnum.showTrackingDiary, Boolean.TRUE);
+
+		new QtLOABackingBean().preRenderViewForQtMaintenance(scLoa.getScQt(),
+				previousPageUrl, loaArgs);
+
+		return null;
+	}
+
+	// 29661 && 41511 -end-
 
 	// 29661 -start-
 	/**
@@ -8080,6 +8210,23 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	// 29661 -end-
+	
+	// 41312 -start-
+	/**
+	 * check estimated amount is null fetched amount from templatespec.
+	 * 
+	 * @param scQt
+	 * @return BigDecimal
+	 */
+	protected BigDecimal checkEstimatedAmount(ScQt scQt) {
+		SpecificationReqDTO estimatedReqDTo = new SpecificationReqDTO();
+		estimatedReqDTo.setQtId(scQt.getQtId());
+		return getQTSpecSO().calCulateTemplateSpecEstimations(estimatedReqDTo)
+				.getTotalSpecEstimatedAmount();
+
+	}
+
+	// 41312 -end-
 
 	//#28784 - Start
 	private boolean checkDemoWIP(ScQt scQt) {
@@ -8738,6 +8885,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			List<ScQtBsvDtl> rejectList = new ArrayList<>();
 			List<ScQtBsvDtl> pendingList = new ArrayList<>();
 			List<ScQtBsvDtl> completedList = new ArrayList<>();
+			List<ScQtBsvDtl> cancelledList = new ArrayList<>();
 			List<ScQtBsvDtl> pendingUpdateApprList = new ArrayList<>();
 			for (ScQtBsvDtl scQtBsvDtl : list) {
 				if (scQtBsvDtl.getBsvStatus() != null
@@ -8756,6 +8904,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						&& scQtBsvDtl.getBsvStatus().getStatusId()
 								.equals(QTStatusConst.BSV_COMPLETED)) {
 					completedList.add(scQtBsvDtl);
+				} else if (scQtBsvDtl.getBsvStatus() != null
+						&& scQtBsvDtl.getBsvStatus().getStatusId()
+								.equals(QTStatusConst.BSV_CANCELLED)) {
+					cancelledList.add(scQtBsvDtl);	
 				} else if (scQtBsvDtl.getBsvStatus() != null
 						&& scQtBsvDtl
 								.getBsvStatus()
@@ -8777,6 +8929,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 			if (CollectionUtils.isNotEmpty(completedList)) {
 				sortedList.addAll(completedList);
+			}
+			if (CollectionUtils.isNotEmpty(cancelledList)) {
+				sortedList.addAll(cancelledList);
 			}
 			if (CollectionUtils.isNotEmpty(pendingUpdateApprList)) {
 				sortedList.addAll(pendingUpdateApprList);

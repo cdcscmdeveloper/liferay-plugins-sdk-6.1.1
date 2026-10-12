@@ -177,7 +177,7 @@
 				<h:column>
 					<p:selectOneRadio id="loiLoaPreparedBy" required="true" label="#{lbl['lbl.sc.loi.loa.prepared.by']}"
 						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.loiLoaBy}" 
-						disabled="#{isMofFinalization or !isSecretaryUser or suppFinalizationBackingBean.isQTMaintenanceScreen() or supplierFinalizationReadOnly}"><!-- 6906 note 117 -->
+						disabled="#{isMofFinalization or !isSecretaryUser or suppFinalizationBackingBean.isQTMaintenanceScreen() or supplierFinalizationReadOnly or suppFinalizationBackingBean.managedBean.bpkCentralContract}"><!-- 6906 note 117 #27502 - New DO MOF Role and Process -->
 						<f:selectItems value="#{suppFinalizationBackingBean.getLoiLoaPreparedByRadioBtn()}" />
 		   			</p:selectOneRadio>
 				</h:column>

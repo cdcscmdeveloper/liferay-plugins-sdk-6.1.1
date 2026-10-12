@@ -2566,6 +2566,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 		//14150
 		SmApplicationUtil.sortSupplierCategory(getManagedBean().getSuppProfileOrHistoryCategoryList());
+
+		// 36504
+		SmApplicationUtil.sortSupplierCategory(getManagedBean().getSupProfileHistoryOtherDesc());
 	}
 	
 	//#26238
@@ -2607,8 +2610,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			return "";
 		}
 		// #38962, #40110 - START
+		SmAppl appl = getManagedBean().getSmAppl() != null ? getManagedBean().getSmAppl() : supplier.getSmAppl();
 		String pending = checkNonActiveDAWithPending(supplier);
-		if (StringUtils.isNotBlank(pending) && !SupplierManagementConst.SUPP_TYPE_BASIC.equalsIgnoreCase(getManagedBean().getSmAppl().getSupplierType())) {
+		if (StringUtils.isNotBlank(pending) && appl != null
+				&& !SupplierManagementConst.SUPP_TYPE_BASIC.equalsIgnoreCase(appl.getSupplierType())) {
 			return pending;
 		}
 		// #38962, #40110 - END
@@ -2619,7 +2624,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			return getSupplierAccountStatusMOF(supplier);
 		}
 		//#34319
-		SmAppl appl = getManagedBean().getSmAppl() != null ? getManagedBean().getSmAppl() : supplier.getSmAppl();
 		if (supplier.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_CANCELLED) 
 				&& appl.getPmStatus().getStatusId().equals(
 						my.ep.constant.sm.SupplierManagementConst.PM_STATUS_CANCELLED_PREREGISTRATION_ACCOUNT)){
@@ -4990,6 +4994,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				RequestContext.getCurrentInstance().execute(
 						"overlapCategoryDialog.show();");
 			}
+			//#40444, #41174 --START
+			public boolean checkOverLappedCategoryExists(SmAppl smAppl) {
+				SmOverlapCategoryVO vo = getOverlapCategoryVO(smAppl);
+				return vo != null && vo.isOverLappedCategoryExist();
+			}//#40444, #41174 --END
+			
 			private SmOverlapCategoryVO getOverlapCategoryVO(SmAppl smAppl) {
 				SmOverlapCategoryVO retVal = null;
 				MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
@@ -5032,6 +5042,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					boolean isAdd = false;
 					boolean isSubAdd = false;
 					for (Object[] arr : resultList) {
+						applStatus = StringUtils.EMPTY; //#40444
 						catCode = arr[0] + "" + arr[1] + arr[2] + "";
 						isActiveAppl = arr[20] + "";
 						voTmp = (SmBulkApplOverlapCatVO) EntityHelper
