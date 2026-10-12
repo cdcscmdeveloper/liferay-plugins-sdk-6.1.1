@@ -1,0 +1,150 @@
+<!-- Author: #37809 Vinod 12102026 -->
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="#{CommonUIConstant.imagePath}/ajax-loader.gif" />
+		</p:blockUI>
+
+		<p:messages id="fcChairpersonMsg" showDetail="true" showSummary="false"
+			autoUpdate="true" closable="true" severity="error, info" />
+
+		<table width="100%">
+			<tr>
+				<td align="right">
+					<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+						action="#{committeBackingBean.backFromUpdateFCChairpersonAction}"
+						partialSubmit="true" process="@this" />
+					<p:commandButton id="fcChairpersonUpdateButton"
+						value="#{lbl['lbl.btn.update']}" process="@all"
+						action="#{committeBackingBean.updateFCChairpersonAction}"
+						update="@form" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();" />
+					<p:tooltip id="ttFcChairpersonUpdateButton" for="fcChairpersonUpdateButton">
+						<h:outputText escape="false"
+							value="#{lbl['lbl.sc.committee.chairperson.update.tooltip']}" />
+					</p:tooltip>
+				</td>
+			</tr>
+		</table>
+
+		<ui:include src="committeeHeader.xhtml" />
+
+		<p:panel id="fcChairpersonCommitteePanel"
+			header="#{lbl['lbl.sc.committee.member.name']}" toggleable="true">
+			<ac:committeeMaintenancePanel
+				historyPaginator="#{committeBackingBean.managedBean.historyPaginator}"
+				selectedHistory="#{committeBackingBean.managedBean.selectedTplCommHistory}"
+				memberHistoryPaginator="#{committeBackingBean.managedBean.memberHistoryPaginator}"
+				onSelectHistory="onSelectTplHistory"
+				committeeName="#{committeBackingBean.managedBean.currentCommitteeType}"
+				backingBean="#{committeBackingBean}" isSFCommittee="true"
+				isLegacy="true" />
+		</p:panel>
+
+		<p:panel id="fcChairpersonUpdatePanel"
+			header="#{lbl['lbl.sc.committee.member.update']}" toggleable="true"
+			styleClass="committeMemberDtls">
+
+			<p:dataTable id="fcChairpersonMembersId" rowKey="#{committeemember}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{committeBackingBean.managedBean.latestMembers}"
+				var="committeemember" rowIndexVar="rowIndex" rows="10"
+				paginator="true" paginatorPosition="bottom"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				currentPageReportTemplate="Page &#160; {currentPage}/{totalPages}">
+
+				<p:column style="width:2%">
+					<p:selectBooleanCheckbox id="selectMember"
+						value="#{committeemember.selected}"
+						disabled="#{committeemember.memberRole.parameterCode ne ParameterConst.committeeRoleChairperson}">
+						<p:ajax partialSubmit="true" process="@this"
+							update="@([id$=fcChairpersonUpdatePanel])" />
+					</p:selectBooleanCheckbox>
+				</p:column>
+
+				<p:column style="width:2%" headerText="#{lbl['lbl.sc.no']}">
+					<h:outputText value="#{rowIndex+1}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.name']}">
+					<h:outputText value="#{committeemember.memberName}"
+						style="white-space: normal;" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.identification.no']}"
+					style="width: 10%">
+					<h:outputText value="#{committeemember.icPassport}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.designation']}">
+					<h:outputText value="#{committeemember.designation}"
+						style="white-space: normal;" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.email']}">
+					<h:outputText value="#{committeemember.email}"
+						style="white-space: normal;" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.grade']}" style="width: 8%">
+					<h:outputText value="#{committeemember.grade}" />
+				</p:column>
+
+				<p:column style="width: 6%">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.pnp']}" />
+						<ac:iconTooltip id="pnpTT#{rowIndex}"
+							value="#{lbl['lbl.sc.pnp.tooltip']}" />
+					</f:facet>
+					<h:outputText
+						value="#{lbl[committeemember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.role']}" style="width: 10%">
+					<h:outputText
+						value="#{committeBackingBean.getFCMemberRole(committeemember.memberRole)}"
+						style="white-space: normal;" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.representative.type']}"
+					style="width: 15%">
+					<h:outputText
+						rendered="#{committeemember.memberRole.parameterCode eq ParameterConst.committeeRoleMember}"
+						value="#{committeBackingBean.getParameterDesc(committeemember.representativeType)}" />
+				</p:column>
+			</p:dataTable>
+
+			<div class="ppRightBtn">
+				<p:commandButton id="fcChairpersonAddButton" styleClass="BtnSpacing"
+					value="#{lbl['lbl.btn.add']}" process="@this"
+					action="#{committeBackingBean.addTplCommitteeMember(committeBackingBean.managedBean.headerTitle)}"
+					oncomplete="committeeScreen3.show();" update="@(.addQCMember)" />
+
+				<p:commandButton id="fcChairpersonDeleteButton"
+					value="#{lbl['lbl.btn.delete']}"
+					disabled="#{committeBackingBean.deleteselectedList(committeBackingBean.managedBean.tplCommittee.tplCommMembers)}"
+					styleClass="BtnSpacing" process="@this, fcChairpersonMembersId"
+					partialSubmit="true" oncomplete="fcChairpersonDeletePopUp.show();"
+					update="@([id$=fcChairpersonDeleteId])" />
+			</div>
+
+			<ac:confirmationPopup id="fcChairpersonDeleteId"
+				widget="fcChairpersonDeletePopUp"
+				okAction="committeBackingBean.deleteTplCommitteeAction" width="45%"
+				height="100" title="#{committeBackingBean.managedBean.headerTitle}"
+				content="#{lbl['lbl.sc.dialog.confirm.committee.members.dtls']}"
+				update="@([id$=fcChairpersonUpdatePanel])" />
+		</p:panel>
+
+		<ui:include src="committeeMaintenanceAddScreen.xhtml" />
+	</ui:define>
+</ui:composition>

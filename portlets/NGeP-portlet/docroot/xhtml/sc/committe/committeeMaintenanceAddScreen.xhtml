@@ -27,7 +27,9 @@
 					<ui:remove>#37809 Start Vinod</ui:remove>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sc.role']}" /></td>
+						<ui:remove>#37809 Start Vinod 12102026</ui:remove>
 						<td colspan="3"><p:selectOneRadio id="searchRoleId"
+								disabled="#{committeBackingBean.fcChairpersonUpdateView}"
 								value="#{committeBackingBean.managedBean.committeeSearchBean.searchRoleId}">
 								<p:ajax onstart="blockWidgetPopup.show()"
 									update="userTblid userexistid"
@@ -40,6 +42,7 @@
 								<f:selectItems
 									value="#{committeBackingBean.getRoleListForAdd()}" />
 							</p:selectOneRadio></td>
+						<ui:remove>#37809 End Vinod 12102026</ui:remove>
 					</tr>
 					<tr>
 						<td><p:outputLabel

@@ -601,6 +601,8 @@ public interface QTConstants {
 	public static final String LBL_SC_SF_HIGHER_AUTHORITY = "lbl.sc.sf.higher.authority";
 	// #37809 Start Vinod 12102026
 	public static final String LBL_SC_FINALIZATION_COMMITTEE_HIGHER_AUTHORITY = "lbl.sc.finalization.committee.higher.authority";
+	public static final String LBL_SC_UPDATE_SAME_COMMITTEE_MEMBER = "lbl.sc.update.same.committee.member";
+	public static final String LBL_SC_COMMITTEE_CHAIRPERSON_UPDATE_SUCCESS = "lbl.sc.committee.chairperson.update.success";
 	// #37809 End Vinod 12102026
 	// #37809 End Vinod
 	

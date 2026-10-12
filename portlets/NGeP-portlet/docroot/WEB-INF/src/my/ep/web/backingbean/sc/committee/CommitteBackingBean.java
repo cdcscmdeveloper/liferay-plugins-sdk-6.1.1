@@ -146,6 +146,9 @@ public class CommitteBackingBean extends
 	/** The Constant NAV_TO_FINALIZATION_COMMITTEE_MAINTENANCE. */
 	private static final String NAV_TO_COMMITTEE_MAINTENANCE = "/xhtml/sc/committe/finalCommitteeMaintenance.xhtml";
 	private static final String NAV_TO_COMMITTEE_ADD_SCREEN = "xhtml/sc/committe/committeeMaintenanceAddScreen.xhtml";
+	// #37809 Start Vinod 12102026
+	private static final String NAV_TO_UPDATE_FC_CHAIRPERSON = "/xhtml/sc/committe/updateFinalizationChairperson.xhtml";
+	// #37809 End Vinod 12102026
 	//35320 - END
 
 	/** The Constant logger. */
@@ -930,6 +933,9 @@ public class CommitteBackingBean extends
 	 */
 	public String editAction(ScQtCommittee scQtCommittee) {
 		debugLogger("editAction");
+		// #37809 Start Vinod 12102026
+		this.getManagedBean().setUpdateFCChairperson(false);
+		// #37809 End Vinod 12102026
 		this.getManagedBean().setHeaderTitle(
 				ParameterHelper.getInstance().getParameterDesc(
 						ParameterTypeConst.SC_COMMITTEE_TYPE,
@@ -1080,10 +1086,11 @@ public class CommitteBackingBean extends
 			// #37809 Start Vinod
 			ScWorkFlowStatus scWorkFlowStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION,
 					scQtCommittee.getScQt().getQtId());
-			if (QTStatusConst.SF_PENDING_SIGN_OFF.equals(scWorkFlowStatus.getPmStatus().getStatusId())
-					|| QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION.equals(scWorkFlowStatus.getPmStatus().getStatusId())) {
-				this.getManagedBean().setUpdateFCChairperson(true);
-			}
+			// #37809 Start Vinod 12102026
+			this.getManagedBean().setUpdateFCChairperson(scWorkFlowStatus != null
+					&& QTStatusConst.SF_PENDING_SIGN_OFF.equals(scWorkFlowStatus.getPmStatus().getStatusId())
+					&& isLoggedInUserSecretary(qtCommitte.getScCommittee()));
+			// #37809 End Vinod 12102026
 			// #37809 End Vinod
 			
 			showQtDetailAction(scQtCommittee.getScQt().getQtId());
@@ -2525,12 +2532,6 @@ public class CommitteBackingBean extends
 	 */
 	public String viewSearchBackAction() {
 		debugLogger("viewSearchBackAction");
-		// #37809 Start Vinod
-		if (this.getManagedBean().isUpdateFCChairperson()) {
-			this.getManagedBean().setEnableUpdateButton(false);
-			return NAV_TO_COMMITTEE_MAINTENANACE + "?faces-redirect=true";
-		}
-		// #37809 End Vinod
 		return NAV_TO_SEARCH_PAGE + "?faces-redirect=true";
 	}
 	
@@ -2798,49 +2799,7 @@ public class CommitteBackingBean extends
 			this.getManagedBean().setCurrentCommitteeType(
 					null != displayCommittee ? displayCommittee.getCommitteeType().getParameterCode() : null);
 			this.getManagedBean().setHistoryPaginator(new Paginator(histories));
-			// #37809 Start Vinod
-			if (this.getManagedBean().isUpdateFCChairperson()) {
-				List<TplCommMember> tplCommMembers = new ArrayList<>();
-				TplCommittee tplCommittee = new TplCommittee();
-
-				tplCommittee.setCommitteeType(scCommittee.getCommitteeType());
-				tplCommittee.setApprovalReq(scCommittee.isApprovalReq());
-				tplCommittee.setCommitteStatus(scCommittee.getCommitteStatus());
-				tplCommittee.setRemark(scCommittee.getRemark());
-				tplCommittee.setRecordStatus(scCommittee.isRecordStatus());
-
-				for (ScCommitteeMember scCommitteeMember : this.getManagedBean().getQtCommittee().getScCommittee().getScCommitteeMembers()) {
-					TplCommMember tplCommMember = new TplCommMember();
-					
-					tplCommMember.setTplCommittee(tplCommittee);
-					tplCommMember.setPmUser(scCommitteeMember.getPmUser());
-					tplCommMember.setMemberName(scCommitteeMember.getMemberName());
-					tplCommMember.setIcPassport(scCommitteeMember.getIcPassport());
-					tplCommMember.setPmOrgProfile(scCommitteeMember.getPmOrgProfile());
-					tplCommMember.setDesignation(scCommitteeMember.getDesignation());
-					if (scCommitteeMember.getMemberRole() != null) {
-						tplCommMember.setMemberRole(scCommitteeMember.getMemberRole());
-					}
-					tplCommMember.setAccessRight(scCommitteeMember.getAccessRight());
-					tplCommMember.setIsEvaluateMember(scCommitteeMember.getIsEvaluateMember());
-					tplCommMember.setConsolidate(scCommitteeMember.isConsolidate());
-					tplCommMember.setPNP(scCommitteeMember.isPNP());
-					tplCommMember.setEmail(scCommitteeMember.getEmail());
-					if (scCommitteeMember.getRepresentativeType() != null) {
-						tplCommMember.setRepresentativeType(scCommitteeMember.getRepresentativeType());
-					}
-					tplCommMember.setGrade(scCommitteeMember.getGrade());
-					tplCommMember.setRepresentativeTypeId(scCommitteeMember.getRepresentativeTypeId());
-
-					tplCommMembers.add(tplCommMember);
-				}
-
-				this.getManagedBean().setLatestMembers(tplCommMembers);
-				this.getManagedBean().setEnableUpdateButton(true);
-			}else{
-				this.getManagedBean().setLatestMembers(latestCommittee);
-			}
-			// #37809 End Vinod
+			this.getManagedBean().setLatestMembers(latestCommittee);
 
 			setHeaderTitle(scCommittee);
 			onSelectCommitteeHistory();
@@ -3316,6 +3275,14 @@ public class CommitteBackingBean extends
 	 * @return the role description assigned to the user; defaults to Member if undetermined
 	 */
 	public String getTplRoleDesc(PmUser pmUser) {
+		// #37809 Start Vinod 12102026
+		if (isFcChairpersonUpdateView()) {
+			PmParameter chairPersonRole = ParameterHelper.getInstance().getParameterByTypeAndCode(
+					ParameterTypeConst.COMMITTEE_ROLE, ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
+			pmUser.setMemberRoleId(chairPersonRole.getParameterId());
+			return getParameterDesc(chairPersonRole);
+		}
+		// #37809 End Vinod 12102026
 
 		String userRole = null;
 		String committeeType = getManagedBean().getTplCommittee().getCommitteeType().getParameterCode();
@@ -3620,24 +3587,24 @@ public class CommitteBackingBean extends
 	 * @return an array of SelectItem
 	 */
 	public SelectItem[] getRoleListForAdd() {
+		// #37809 Start Vinod 12102026
+		boolean chairpersonUpdate = isFcChairpersonUpdateView();
+		// #37809 End Vinod 12102026
 
-		if (this.getManagedBean().isUpdateFCChairperson()) {
-			UserCommitteeSearchBean userCommitteeSearchBean = new UserCommitteeSearchBean();
-			this.getManagedBean().setCommitteeSearchBean(userCommitteeSearchBean);
-		}
-		
 		SelectItem[] items = getDropdownValues(ParameterTypeConst.COMMITTEE_ROLE);
 
 		List<SelectItem> tempList = new ArrayList<>();
 		for (SelectItem item : items) {
 			String role = (String) item.getLabel();
+			// #37809 Start Vinod 12102026
+			boolean chairperson = StringUtils.equalsIgnoreCase(SourcingConstants.MEMBER_CHAIRPERSON, role);
 			if (StringUtils.isNotEmpty(role)
-					&& (StringUtils.equalsIgnoreCase(SourcingConstants.MEMBER_ROLE, role) || StringUtils
-							.equalsIgnoreCase(SourcingConstants.MEMBER_CHAIRPERSON, role))) {
+					&& (chairperson || (!chairpersonUpdate && StringUtils.equalsIgnoreCase(
+							SourcingConstants.MEMBER_ROLE, role)))) {
 				tempList.add(item);
 			}
-			if(this.getManagedBean().isUpdateFCChairperson() && StringUtils
-					.equalsIgnoreCase(SourcingConstants.MEMBER_CHAIRPERSON, role)){
+			if (chairpersonUpdate && chairperson) {
+			// #37809 End Vinod 12102026
 				ScCommittee scCommittee = this.getManagedBean().getQtCommittee().getScCommittee();
 				String committeeType = scCommittee.getCommitteeType().getParameterCode();
 				Long roleId = Long.valueOf(item.getValue().toString());
@@ -3886,19 +3853,172 @@ public class CommitteBackingBean extends
 			workFlowStatusSO = null;
 		}
 	}
-	
+	// #37809 Start Vinod 12102026
 	/**
-	 * Navigate between main screen and update committee Chairperson screen. Populate
-	 * data based on action type provided.
-	 * 
-	 * @param action
+	 * @return true on the update finalization chairperson screen
 	 */
-	public void navigateToUpdateFinalizCommitteeChairperson(String action) {
-		
-		if (BpmOutcomeConst.BPM_VIEW.equalsIgnoreCase(action)) {
-			getTabInfo();
-		} else if (BpmOutcomeConst.BPM_UPDATE.equalsIgnoreCase(action)) {
-			
-		}
+	public boolean isFcChairpersonUpdateView() {
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		return facesContext != null && facesContext.getViewRoot() != null
+				&& NAV_TO_UPDATE_FC_CHAIRPERSON.equals(facesContext.getViewRoot().getViewId());
 	}
+
+	/**
+	 * @param scCommittee
+	 *            the finalization committee
+	 * @return true when the logged-in user is the committee secretary
+	 */
+	private boolean isLoggedInUserSecretary(ScCommittee scCommittee) {
+		Long loggedInUserId = getUserIdSessionFromLoginId();
+		for (ScCommitteeMember member : scCommittee.getScCommitteeMembers()) {
+			if (member.getMemberRole() != null
+					&& ParameterConst.COMMITTEE_ROLE_SECRETARY.equals(member.getMemberRole().getParameterCode())
+					&& member.getPmUser() != null && loggedInUserId != null
+					&& loggedInUserId.equals(member.getPmUser().getUserId())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Opens the update finalization chairperson screen for the viewed QT.
+	 *
+	 * @return the navigation outcome
+	 */
+	public String updateFCChairpersonScreenAction() {
+		ScCommittee scCommittee = getManagedBean().getQtCommittee().getScCommittee();
+		String committeeType = scCommittee.getCommitteeType().getParameterCode();
+		getManagedBean().setSelectedTab(committeeType);
+		getManagedBean().setRefreshFCMaintenancePage(Boolean.TRUE);
+		getTabInfo();
+
+		TplCommittee tplCommittee = buildTplCommitteeFromQt(scCommittee);
+		getManagedBean().setTplCommittee(tplCommittee);
+		getManagedBean().setTplCommMembers(tplCommittee.getTplCommMembers());
+		getManagedBean().setLatestMembers(tplCommittee.getTplCommMembers());
+		getManagedBean().setToBeDelTplCommitteMembers(null);
+		getManagedBean().setCommitteeType(committeeType);
+		getManagedBean().setHeaderTitle(ParameterHelper.getInstance().getParameterDesc(
+				ParameterTypeConst.SC_COMMITTEE_TYPE, committeeType));
+		getManagedBean().getCommitteeSearchBean().setOrgCat(ParameterConst.ORG_CATEGORY_PTJ);
+		return NAV_TO_UPDATE_FC_CHAIRPERSON + "?faces-redirect=true";
+	}
+
+	/**
+	 * Returns to the finalization committee view of the QT.
+	 *
+	 * @return the navigation outcome
+	 */
+	public String backFromUpdateFCChairpersonAction() {
+		return editAction(getManagedBean().getQtCommittee());
+	}
+
+	/**
+	 * Replaces the finalization chairperson of the QT and reassigns its
+	 * sign-off task to the new chairperson.
+	 *
+	 * @return the navigation outcome
+	 */
+	public String updateFCChairpersonAction() {
+		ScQtCommittee qtCommittee = getManagedBean().getQtCommittee();
+		ScCommittee scCommittee = qtCommittee.getScCommittee();
+		String committeeDesc = ParameterHelper.getInstance().getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE,
+				scCommittee.getCommitteeType().getParameterCode());
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+
+		List<TplCommMember> chairpersons = new ArrayList<>();
+		for (TplCommMember member : getManagedBean().getTplCommittee().getTplCommMembers()) {
+			if (member.getMemberRole() != null
+					&& ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equals(member.getMemberRole().getParameterCode())) {
+				chairpersons.add(member);
+			}
+		}
+		if (chairpersons.size() != 1) {
+			String messageKey = chairpersons.isEmpty() ? MessageConst.ERROR_760711 : MessageConst.ERROR_760712;
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+					messageKey, new String[] { committeeDesc }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+					new FacesScopes().getUserLocale())));
+			return null;
+		}
+
+		Long newChairpersonId = chairpersons.get(0).getPmUser().getUserId();
+		for (ScCommitteeMember member : scCommittee.getScCommitteeMembers()) {
+			if (member.getMemberRole() != null
+					&& ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equals(member.getMemberRole().getParameterCode())
+					&& newChairpersonId.equals(member.getPmUser().getUserId())) {
+				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+						getMessageCommon(QTConstants.LBL_SC_UPDATE_SAME_COMMITTEE_MEMBER)));
+				return null;
+			}
+		}
+
+		CommitteReqDTO reqDTO = new CommitteReqDTO();
+		reqDTO.setScQtCommittee(qtCommittee);
+		reqDTO.setUserId(newChairpersonId);
+		reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+		try {
+			ICommitteSO committeSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+			committeSO.updateFinalizationChairperson(reqDTO);
+		} catch (EpException epx) {
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+					epx.getMessage(), epx.getParameters(), MessageUtils.BUNDLE_COMMON_MESSAGES,
+					new FacesScopes().getUserLocale())));
+			return null;
+		}
+
+		editAction(qtCommittee);
+		updateFCChairpersonScreenAction();
+		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+				getMessageCommon(QTConstants.LBL_SC_COMMITTEE_CHAIRPERSON_UPDATE_SUCCESS)));
+		return null;
+	}
+
+	/**
+	 * Copies the QT finalization committee into a template committee so the
+	 * maintenance table, add and delete actions can edit it.
+	 *
+	 * @param scCommittee
+	 *            the QT finalization committee
+	 * @return the template committee holding the QT members
+	 */
+	private TplCommittee buildTplCommitteeFromQt(ScCommittee scCommittee) {
+		TplCommittee tplCommittee = new TplCommittee();
+		tplCommittee.setCommitteeType(scCommittee.getCommitteeType());
+		tplCommittee.setApprovalReq(scCommittee.isApprovalReq());
+		tplCommittee.setCommitteStatus(scCommittee.getCommitteStatus());
+		tplCommittee.setRemark(scCommittee.getRemark());
+		tplCommittee.setRecordStatus(scCommittee.isRecordStatus());
+
+		List<TplCommMember> tplCommMembers = new ArrayList<>();
+		for (ScCommitteeMember scCommitteeMember : scCommittee.getScCommitteeMembers()) {
+			TplCommMember tplCommMember = new TplCommMember();
+			tplCommMember.setTplCommittee(tplCommittee);
+			tplCommMember.setPmUser(scCommitteeMember.getPmUser());
+			tplCommMember.setMemberName(scCommitteeMember.getMemberName());
+			tplCommMember.setIcPassport(scCommitteeMember.getIcPassport());
+			tplCommMember.setPmOrgProfile(scCommitteeMember.getPmOrgProfile());
+			tplCommMember.setDesignation(scCommitteeMember.getDesignation());
+			if (scCommitteeMember.getMemberRole() != null) {
+				tplCommMember.setMemberRole(scCommitteeMember.getMemberRole());
+				tplCommMember.setMemberRoleId(scCommitteeMember.getMemberRole().getParameterId());
+			}
+			tplCommMember.setAccessRight(scCommitteeMember.getAccessRight());
+			tplCommMember.setIsEvaluateMember(scCommitteeMember.getIsEvaluateMember());
+			tplCommMember.setConsolidate(scCommitteeMember.isConsolidate());
+			tplCommMember.setPNP(scCommitteeMember.isPNP());
+			tplCommMember.setEmail(scCommitteeMember.getEmail());
+			if (scCommitteeMember.getRepresentativeType() != null) {
+				tplCommMember.setRepresentativeType(scCommitteeMember.getRepresentativeType());
+			}
+			tplCommMember.setGrade(scCommitteeMember.getGrade());
+			tplCommMember.setRepresentativeTypeId(scCommitteeMember.getRepresentativeTypeId());
+			tplCommMembers.add(tplCommMember);
+		}
+		Collections.sort(tplCommMembers, new TplMemberRoleComparator());
+		tplCommittee.setTplCommMembers(tplCommMembers);
+		return tplCommittee;
+	}
+	// #37809 End Vinod 12102026
 }
