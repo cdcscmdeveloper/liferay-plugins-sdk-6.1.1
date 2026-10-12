@@ -78,6 +78,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	private static final String EL_BACKING_BEAN = "#{backingBean}";
 	private static final String LBL_DOC_INVALID = "lbl.sm.ai.doc.invalid";
 	private static final String LBL_EPF_MISMATCH = "lbl.sm.ai.epf.mismatch";
+	private static final String RA_DIALOG_MESSAGES = "smAiDialogMessages";
 
 	private List<AiEpfResultDTO> epfs;
 	private AiTenancyDTO tenancy;
@@ -566,6 +567,18 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 
 	private static void addMessageOnce(FacesMessage.Severity severity, String key){
 		String detail = AiDocParser.label(key);
+		// Supporting Documents has no dialog, so its messages stay with the page
+		if (!isSupportDocPage()){
+			List<FacesMessage> msgs = dialogMessages();
+			for (FacesMessage existing : msgs){
+				if (existing.getSeverity() == severity
+						&& StringUtils.equals(existing.getDetail(), detail)){
+					return;
+				}
+			}
+			msgs.add(new FacesMessage(severity, null, detail));
+			return;
+		}
 		Iterator<FacesMessage> it = FacesContext.getCurrentInstance().getMessages("ai");
 		while (it.hasNext()){
 			FacesMessage existing = it.next();
@@ -578,14 +591,35 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	/**
-	 * True while the AI Assistant dialog holds messages of its own. The page-level p:messages shows
-	 * every clientId, so it repeats them above the form unless it is switched to globalOnly.
-	 * Supporting Documents has no dialog and takes a Tenancy Agreement too, so the page decides.
+	 * The AI Assistant dialog's messages. They are kept in the request, not the FacesContext, because
+	 * any page-level p:messages without for/globalOnly would repeat a FacesContext message outside the dialog.
 	 * @return
 	 */
-	public boolean isAiMessagePending(){
-		return docType != null && !isSupportDocPage()
-				&& FacesContext.getCurrentInstance().getMessages("ai").hasNext();
+	@SuppressWarnings("unchecked")
+	private static List<FacesMessage> dialogMessages(){
+		Map<String, Object> req = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
+		List<FacesMessage> msgs = (List<FacesMessage>) req.get(RA_DIALOG_MESSAGES);
+		if (msgs == null){
+			msgs = new ArrayList<>();
+			req.put(RA_DIALOG_MESSAGES, msgs);
+		}
+		return msgs;
+	}
+
+	/**
+	 * Dialog message texts of one severity, "error" or "warn".
+	 * @param severity
+	 * @return
+	 */
+	public List<String> getDialogMessages(String severity){
+		FacesMessage.Severity sev = "warn".equals(severity) ? FacesMessage.SEVERITY_WARN : FacesMessage.SEVERITY_ERROR;
+		List<String> details = new ArrayList<>();
+		for (FacesMessage msg : dialogMessages()){
+			if (msg.getSeverity() == sev){
+				details.add(msg.getDetail());
+			}
+		}
+		return details;
 	}
 
 	// docType is re-seeded per page but never cleared, so it cannot say where we are
@@ -600,9 +634,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 
 	private static boolean hasErrorMessage(){
 		String soft = AiDocParser.label(LBL_EPF_MISMATCH);
-		Iterator<FacesMessage> it = FacesContext.getCurrentInstance().getMessages("ai");
-		while (it.hasNext()){
-			FacesMessage msg = it.next();
+		for (FacesMessage msg : dialogMessages()){
 			if (msg.getSeverity() == FacesMessage.SEVERITY_ERROR
 					&& !StringUtils.equals(msg.getDetail(), soft)){
 				return true;
@@ -803,10 +835,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				jsonWrappers.add(result);
 			}
 		}
-		boolean hasError = showErrorMessage(TYPE_TENANCY, jsonWrappers);
-		if (!hasError){
-			validateTenancy(appl);
-		}
+		showErrorMessage(TYPE_TENANCY, jsonWrappers);
+		validateTenancy(appl);
 	}
 	
 	public static void validateBank(SmAppl appl){
@@ -849,8 +879,12 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			AIApiResponse response = SmServiceLookup.getAIApiProcessSO()
 					.getById(docFile.getAiApiResponseId());
 			if (response != null){
-				entities.add(AiDocParser.toBankDoc(response.getApiResponseId(),
-						AiDocParser.parseFields(response.getJsonResponse())));
+				AiBankDocDTO dto = AiDocParser.toBankDoc(response.getApiResponseId(),
+						AiDocParser.parseFields(response.getJsonResponse()));
+				if (AiDocParser.isUnavailable(response)){
+					dto.setUnavailable(true);
+				}
+				entities.add(dto);
 			}
 		}
 		return entities;
@@ -877,13 +911,17 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	// read the supplier side off the same facility setTenancyAiFields() writes the verdict onto
 	private static void validateTenancyFiles(SmAppl appl, List<AIApiResponse> responses, SmFacility hqFacility){
 		for (AIApiResponse response : responses){
+			if (AiDocParser.isUnavailable(response)){
+				markProjectedFile(appl, response, AiDocParser.unavailableLabel(), 3);
+				continue;
+			}
 			JSONArray fields = AiDocParser.parseFields(response.getJsonResponse());
 			if (fields == null){
 				// nothing mappable in the file: cross the row rather than leave it blank
 				markProjectedFile(appl, response, AiDocParser.label(LBL_DOC_INVALID), 2);
 				continue;
 			}
-			AiTenancyDTO te = validatedTenancy(appl, hqFacility, fields);
+			AiTenancyDTO te = validatedTenancy(appl, hqFacility, response.getApiResponseId(), fields);
 
 			markProjectedFile(appl, response, te.getLabel(), te.hasError() ? 2 : 1); //1-ok, 2-err
 			Map<String, Set<String>> edits = AiUserEdit.parse(response.getUserEdit());
@@ -894,7 +932,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	// one tenancy file scored against the supplier's own premises values
-	private static AiTenancyDTO validatedTenancy(SmAppl appl, SmFacility hqFacility, JSONArray fields){
+	private static AiTenancyDTO validatedTenancy(SmAppl appl, SmFacility hqFacility, Long apiId, JSONArray fields){
 		String landlordsNameSupp = "";
 		BigDecimal rentalRate = null;
 		SmAddress addr = null;
@@ -905,7 +943,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			}
 			addr = hqFacility.getSmAddress();
 		}
-		AiTenancyDTO te = AiDocParser.toTenancy(fields);
+		AiTenancyDTO te = AiDocParser.toTenancy(apiId, fields);
 		AiDocValidator.validateTenancy(te, landlordsNameSupp, appl.getSmSupplier().getCompanyName(),
 				rentalRate, addr);
 		return te;
@@ -953,7 +991,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if (fields == null){
 			return;
 		}
-		AiEpfResultDTO ee = AiDocParser.toEpf(fields);
+		AiEpfResultDTO ee = AiDocParser.toEpf(response.getApiResponseId(), fields);
 		// a statement issued to another company lights nobody, as in the AI Assistant table
 		AiDocValidator.validateEpf(ee, companyName);
 		if (!ee.isValidEmployerName()){
@@ -1021,7 +1059,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			return;
 		}
 		Map<String, AiEpfResultDTO.AiEmployeeDTO> extracted = new HashMap<>();
-		for (AiEpfResultDTO.AiEmployeeDTO emp : AiDocParser.toEpf(fields).getEmployees()){
+		for (AiEpfResultDTO.AiEmployeeDTO emp : AiDocParser.toEpf(response.getApiResponseId(), fields).getEmployees()){
 			extracted.put(emp.getIdNo(), emp);
 		}
 		Map<String, Set<String>> edits = AiUserEdit.parse(response.getUserEdit());
@@ -1175,7 +1213,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if (fields == null){
 			return;
 		}
-		AiEpfResultDTO ee = AiDocParser.toEpf(fields);
+		AiEpfResultDTO ee = AiDocParser.toEpf(response.getApiResponseId(), fields);
 		// a statement issued to another company contributes nobody, as in the AI Assistant table
 		AiDocValidator.validateEpf(ee, companyName);
 		if (!ee.isValidEmployerName()){
@@ -1275,14 +1313,20 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if (response == null){
 			return;
 		}
-		AiEpfResultDTO ee = validatedEpf(appl, AiDocParser.parseFields(response.getJsonResponse()));
+		if (AiDocParser.isUnavailable(response)){
+			docFile.setMappedFieldAI(AiDocParser.unavailableLabel());
+			docFile.setValidatedAI(3);
+			return;
+		}
+		AiEpfResultDTO ee = validatedEpf(appl, response.getApiResponseId(),
+				AiDocParser.parseFields(response.getJsonResponse()));
 		docFile.setMappedFieldAI(ee.getLabel());
 		docFile.setValidatedAI(ee.isValidEmployerName() ? 1 : 2); //1-ok, 2-err
 	}
 
 	// one EPF file scored against the registered company name
-	private static AiEpfResultDTO validatedEpf(SmAppl appl, JSONArray fields){
-		AiEpfResultDTO ee = AiDocParser.toEpf(fields);
+	private static AiEpfResultDTO validatedEpf(SmAppl appl, Long apiId, JSONArray fields){
+		AiEpfResultDTO ee = AiDocParser.toEpf(apiId, fields);
 		AiDocValidator.validateEpf(ee, appl.getSmSupplier().getCompanyName());
 		return ee;
 	}
@@ -1313,6 +1357,9 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if (response == null){
 			return file.getMappedFieldAI();
 		}
+		if (AiDocParser.isUnavailable(response)){
+			return AiDocParser.unavailableLabel();
+		}
 		JSONArray fields = AiDocParser.parseFields(response.getJsonResponse());
 		PmDocument pmDoc = suppDoc.getPmDocument();
 		if (isBankDoc(pmDoc)){
@@ -1327,16 +1374,21 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			return isTenancyDoc(pmDoc) ? AiDocParser.label(LBL_DOC_INVALID) : file.getMappedFieldAI();
 		}
 		if (isTenancyDoc(pmDoc)){
-			return validatedTenancy(appl, AiDocValidator.getHeadquartersFacility(appl), fields).getLabel();
+			return validatedTenancy(appl, AiDocValidator.getHeadquartersFacility(appl), response.getApiResponseId(),
+					fields).getLabel();
 		}
 		if (isEpfDoc(pmDoc)){
-			return validatedEpf(appl, fields).getLabel();
+			return validatedEpf(appl, response.getApiResponseId(), fields).getLabel();
 		}
 		return file.getMappedFieldAI();
 	}
 
 	// 1-ok, 2-err, 3-read only partly; a mismatch outranks a field the AI never read, per the BA
 	private static int bankVerdict(AiBankDocDTO entity){
+		// the AI never read the file: warn, but only a mismatch or a wrong document blocks Declare
+		if (entity.isUnavailable()){
+			return 3;
+		}
 		if (entity.hasError()){
 			return 2;
 		}
@@ -1367,6 +1419,9 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 
 		for (AiBankDocDTO doc : docEntities){
 			// nothing parsed out of this file: it blocks submit too, but it is not a mismatch
+			if (doc.isUnavailable()){
+				continue;
+			}
 			if (doc.isError()){
 				hasUnreadable = true;
 				continue;
@@ -1500,7 +1555,11 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		List<AiBankDocDTO> docEnts = new ArrayList<>();
 		for (JsonWrapper json : jsonWrappers){
 			// null entities yields an error DTO, so a wrong document is crossed rather than skipped
-			docEnts.add(AiDocParser.toBankDoc(json.apiId, json.entities));
+			AiBankDocDTO dto = AiDocParser.toBankDoc(json.apiId, json.entities);
+			if (AiDocParser.isUnavailable(json.apiId, json.statusCode, json.rawContent)){
+				dto.setUnavailable(true);
+			}
+			docEnts.add(dto);
 		}
 		return docEnts;
 	}
@@ -1513,7 +1572,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			if (entityWrapper.entities == null){
 				continue;
 			}
-			tenancy = AiDocParser.toTenancy(entityWrapper.entities);
+			tenancy = AiDocParser.toTenancy(entityWrapper.apiId, entityWrapper.entities);
 		}
 		if (tenancy == null){
 			return;
@@ -1548,7 +1607,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			if (entityWrapper.entities == null){
 				continue;
 			}
-			AiEpfResultDTO ee = AiDocParser.toEpf(entityWrapper.entities);
+			AiEpfResultDTO ee = AiDocParser.toEpf(entityWrapper.apiId, entityWrapper.entities);
 			ee.setApiId(entityWrapper.apiId);
 			// employer name matches exactly, case-insensitive; no employer name extracted counts as wrong
 			AiDocValidator.validateEpf(ee, companyName);
@@ -1610,6 +1669,9 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			return getEpfDocLabel(doc);
 		}
 		if (TYPE_TENANCY.equals(docType)){
+			if (doc != null && AiDocParser.isUnavailable(doc)){
+				return AiDocParser.unavailableLabel();
+			}
 			AiTenancyDTO te = findTenancyResult(doc);
 			return te == null ? AiDocParser.label(LBL_DOC_INVALID) : te.getLabel();
 		}
@@ -1622,6 +1684,9 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * @return
 	 */
 	public String getEpfDocLabel(AIApiResponse doc){
+		if (doc != null && AiDocParser.isUnavailable(doc)){
+			return AiDocParser.unavailableLabel();
+		}
 		AiEpfResultDTO ee = findEpfResult(doc);
 		return ee == null ? AiDocParser.label(LBL_DOC_INVALID) : ee.getLabel();
 	}
@@ -1634,7 +1699,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if (!tenancies.containsKey(doc.getApiResponseId())){
 			JSONArray fields = AiDocParser.parseFields(doc.getJsonResponse());
 			tenancies.put(doc.getApiResponseId(), fields == null ? null
-					: validatedTenancy(smAppl, AiDocValidator.getHeadquartersFacility(smAppl), fields));
+					: validatedTenancy(smAppl, AiDocValidator.getHeadquartersFacility(smAppl), doc.getApiResponseId(),
+							fields));
 		}
 		return tenancies.get(doc.getApiResponseId());
 	}
