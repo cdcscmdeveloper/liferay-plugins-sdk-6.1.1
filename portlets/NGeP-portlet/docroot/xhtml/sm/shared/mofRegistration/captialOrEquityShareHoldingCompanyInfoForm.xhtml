@@ -62,16 +62,20 @@
 				selection="#{backingBean.managedBean.selectedEquityCompanies}"
 				rowKey="#{equiBean}" rowIndexVar="index" id="eqiComDt">
 				<ac:paginator for="eqiComDt" />
+				<!-- #40387 - start - refresh Delete button on checkbox select/unselect -->
 				<p:ajax event="rowSelect" listener="#{backingBean.unSelectEquityCompany}"
-					update=":form:tt:eqiComDt"></p:ajax>
+					update=":form:tt:eqiComDt :#{p:component('equiCompDelBtnId')}"></p:ajax>
 				<p:ajax event="rowUnselect" listener="#{backingBean.unSelectEquityCompany}"
-					update=":form:tt:eqiComDt"></p:ajax>
+					update=":form:tt:eqiComDt :#{p:component('equiCompDelBtnId')}"></p:ajax>
 				<p:ajax event="rowSelectCheckbox"
-					listener="#{backingBean.unSelectEquityCompany}" update=":form:tt:eqiComDt"></p:ajax>
+					listener="#{backingBean.unSelectEquityCompany}" update=":form:tt:eqiComDt :#{p:component('equiCompDelBtnId')}"></p:ajax>
 				<p:ajax event="rowUnselectCheckbox"
-					listener="#{backingBean.unSelectEquityCompany}" update=":form:tt:eqiComDt"></p:ajax>
+					listener="#{backingBean.unSelectEquityCompany}" update=":form:tt:eqiComDt :#{p:component('equiCompDelBtnId')}"></p:ajax>
 				<p:ajax event="rowDblselect" listener="#{backingBean.unSelectEquityCompany}"
-					update=":form:tt:eqiComDt"></p:ajax>
+					update=":form:tt:eqiComDt :#{p:component('equiCompDelBtnId')}"></p:ajax>
+				<p:ajax event="toggleSelect" listener="#{backingBean.unSelectEquityCompany}"
+					update=":form:tt:eqiComDt :#{p:component('equiCompDelBtnId')}"></p:ajax>
+				<!-- #40387 - end -->
 
 				<p:column selectionMode="multiple" width="1%" rendered="#{(not empty backingBean.managedBean.smAppl.smEquityCompanies) and (!backingBean.managedBean.upsCannotEdit)}" disabledSelection="#{equiBean.ssmData}" />
 				<p:column headerText="#{lbl['lbl.sm.equiComp.compName']}" style="white-space: break-spaces;">
@@ -141,11 +145,12 @@
 					disabled="#{backingBean.managedBean.disAllowOwnerEdit}"
 					value="#{lbl['lbl.sm.button.add']}"
 					action="#{backingBean.assignNewEquiCompBean}" partialSubmit="true" 
-					process="@this" update=":form:tt:eqiCompDialog" /> 
+					process="@this" update=":form:tt:eqiCompDialog" />
+				<!-- #40387 - disable Delete when no equity company is selected -->
 				<p:commandButton
 					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					value="#{lbl['lbl.sm.button.delete']}" id="equiCompDelBtnId"
-					disabled="#{empty backingBean.managedBean.smAppl.smEquityCompanies or backingBean.managedBean.disAllowOwnerEdit}"
+					disabled="#{empty backingBean.managedBean.smAppl.smEquityCompanies or empty backingBean.managedBean.selectedEquityCompanies or backingBean.managedBean.disAllowOwnerEdit}"
 					oncomplete="equiCompDeletePopUp.show()" process="equiInfPan"
 					partialSubmit="true" update=":form:tt:eqiComDt" />
 				<!-- #30660 end -->
