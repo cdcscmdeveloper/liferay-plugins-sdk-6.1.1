@@ -3529,7 +3529,6 @@ public class SupplierDataMaintenanceBackingBean extends
 			}
 			
 			if (firstDataApprover){
-				reqDTO.setOtherDescOld(getManagedBean().getOtherDescOld());
 				reqDTO.setRoleType(SupplierManagementConst.APPROVER_SDM);
 			} else {
 				reqDTO.setRoleType(SupplierManagementConst.SECTION_ROLE_APP_SDM);
@@ -3701,7 +3700,13 @@ public class SupplierDataMaintenanceBackingBean extends
 		} else if (roleApprover || roleSupApprover || roleApproverSDMA || roleApproverSDM) {
 			roleDesc = epRoleName(SupplierManagementConst.APPROVER_HQ);
 		} else if (roleSupplier || roleSupplierData) {
-			roleDesc = SmApplicationUtil.epRoleNameByUserId(history.getCreatedBy()).getRoleName();
+			PmRoleDesc role = SmApplicationUtil.epRoleNameByUserId(history.getCreatedBy());
+			
+			if (role == null) {
+				roleDesc = epRoleName(history.getRoleCode());
+			} else {
+				roleDesc = role.getRoleName();			
+			}
 		}
 		
 		return roleDesc;

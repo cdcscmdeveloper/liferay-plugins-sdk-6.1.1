@@ -88,6 +88,11 @@ public class PurchaseDeliveryRptBackingBean extends FlReportBackingBean<Purchase
 		if(getManagedBean().getStatusDescId() != null){
 			params.put(FlReportConst.FL_RPT_STATUS, getManagedBean().getStatusDescId().toString());
 		}
+		
+		// #41069 start
+		log.info("PGROUP = [" + getManagedBean().getGroup() + "]");
+		// #41069 end
+		
 		if(StringUtils.isNotBlank(getManagedBean().getGroup())){
 			params.put(FlReportConst.FL_RPT_GROUP_BY, getManagedBean().getGroup());
 		}

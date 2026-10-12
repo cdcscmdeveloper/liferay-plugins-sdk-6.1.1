@@ -68,7 +68,8 @@ public class SmPtjPopupBackingBean extends BaseBackingBean<SmPtjPopupManagedBean
 		if (null != this.getManagedBean().getMinistryProfileId()) {
 			this.getManagedBean().setDisabledPtjGroup(false);
 			// #9299 - #40663
-			this.getManagedBean().setJabatanDD(PmCommonUtil.getJabatanDropdown(this.getManagedBean().getMinistryProfileId()));
+			// #9299 - #41053
+			this.getManagedBean().setJabatanDD(PmCommonUtil.getJabatanDropdownSM(this.getManagedBean().getMinistryProfileId()));
 		} else {
 			// #9299 - #40663 Start
 			SelectItem[] items = new SelectItem[1];

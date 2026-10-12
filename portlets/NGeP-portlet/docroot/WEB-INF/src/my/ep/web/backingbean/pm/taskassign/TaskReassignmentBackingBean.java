@@ -115,6 +115,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
+//#34945 Start
+import my.ep.constant.pm.RuleTypeConst;
+import my.ep.web.util.pm.helper.RuleConfigHelper;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
+import my.ep.constant.ct.ContractStatusConst;
+//#34945 End
+
 /**
  * Backing Bean for Task Reasssingment (new)
  * 
@@ -240,6 +247,27 @@ public class TaskReassignmentBackingBean extends
 		//#38680- End
 	}
 	//[#25018] - end
+	
+	//#34945 Start
+	private static final Set<Long> circularCentralPanelContract = new HashSet<>(Arrays.asList(
+			ContractStatusConst.PQ_PENDING_SUBMISSION,
+			ContractStatusConst.PQ_PENDING_REVISION,
+			ContractStatusConst.PQ_PENDING_UPDATE_SUBMISSION,
+			ContractStatusConst.PQ_PENDING_UPDATE_REVISION,
+			ContractStatusConst.PQ_PENDING_APPROVAL,
+			ContractStatusConst.PQ_PENDING_REVISION_APPROVAL,
+			ContractStatusConst.PQ_PENDING_UPDATE_APPROVAL,
+			ContractStatusConst.PQ_PENDING_UPDATE_REVISION_APPROVAL,
+			ContractStatusConst.MQ_PENDING_SUBMISSION,
+			ContractStatusConst.MQ_PENDING_APPROVAL,
+			ContractStatusConst.MQ_PENDING_REVISION,
+			ContractStatusConst.MQ_PENDING_REVISION_APPROVAL,
+			ContractStatusConst.MQ_PENDING_UPDATE_SUBMISSION,
+			ContractStatusConst.MQ_PENDING_UPDATE_APPROVAL,
+			ContractStatusConst.MQ_PENDING_UPDATE_REVISION,
+			ContractStatusConst.MQ_PENDING_UPDATE_REVISION_APPROVAL
+			));
+	//#34945 End
 	
 	public void preLoading() throws EpException {
 		log.info("preLoading");
@@ -2046,11 +2074,14 @@ public class TaskReassignmentBackingBean extends
 			ctIntegrationSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.CONTRACT_MANAGEMENT,
 					IContractIntegrationSO.class);
-			if(getManagedBean()
-					.getTaskAssignmentSearchBean().getUser() != null){
-				reqDTO.setUserId(getManagedBean()
-						.getTaskAssignmentSearchBean().getUser().getUserId());
+
+			//#36053 Start
+			if (getManagedBean().getTaskAssignmentSearchBean().getUser() != null) {
+				reqDTO.setUserId(getManagedBean().getTaskAssignmentSearchBean().getUser().getUserId());
+			} else if (getManagedBean().getResultUser() != null) {
+				reqDTO.setUserId(getManagedBean().getResultUser().getUserId());
 			}
+			//#36053 End
 			reqDTO.setDocNo(task.getDocNumber());
 			reqDTO.setDocType(task.getDocType());
 			reqDTO.setStatusId(task.getDocStatus().longValue());
@@ -4410,17 +4441,16 @@ public class TaskReassignmentBackingBean extends
 		case ProfileManagementConst.REASSIGN_TYPE_COMMON:
 			//1 - Normal Reassignment
 			
+			//#34945 Start
 			//check because to allow cross org profile for market research #10927
-			if(task.getDocStatus().longValue() != ProfileManagementStatusConst.PENDING_MARKET_RESEARCH_ACCESS_APPROVAL.longValue()) {
-				
-				// same org profile id
-				searchBean.getDataFilterBeans().add(
-				new SearchFilterBean(
-						"pmUserOrgs.pmOrgProfile.orgProfileId",
-						SearchOperator.OPERATOR_EQUALS.value(),
-						orgProfileId));
+			if (task.getDocStatus().longValue() == ProfileManagementStatusConst.PENDING_MARKET_RESEARCH_ACCESS_APPROVAL.longValue()) {
+				break;
 			}
+			
+			applyOrgProfileFilter(searchBean, task, orgProfileId);
+			
 			break;
+			//#34945 End
 		case ProfileManagementConst.REASSIGN_TYPE_S2:
 			// 2: S2/CT Committee Task
 			
@@ -4438,7 +4468,7 @@ public class TaskReassignmentBackingBean extends
 			log.info(":::generateUserResultBean() userId: "+ userId +", vo.getDocId(): "+ vo.getDocId() 
 					+", vo.getDocType(): "+ vo.getDocType() +", vo.getRoleList(): "+ vo.getRoleList() +".");	
 			
-			resultBean = generateCommitteAssigneesForCT(searchBean, vo.getDocId(), vo.getDocType(), vo.getDocNo(), roleList, orgProfileId, task.getDocStatus()); //#36053
+			resultBean = generateCommitteAssigneesForCT(searchBean, vo.getDocId(), vo.getDocType(), vo.getDocNo(), roleList, orgProfileId, task); //#36053
 			//Bug #25021
 			
 			getManagedBean().setCommitteeUpdate(true);		
@@ -4753,10 +4783,29 @@ public class TaskReassignmentBackingBean extends
 		return resultBean;
 		
 	}
-	
-	
+
+	//#34945 Start
+	private void applyOrgProfileFilter(ISearchBean<PmUser> searchBean, WorklistItemVO task, Long orgProfileId) {
+		if (circularCentralPanelContract.contains(task.getDocStatus().longValue())) {
+			List<PmConfigRuleValue> ptjCcType = RuleConfigHelper.getInstance().getRuleTypeValueListByRuleType(RuleTypeConst.PTJ_AUTH_CC);
+			List<Long> ptjIdList = new ArrayList<>();
+
+			for (PmConfigRuleValue pmConfigRuleValue : ptjCcType) {
+				ptjIdList.add(pmConfigRuleValue.getPtjId().getOrgProfileId());
+			}
+
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmUserOrgs.pmOrgProfile.orgProfileId", SearchOperator.OPERATOR_IN.value(), ptjIdList));
+		} else {
+			// same org profile id
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmUserOrgs.pmOrgProfile.orgProfileId", SearchOperator.OPERATOR_EQUALS.value(), orgProfileId));
+		}
+	}
+	//#34945 End
+
 	private ISearchResultBean<PmUser> generateCommitteAssigneesForCT(ISearchBean<PmUser> searchBean,
-			Long docId, String docType, String docNo, List<String> roleCodeList, Long orgProfileId, int statusId){ //#36053
+			Long docId, String docType, String docNo, List<String> roleCodeList, Long orgProfileId, WorklistItemVO task){ //#36053
 		ICommitteSO committeSO;
 		try {
 			committeSO = BusinessDelegate.getInstance().getServiceObject(
@@ -4766,7 +4815,8 @@ public class TaskReassignmentBackingBean extends
 			committeReqDTO.setDocType(docType);
 			//#36053 - Start
 			committeReqDTO.setDocNo(docNo);
-			committeReqDTO.setStatusId(statusId);
+			committeReqDTO.setStatusId(task.getDocStatus());
+			committeReqDTO.setIcNo(task.getAssignees() != null && !task.getAssignees().isEmpty() ? task.getAssignees().get(0) : "");
 			//#36053 - End
 			committeReqDTO.setRoleCode(roleCodeList != null && !roleCodeList.isEmpty() ? roleCodeList.get(0) : "");
 			committeReqDTO.setUserSearchBean(searchBean);

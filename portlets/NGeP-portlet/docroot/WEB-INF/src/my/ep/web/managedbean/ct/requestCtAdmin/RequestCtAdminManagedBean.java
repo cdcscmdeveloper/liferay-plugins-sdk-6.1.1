@@ -58,6 +58,10 @@ public class RequestCtAdminManagedBean extends BaseManagedBean{
 	private CtContract ctContract;
 	private CtContractVer contractVer;
 	
+	//30737 - start
+	private Long userStatusCheckResult;
+	//30737 - end
+	
 	/**
 	 * @return the taskName
 	 */
@@ -378,6 +382,15 @@ public class RequestCtAdminManagedBean extends BaseManagedBean{
 	public void setDocType(String docType) {
 		this.docType = docType;
 	}
-	
+
+	//#30737 - start
+	public Long getUserStatusCheckResult() {
+		return userStatusCheckResult;
+	}
+
+	public void setUserStatusCheckResult(Long userStatusCheckResult) {
+		this.userStatusCheckResult = userStatusCheckResult;
+	}
+	//#30737 - end
 
 }

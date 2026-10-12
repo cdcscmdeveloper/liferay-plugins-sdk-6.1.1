@@ -62,6 +62,7 @@ import my.ep.biz.service.sc.quationtender.IQTAwardSO; //#25790
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
+import my.ep.biz.service.trackingdiary.ITrackingDiarySO; //#33224
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -1159,8 +1160,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			RequestContext.getCurrentInstance().execute("cancelRN.show()");
 		} else if (outcome.equals(BpmOutcomeConst.BPM_REJECT)) {
 			RequestContext.getCurrentInstance().execute("rejectRN.show()");
-		} else {
-			submitAction(outcome);
+		} else if (outcome.equals(BpmOutcomeConst.BPM_SUBMIT)){ //#34449
+			constructConfirmationMessageSubmit(false); //#34449
+		}else {
+			constructReviseConfirmationMessage(outcome);
 		}
 	}
 
@@ -6759,7 +6762,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					};
 					
 					Collections.sort(getManagedBean().getPurchaseRequestMapList(), prComparator);
-					
+
+					updatePurchaseRequestDiaryGroup(purchaseRequestList, requestNoteId);//#33224 (gate 4)
 				}
 			}
 
@@ -6769,6 +6773,30 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					"viewPurchaseRequestList", getUserIdSessionFromLoginId(), e);
 		}
 	}
+
+	//#33224 - start (gate 4)
+	/**
+	 * re-group the purchase request diary rows under the request note.
+	 * 
+	 * @param purchaseRequestList
+	 *            the purchase request list
+	 * @param requestNoteId
+	 *            the request note id
+	 */
+	private void updatePurchaseRequestDiaryGroup(List<ScPurchaseRequest> purchaseRequestList, Long requestNoteId) {
+		ITrackingDiarySO trackingDiarySO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.COMMON_COMPONENT, ITrackingDiarySO.class);
+		Long statusId = Long.valueOf(ParameterConst.STATUSID_40000);
+
+		for (ScPurchaseRequest scPurchaseRequest : purchaseRequestList) {
+			for (FlFulfilmentRequest flFulfilmentRequest : scPurchaseRequest.getFlFulfilmentRequests()) {
+				trackingDiarySO.updateTrackingDiaryGroupByStatus(flFulfilmentRequest.getFulfilmentReqId(),
+						flFulfilmentRequest.getDocType(), statusId, requestNoteId,
+						ParameterConst.DOCTYPE_REQUEST_NOTE);
+			}
+		}
+	}
+	//#33224 - end (gate 4)
 
 	/**
 	 * extract purchase request list.
@@ -7495,7 +7523,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				IFlItemSummarySO itemSummarySO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
 
-				BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemExtensionCode(flReqDTO);
+				BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemCode(flReqDTO);//#26059
 
 				group.setAccumulativeAmountPerItemGroup(totalAmt);
 				
@@ -7895,7 +7923,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				flReqDTO.setYear(cal.get(Calendar.YEAR));
 				IFlItemSummarySO itemSummarySO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
-				BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemExtensionCode(flReqDTO);
+				BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemCode(flReqDTO);//#26059
 
 				totalAmt = requestNoteDtl.getTotalPricePerItem().add(totalAmt);
 
@@ -8081,7 +8109,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
 				// changes to calculate per ptj per item per year
 				// using 8 digit
-				BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemExtensionCode(flReqDTO);
+				BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemCode(flReqDTO);//#26059
 
 				totalAmt = requestNoteDtl.getTotalPricePerItem().add(totalAmt);
 				
@@ -8558,8 +8586,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public void validateReasonStatus(List<ScRequestNoteDtl> requestNoteDtls) {
 		for (ScRequestNoteDtl rnDtl : requestNoteDtls) {
 			if (null != rnDtl.getJustificationType() && null != rnDtl.getJustificationType().getReasonId()) {
-				PmReason reason = retrieveReasonDtlById(getManagedBean().getRequestNoteDtl().getJustificationType()
-						.getReasonId());
+				PmReason reason = retrieveReasonDtlById(rnDtl.getJustificationType().getReasonId());
 
 				if (reason == null) {
 					continue;
@@ -9110,5 +9137,72 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    }
 
 	    return false; 
-	}		 
+	}
+
+	// 41034 - start
+	/**
+	 * Sorts Request Note remarks in descending order by created date (latest
+	 * first).
+	 * 
+	 * @return
+	 */
+	public List<ScRequestNoteRemark> getSortedRequestNoteRemarksByDate() {
+		// Null check for request note
+		if (getManagedBean().getRequestNote() == null) {
+			return Collections.emptyList();
+		}
+
+		List<ScRequestNoteRemark> remarks = getManagedBean().getRequestNote().getRemarks();
+
+		if (remarks == null || remarks.isEmpty()) {
+			return remarks;
+		}
+
+		List<ScRequestNoteRemark> sortedList = new ArrayList<>(remarks);
+
+		Collections.sort(sortedList, new Comparator<ScRequestNoteRemark>() {
+			@Override
+			public int compare(ScRequestNoteRemark r1, ScRequestNoteRemark r2) {
+				return DateUtils.compareDatesForRemark(r1.getCreatedDate(), r2.getCreatedDate());
+			}
+		});
+		return sortedList;
+	}
+	// 41034 - end
+	
+	//34449 - start
+	
+	/**
+	 * Prepares the submit action based on whether the task ID is empty
+	 * and opens the submit confirmation dialog.
+	 *
+	 * @param isTaskIdEmpty true if the task ID is empty; false otherwise
+	 */
+	public void constructConfirmationMessageSubmit(boolean isTaskIdEmpty ){
+		
+		if (isTaskIdEmpty){
+			getManagedBean().setAssignMethod("requestNoteBackingBean.submitAction('')");
+		}else{
+			getManagedBean().setAssignMethod("requestNoteBackingBean.submitAction('SUBMIT')");
+		}
+		
+		RequestContext.getCurrentInstance().execute("submitConformDlg.show()");
+	}
+	
+	/**
+	 * Construct Revise and Approve dialog message
+	 * @param outcome
+	 */
+	public void constructReviseConfirmationMessage (String outcome) {
+		
+		if (outcome.equals(BpmOutcomeConst.BPM_APPROVE)) {
+			RequestContext.getCurrentInstance().execute("approveDlg.show()");
+			getManagedBean().setApproveMethod("requestNoteBackingBean.submitAction('"+outcome+"')");
+		} else {
+			RequestContext.getCurrentInstance().execute("reviseDlg.show()");
+			getManagedBean().setReviseMethod("requestNoteBackingBean.submitAction('"+outcome+"')");
+		}
+		
+	}
+	//34449 - end
 }

@@ -4,7 +4,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc"> <ui:remove>34449</ui:remove>
 
 	<p:blockUI block=":form" widgetVar="blockWidget">
 		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
@@ -27,11 +28,9 @@
 			</tr>
 		</table>
 	</h:panelGroup>
-
 	<div class="ppRightBtn">
 		<h:panelGroup rendered="#{!isTrackingDairyView}">
 			<c:if test="#{empty lOADetailBackingBean.managedBean.taskId}">
-
 				<p:commandButton immediate="true" value="#{lbl['lbl.btn.back']}"
 					rendered="#{lOADetailBackingBean.managedBean.editFlag}"
 					style="float:left;" action="#{lOADetailBackingBean.backToPrevious}" />
@@ -41,9 +40,14 @@
 					and !(!qtLOABackingBean.managedBean.ableToSubmitLOA and lOADetailBackingBean.isApproverAbleToSave())}" process="@form" update="@form"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" /><ui:remove>#21692</ui:remove>
 
+				<!-- #34444 -  start -->
+				<ui:param name="popupMsgActionBtn"
+					value="#{lOADetailBackingBean.submitConformationForLampiranA3()}" />
+					<!-- #34444 -  end-->
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt and isSqStillValid and qtLOABackingBean.managedBean.ableToSubmitLOA}"
-					action="#{lOADetailBackingBean.submitConformationForLampiranA3}" process="@form"
+					 process="@form"
+					action="#{lOADetailBackingBean.constructSubmitDialogMesssageLoa()}"
 					update="@form" onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();" /><ui:remove>#21692</ui:remove>
 				<ui:remove>START - #33639 (by include another checking by LOA Doc Type during render the cancel button)</ui:remove>
@@ -75,7 +79,7 @@
 				<ui:remove>START - #33639</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}" id="cancelLoaBtn"
 					rendered="#{isLoaGenerated and isPendingSubmissionStatus and isSqStillValid and isDocTypePurchaseRequest}"
-					action="#{lOACancelDetailBackingBean.cancelationLOA(lOADetailBackingBean.managedBean.scLoa.loaId)}"
+					action="#{lOADetailBackingBean.constructDialogMessageForcancelationLOADocTypePR(lOADetailBackingBean.managedBean.scLoa.loaId)}"
 					process="@form" update="@form" onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();" />
 				<ui:remove>END - #33639</ui:remove>
@@ -90,7 +94,8 @@
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					styleClass="ui-button"
 					rendered="#{qtLOABackingBean.managedBean.ableToCancelLOA and isLoaGenerated}"
-					action="#{lOADetailBackingBean.validateBeforePopup(true)}" partialSubmit="true"
+					action="#{lOADetailBackingBean.getCancelButtonMethodForLoa(true)}"
+					partialSubmit="true"
 					process="#{isReject ? '@this' : '@form'}"
 					update="#{isReject ? '@this' : '@form'}" />
 				<ui:remove>36339, 21692</ui:remove>
@@ -98,7 +103,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					styleClass="ui-button"
 					rendered="#{qtLOABackingBean.managedBean.ableToCancelLOAWithoutBPM and isLoaGenerated}"
-					action="#{lOADetailBackingBean.validateBeforePopup(false)}"
+					action="#{lOADetailBackingBean.getCancelButtonMethodForLoa(false)}"
 					partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
 					update="#{isReject ? '@this' : '@form'}" /><ui:remove>21692</ui:remove>
 			
@@ -123,7 +128,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					styleClass="ui-button"
 					rendered="#{qtLOABackingBean.managedBean.ableToCancelLOA and lOADetailBackingBean.disableCancelForApprover()}"
-					action="#{lOADetailBackingBean.validateBeforePopup(true)}"
+					action="#{lOADetailBackingBean.getCancelButtonMethodForLoa(true)}"
 					partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
 					update="#{isReject ? '@this' : '@form'}" /><ui:remove>36339, 21692</ui:remove>
 				
@@ -183,6 +188,10 @@
 									action="#{lOADetailBackingBean.approveBeforeupdateBpmTaskAction(bpmAction)}"
 									partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
 									update="#{isReject ? '@this' : '@form'}" /><ui:remove>21692</ui:remove>
+								<!-- #34444 -  start -->
+								<ui:param name="popupMsgActionBtn"
+									value="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}" />
+								<!-- #34444 -  end-->
 								<ui:remove>21692 - Start</ui:remove>
 								<p:commandButton value="#{lbl[buttonLabel]}"
 									styleClass="ui-button" onstart="blockWidget.show();"
@@ -200,7 +209,7 @@
 									rendered="#{isPendingVerification and isSqStillValid}"
 									oncomplete="blockWidget.hide();"
 									disabled="#{lOADetailBackingBean.managedBean.verifyBtnFlag}"
-									action="#{lOADetailBackingBean.verifyConfirmationForLampiranA3(bpmAction)}"
+									action="#{lOADetailBackingBean.constructVerifyDialogMessage(bpmAction)}"
 									partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
 									update="#{isReject ? '@this' : '@form'}" />
 								<ui:remove> #29007 End Vinod </ui:remove>
@@ -335,4 +344,50 @@
 		</div>
 	</p:dialog>
 	<ui:remove>#21692</ui:remove>
+	<ui:remove>34449 - start</ui:remove>
+	<ui:remove> Popup Submit Action </ui:remove>
+	<ac:confirmationPopupSM id="submitConformDlgLoa"
+		widget="submitConformDlg" width="400" height="100"
+		okAction="#{lOADetailBackingBean.submitConformationForLampiranA3()}"
+		title="#{lbl['lbl.sc.header.message.submit']}"
+		content="#{lbl['lbl.sc.loa.confirmation.submit.message']}" update="@form" />
+	
+	<ac:confirmationPopupSM id="cancelDlgLoa"
+			widget="cancelDlg" width="400" height="100"
+			okAction="#{lOADetailBackingBean.managedBean.cancelMethod}"
+			title="#{lbl['lbl.sc.header.message.cancel']}"
+			content="#{lbl['lbl.sc.loa.confirmation.cancel.message']}" update="@form" />		
+			
+	<ac:confirmationPopupSM id="submitConformDlgReviseLoa"
+		widget="submitConformDlgRevise" width="400" height="100"
+		okAction="#{lOADetailBackingBean.managedBean.submitMethod}"
+		title="#{lbl['lbl.sc.header.message.submit']}"
+		content="#{lbl['lbl.sc.loa.confirmation.submit.message']}" update="@form" />	
+		
+	<ac:confirmationPopupSM id="reviseDlgLoa"
+		widget="reviseDlg" width="400" height="100"
+		okAction="#{lOADetailBackingBean.managedBean.reviseMethod}"
+		title="#{lbl['lbl.sc.header.message.revise']}"
+		content="#{lbl['lbl.sc.loa.confirmation.revise.message']}" update="@form" />
+		
+	<ac:confirmationPopupSM id="verifyDlgLoa"
+		widget="verifyDlg" width="400" height="100"
+		okAction="#{lOADetailBackingBean.managedBean.verifyMethod}"
+		title="#{lbl['lbl.sc.header.message.verify']}"
+		content="#{lbl['lbl.sc.loa.confirmation.verify.message']}" update="@form" />
+		
+	<ac:confirmationPopupSM id="rejectDlgLoa"
+		widget="rejectDlg" width="400" height="100"
+		okAction="#{lOADetailBackingBean.managedBean.rejectMethod}"
+		title="#{lbl['lbl.sc.header.message.reject']}"
+		content="#{lbl['lbl.sc.loa.cancel.dialog.confirm.reject.message']}" update="@form" />				
+	<ui:remove>34449 - end</ui:remove>
+
+	<!-- #34444 -  start -->
+	<ac:confirmationPopupQT id="popupConfirmInfoDlg"
+		widget="popupConfirmInfoDlg"		
+		title="#{lOADetailBackingBean.managedBean.confirmTitle}"
+		content="#{lOADetailBackingBean.managedBean.confirmContent}"
+		update="@form" okProcess="@form" okAction= "#{popupMsgActionBtn}" />
+	<!-- #34444 -  end-->
 </ui:composition>
