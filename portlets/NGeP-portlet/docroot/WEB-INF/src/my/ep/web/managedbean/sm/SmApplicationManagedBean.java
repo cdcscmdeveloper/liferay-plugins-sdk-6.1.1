@@ -689,6 +689,11 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmSupplierCategory historySuppCategory;
 	// 36504 - END
 	
+	
+	// #40112 - Start
+	// AI on for the open application: version gate, then extracted or toggle on
+	private boolean aiEnabled;
+	// #40112 - End
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
 		 * 
@@ -5083,4 +5088,15 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.historySuppCategory = historySuppCategory;
 	}
 	// 36504 - END
+
+	// #40112 - Start
+	@Override
+	public boolean isAiEnabled() {
+		return aiEnabled;
+	}
+
+	public void setAiEnabled(boolean aiEnabled) {
+		this.aiEnabled = aiEnabled;
+	}
+	// #40112 - End
 }

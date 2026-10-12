@@ -616,7 +616,8 @@
 			</table><br />
 			
 			<ac:smSdoOnlineSuppDoc tableId="mandatoryTableId"
-				smApplSupportDocs="#{sdoReviewBackingBean.managedBean.mandatoryDocs}" mandatory="true" />
+				smApplSupportDocs="#{sdoReviewBackingBean.managedBean.mandatoryDocs}" mandatory="true"
+				hasAI="#{sdoReviewBackingBean.managedBean.aiExtracted}"/> <!-- #40112 -->
 			<ac:smSdoOnlineSuppDoc tableId="nonMandatoryTableId"
 				smApplSupportDocs="#{sdoReviewBackingBean.managedBean.nonMandatoryDocs}" mandatory="false" />
 			

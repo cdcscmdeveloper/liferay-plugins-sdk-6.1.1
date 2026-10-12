@@ -65,6 +65,7 @@ import my.ep.persistence.entity.pm.common.PmKPIValue;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault; //#9133
+import my.ep.persistence.entity.sm.SmAppl;	//#40112
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -74,6 +75,7 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmServiceLookup;	//#40112
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -387,6 +389,19 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 		return null;
 	}
+	
+	//#40112 - start
+	// status first: only the two pending statuses pay for the extraction lookup
+	private boolean isAiTaskIcon(Integer applId, Integer docStatus) {
+		if (applId == null || docStatus == null) {
+			return false;
+		}
+		long statusId = docStatus.longValue();
+		return (statusId == SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION
+				|| statusId == SupplierManagementConst.PM_STATUS_PENDING_SUPP_DOC_VERIFICATION)
+				&& SmServiceLookup.getAIApiProcessSO().hasExtraction(applId.longValue());
+	}
+	//#40112 - end
 	
 	private MofRegistrationResDTO retriveCompanyNameByApplicationId(long applId) {
 		IMofRegistrationSO mofRegistrationSO = null;
@@ -812,6 +827,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						       if(worklistItemVO.getTitle().startsWith("lbl.sm")) {
 						    		MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
 									mofResDto = retriveCompanyNameByApplicationId(worklistItemVO.getDocId());
+									worklistItemVO.setAiProcessed(isAiTaskIcon(worklistItemVO.getDocId(), worklistItemVO.getDocStatus())); //#40112
 						    	   StringBuilder sb = new StringBuilder();
 						    	   sb.append(ResourceBundleUtils.getMessage(worklistItemVO.getTitle(), ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 						    	   if(mofResDto.getCompanyName() != null){
@@ -1523,6 +1539,8 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			// worklistItemVO.setTitle(SmCommonUtil.getSmBpmTaskTitle(worklistItemVO.getTitle(),worklistItemVO.getProcess()));
 			// sm module
 			MofRegistrationResDTO mofResDto = retriveCompanyNameByApplicationId(worklistItemVO.getDocId());
+			//#40112
+			worklistItemVO.setAiProcessed(isAiTaskIcon(worklistItemVO.getDocId(), worklistItemVO.getDocStatus()));
 			StringBuilder sb = new StringBuilder();
 			sb.append(ResourceBundleUtils.getMessage(worklistItemVO.getTitle(),
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
