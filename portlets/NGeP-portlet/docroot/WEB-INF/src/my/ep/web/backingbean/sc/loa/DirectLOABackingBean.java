@@ -6322,8 +6322,20 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		String userName = "&#60;Nama Wakil Syarikat&#62;";
 		String icNo = "&#60;No. Kad Pengenalan&#62;";
 		if (pmUser != null) {
-			userName = pmUser.getUserName();
-			icNo = pmUser.getIdentificationNo();
+			// #30449, #30447 - start
+		    if (pmUser.getSalutationCode() == null) {
+		        PmUser userDtls = retrieveUserDtlById(pmUser.getUserId());
+		        if (userDtls != null) {
+		            pmUser = userDtls;
+		        }
+		    }
+		    if (pmUser.getSalutationCode() != null) {
+		        userName = getFormattedSalutationName(pmUser.getSalutationCode().getSalutationName(), pmUser.getUserName());
+		    } else {
+		        userName = pmUser.getUserName();
+		    }
+		    icNo = pmUser.getIdentificationNo();
+		    // #30449, #30447 - end
 		}
 		context.put("userName", userName);
 		context.put("icNo", icNo);
@@ -9273,7 +9285,20 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		
 		PmUser ackBy = scLoa.getAckBy();
 		if(ackBy !=null){
-			supplierSignerUser = ackBy.getUserName();
+		    // #30447 - start
+		    if (ackBy.getSalutationCode() == null) {
+		        PmUser userDtls = retrieveUserDtlById(ackBy.getUserId());
+		        if (userDtls != null) {
+		            ackBy = userDtls;
+		        }
+		    }
+
+		    if (ackBy.getSalutationCode() != null) {
+		        supplierSignerUser = getFormattedSalutationName(ackBy.getSalutationCode().getSalutationName(), ackBy.getUserName());
+		    } else {
+		        supplierSignerUser = ackBy.getUserName();
+		    }
+		    // #30447 - end
 			supplierSignerIcNo = ackBy.getIdentificationNo();
 		}
 		
@@ -14815,5 +14840,28 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		return sortedList;
 	}
 	// 41092 - end
-
+		
+	// #30447, #30449 - start
+	public String getFormattedSupplierContractSigner() {
+		//check null
+        if (this.getManagedBean() == null 
+            || this.getManagedBean().getScLoa() == null
+            || this.getManagedBean().getScLoa().getAckBy() == null) {
+            return "";
+        }
+        
+        String name = StringUtils.trimToEmpty(this.getManagedBean().getScLoa().getAckBy().getUserName());
+        
+        String salutation = "";
+        if (this.getManagedBean().getScLoa().getAckBy().getSalutationCode() != null) {
+            salutation = StringUtils.trimToEmpty(this.getManagedBean().getScLoa().getAckBy().getSalutationCode().getSalutationName());
+        }
+        
+        return getFormattedSalutationName(salutation, name);
+	}
+	// #30447, #30449 - end
+	
+	// #30447, #30449 - start
+	public void setFormattedSupplierContractSigner(String value) {}
+	// #30447, #30449 - end
 }
