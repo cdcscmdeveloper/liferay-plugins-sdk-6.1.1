@@ -5253,8 +5253,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				// #29766 Start Vinod
 				boolean isQTTypePK7Inactive = checkQTTypeItemPK7Selected();
 				if (isQTTypePK7Inactive) {
-					RequestContext.getCurrentInstance().update(QTConstants.UPDATE_REVISE_FOR_PK7_ID);
-					RequestContext.getCurrentInstance().execute(QTConstants.REVISE_FOR_PK7_POPUP);
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									this.getManagedBean().getAlertForInactivePK7()));
 					return;
 				}
 				// #29766 End Vinod
@@ -12691,21 +12693,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			return isNewPK7ReasonInactive;
 		}
 		return false;
-	}
-
-	// #29766 End Vinod
-	// #29766 Start Vinod
-	/**
-	 * This method will call when user click ok in conformation popup for QT
-	 * type "Special Item/Item In PK7".
-	 * 
-	 * @param
-	 * @return
-	 */
-	public void reviseForQTTypeItemInPK7() {
-		this.getManagedBean().setAutoRevise(true);
-		//Pending for #21694
-		//this.updateReviseBPMTaskAction(BpmOutcomeConst.BPM_REVISE);
 	}
 
 	// #29766 End Vinod

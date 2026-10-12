@@ -349,7 +349,6 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	//#11134/#41092 -end-	
 	// #29766 Start Vinod
 	private String alertForInactivePK7;
-	private boolean autoRevise;
 	// #29766 End Vinod
 
 	/**
@@ -2106,14 +2105,6 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 
 	public void setAlertForInactivePK7(String alertForInactivePK7) {
 		this.alertForInactivePK7 = alertForInactivePK7;
-	}
-	
-	public boolean isAutoRevise() {
-		return autoRevise;
-	}
-
-	public void setAutoRevise(boolean autoRevise) {
-		this.autoRevise = autoRevise;
 	}
 	
 	// #29766 End Vinod
