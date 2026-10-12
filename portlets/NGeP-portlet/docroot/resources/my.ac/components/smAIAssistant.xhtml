@@ -84,6 +84,12 @@
 							<p:outputLabel escape="false" value="#{ai.getDocLabel(doc)}"/>
 						</p:tooltip>
 					</p:outputPanel>
+					<p:outputPanel rendered="#{ai.getDocVerdict(doc) eq 3}">
+						<p:graphicImage id="imgAiEpf3" value="/css/images/ai/warning.png" />
+						<p:tooltip for="imgAiEpf3" rendered="#{not empty ai.getDocLabel(doc)}">
+							<p:outputLabel escape="false" value="#{ai.getDocLabel(doc)}"/>
+						</p:tooltip>
+					</p:outputPanel>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.sme.supp.doc.name']}">
 					<h:commandLink id="file" value="#{doc.fileName}" >
