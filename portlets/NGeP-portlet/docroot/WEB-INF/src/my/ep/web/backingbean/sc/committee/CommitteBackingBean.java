@@ -1560,7 +1560,9 @@ public class CommitteBackingBean extends
 			userCommitteeSearchBean.setOrgCat(ParameterConst.ORG_CATEGORY_PTJ);
 		}
 		this.getManagedBean().setCommitteeSearchBean(userCommitteeSearchBean);
-		resetCommitteeSearchBean(this.getManagedBean().getQt());
+		// #37809 Start Vinod 12102026
+		resetDeskOfficerSearchBean();
+		// #37809 End Vinod 12102026
 		// #37809 Start Vinod 21092026
 		this.getManagedBean().setFpbSearchProfile(isFpbSearchProfile());
 		// #37809 End Vinod 21092026
@@ -1660,7 +1662,9 @@ public class CommitteBackingBean extends
 		this.getManagedBean().getUserQCSearchBean().setIdentificationNo(null);
 		// #37809 Start Vinod
 		if(this.getManagedBean().getCommitteeSearchBean() != null){
-			resetCommitteeSearchBean(this.getManagedBean().getQt());
+			// #37809 Start Vinod 12102026
+			resetDeskOfficerSearchBean();
+			// #37809 End Vinod 12102026
 		}
 		// #37809 End Vinod
 	}
@@ -3288,7 +3292,9 @@ public class CommitteBackingBean extends
 			// this qt is used to get PTJ dropdown values only in maintanence.
 			this.getManagedBean().setQt(scQt);
 		} else {
-			resetCommitteeSearchBean(this.getManagedBean().getQt());
+			// #37809 Start Vinod 12102026
+			resetDeskOfficerSearchBean();
+			// #37809 End Vinod 12102026
 		}
 		// #37809 Start Vinod 21092026
 		this.getManagedBean().setFpbSearchProfile(isFpbSearchProfile());
@@ -3711,6 +3717,37 @@ public class CommitteBackingBean extends
 				|| ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equalsIgnoreCase(committeeType);
 	}
 	// #37809 End Vinod 21092026
+
+	// #37809 Start Vinod 12102026
+	/**
+	 * Resets the member search criteria to the logged-in desk officer's PTJ.
+	 */
+	public void resetDeskOfficerSearchBean() {
+		resetCommitteeSearchBean(deskOfficerProfileQt());
+	}
+
+	/**
+	 * @return a search-only QT carrying the logged-in desk officer's PTJ, or
+	 *         the current QT when the user has no PTJ
+	 */
+	private ScQt deskOfficerProfileQt() {
+		PmOrgProfile deskOfficerPtj = getPTJOrgProfileByLoginUser();
+		if (deskOfficerPtj == null) {
+			return this.getManagedBean().getQt();
+		}
+		ScQt scQt = new ScQt();
+		scQt.setOrgProfileId(deskOfficerPtj.getOrgProfileId());
+		return scQt;
+	}
+
+	/**
+	 * @return true when searching for members, whose ministry may be changed
+	 */
+	public boolean isMemberSearch() {
+		UserCommitteeSearchBean searchBean = this.getManagedBean().getCommitteeSearchBean();
+		return searchBean != null && SourcingConstants.MEMBER_ROLE_ID_MEMBER.equals(searchBean.getSearchRoleId());
+	}
+	// #37809 End Vinod 12102026
 
 	// #37809 Start Vinod
 	public SelectItem[] getOrgCatList() {

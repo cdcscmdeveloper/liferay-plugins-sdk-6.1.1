@@ -32,9 +32,11 @@
 								<p:ajax onstart="blockWidgetPopup.show()"
 									update="userTblid userexistid"
 									listener="#{committeBackingBean.searchRoleChangeListener}" />
+								<ui:remove>#37809 Start Vinod 12102026</ui:remove>
 								<p:ajax oncomplete="blockWidgetPopup.hide()"
 									update="userTblid userexistid"
-									listener="#{committeBackingBean.resetCommitteeSearchBean(committeBackingBean.managedBean.qt)}" />
+									listener="#{committeBackingBean.resetDeskOfficerSearchBean}" />
+								<ui:remove>#37809 End Vinod 12102026</ui:remove>
 								<f:selectItems
 									value="#{committeBackingBean.getRoleListForAdd()}" />
 							</p:selectOneRadio></td>
@@ -58,7 +60,8 @@
 						<tr>
 							<td><p:outputLabel
 									value="#{lbl['lbl.sc.committee.add.member.search.ministry']}" /></td>
-							<td><p:selectOneMenu id="ministryDD" disabled="true"
+							<ui:remove>#37809 Start Vinod 12102026</ui:remove>
+							<td><p:selectOneMenu id="ministryDD" disabled="#{!committeBackingBean.memberSearch}"
 									value="#{committeBackingBean.managedBean.committeeSearchBean.ministry}">
 									<p:ajax onstart="blockWidgetPopup.show()"
 										oncomplete="blockWidgetPopup.hide()" update="PtjGroupDD PtjDD"
@@ -66,6 +69,7 @@
 									<f:selectItems
 										value="#{committeBackingBean.managedBean.ministryDDList}" />
 								</p:selectOneMenu></td>
+							<ui:remove>#37809 End Vinod 12102026</ui:remove>
 						</tr>
 						<tr>
 							<td><p:outputLabel

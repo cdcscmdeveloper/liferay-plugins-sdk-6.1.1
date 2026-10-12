@@ -3110,10 +3110,14 @@ public class QTCommitteBackingBean extends
 		getManagedBean().setPtjGroupDDList(ptjGroupDD);
 		getManagedBean().setPtjDDList(ptjDD);
 		
-		PmOrgProfile orgProfile = getManagedBean().getQt().getPmOrgProfile();
-		if(!StringUtils.equals(orgProfile.getPmOrgValidity().getOrgCode(), "900")){
-			getManagedBean().setMinistryNotNegeri(true);
-		}
+		// #37809 Start Vinod 12102026
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(getManagedBean().getQt().getOrgProfileId());
+		PmOrgProfile ministry = orgProfileSO.retrieveMinistryByOrgProfileId(reqDTO).getPmOrgProfile();
+		getManagedBean().setMinistryNotNegeri(!SourcingConstants.MINISTRY_CODE_NEGERI.equals(ministry.getOrgCode()));
+		// #37809 End Vinod 12102026
 	}
 	// #37809 End Vinod
 
