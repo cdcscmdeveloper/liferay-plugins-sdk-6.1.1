@@ -7647,7 +7647,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	// #38151 true = score setting saved with OVERALL_OTHER_FLAG (non-WIP)
-	private boolean isWipScoreFlagSaved(Long qtId) {
+	protected boolean isWipScoreFlagSaved(Long qtId) {
 		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTSpecSO.class);
 		return specSo.checkWipScoreFlag(qtId);
