@@ -44,6 +44,7 @@ public class OrgProfileSearchManagedBean extends BaseManagedBean{
 	
 	//27502 - Start
 	private Long zone;
+	private boolean ministrySearching = false;
 	//27502 - End
 	
 	public OrgProfileSearchManagedBean() {
@@ -243,7 +244,7 @@ public class OrgProfileSearchManagedBean extends BaseManagedBean{
 		this.specialItemSearching = specialItemSearching;
 	}
 	//end - #27868	
-	//27502 - Start
+	// 27502 - Start
 	public Long getZone() {
 		return zone;
 	}
@@ -251,5 +252,21 @@ public class OrgProfileSearchManagedBean extends BaseManagedBean{
 	public void setZone(Long zone) {
 		this.zone = zone;
 	}
-	//27502 - End
+
+	/**
+	 * @return the ministrySearching
+	 */
+	public boolean isMinistrySearching() {
+		return ministrySearching;
+	}
+
+	/**
+	 * @param ministrySearching
+	 *            the ministrySearching to set
+	 */
+	public void setMinistrySearching(boolean ministrySearching) {
+		this.ministrySearching = ministrySearching;
+	}
+
+	// 27502 - End
 }
