@@ -6332,7 +6332,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			stateCodeList.add(ProfileManagementConst.STATE_CODE_LABUAN);
 
 			for (String s : stateCodeList) {
-				List<Object[]> pjtcode = addressSO.getSabahOrSrwkPtj(scQt.getOrgProfileId(), s);
+				List<Object[]> pjtcode = addressSO.getSabahSarawakPTJ(scQt.getOrgProfileId(), s);
 
 				if (pjtcode != null && !pjtcode.isEmpty()) {
 					isSbhOrSrwk = true;
