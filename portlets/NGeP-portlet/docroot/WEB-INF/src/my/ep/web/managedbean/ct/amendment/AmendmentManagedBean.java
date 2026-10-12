@@ -1,5 +1,5 @@
 /**
- * Copyright ï¿½ 2013 Archisoft. All rights reserved.
+ * Copyright © 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.managedbean.ct.amendment;
 
@@ -188,6 +188,13 @@ public class AmendmentManagedBean extends BaseManagedBean {
 //	private boolean isFromViewPage = false; // Fix - #34110
 	
 	private boolean committeeQCBSecretaryWIP; //#35238
+	
+	//24336
+	private Date initialNewAmtEffDate;
+	
+	//30737 - start
+	private Long userStatusCheckResult;
+	//30737 - end
 	
 	public void reassignValue(boolean value) 
 	{
@@ -1704,4 +1711,30 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.committeeQCBSecretaryWIP = committeeQCBSecretaryWIP;
 	}
 	//#35238 end
+	
+	//#24336 - Start
+	public Date getInitialNewAmtEffDate() {
+		return initialNewAmtEffDate;
+	}
+	
+	public void setInitialNewAmtEffDate(Date initialNewAmtEffDate) {
+		this.initialNewAmtEffDate = initialNewAmtEffDate;
+	}
+	//#24336 - End
+	
+	
+	//30737 - start
+	/**
+	 * @return the userStatusCheckResult
+	 */
+	public Long getUserStatusCheckResult() {
+		return userStatusCheckResult;
+	}
+	/**
+	 * @param userStatusCheckResult the userStatusCheckResult to set
+	 */
+	public void setUserStatusCheckResult(Long userStatusCheckResult) {
+		this.userStatusCheckResult = userStatusCheckResult;
+	}
+	//30737 - end
 }

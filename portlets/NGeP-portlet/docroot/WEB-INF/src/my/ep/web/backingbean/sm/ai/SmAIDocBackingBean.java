@@ -2,6 +2,8 @@ package my.ep.web.backingbean.sm.ai;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,6 +29,7 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.json.JSONArray;
 
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.ai.AIApiResponse;
@@ -72,9 +75,14 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	private static final String LBL_AI_UNAVAILABLE = "lbl.sm.ai.unavailable";
 	private static final int SC_AI_UNAVAILABLE = 503;
 	private static final String AI_UPLOAD_MARKER = "_ai";
+	private static final String EL_BACKING_BEAN = "#{backingBean}";
+	private static final String LBL_DOC_INVALID = "lbl.sm.ai.doc.invalid";
+	private static final String LBL_EPF_MISMATCH = "lbl.sm.ai.epf.mismatch";
+	private static final String RA_DIALOG_MESSAGES = "smAiDialogMessages";
 
 	private List<AiEpfResultDTO> epfs;
 	private AiTenancyDTO tenancy;
+	private Map<Long, AiTenancyDTO> tenancies = new HashMap<>();
 	private List<AiEpfResultDTO.AiEmployeeDTO> selectedEmployees;
 	private boolean postAI = false;
 	private boolean blockSubmit = false;
@@ -96,6 +104,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		docs = new ArrayList<>();
 		epfs = null;
 		tenancy = null;
+		tenancies.clear();
 		postAI = false;
 		blockSubmit = false;
 
@@ -120,6 +129,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		SmAIDocBackingBean bean = fc.getApplication()
 				.evaluateExpressionGet(fc, "#{smAIDocBackingBean}", SmAIDocBackingBean.class);
 		if (bean != null) {
+			bean.tenancies.clear();
 			bean.initContext(docType, appl);
 		}
 	}
@@ -192,48 +202,37 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	/**
-	 * 0 = AI off for this application, 1 = on, 2 = something has already been extracted.
-	 * @param appl
-	 * @return
-	 */
-	public static boolean isAIApplicable(SmAppl appl) {
-		return appl != null && appl.getAiStatus() >= 1;
-	}
-	
-	/**
 	 * Show the AI upload control on a Supporting Documents row.
-	 * @param appl
 	 * @param doc
 	 * @return
 	 */
-	public static boolean isAiUploadDocRow(SmAppl appl, PmDocument doc) {
-		return isAIApplicable(appl) && (isBankDoc(doc) || isTenancyDoc(doc));
+	public static boolean isAiUploadDocRow(PmDocument doc) {
+		return isBankDoc(doc) || isTenancyDoc(doc);
 	}
 
 	/**
-	 * Set aiStatus from the version gate and the AI toggle, then re-derive every verdict.
+	 * Decide from the version gate and the AI toggle whether AI is on, then re-derive every verdict.
 	 * @param appl
+	 * @return whether AI is on for this application
 	 */
-	public static void initAiState(SmAppl appl) {
+	public static boolean initAiState(SmAppl appl) {
 		if (appl == null) {
-			return;
+			return false;
 		}
 		if (SmApplicationUtil.getAppVersionDetailsWithRedmineNo(appl,
 				SupplierManagementConst.APP_VERSION_REDMINE_NO_40112, SupplierManagementConst.PHASE_1)) {
-			appl.setAiStatus(0);
-			return;
+			return false;
 		}
-		appl.setAiStatus(1);
-		recomputeAiStatus(appl);
-		// nothing extracted yet + AI off: hide everything. 2 = already extracted, ignores the toggle
-		if (appl.getAiStatus() == 1 && !AiDocSupport.isAiEnabled()) {
-			appl.setAiStatus(0);
-			return;
+		// nothing extracted yet + AI off: hide everything. Already extracted ignores the toggle
+		if (!AiDocSupport.isAiEnabled()
+				&& !SmServiceLookup.getAIApiProcessSO().hasExtraction(appl.getApplId())) {
+			return false;
 		}
 		validateBank(appl);
 		validateTenancy(appl);
 		validateEPF(appl);
 		markEpfAiDocs(appl);
+		return true;
 	}
 
 	/**
@@ -242,7 +241,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * @param suppDoc
 	 */
 	public static void processUploadedSupportDoc(SmAppl appl, SmApplSupportDoc suppDoc) {
-		if (!isAIApplicable(appl) || suppDoc == null || suppDoc.getPmDocument() == null) {
+		if (appl == null || suppDoc == null || suppDoc.getPmDocument() == null) {
 			return;
 		}
 		// the dialog fires close on dismiss too: nothing to OCR when no new file came in
@@ -254,7 +253,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		} else {
 			processBankStatement(appl, suppDoc);
 		}
-		recomputeAiStatus(appl);
 	}
 
 	// a file still without its AI_API_RESPONSE id is one this close event has to process
@@ -272,13 +270,12 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	public static void revalidateAfterDelete(SmAppl appl) {
-		if (!isAIApplicable(appl)) {
+		if (appl == null) {
 			return;
 		}
 		validateTenancy(appl);
 		validateEPF(appl);
 		markEpfAiDocs(appl);
-		recomputeAiStatus(appl);
 	}
 
 	/**
@@ -423,7 +420,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	/**
-	 * The Supporting Documents row an AI type projects onto; bank already has its own row.
+	 * The Supporting Documents row an AI type projects onto.
 	 * @param appl
 	 * @param ocrType
 	 * @return
@@ -435,7 +432,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		for (SmApplSupportDoc suppDoc : appl.getSmApplSupportDocs()){
 			PmDocument doc = suppDoc.getPmDocument();
 			if ((TYPE_EPF.equals(ocrType) && isEpfDoc(doc))
-					|| (TYPE_TENANCY.equals(ocrType) && isTenancyDoc(doc))){
+					|| (TYPE_TENANCY.equals(ocrType) && isTenancyDoc(doc))
+					|| (TYPE_BANK.equals(ocrType) && isBankDoc(doc))){
 				return suppDoc;
 			}
 		}
@@ -455,6 +453,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		blockSubmit = false;
 		epfs = null;
 		tenancy = null;
+		tenancies.clear();
 		if (EntityHelper.isCollectionEmpty(docs)){
 			return;
 		}
@@ -500,14 +499,14 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		
 		try {
 			String requestBody = AiDocParser.buildOcrRequestBody(docType, filepath, filename, clientRequestId);
-			String result = AiOcrClient.callDocumentOcr(requestBody, docType);
+			AiOcrClient.OcrResponse result = AiOcrClient.callDocumentOcr(requestBody, docType);
 			SLAUtils.getInstance().logSLASubInfo("SM", "AI", sessionId, "null",
 					"SmAIDocbackingBean.sendDocumentOCR", "1:"+filename, startTime);
 			if (result == null) {
 				addMessageOnce(FacesMessage.SEVERITY_WARN, LBL_AI_UNAVAILABLE);
 				return null;
 			}
-			return new JsonWrapper(startTime, result, docType);
+			return new JsonWrapper(startTime, result.body, docType, result.status);
 		} catch (IOException e) {
 			log.error("OCR call failed for " + filename, e);
 
@@ -517,6 +516,28 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		return null;
 	}
 	
+	/**
+	 * The DB is WE8MSWIN1252, which stores anything outside it as 0xBF and loses it for good.
+	 * Escape those as JSON backslash-u units so the stored JSON still parses to what the AI sent.
+	 * @param json
+	 * @return
+	 */
+	private static String escapeNonDbChars(String json) {
+		if (json == null) {
+			return null;
+		}
+		CharsetEncoder dbCharset = Charset.forName("windows-1252").newEncoder();
+		StringBuilder sb = new StringBuilder(json.length());
+		for (char c : json.toCharArray()) {
+			if (dbCharset.canEncode(c)) {
+				sb.append(c);
+			} else {
+				sb.append(String.format("\\u%04x", (int) c));
+			}
+		}
+		return sb.toString();
+	}
+
 	private static AIApiResponse saveResponse(SmAppl smAppl, JsonWrapper jsonWrapper, String fileName, String filePath){
 		AIApiResponse apiResp = new AIApiResponse();
 
@@ -527,7 +548,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		apiResp.setFileName(fileName);
 		apiResp.setFilePath(filePath);
 
-		apiResp.setJsonResponse(jsonWrapper.rawContent);
+		apiResp.setJsonResponse(escapeNonDbChars(jsonWrapper.rawContent));
 		apiResp.setTimeTakenMs(jsonWrapper.timeTakenMs);
 		apiResp.setOcrType(jsonWrapper.ocrType);
 		apiResp.setApiName("test");		//temp
@@ -546,6 +567,18 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 
 	private static void addMessageOnce(FacesMessage.Severity severity, String key){
 		String detail = AiDocParser.label(key);
+		// Supporting Documents has no dialog, so its messages stay with the page
+		if (!isSupportDocPage()){
+			List<FacesMessage> msgs = dialogMessages();
+			for (FacesMessage existing : msgs){
+				if (existing.getSeverity() == severity
+						&& StringUtils.equals(existing.getDetail(), detail)){
+					return;
+				}
+			}
+			msgs.add(new FacesMessage(severity, null, detail));
+			return;
+		}
 		Iterator<FacesMessage> it = FacesContext.getCurrentInstance().getMessages("ai");
 		while (it.hasNext()){
 			FacesMessage existing = it.next();
@@ -558,31 +591,50 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	/**
-	 * True while the AI Assistant dialog holds messages of its own. The page-level p:messages shows
-	 * every clientId, so it repeats them above the form unless it is switched to globalOnly.
-	 * Supporting Documents has no dialog and takes a Tenancy Agreement too, so the page decides.
+	 * The AI Assistant dialog's messages. They are kept in the request, not the FacesContext, because
+	 * any page-level p:messages without for/globalOnly would repeat a FacesContext message outside the dialog.
 	 * @return
 	 */
-	public boolean isAiMessagePending(){
-		return docType != null && !isSupportDocPage()
-				&& FacesContext.getCurrentInstance().getMessages("ai").hasNext();
+	@SuppressWarnings("unchecked")
+	private static List<FacesMessage> dialogMessages(){
+		Map<String, Object> req = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
+		List<FacesMessage> msgs = (List<FacesMessage>) req.get(RA_DIALOG_MESSAGES);
+		if (msgs == null){
+			msgs = new ArrayList<>();
+			req.put(RA_DIALOG_MESSAGES, msgs);
+		}
+		return msgs;
+	}
+
+	/**
+	 * Dialog message texts of one severity, "error" or "warn".
+	 * @param severity
+	 * @return
+	 */
+	public List<String> getDialogMessages(String severity){
+		FacesMessage.Severity sev = "warn".equals(severity) ? FacesMessage.SEVERITY_WARN : FacesMessage.SEVERITY_ERROR;
+		List<String> details = new ArrayList<>();
+		for (FacesMessage msg : dialogMessages()){
+			if (msg.getSeverity() == sev){
+				details.add(msg.getDetail());
+			}
+		}
+		return details;
 	}
 
 	// docType is re-seeded per page but never cleared, so it cannot say where we are
 	private static boolean isSupportDocPage(){
 		FacesContext fc = FacesContext.getCurrentInstance();
 		SmApplicationBackingBean bb = fc.getApplication().evaluateExpressionGet(fc,
-				"#{backingBean}", SmApplicationBackingBean.class);
+				EL_BACKING_BEAN, SmApplicationBackingBean.class);
 		return bb != null && bb.getManagedBean() != null
 				&& SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS
 						.equalsIgnoreCase(bb.getManagedBean().getCurrentPageType());
 	}
 
 	private static boolean hasErrorMessage(){
-		String soft = AiDocParser.label("lbl.sm.ai.epf.mismatch");
-		Iterator<FacesMessage> it = FacesContext.getCurrentInstance().getMessages("ai");
-		while (it.hasNext()){
-			FacesMessage msg = it.next();
+		String soft = AiDocParser.label(LBL_EPF_MISMATCH);
+		for (FacesMessage msg : dialogMessages()){
 			if (msg.getSeverity() == FacesMessage.SEVERITY_ERROR
 					&& !StringUtils.equals(msg.getDetail(), soft)){
 				return true;
@@ -602,7 +654,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		// Hard block: a company-name mismatch prevents using the extracted data.
 		if (blockSubmit){
-			String key = TYPE_EPF.equals(docType) ? "lbl.sm.ai.epf.mismatch" : "lbl.sm.ai.tnc.mismatch";
+			String key = TYPE_EPF.equals(docType) ? LBL_EPF_MISMATCH : "lbl.sm.ai.tnc.mismatch";
 			addMessageOnce(FacesMessage.SEVERITY_ERROR, key);
 			return;
 		}
@@ -610,8 +662,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			return;
 		}
 		log.info(docType+"\t"+appl.getApplNo());
-		// recompute the task-list AI flag before the save flow persists the appl graph
-		recomputeAiStatus(appl);
 		if (TYPE_EPF.equals(docType)){
 			if (!EntityHelper.isCollectionEmpty(selectedEmployees)){
 				submitEPF(appl);
@@ -632,25 +682,39 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		Map<String, SmPersonnel> personnels = new HashMap<>();
 		for (SmPersonnel per : appl.getSmPersonnels()){
-			personnels.put(AiDocValidator.normalizeNric(per.getIdentificationNo()), per);
+			personnels.put(AiDocValidator.normalizeIdNo(per.getIdentificationNo()), per);
 		}
-		
-		//check for dupe IC
+
+		//check for dupe IC/passport
 		for (AiEpfResultDTO.AiEmployeeDTO employee : selectedEmployees) {
-			SmPersonnel per = personnels.get(employee.getNricNumber());
+			SmPersonnel per = personnels.get(employee.getIdNo());
 			if (per != null){
-				// existing (SSM/eP) personnel: only EPF No. is AI-populated -> only it gets the icon.
-				acceptEpfUserEdit(appl, employee.getNricNumber(), AiUserEdit.F_EPF_NO);
+				// the applicant applied all three fields from the dialog, so all three get the icon
+				// tenancy accepts every extracted field on submit the same way
+				acceptEpfUserEdit(appl, employee.getIdNo(),
+						AiUserEdit.F_EPF_NO, AiUserEdit.F_NAME, AiUserEdit.F_IC);
+				// applying the statement overwrites the eP name as well as the EPF No.
+				per.setName(employee.getEmployeeName());
+				per.setNameAI(employee.getEmployeeName());
 				per.setEpfNo(employee.getKwspNumber());
 				per.setEpfNoAI(employee.getKwspNumber());
 				continue;
 			}
 			// a new row is wholly AI-populated, so all three fields are accepted
-			acceptEpfUserEdit(appl, employee.getNricNumber(),
+			acceptEpfUserEdit(appl, employee.getIdNo(),
 					AiUserEdit.F_EPF_NO, AiUserEdit.F_NAME, AiUserEdit.F_IC);
 			per = new SmPersonnel();
 			per.setName(employee.getEmployeeName());
-			per.setIdentificationNo(employee.getNricNumber());
+			per.setIdentificationNo(employee.getIdNo());
+			if (employee.isPassport()){
+				per.setIdentificationTypeId(SmApplicationUtil.retrievePmParameterByTypeAndCode(
+						ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_PASSPORT)
+						.getParameterId());
+			} else {
+				per.setIdentificationTypeId(SmApplicationUtil.retrievePmParameterByTypeAndCode(
+						ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_IC)
+						.getParameterId());
+			}
 			per.setEpfNo(employee.getKwspNumber());
 
 			//defaults as per SmApplicationUtil.setDefaultPersonnelValues() / SssmSO
@@ -666,24 +730,32 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			appl.getSmPersonnels().add(per);
 		}
 		
-		//save smAppl
+		SmApplicationBackingBean bb = saveAppl();
+		if (bb != null){
+			validateEPF(bb.getManagedBean().getSmAppl());
+		}
+	}
+
+	// save through the page's own Save; the reload swaps in a fresh appl graph
+	private SmApplicationBackingBean saveAppl(){
 		FacesContext fc = FacesContext.getCurrentInstance();
 		SmApplicationBackingBean bb = fc.getApplication().evaluateExpressionGet(fc, 
-				"#{backingBean}", SmApplicationBackingBean.class);
+				EL_BACKING_BEAN, SmApplicationBackingBean.class);
 		if (bb != null){
 			bb.saveOrUpdateAppl();
 			SmApplicationUtil.sortPersonnelByRoleInCompany(bb.getManagedBean().getSmAppl());
 			// the reload drops the @Transient roleName, same as every other personnel mutator
 			bb.calcPersonnelListCount();
-			validateEPF(bb.getManagedBean().getSmAppl());
+			smAppl = bb.getManagedBean().getSmAppl();
 		}
+		return bb;
 	}
 
 
 	private void submitTenancy(){
 		FacesContext fc = FacesContext.getCurrentInstance();
 		SmApplicationBackingBean bb = fc.getApplication().evaluateExpressionGet(fc, 
-				"#{backingBean}", SmApplicationBackingBean.class);
+				EL_BACKING_BEAN, SmApplicationBackingBean.class);
 		if (bb != null){
 			bb.updateTenancyAI(tenancy);
 		}
@@ -763,10 +835,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				jsonWrappers.add(result);
 			}
 		}
-		boolean hasError = showErrorMessage(TYPE_TENANCY, jsonWrappers);
-		if (!hasError){
-			validateTenancy(appl);
-		}
+		showErrorMessage(TYPE_TENANCY, jsonWrappers);
+		validateTenancy(appl);
 	}
 	
 	public static void validateBank(SmAppl appl){
@@ -775,9 +845,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 
 	// emitMessages: the submit-time re-check also raises the mismatch messages, the page-load pass stays silent
 	private static void validateBank(SmAppl appl, boolean emitMessages){
-		if (!isAIApplicable(appl)){
-			return;
-		}
 		if (appl == null || appl.getSmSupplier() == null || EntityHelper.isCollectionEmpty(appl.getSmApplSupportDocs())){
 			return;
 		}
@@ -812,15 +879,19 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			AIApiResponse response = SmServiceLookup.getAIApiProcessSO()
 					.getById(docFile.getAiApiResponseId());
 			if (response != null){
-				entities.add(AiDocParser.toBankDoc(response.getApiResponseId(),
-						AiDocParser.parseFields(response.getJsonResponse())));
+				AiBankDocDTO dto = AiDocParser.toBankDoc(response.getApiResponseId(),
+						AiDocParser.parseFields(response.getJsonResponse()));
+				if (AiDocParser.isUnavailable(response)){
+					dto.setUnavailable(true);
+				}
+				entities.add(dto);
 			}
 		}
 		return entities;
 	}
 	
 	public static void validateTenancy(SmAppl appl){
-		if (!isAIApplicable(appl)){
+		if (appl == null){
 			return;
 		}
 		if (appl.getSmSupplier() == null){
@@ -840,13 +911,17 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	// read the supplier side off the same facility setTenancyAiFields() writes the verdict onto
 	private static void validateTenancyFiles(SmAppl appl, List<AIApiResponse> responses, SmFacility hqFacility){
 		for (AIApiResponse response : responses){
+			if (AiDocParser.isUnavailable(response)){
+				markProjectedFile(appl, response, AiDocParser.unavailableLabel(), 3);
+				continue;
+			}
 			JSONArray fields = AiDocParser.parseFields(response.getJsonResponse());
 			if (fields == null){
 				// nothing mappable in the file: cross the row rather than leave it blank
-				markProjectedFile(appl, response, AiDocParser.label("lbl.sm.ai.doc.invalid"), 2);
+				markProjectedFile(appl, response, AiDocParser.label(LBL_DOC_INVALID), 2);
 				continue;
 			}
-			AiTenancyDTO te = validatedTenancy(appl, hqFacility, fields);
+			AiTenancyDTO te = validatedTenancy(appl, hqFacility, response.getApiResponseId(), fields);
 
 			markProjectedFile(appl, response, te.getLabel(), te.hasError() ? 2 : 1); //1-ok, 2-err
 			Map<String, Set<String>> edits = AiUserEdit.parse(response.getUserEdit());
@@ -857,7 +932,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	// one tenancy file scored against the supplier's own premises values
-	private static AiTenancyDTO validatedTenancy(SmAppl appl, SmFacility hqFacility, JSONArray fields){
+	private static AiTenancyDTO validatedTenancy(SmAppl appl, SmFacility hqFacility, Long apiId, JSONArray fields){
 		String landlordsNameSupp = "";
 		BigDecimal rentalRate = null;
 		SmAddress addr = null;
@@ -868,14 +943,14 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			}
 			addr = hqFacility.getSmAddress();
 		}
-		AiTenancyDTO te = AiDocParser.toTenancy(fields);
+		AiTenancyDTO te = AiDocParser.toTenancy(apiId, fields);
 		AiDocValidator.validateTenancy(te, landlordsNameSupp, appl.getSmSupplier().getCompanyName(),
 				rentalRate, addr);
 		return te;
 	}
 
 	public static void validateEPF(SmAppl appl){
-		if (!isAIApplicable(appl)){
+		if (appl == null){
 			return;
 		}
 		clearPersonnelAiFields(appl);
@@ -888,7 +963,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 
 		Map<String, SmPersonnel> byNric = new HashMap<>();
 		for (SmPersonnel per : appl.getSmPersonnels()){
-			byNric.put(AiDocValidator.normalizeNric(per.getIdentificationNo()), per);
+			byNric.put(AiDocValidator.normalizeIdNo(per.getIdentificationNo()), per);
 		}
 
 		String companyName = appl.getSmSupplier() != null ? appl.getSmSupplier().getCompanyName() : null;
@@ -916,7 +991,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if (fields == null){
 			return;
 		}
-		AiEpfResultDTO ee = AiDocParser.toEpf(fields);
+		AiEpfResultDTO ee = AiDocParser.toEpf(response.getApiResponseId(), fields);
 		// a statement issued to another company lights nobody, as in the AI Assistant table
 		AiDocValidator.validateEpf(ee, companyName);
 		if (!ee.isValidEmployerName()){
@@ -924,33 +999,37 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		Map<String, Set<String>> edits = AiUserEdit.parse(response.getUserEdit());
 		for (AiEpfResultDTO.AiEmployeeDTO emp : ee.getEmployees()){
-			SmPersonnel per = byNric.get(emp.getNricNumber());
-			if (per == null){
-				continue;
-			}
-			// #40112 - the icon means the applicant submitted this field from the dialog. A personnel
-			// added by hand matches the statement by NRIC but was never accepted, so it stays blank.
-			Set<String> accepted = AiUserEdit.accepted(edits, emp.getNricNumber());
-			if (accepted.isEmpty()){
-				continue;
-			}
-			Set<String> edited = AiUserEdit.fields(edits, emp.getNricNumber());
-			if (accepted.contains(AiUserEdit.F_EPF_NO) && !edited.contains(AiUserEdit.F_EPF_NO)){
-				per.setEpfNoAI(emp.getKwspNumber());
-			}
+			applyEpfEmployee(emp, byNric.get(emp.getIdNo()), edits);
+		}
+	}
 
-			// the NRIC is what matched this employee to the personnel, so it is AI-verified on its
-			// own; nesting it under the name check let an edited name switch the IC icon off too
-			if (accepted.contains(AiUserEdit.F_IC) && !edited.contains(AiUserEdit.F_IC)){
-				per.setIcAI(per.getIdentificationNo());
-			}
+	private static void applyEpfEmployee(AiEpfResultDTO.AiEmployeeDTO emp, SmPersonnel per,
+			Map<String, Set<String>> edits){
+		if (per == null){
+			return;
+		}
+		// #40112 - the icon means the applicant submitted this field from the dialog. A personnel
+		// added by hand matches the statement by IC/passport but was never accepted, so it stays blank.
+		Set<String> accepted = AiUserEdit.accepted(edits, emp.getIdNo());
+		if (accepted.isEmpty()){
+			return;
+		}
+		Set<String> edited = AiUserEdit.fields(edits, emp.getIdNo());
+		if (accepted.contains(AiUserEdit.F_EPF_NO) && !edited.contains(AiUserEdit.F_EPF_NO)){
+			per.setEpfNoAI(emp.getKwspNumber());
+		}
 
-			String aiName = emp.getEmployeeName();
-			// the OCR keeps the statement's own line breaks inside a name, so compare canonically
-			if (accepted.contains(AiUserEdit.F_NAME) && !edited.contains(AiUserEdit.F_NAME)
-					&& AiDocValidator.normalizedEquals(per.getName(), aiName)){
-				per.setNameAI(per.getName());
-			}
+		// the NRIC is what matched this employee to the personnel, so it is AI-verified on its
+		// own; nesting it under the name check let an edited name switch the IC icon off too
+		if (accepted.contains(AiUserEdit.F_IC) && !edited.contains(AiUserEdit.F_IC)){
+			per.setIcAI(per.getIdentificationNo());
+		}
+
+		String aiName = emp.getEmployeeName();
+		// both sides are whitespace-collapsed before the ignore-case compare
+		if (accepted.contains(AiUserEdit.F_NAME) && !edited.contains(AiUserEdit.F_NAME)
+				&& AiDocValidator.personNameEquals(per.getName(), aiName)){
+			per.setNameAI(per.getName());
 		}
 	}
 	
@@ -959,7 +1038,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * @param appl
 	 */
 	public static void latchUserEdit(SmAppl appl){
-		if (!isAIApplicable(appl)){
+		if (appl == null){
 			return;
 		}
 		for (AIApiResponse response : findResponses(appl, TYPE_EPF)){
@@ -979,26 +1058,29 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if (fields == null){
 			return;
 		}
-		Set<String> extracted = new HashSet<>();
-		for (AiEpfResultDTO.AiEmployeeDTO emp : AiDocParser.toEpf(fields).getEmployees()){
-			extracted.add(emp.getNricNumber());
+		Map<String, AiEpfResultDTO.AiEmployeeDTO> extracted = new HashMap<>();
+		for (AiEpfResultDTO.AiEmployeeDTO emp : AiDocParser.toEpf(response.getApiResponseId(), fields).getEmployees()){
+			extracted.put(emp.getIdNo(), emp);
 		}
 		Map<String, Set<String>> edits = AiUserEdit.parse(response.getUserEdit());
 		boolean changed = false;
 		for (SmPersonnel per : appl.getSmPersonnels()){
-			String key = AiDocValidator.normalizeNric(
+			String key = AiDocValidator.normalizeIdNo(
 					per.getIcAI() != null ? per.getIcAI() : per.getIdentificationNo());
-			if (!extracted.contains(key)){
+			AiEpfResultDTO.AiEmployeeDTO emp = extracted.get(key);
+			if (emp == null){
 				continue;
 			}
-			if (per.getEpfNoAI() != null && !per.isEpfNoFromAI()){
+			// the AI transients are re-derived on every page load and the form clears them on edit, so
+			// the saved value against the statement is the only lasting evidence that it was typed over
+			Set<String> accepted = AiUserEdit.accepted(edits, key);
+			if (accepted.contains(AiUserEdit.F_EPF_NO) && !StringUtils.equals(
+					StringUtils.trimToEmpty(per.getEpfNo()), StringUtils.trimToEmpty(emp.getKwspNumber()))){
 				changed |= AiUserEdit.add(edits, key, AiUserEdit.F_EPF_NO);
 			}
-			if (per.getNameAI() != null && !per.isNameFromAI()){
+			if (accepted.contains(AiUserEdit.F_NAME)
+					&& !AiDocValidator.personNameEquals(per.getName(), emp.getEmployeeName())){
 				changed |= AiUserEdit.add(edits, key, AiUserEdit.F_NAME);
-			}
-			if (per.getIcAI() != null && !per.isIcFromAI()){
-				changed |= AiUserEdit.add(edits, key, AiUserEdit.F_IC);
 			}
 		}
 		persistUserEdit(response, edits, changed);
@@ -1036,6 +1118,9 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			if (addr.getStateIdAI() != null && !addr.isStateFromAI()){
 				changed |= AiUserEdit.add(edits, AiUserEdit.KEY_TENANCY, AiUserEdit.F_STATE);
 			}
+			if (addr.getDivisionIdAI() != null && !addr.isDivisionFromAI()){
+				changed |= AiUserEdit.add(edits, AiUserEdit.KEY_TENANCY, AiUserEdit.F_DIVISION);
+			}
 			if (addr.getDistrictIdAI() != null && !addr.isDistrictFromAI()){
 				changed |= AiUserEdit.add(edits, AiUserEdit.KEY_TENANCY, AiUserEdit.F_DISTRICT);
 			}
@@ -1066,6 +1151,20 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	/**
+	 * A deleted personnel takes its accepted and edited fields with it, so the same IC added back
+	 * by hand carries no AI icon.
+	 * @param appl
+	 * @param identificationNo
+	 */
+	public static void forgetEpfUserEdit(SmAppl appl, String identificationNo){
+		String nric = AiDocValidator.normalizeIdNo(identificationNo);
+		for (AIApiResponse response : findResponses(appl, TYPE_EPF)){
+			Map<String, Set<String>> edits = AiUserEdit.parse(response.getUserEdit());
+			persistUserEdit(response, edits, AiUserEdit.forget(edits, nric));
+		}
+	}
+
+	/**
 	 * Applying an extracted tenancy statement accepts every field it carries, and re-applying makes
 	 * fields edited since AI-populated again.
 	 * @param appl
@@ -1091,14 +1190,14 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	/**
-	 * Extracted employee IC Nos., empty when AI does not apply so the caller leaves manual adds
+	 * Extracted employee IC/Passport Nos., empty when nothing was extracted so the caller leaves manual adds
 	 * unrestricted. Wrong-company statements offer no one, the same set the AI Assistant table shows.
 	 * @param appl
 	 * @return
 	 */
 	public static Set<String> getAiEpfEmployeeNrics(SmAppl appl){
 		Set<String> nrics = new HashSet<>();
-		if (!isAIApplicable(appl)){
+		if (appl == null){
 			return nrics;
 		}
 		String companyName = appl.getSmSupplier() != null ? appl.getSmSupplier().getCompanyName() : null;
@@ -1108,39 +1207,39 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		return nrics;
 	}
 
-	// collect trimmed AI-extracted employee IC Nos. from one EPF doc file into nrics
+	// collect trimmed AI-extracted employee IC/Passport Nos. from one EPF doc file into nrics
 	private static void collectEpfEmployeeNrics(AIApiResponse response, String companyName, Set<String> nrics){
 		JSONArray fields = AiDocParser.parseFields(response.getJsonResponse());
 		if (fields == null){
 			return;
 		}
-		AiEpfResultDTO ee = AiDocParser.toEpf(fields);
+		AiEpfResultDTO ee = AiDocParser.toEpf(response.getApiResponseId(), fields);
 		// a statement issued to another company contributes nobody, as in the AI Assistant table
 		AiDocValidator.validateEpf(ee, companyName);
 		if (!ee.isValidEmployerName()){
 			return;
 		}
 		for (AiEpfResultDTO.AiEmployeeDTO emp : ee.getEmployees()){
-			if (emp.getNricNumber() != null && !emp.getNricNumber().trim().isEmpty()){
-				nrics.add(emp.getNricNumber().trim());
-			}
+			nrics.add(emp.getIdNo());
 		}
 	}
 
 	/**
-	 * A manually added new personnel must appear by IC No. in the uploaded EPF statement; throws to abort the add.
-	 * Matched on IC No., not name - a matching name with a different IC is a different person.
-	 * Only IC holders are checked - the EPF statement carries IC Nos. only, so any other
-	 * identification type could never match and is left unrestricted.
+	 * A manually added new personnel must appear by IC No. in the uploaded EPF statement; throws to abort
+	 * the add. Matched on IC No., not name - a matching name with a different IC is a different person.
+	 * Only IC holders are checked - passport and any other identification type are left unrestricted.
 	 * @param appl
 	 * @param personnel
 	 */
 	public static void validateManualPersonnelAgainstEpf(SmAppl appl, SmPersonnel personnel){
-		if (!isAIApplicable(appl) || personnel == null || personnel.getPersonnelId() != null){
+		if (appl == null || personnel == null || personnel.getPersonnelId() != null){
 			return;
 		}
-		if (personnel.getIdentificationType() == null || !ParameterConst.IDENTIFICATION_TYPES_IC
-				.equalsIgnoreCase(personnel.getIdentificationType().getParameterCode())){
+		if (personnel.getIdentificationType() == null){
+			return;
+		}
+		String idType = personnel.getIdentificationType().getParameterCode();
+		if (!ParameterConst.IDENTIFICATION_TYPES_IC.equalsIgnoreCase(idType)){
 			return;
 		}
 		Set<String> aiNrics = getAiEpfEmployeeNrics(appl);
@@ -1148,17 +1247,17 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			return;
 		}
 		if (personnel.getIdentificationNo() != null
-				&& aiNrics.contains(AiDocValidator.normalizeNric(personnel.getIdentificationNo()))){
+				&& aiNrics.contains(AiDocValidator.normalizeIdNo(personnel.getIdentificationNo()))){
 			return;
 		}
 		throw new EpException(SmCommonUtil.getMessage("lbl.sm.ai.epf.personnel.notexist", null));
 	}
 
 	/**
-	 * An EPF or Tenancy doc uploaded via the AI Assistant cannot be deleted from the Supporting Documents listing.
-	 * The _ai marker still answers "uploaded from the AI Assistant dialog?" and is not replaceable by the
-	 * response id; the id is ANDed on top to answer "is that response still alive?", because a resubmit
-	 * clones the file name but not the response and the clone would otherwise never be deletable.
+	 * An EPF or Tenancy doc uploaded via the AI Assistant is deleted in that dialog, not from the Supporting
+	 * Documents listing. The _ai marker answers "uploaded from the AI Assistant dialog?" and is not
+	 * replaceable by the response id; the AI verdict answers "is its response still active?", because a
+	 * verdict is only ever set from an active response - otherwise the file could be deleted nowhere.
 	 * @param doc
 	 * @param file
 	 * @return
@@ -1169,7 +1268,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				|| doc == null || doc.getPmDocument() == null){
 			return false;
 		}
-		return isEpfDoc(doc.getPmDocument()) || isTenancyDoc(doc.getPmDocument());
+		return (isEpfDoc(doc.getPmDocument()) || isTenancyDoc(doc.getPmDocument()))
+				&& file.getValidatedAI() != 0;
 	}
 
 	// true when the filename carries the AI Assistant marker (last token before the extension)
@@ -1190,7 +1290,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * @param appl
 	 */
 	public static void markEpfAiDocs(SmAppl appl){
-		if (!isAIApplicable(appl) || EntityHelper.isCollectionEmpty(appl.getSmApplSupportDocs())){
+		if (appl == null || EntityHelper.isCollectionEmpty(appl.getSmApplSupportDocs())){
 			return;
 		}
 		for (SmApplSupportDoc suppDoc : appl.getSmApplSupportDocs()){
@@ -1213,14 +1313,20 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if (response == null){
 			return;
 		}
-		AiEpfResultDTO ee = validatedEpf(appl, AiDocParser.parseFields(response.getJsonResponse()));
+		if (AiDocParser.isUnavailable(response)){
+			docFile.setMappedFieldAI(AiDocParser.unavailableLabel());
+			docFile.setValidatedAI(3);
+			return;
+		}
+		AiEpfResultDTO ee = validatedEpf(appl, response.getApiResponseId(),
+				AiDocParser.parseFields(response.getJsonResponse()));
 		docFile.setMappedFieldAI(ee.getLabel());
 		docFile.setValidatedAI(ee.isValidEmployerName() ? 1 : 2); //1-ok, 2-err
 	}
 
 	// one EPF file scored against the registered company name
-	private static AiEpfResultDTO validatedEpf(SmAppl appl, JSONArray fields){
-		AiEpfResultDTO ee = AiDocParser.toEpf(fields);
+	private static AiEpfResultDTO validatedEpf(SmAppl appl, Long apiId, JSONArray fields){
+		AiEpfResultDTO ee = AiDocParser.toEpf(apiId, fields);
 		AiDocValidator.validateEpf(ee, appl.getSmSupplier().getCompanyName());
 		return ee;
 	}
@@ -1251,6 +1357,9 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if (response == null){
 			return file.getMappedFieldAI();
 		}
+		if (AiDocParser.isUnavailable(response)){
+			return AiDocParser.unavailableLabel();
+		}
 		JSONArray fields = AiDocParser.parseFields(response.getJsonResponse());
 		PmDocument pmDoc = suppDoc.getPmDocument();
 		if (isBankDoc(pmDoc)){
@@ -1262,15 +1371,28 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		if (fields == null){
 			// same verdict the markers wrote: nothing mappable in the file
-			return isTenancyDoc(pmDoc) ? AiDocParser.label("lbl.sm.ai.doc.invalid") : file.getMappedFieldAI();
+			return isTenancyDoc(pmDoc) ? AiDocParser.label(LBL_DOC_INVALID) : file.getMappedFieldAI();
 		}
 		if (isTenancyDoc(pmDoc)){
-			return validatedTenancy(appl, AiDocValidator.getHeadquartersFacility(appl), fields).getLabel();
+			return validatedTenancy(appl, AiDocValidator.getHeadquartersFacility(appl), response.getApiResponseId(),
+					fields).getLabel();
 		}
 		if (isEpfDoc(pmDoc)){
-			return validatedEpf(appl, fields).getLabel();
+			return validatedEpf(appl, response.getApiResponseId(), fields).getLabel();
 		}
 		return file.getMappedFieldAI();
+	}
+
+	// 1-ok, 2-err, 3-read only partly; a mismatch outranks a field the AI never read, per the BA
+	private static int bankVerdict(AiBankDocDTO entity){
+		// the AI never read the file: warn, but only a mismatch or a wrong document blocks Declare
+		if (entity.isUnavailable()){
+			return 3;
+		}
+		if (entity.hasError()){
+			return 2;
+		}
+		return entity.hasWarning() ? 3 : 1;
 	}
 
 	private static void validateBankEntity(SmAppl appl, SmApplSupportDoc suppDoc, List<AiBankDocDTO> docEntities){
@@ -1282,7 +1404,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			for (AiBankDocDTO entity : docEntities){
 				if (entity.getApiId() != null && entity.getApiId().equals(file.getAiApiResponseId())){
 					file.setMappedFieldAI(entity.getLabel());
-					file.setValidatedAI(entity.hasError() ? 2 : 1); //1-ok, 2-err
+					file.setValidatedAI(bankVerdict(entity));
 				}
 			}
 		}
@@ -1297,6 +1419,9 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 
 		for (AiBankDocDTO doc : docEntities){
 			// nothing parsed out of this file: it blocks submit too, but it is not a mismatch
+			if (doc.isUnavailable()){
+				continue;
+			}
 			if (doc.isError()){
 				hasUnreadable = true;
 				continue;
@@ -1370,9 +1495,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * @return
 	 */
 	public static boolean isBankAiMismatch(SmAppl appl, boolean emitMessages) {
-		if (!isAIApplicable(appl)) {
-			return false;
-		}
 		if (appl == null || EntityHelper.isCollectionEmpty(appl.getSmApplSupportDocs())) {
 			return false;
 		}
@@ -1392,26 +1514,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		return false;
 	}
 
-	/**
-	 * Recompute the task-list AI flag: 2 once any document has a parsed AI response.
-	 * @param appl
-	 */
-	public static void recomputeAiStatus(SmAppl appl){
-		// 0 means the version gate turned AI off for this application, leave it alone
-		if (appl == null || appl.getApplId() == null || appl.getAiStatus() == 0){
-			return;
-		}
-		int state = 1;
-		for (AIApiResponse res : SmServiceLookup.getAIApiProcessSO().getByApplId(appl.getApplId())){
-			// a recorded OCR failure is not an extraction
-			if (AiDocParser.parseFields(res.getJsonResponse()) != null){
-				state = 2;
-				break;
-			}
-		}
-		appl.setAiStatus(state);
-	}
-	
 	private static boolean showErrorMessage(String docType, List<JsonWrapper> jsonWrappers){
 		if (EntityHelper.isCollectionEmpty(jsonWrappers)){
 			return false;
@@ -1453,7 +1555,11 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		List<AiBankDocDTO> docEnts = new ArrayList<>();
 		for (JsonWrapper json : jsonWrappers){
 			// null entities yields an error DTO, so a wrong document is crossed rather than skipped
-			docEnts.add(AiDocParser.toBankDoc(json.apiId, json.entities));
+			AiBankDocDTO dto = AiDocParser.toBankDoc(json.apiId, json.entities);
+			if (AiDocParser.isUnavailable(json.apiId, json.statusCode, json.rawContent)){
+				dto.setUnavailable(true);
+			}
+			docEnts.add(dto);
 		}
 		return docEnts;
 	}
@@ -1466,7 +1572,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			if (entityWrapper.entities == null){
 				continue;
 			}
-			tenancy = AiDocParser.toTenancy(entityWrapper.entities);
+			tenancy = AiDocParser.toTenancy(entityWrapper.apiId, entityWrapper.entities);
 		}
 		if (tenancy == null){
 			return;
@@ -1501,7 +1607,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			if (entityWrapper.entities == null){
 				continue;
 			}
-			AiEpfResultDTO ee = AiDocParser.toEpf(entityWrapper.entities);
+			AiEpfResultDTO ee = AiDocParser.toEpf(entityWrapper.apiId, entityWrapper.entities);
 			ee.setApiId(entityWrapper.apiId);
 			// employer name matches exactly, case-insensitive; no employer name extracted counts as wrong
 			AiDocValidator.validateEpf(ee, companyName);
@@ -1512,7 +1618,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			}
 		}
 		if(hasWrongCompanyName){
-			addMessageOnce(FacesMessage.SEVERITY_ERROR, "lbl.sm.ai.epf.mismatch");
+			addMessageOnce(FacesMessage.SEVERITY_ERROR, LBL_EPF_MISMATCH);
 		}
 	}
 	
@@ -1537,14 +1643,18 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	/**
-	 * Verdict icon for one uploaded file. Tenancy carries no verdict of its own, per BA.
-	 * 1 = mapped, 2 = wrong company or nothing mappable, 0 = nothing to show.
+	 * Verdict icon for one uploaded file, scored the same way as its Supporting Documents row.
+	 * 1 = mapped, 2 = mismatch or nothing mappable, 0 = nothing to show.
 	 * @param doc
 	 * @return
 	 */
 	public int getDocVerdict(AIApiResponse doc){
 		if (TYPE_EPF.equals(docType)){
 			return getEpfDocVerdict(doc);
+		}
+		if (TYPE_TENANCY.equals(docType)){
+			AiTenancyDTO te = findTenancyResult(doc);
+			return te == null || te.hasError() ? 2 : 1;
 		}
 		return 0;
 	}
@@ -1558,6 +1668,13 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if (TYPE_EPF.equals(docType)){
 			return getEpfDocLabel(doc);
 		}
+		if (TYPE_TENANCY.equals(docType)){
+			if (doc != null && AiDocParser.isUnavailable(doc)){
+				return AiDocParser.unavailableLabel();
+			}
+			AiTenancyDTO te = findTenancyResult(doc);
+			return te == null ? AiDocParser.label(LBL_DOC_INVALID) : te.getLabel();
+		}
 		return "";
 	}
 
@@ -1567,8 +1684,25 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * @return
 	 */
 	public String getEpfDocLabel(AIApiResponse doc){
+		if (doc != null && AiDocParser.isUnavailable(doc)){
+			return AiDocParser.unavailableLabel();
+		}
 		AiEpfResultDTO ee = findEpfResult(doc);
-		return ee == null ? AiDocParser.label("lbl.sm.ai.doc.invalid") : ee.getLabel();
+		return ee == null ? AiDocParser.label(LBL_DOC_INVALID) : ee.getLabel();
+	}
+
+	// scored once per file: the area lookups are EJB calls and EL asks for each row several times
+	private AiTenancyDTO findTenancyResult(AIApiResponse doc){
+		if (doc == null || doc.getApiResponseId() == null || smAppl == null || smAppl.getSmSupplier() == null){
+			return null;
+		}
+		if (!tenancies.containsKey(doc.getApiResponseId())){
+			JSONArray fields = AiDocParser.parseFields(doc.getJsonResponse());
+			tenancies.put(doc.getApiResponseId(), fields == null ? null
+					: validatedTenancy(smAppl, AiDocValidator.getHeadquartersFacility(smAppl), doc.getApiResponseId(),
+							fields));
+		}
+		return tenancies.get(doc.getApiResponseId());
 	}
 
 	private AiEpfResultDTO findEpfResult(AIApiResponse doc){
@@ -1586,7 +1720,31 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	public void deleteDoc(AIApiResponse doc) {
 		deleteResponse(doc);
 		docs.remove(doc);
+		afterDelete();
+	}
+
+	/**
+	 * Delete every crossed file when the dialog closes, whether by Submit, Cancel or the X.
+	 */
+	public void deleteInvalidDocs() {
+		boolean deleted = false;
+		for (AIApiResponse doc : new ArrayList<>(docs)){
+			if (getDocVerdict(doc) == 2){
+				log.info("Deleting invalid " + docType + " doc on dialog close: " + doc.getFileName());
+				deleteResponse(doc);
+				docs.remove(doc);
+				deleted = true;
+			}
+		}
+		if (deleted){
+			afterDelete();
+		}
+	}
+
+	private void afterDelete() {
 		selectedEmployees = null;
+		// the response is gone already, so save now or its file outlives it until some later Save
+		saveAppl();
 		if (TYPE_TENANCY.equals(docType)){
 			validateTenancy(smAppl);
 		} else if (TYPE_EPF.equals(docType)){
@@ -1600,7 +1758,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		} else {
 			processDoc(docType, smAppl);
 		}
-		recomputeAiStatus(smAppl);
 	}
 
 	private void detachFromSupportDoc(AIApiResponse res){
@@ -1643,12 +1800,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 				continue;
 			}
 			for (AiEpfResultDTO.AiEmployeeDTO emp : epf.getEmployees()){
-				String key = emp.getNricNumber();
-				if (StringUtils.isEmpty(key)){
-					key = emp.getKwspNumber() + "|" + emp.getEmployeeName();
-				}
-				if (!unique.containsKey(key)){
-					unique.put(key, emp);
+				if (!unique.containsKey(emp.getIdNo())){
+					unique.put(emp.getIdNo(), emp);
 				}
 			}
 		}
@@ -1695,6 +1848,14 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			// nothing came back at all: the call never reached the service
 			this.statusCode = StringUtils.isEmpty(rawContent)
 					? SC_AI_UNAVAILABLE : AiDocParser.getStatusCode(rawContent);
+		}
+
+		private JsonWrapper(long startTime, String rawContent, String ocrType, int httpStatus) {
+			this(startTime, rawContent, ocrType);
+			// a gateway error page is not the service's JSON: keep the status the wire reported
+			if (httpStatus < 200 || httpStatus >= 300) {
+				this.statusCode = httpStatus;
+			}
 		}
 
 		private JsonWrapper(AIApiResponse res){

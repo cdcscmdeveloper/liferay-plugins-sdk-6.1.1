@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  */
 
 package my.ep.web.backingbean.sc.loiloa;
@@ -3170,10 +3170,12 @@ public class LOIDetailBackingBean extends
 						scLoi.getLoiNo(), Boolean.TRUE);
 				}
 			}
+			/*#34444 Start*/
+			return awardSupplierResDTO;
+			/*#34444 End*/
 		} finally {
 			// iqtAwardSO = null;
 		}
-		return awardSupplierResDTO;
 	}
 	
 	/**
@@ -3392,8 +3394,9 @@ public class LOIDetailBackingBean extends
 	        if (remarksNotFound) {
 	            throw new EpException(MessageConst.ERR_775152);
 	        }
-			RequestContext.getCurrentInstance().execute("reviseLoiDlgs.show()");
-			return;
+	        /*#34444 - Start*/
+	        reviseAction();
+	        /*#34444 - End*/
 		}
 		//25638 - End
 		//#21692 - Start
@@ -7878,9 +7881,14 @@ public class LOIDetailBackingBean extends
 	 */
 	public void validateNegoDecisionAction(String outcome) {
 		try {
+			/*#34444 Start*/
+			this.getManagedBean().setAction(outcome);
+			log.info("validateNegoDecisionAction(String outcome ::>:: " + outcome);
+			/*#34444 End*/
 			ScLoi scLoi = getManagedBean().getScLoi();
 			Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId();
 			String bpmAction = outcome;
+			
 
 			if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)) {
 				String decision = this.getManagedBean().getDecisionCode();
