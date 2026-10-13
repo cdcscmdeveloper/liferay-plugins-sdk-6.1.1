@@ -7,6 +7,32 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<p:panel header="#{lbl['lbl.sm.catCodes.panHdr']}" toggleable="true" id="catcodeMainPanelId">
+		<!-- 36504 - START -->
+		<p:outputPanel align="left" rendered="#{supplierDataMaintenanceBackingBean.managedBean.otherDescChangeSupplier}">
+			<table style="width: 100%">
+				<tr>
+					<td>
+						<h:outputText value="#{lbl['lbl.sm.other.desc.history.click']}"
+							escape="false" />
+						<p:commandLink onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()"
+							action="#{supplierDataMaintenanceBackingBean.otherDescriptionHistoryMaintenance}" process="@this"
+							partialSubmit="true" update=":form">
+							<u><h:outputText
+									value="#{lbl['lbl.sm.other.desc.history.here']}"
+									style="color:blue;" escape="false" /></u>
+						</p:commandLink>
+						<p:spacer width="2" />
+						<h:outputText
+							value="#{lbl['lbl.sm.other.desc.history.to.view.history.of.other.desc']}"
+							escape="false" />
+						<br />
+						<p:spacer height="2" />
+					</td>
+				</tr>
+			</table>
+		</p:outputPanel>
+		<!-- 36504 - END -->
 		
 		<ui:include src="regCatCodesApprovedMaintenance.xhtml" />
 			
@@ -123,5 +149,14 @@
 		</div>
 
 	</p:confirmDialog>
+	
+	<!-- 36504 - START -->
+	<ac:otherDescriptionHistoryMaintenance
+		categoryCodeList="#{supplierDataMaintenanceBackingBean.managedBean.historyOtherDescList}"
+		applNo="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.applNo}"
+		otherDescChangePO="#{supplierDataMaintenanceBackingBean.managedBean.otherDescChangePO}"
+		otherDescChangeApprover="#{supplierDataMaintenanceBackingBean.managedBean.otherDescChangeApprover}"
+		otherDescChangeSupplier="#{supplierDataMaintenanceBackingBean.managedBean.otherDescChangeSupplier}"  />
+	<!-- 36504 - END -->
 
 </ui:composition>
