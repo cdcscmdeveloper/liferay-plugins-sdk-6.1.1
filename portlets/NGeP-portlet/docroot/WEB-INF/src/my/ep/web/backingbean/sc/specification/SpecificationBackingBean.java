@@ -4,7 +4,7 @@
  *                ePerolehan 
  * Release 1.00    
  *    
- * Copyright ï¿½ 2013 Archisoft. All rights reserved.
+ * Copyright © 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
  */
@@ -5062,6 +5062,83 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	//#25138 - start
+	/**
+	 * Score type change.Change Offer Price Score type(Auto/User) Scores in
+	 * specification committee menu.
+	 * 
+	 * @param event
+	 *            (String scoreType).
+	 */
+	public void offerscoreTypeChange(AjaxBehaviorEvent event) {
+		IQTSpecSO qtspecSo = null;
+		scoreTypeN = event.getComponent().getAttributes().get("value").toString();
+		List<ScQtScoreOfferPrice> toBeRemoveList = this.getManagedBean().getOfferToBeRemoveList();
+
+		if (null == toBeRemoveList) {
+			toBeRemoveList = new ArrayList<ScQtScoreOfferPrice>();
+		}
+		if (null != scoreTypeN && !"".equalsIgnoreCase(scoreTypeN)) {
+			if (scoreTypeN.equalsIgnoreCase(QTConstants.AUTO_SCORE)) {
+				ScQtScoreOfferPrice score = new ScQtScoreOfferPrice();
+				setUserDetails(score);
+
+				this.getManagedBean().setScQtScoreOfferPrice(score);
+				//====#31913 bug related to #25138==== start
+				if(!this.getManagedBean().getQt().isZonal()){
+					if (null != this.getManagedBean().getScoreOfferPrice()
+							&& !this.getManagedBean().getScoreOfferPrice().isEmpty()) {
+						this.getManagedBean().setScoreOfferPrice(new ArrayList<ScQtScoreOfferPrice>());
+						
+					}
+				//====#31913 bug related to #25138==== end
+				}
+			} else {
+
+				if (null != this.getManagedBean().getScQtScoreOfferPrice()) {
+					toBeRemoveList.add(this.getManagedBean().getScQtScoreOfferPrice());
+					
+				}
+				
+			}
+			this.getManagedBean().setOfferToBeRemoveList(toBeRemoveList);
+			this.getManagedBean().setOfferScoreType(scoreTypeN);
+			this.getManagedBean().getOfferPricePackage().setScoreType(new BigDecimal(scoreTypeN));
+			
+			if(this.getManagedBean().getQt().isZonal()){
+				for(ScQtScoreOfferPrice scoreOfferprice : this.getManagedBean().getOfferPricePackageList()){
+					scoreOfferprice.setScoreType(new BigDecimal(this.getManagedBean().getOfferScoreType()));
+					
+					if(scoreOfferprice.getScoreType().equals(new BigDecimal(QTConstants.USER_SCORE))){
+						scoreOfferprice.setFromVariance(null);
+						scoreOfferprice.setToVariance(null);
+						scoreOfferprice.setBelowScore(null);
+						scoreOfferprice.setAboveScore(null);
+					}
+					//====#31913 bug related to #25138==== start
+					else{
+						qtspecSo = BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+						SpecificationReqDTO offerReqdto = new SpecificationReqDTO();
+						SpecificationResDTO offerResdto = new SpecificationResDTO();
+						offerReqdto.setZoneId(scoreOfferprice.getTplSpecZoneDtl().getSpecZoneId());
+						offerResdto = qtspecSo.retrieveScoreOfferPriceByZone(offerReqdto);
+						if(offerResdto.getScQtScoreOfferPrice()!=null){
+							scoreOfferprice.setFromVariance(offerResdto.getScQtScoreOfferPrice().getFromVariance());
+							scoreOfferprice.setToVariance(offerResdto.getScQtScoreOfferPrice().getToVariance());
+							scoreOfferprice.setBelowScore(offerResdto.getScQtScoreOfferPrice().getBelowScore());
+							scoreOfferprice.setAboveScore(offerResdto.getScQtScoreOfferPrice().getAboveScore());
+							
+						}
+						
+					}
+					//====#31913 bug related to #25138==== end
+				}
+			}
+		}
+	}
+	//#25138 - end
+
 	/**
 	 * Bank statementsfrom change.change bankStatemnt checklist month dropdown
 	 * in specification committee.
@@ -8256,6 +8333,52 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	// #21695, #25138 -start-
+	/**
+	 * Calculate Technical Item score.calculate Item Technical Scores in
+	 * TechnicalScoring Menu.
+	 * 
+	 * @param Technical
+	 *            (ScQtScoreSetting technicalItem).
+	 */
+	public void calculateTechnicalItemScore(ScQtScoreSetting technicalItem) {
+		try {
+			if (null != technicalItem) {
+				String checkDecimal1 = String.valueOf(technicalItem.getOverallTechnical());
+				String checkDecimal2 = String.valueOf(technicalItem.getOverallOtherTechnical());
+				String pattern1 = "^[0-9\\s]+$";
+				
+				if(this.getManagedBean().getTechnicalItemScoreSetting().getOverallTechnical() != null 
+						&& this.getManagedBean().getTechnicalItemScoreSetting().getOverallOtherTechnical() != null){
+					if (!checkDecimal1.matches(pattern1)) {
+							throw new EpException(MessageConst.ERROR_775157);
+						}else if (!checkDecimal2.matches(pattern1)) {
+							throw new EpException(MessageConst.ERROR_775157);
+						}
+				}
+				
+				int value1 = technicalItem.getOverallTechnical() != null ? technicalItem
+						.getOverallTechnical().intValue() : 0;
+				int value2 = technicalItem.getOverallOtherTechnical() != null ? technicalItem
+						.getOverallOtherTechnical().intValue() : 0;
+				int local = value1 + value2;
+				this.getManagedBean().setTechnicalItemScore(
+						new BigDecimal(local));
+				
+				if ((null != this.getManagedBean().getTechnicalItemScore())
+						&& (this.getManagedBean().getTechnicalItemScore()
+								.intValue() < 100 || this.getManagedBean()
+								.getTechnicalItemScore().intValue() > 100)) {
+					throw new EpException(MessageConst.ERROR_7602571);
+				}
+			}
+
+		} finally {
+
+		}
+	}
+	// #21695, #25138 -end-
+
 	/**
 	 * Calculate Financial Item score.calculate Item Financial Scores in
 	 * FinancialScoring Menu.
@@ -9833,6 +9956,40 @@ public class SpecificationBackingBean extends
 		}
 
 	}
+
+	// #21695 Farid Start 12/8/2020
+	/**
+	 * Check technical Item passing score.check technical Item passing score null or less
+	 * than zero or greater than hundred.
+	 * 
+	 * @param technicalScoreSetting
+	 *            (ScQtScoreSetting technicalItemScoreSetting).
+	 */
+	public void checkTechnicalItemPassingScore(ScQtScoreSetting technicalItemScoreSetting) {
+		if (null != technicalItemScoreSetting) {
+			BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_PASSING_SCORE);
+		
+			if (null == technicalItemScoreSetting.getPassingScore()
+					|| technicalItemScoreSetting.getPassingScore().intValue() < 50) {
+				this.getManagedBean().setActiveIndex(4);
+				throw new EpException(MessageConst.ERROR_775155);
+			}
+			
+			if (null != technicalItemScoreSetting.getPassingScore()
+					&& technicalItemScoreSetting.getPassingScore().intValue() > 100) {
+				this.getManagedBean().setActiveIndex(4);
+				throw new EpException(MessageConst.ERROR_760142);
+			}
+			
+			if (null != passingScore
+					&& (technicalItemScoreSetting.getPassingScore().intValue() < passingScore.intValue())) {
+				technicalItemScoreSetting.setPassingScore(new BigDecimal(50));
+				this.getManagedBean().setTechnicalItemScoreSetting(technicalItemScoreSetting);
+				throw new EpException(MessageConst.ERROR_775155, new String[] { String.valueOf(passingScore) });
+			}
+		}
+	}
+	// #21695 -end-
 
 	/**
 	 * Check financial passing score.check financial passing score null or less
