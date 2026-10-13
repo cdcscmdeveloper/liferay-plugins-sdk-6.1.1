@@ -4206,7 +4206,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					SmApplicationUtil
 							.handleShowOrHideFacilityPanels(getManagedBean());
 					//#28775 - start
-					if (getManagedBean().isSupplierUser()) {
+					if (getManagedBean().getSmAppl().getPmStatus() != null
+							&& getManagedBean().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION) {
 						getManagedBean().getSmAppl().setSiteVisitGroup(true);
 					}
 					//#28775 - end
@@ -7368,7 +7369,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			getManagedBean().getSelectedWorkShopFacility().setSmSvWorkers(new ArrayList<SmSvWorker>());
 		}
 		getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
-		if (getManagedBean().isSupplierUser()) {
+		if (getManagedBean().getSmAppl().getPmStatus() != null
+				&& getManagedBean().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION) {
 			getManagedBean().getSmAppl().setSiteVisitGroup(true);
 		}
 		// 29379 - Site Visit Grouping Enhancement -28775 - end
@@ -8510,6 +8512,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		// happen due to resubmit application (#23683)
 		updateCategoriesRecordStatus();
 		reCheckVerifiedSection();
+		cleanOwnershipTypeFacilityType(); //#40368
 		try {
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
 			reqDto.setSmAppl(this.getManagedBean().getSmAppl());
@@ -10185,7 +10188,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		validateNoChangesBeenMadeToApplication();
 		//#28775 - Site Grouping Enhancement
 		validateAllWorkshops();
-		getManagedBean().getSmAppl().setSiteVisitGroup(true);
+		if (getManagedBean().getSmAppl().getPmStatus() != null
+				&& getManagedBean().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION) {
+			getManagedBean().getSmAppl().setSiteVisitGroup(true);
+		}
 		//#28775 end
 
 		// try {
@@ -15743,6 +15749,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				supplier.setLocalAuthorityId(getManagedBean().getSmSupplier()
 						.getLocalAuthorityId());
 			}
+			cleanOwnershipTypeFacilityType();	//#40368
 		}
 	}
 
@@ -20504,4 +20511,40 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	    }
 	}
 	//#40801 END
+	
+//	#40368 START
+	/**
+	 * Clears irrelevant data fields based on the facility's ownership type.
+	 * 
+	 * - OWNED: Clears rental address and rental rate.
+	 * - RENTED: Clears purchase date and purchase price.
+	 * - Default: Clears all four fields.
+	 */
+	public void cleanOwnershipTypeFacilityType() {
+		SmFacility basicCompanyFacility = getManagedBean().getBasicCompanyFacility();
+
+		if (basicCompanyFacility != null) {
+			String ownershipType = basicCompanyFacility.getOwnershipType();
+			if (ownershipType == null) {
+				ownershipType = "";
+			}
+			switch (ownershipType) {
+			case SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN:
+				basicCompanyFacility.setSmAddress(null);
+				basicCompanyFacility.setRentalRate(null);
+				break;
+			case SupplierManagementConst.SM_FACILITY_OWNERSHIP_RENTED:
+				basicCompanyFacility.setPurchaseDate(null);
+				basicCompanyFacility.setPurchasePrice(null);
+				break;
+			default:
+				basicCompanyFacility.setPurchaseDate(null);
+				basicCompanyFacility.setPurchasePrice(null);
+				basicCompanyFacility.setSmAddress(null);
+				basicCompanyFacility.setRentalRate(null);
+				break;
+			}
+		}
+	}
+//	#40368 END
 }

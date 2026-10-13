@@ -5790,8 +5790,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			// #29766 Start Vinod
 			boolean isQTTypePK7Inactive = checkQTTypeItemPK7Selected();
 			if (isQTTypePK7Inactive) {
-				RequestContext.getCurrentInstance().update(QTConstants.UPDATE_REVISE_FOR_PK7_ID);
-				RequestContext.getCurrentInstance().execute(QTConstants.REVISE_FOR_PK7_POPUP);
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								this.getManagedBean().getAlertForInactivePK7()));
 				return;
 			}
 			// #29766 End Vinod
@@ -5886,9 +5888,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			ScActorReqDTO actorReqDTO=new ScActorReqDTO();
 			actorSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScActorSO.class);
 			reqDTO.setScLoa(this.getManagedBean().getScLoa());
-			// #29766 Start Vinod.
-			boolean autoRevise = this.getManagedBean().isAutoRevise();
-			// #29766 End Vinod.
 			//#26474 - start
 			if(getManagedBean().getContractSignerUser() != null){
 				reqDTO.getScLoa().setContractSigner(getManagedBean().getContractSignerUser());
@@ -5977,13 +5976,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						successMessage(MessageConst.INFO_700078, param);
 						break;
 					case ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO:
-						// #29766 Start Vinod.
-						if (StringUtils.equalsIgnoreCase(outcome, BpmOutcomeConst.BPM_REVISE) && autoRevise) {
-							successMessage(MessageConst.INFO_700009, ParameterTypeConst.DOCUMENT_TYPES,
-									ParameterConst.DOCTYPE_LETTER_OF_AWARD, reqDTO.getScLoa().getLoaNo(), Boolean.TRUE);
-							break;
-						}
-						// #29766 End Vinod.
 						if (null != loaProcurementMode
 								&& loaProcurementMode.getParameterCode().equalsIgnoreCase(
 										ParameterConst.PROCUREMENT_MODE_QUOTATION)) {
@@ -6322,8 +6314,20 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		String userName = "&#60;Nama Wakil Syarikat&#62;";
 		String icNo = "&#60;No. Kad Pengenalan&#62;";
 		if (pmUser != null) {
-			userName = pmUser.getUserName();
-			icNo = pmUser.getIdentificationNo();
+			// #30449, #30447 - start
+		    if (pmUser.getSalutationCode() == null) {
+		        PmUser userDtls = retrieveUserDtlById(pmUser.getUserId());
+		        if (userDtls != null) {
+		            pmUser = userDtls;
+		        }
+		    }
+		    if (pmUser.getSalutationCode() != null) {
+		        userName = getFormattedSalutationName(pmUser.getSalutationCode().getSalutationName(), pmUser.getUserName());
+		    } else {
+		        userName = pmUser.getUserName();
+		    }
+		    icNo = pmUser.getIdentificationNo();
+		    // #30449, #30447 - end
 		}
 		context.put("userName", userName);
 		context.put("icNo", icNo);
@@ -9273,7 +9277,20 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		
 		PmUser ackBy = scLoa.getAckBy();
 		if(ackBy !=null){
-			supplierSignerUser = ackBy.getUserName();
+		    // #30447 - start
+		    if (ackBy.getSalutationCode() == null) {
+		        PmUser userDtls = retrieveUserDtlById(ackBy.getUserId());
+		        if (userDtls != null) {
+		            ackBy = userDtls;
+		        }
+		    }
+
+		    if (ackBy.getSalutationCode() != null) {
+		        supplierSignerUser = getFormattedSalutationName(ackBy.getSalutationCode().getSalutationName(), ackBy.getUserName());
+		    } else {
+		        supplierSignerUser = ackBy.getUserName();
+		    }
+		    // #30447 - end
 			supplierSignerIcNo = ackBy.getIdentificationNo();
 		}
 		
@@ -14360,20 +14377,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	// #29766 End Vinod
 	// #29766 Start Vinod
 	/**
-	 * This method will call when user click ok in conformation popup for QT
-	 * type "Special Item/Item In PK7".
-	 * 
-	 * @param
-	 * @return
-	 */
-	public void reviseForQTTypeItemInPK7() {
-		this.getManagedBean().setAutoRevise(true);
-		this.updateReviseBPMTaskAction(BpmOutcomeConst.BPM_REVISE);
-	}
-
-	// #29766 End Vinod
-	// #29766 Start Vinod
-	/**
 	 * This method will check QT Type "Special Item/Item In PK7" selected and if
 	 * the status is pending approval and pending approval revision will make
 	 * the reason non editable.
@@ -14815,5 +14818,28 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		return sortedList;
 	}
 	// 41092 - end
-
+		
+	// #30447, #30449 - start
+	public String getFormattedSupplierContractSigner() {
+		//check null
+        if (this.getManagedBean() == null 
+            || this.getManagedBean().getScLoa() == null
+            || this.getManagedBean().getScLoa().getAckBy() == null) {
+            return "";
+        }
+        
+        String name = StringUtils.trimToEmpty(this.getManagedBean().getScLoa().getAckBy().getUserName());
+        
+        String salutation = "";
+        if (this.getManagedBean().getScLoa().getAckBy().getSalutationCode() != null) {
+            salutation = StringUtils.trimToEmpty(this.getManagedBean().getScLoa().getAckBy().getSalutationCode().getSalutationName());
+        }
+        
+        return getFormattedSalutationName(salutation, name);
+	}
+	// #30447, #30449 - end
+	
+	// #30447, #30449 - start
+	public void setFormattedSupplierContractSigner(String value) {}
+	// #30447, #30449 - end
 }
