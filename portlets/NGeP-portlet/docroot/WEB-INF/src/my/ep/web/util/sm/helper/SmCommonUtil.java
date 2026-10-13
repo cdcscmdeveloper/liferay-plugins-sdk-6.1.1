@@ -6580,8 +6580,10 @@ public class SmCommonUtil {
 	public static void saveGroupTaskTrackingDiary(IBpmSO bpmSO, BpmRequestDTO reqDTO, boolean isRelease) {
 		try {
 			FacesScopes fc = new FacesScopes();
+			log.info("role code : " + fc.getUserRoleList());
 			if (!fc.hasRoleUser(RoleCode.UPS_SDO.value())
 					&& !fc.hasRoleUser(RoleCode.UPS_APPROVER.value())) {
+				log.info("role code besides sdo & approver : " + fc.getUserRoleList());
 				return;
 			}
 
