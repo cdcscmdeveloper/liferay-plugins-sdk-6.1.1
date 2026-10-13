@@ -18,6 +18,7 @@ import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.ct.CtContractVer; //#30737
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
@@ -110,6 +111,11 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private String taskIdFromTaskList;
 	private String[] outComesFromTaskList;
 	//#33533 end
+	
+	//#30737 start
+	private CtContractVer contractVer;
+	private Long userStatusCheckResult;
+	//#30737 end
 
 	/**
 	 * @return the updateAction
@@ -875,4 +881,22 @@ public class CentralContractManagedBean extends BaseManagedBean {
 		this.selectedPidReason = selectedPidReason;
 	}
 	//#39594 - End
+	
+	//#30737 start
+	public CtContractVer getContractVer() {
+		return contractVer;
+	}
+
+	public void setContractVer(CtContractVer contractVer) {
+		this.contractVer = contractVer;
+	}
+
+	public Long getUserStatusCheckResult() {
+		return userStatusCheckResult;
+	}
+
+	public void setUserStatusCheckResult(Long userStatusCheckResult) {
+		this.userStatusCheckResult = userStatusCheckResult;
+	}
+	//#30737 end
 }
