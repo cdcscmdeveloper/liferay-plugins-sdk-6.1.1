@@ -44,9 +44,9 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.pm.common.reason.IReasonSO;
-import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
-import my.ep.biz.service.pm.map.IPmPK7MapSO;
+import my.ep.biz.service.pm.common.reason.IReasonSO;//#27868
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;//#27868
+import my.ep.biz.service.pm.map.IPmPK7MapSO;//#27868
 import my.ep.biz.service.sc.actor.IScActorSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
@@ -76,15 +76,15 @@ import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.dto.pm.authorization.userorg.UserOrgReqDTO;
-import my.ep.dto.pm.authorization.userorg.UserOrgResDTO;
+import my.ep.dto.pm.authorization.userorg.UserOrgReqDTO;  //#27868
+import my.ep.dto.pm.authorization.userorg.UserOrgResDTO;  //#27868
 import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.pm.common.reason.ReasonReqDTO;
-import my.ep.dto.pm.common.reason.ReasonResDTO;
-import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.pm.common.reason.ReasonReqDTO;//#27868
+import my.ep.dto.pm.common.reason.ReasonResDTO;//#27868
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;//#27868
 import my.ep.dto.sc.actor.ScActorReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
@@ -118,12 +118,12 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.pm.common.PmReason;
-import my.ep.persistence.entity.pm.common.PmReasonDesc;
-import my.ep.persistence.entity.pm.common.PmReasonRestr;
+import my.ep.persistence.entity.pm.common.PmReason;//#27868
+import my.ep.persistence.entity.pm.common.PmReasonDesc;//#27868
+import my.ep.persistence.entity.pm.common.PmReasonRestr; //#27868
 import my.ep.persistence.entity.pm.common.PmUom;
-import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
-import my.ep.persistence.entity.pm.map.PmPK7Mapping;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;//#27868
+import my.ep.persistence.entity.pm.map.PmPK7Mapping;//#27868
 import my.ep.persistence.entity.sc.common.ScActor;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
@@ -164,7 +164,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
-import my.ep.type.pm.ReasonCategory;
+import my.ep.type.pm.ReasonCategory; //#27868
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.ApprovalAction;
 import my.ep.util.EpPropertiesUtils;
@@ -196,7 +196,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.NumberWordUtilEn;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.pm.helper.ReasonHelper;
+import my.ep.web.util.pm.helper.ReasonHelper;//#27868
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.VmUtil;
 import my.ep.web.util.template.DocumentGenerator;
@@ -569,7 +569,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			finalizeWIPCodePK7();
 		}
 		// 27868 - end
-		
+
 		// Bug 34404 - related to 29007 - start
 		if (this.getManagedBean().getScLoa() != null) {
 			// fix issue 2 search action note 347
@@ -577,7 +577,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					new ArrayList<ScLoiLoaItem>(this.getManagedBean().getScLoa().getScLoiLoaItems()));
 		} else {
 			this.getManagedBean().setLoiLoaItemsResult(null);
-		}
+		}		
 		// Bug 34404 - related to 29007 - end
 		//#21692 - Start
 		QtLOABackingBean qtLoa = new QtLOABackingBean();
@@ -693,7 +693,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 			ScLoa scLoa = resDTO.getScLoa();
 			getManagedBean().setScLoa(scLoa);
-			
+
 			//#26059 - Start
 			CommonUtils commonUtils = new CommonUtils();
 			for (ScLoiLoaItem item : scLoa.getScLoiLoaItems()) {
@@ -701,7 +701,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						.setItemName(commonUtils.removeItemNameNA(item.getScRequestItem().getItemName()));
 			}
 			//#26059 - End
-
+							
 			// Supplier Bank Account
 			getManagedBean().setBankList(resDTO.getSmSupplierBanks());
 
@@ -1262,6 +1262,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			SmSupplier smSupplier = getQtSuppFinalizationSO().evaluateDisciplinaryActions(
 					scLoa.getScLoiLoa().getSmSupplier(), qtId);
 			scLoa.getScLoiLoa().setSmSupplier(smSupplier);
+			
+			//#26059 - Start
+			filterLOAItemName(scLoa.getScLoiLoaItems());
+			//#26059 - End	 
 		}
 		// 26247 - end
 
@@ -3770,7 +3774,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				validateContractDetails(scLoa);
 				// 27868 - start
 				validateReasonStatus(scLoa);
-				// 27868 - end				
+				// 27868 - end
 	
 				scLoa.setScLoaWorkFlowStatuses(null);
 				// To avoid insert workflow status when direct submit without save.
@@ -4028,7 +4032,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			// 27868 - start
 			validateReasonStatus(scLoa);
 			// 27868 - end
-			
+
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 
 			// #26475 - start
@@ -12183,12 +12187,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			reqDTO.setReasonId(getManagedBean().getScLoa().getScQuote().getJustificationType().getReasonId());
 
 			PmReason reason = reqSO.retrieveReasonDtlById(reqDTO).getPmReason();
-
+			
 			if (reason == null) {
 				return;
 			}
-			boolean reasonStatus = retrievePK7ReasonStatus(reason.getReasonId());
-
+			boolean reasonStatus = retrievePK7ReasonStatus(reason.getReasonId());			
+			
 			if (!reasonStatus) {
 				throw new EpException(MessageConst.ERROR_760715, new String[] {
 						getParameterDesc(getManagedBean().getScLoa().getProcurementType().getParameterType(),
@@ -12197,10 +12201,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 		}
 	}
-
+	
 	/**
 	 * Retrieves the PK7 reason status by reason ID.
-	 * 
+	 *
 	 * @param reasonId
 	 *            the reason ID
 	 * @return true if the reason is active, otherwise false
@@ -12521,7 +12525,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 	// #27868 - End
 	
-	//#21692 - Start
+	// #21692 - Start
 	/**
 	 * Enable LOA without BPM (LOA Submission) to be cancelled for rejecting
 	 * proposal validity extension
@@ -12547,8 +12551,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					"cancelLOAWithoutBPM", getUserIdSessionFromLoginId(), e);
 		}
 	}
-	//#21692 - End
-	
+
+	// #21692 - End
+
 	//#21692 - Start
 	/**
 	 * Enable LOA without BPM (LOA Submission) to be cancelled for rejecting
@@ -12727,7 +12732,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * 
 	 * @return boolean isPK7
 	 */
-	public boolean isPK7(ScLoa loa) {
+	public boolean isPK7(ScLoa loa) {				
 		boolean PK7 = false;
 		//Add this because of CR27868 not include in UAT
 		//#25725 - Start
@@ -12737,12 +12742,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			loa.setProcurementType(loa.getScQuote().getProcurementType());
 		}
 		//#25725 - End
-		if (loa.getProcurementType() != null) {
-			if (loa.getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_PK7)) {
+		if(loa.getProcurementType()!=null){					
+			if(loa.getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_PK7)){
 				this.getManagedBean().setProcurementType(loa.getProcurementType().getParameterCode());
 				PK7 = true;
-			} else {
-				this.getManagedBean().setProcurementType(loa.getProcurementType().getParameterCode());
+			}else{
+				this.getManagedBean().setProcurementType(loa.getProcurementType().getParameterCode());				
 			}
 		}
 		return PK7;
@@ -12874,7 +12879,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			this.getManagedBean().setAgreementReqChange(true);
 			this.getManagedBean().setShowApprovalLetter(false); // #25725 - note
 																// 146
-			
+
 			RequestContext.getCurrentInstance().update(CONTRACT_DETAILS_ID);
 		}
 
@@ -13065,7 +13070,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 
 	// #25725/25726 - end
-	
 	// #26059 - Start
 	/**
 	 * Removes "NA" placeholders from the item names in the list of LOA items.
@@ -13091,7 +13095,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError("DP", "filterLOAItemName", StringUtils.EMPTY, "filterLOAItemName",
+			SLAUtils.getInstance().logSLAError("DP", "filterLOAItemName",StringUtils.EMPTY, "filterLOAItemName",
 					getUserIdSessionFromLoginId(), e);
 		}
 	}
@@ -13135,7 +13139,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		return false;
 	}
-
 	// #26059 - End
 	
 	// 41033 - start
