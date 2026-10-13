@@ -15,7 +15,7 @@ import my.ep.biz.bean.search.SearchBean; //#29416
 import my.ep.biz.service.rpt.IRPTRequestDtlSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
 import my.ep.constant.MessageConst; //#29416
-import my.ep.constant.ct.ContractConst;//#29416
+import my.ep.constant.ct.ContractConst;//#29416, #34889
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.report.RPTRequestDtlReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
@@ -258,6 +258,16 @@ public abstract class CtReportBaseBackingBean<T extends CtReportBaseManagedBean>
 			searchbeanz.setDocNo(contractNo);
 		}
 	}
+	
+	// Start - #34889
+	public boolean isCentralItemUsageMonitoringDtls() {
+		boolean isQualifiedReport = false;
+		if (getManagedBean().getReportCode().equals(CtReportConst.CT_CONTRACT_ITEM_USAGE_MONITORING_DTLS_RPT_CC_VAL)) {
+			isQualifiedReport = true;
+		}
+		return isQualifiedReport;
+	}
+	// End - #34889
 
 	// Start - #29416 || #34889
 	/**
@@ -310,5 +320,4 @@ public abstract class CtReportBaseBackingBean<T extends CtReportBaseManagedBean>
 		return isError;
 	}
 	// End - #29416 || #34889
-	// End - #29416
 }
