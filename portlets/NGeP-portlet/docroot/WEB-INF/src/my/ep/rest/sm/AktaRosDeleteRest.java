@@ -79,17 +79,18 @@ public class AktaRosDeleteRest {
 		int deleted = 0;
 		int failed = 0;
 
-		SmSchedulerReqDTO schedulerReqDTO = new SmSchedulerReqDTO(); //reqDTO
-		
+
 		for (SmSupplier supplier : supplierLs) {
 
-			schedulerReqDTO = new SmSchedulerReqDTO();
-			
+			SmSchedulerReqDTO schedulerReqDTO = new SmSchedulerReqDTO();
+
 			schedulerReqDTO.setSmSupplier(supplier);
 			schedulerReqDTO.setSchedulerType(SupplierManagementConst.SM_SCHEDULER_A882_ROS_DELETE);
 			schedulerReqDTO.setDryRun(dryRun);
+
 			try {
 				SmSchedulerResDTO one = reqSO.deleteRosSupplier(schedulerReqDTO);
+
 				if (one.isSuccessful()) {
 					deleted++;
 				} else {
@@ -97,8 +98,8 @@ public class AktaRosDeleteRest {
 				}
 			} catch (Exception ex) {
 				failed++;
-				log.info("deleteRosSupplier ERROR :: " + ex.getMessage()
-						+ " - supplier ID - " + supplier.getSupplierId());
+				log.info("deleteRosSupplier ERROR :: " + ex.getMessage() + " - supplier ID - "
+						+ supplier.getSupplierId());
 			}
 		}
 
