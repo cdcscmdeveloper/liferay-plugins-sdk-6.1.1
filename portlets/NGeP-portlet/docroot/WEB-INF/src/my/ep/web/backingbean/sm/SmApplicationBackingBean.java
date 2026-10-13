@@ -15651,6 +15651,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				supplier.setLocalAuthorityId(getManagedBean().getSmSupplier()
 						.getLocalAuthorityId());
 			}
+			cleanOwnershipTypeFacilityType();	//#40368
 		}
 	}
 
