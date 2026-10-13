@@ -14925,6 +14925,39 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 	}
 	
+	// 29661 && 41511 -start-
+	/**
+	 * supplier acknowledgement view without a bpm task.
+	 * 
+	 * @param sourceId
+	 * @param loaId
+	 * @param previousPageUrl
+	 */
+	public void viewSupplierLoaDetails(Long sourceId, Long loaId,
+			String previousPageUrl) {
+		debugLogger("viewSupplierLoaDetails");
+
+		try {
+			getManagedBean().setSourceId(sourceId);
+			getManagedBean().setBackToPreviousPage(previousPageUrl);
+			getManagedBean().setReadOnly(true);
+
+			getSupplierDeatilsByLoaId(loaId);
+			setDisciplinaryAction(this.getManagedBean().getScLoa());
+			getSmSupplierCategory(this.getManagedBean().getScLoa());
+			this.getManagedBean().setValidatewitness(Boolean.TRUE);
+			this.getManagedBean().setDownloadLOADisabled(false);
+			this.getManagedBean().setReadOnlyLOADownload(false);
+			this.getManagedBean().setSelectedTabIndex(
+					newTabIndexDirectLOA(QTConstants.DIRECT_LOA_TAB_INDEX_TWO));
+
+		} catch (Exception e) {
+			handleException(e);
+		}
+	}
+
+	// 29661 && 41511 -end-
+	
 	/**
 	 * #29661
 	 * Update loa's selected supplier categories

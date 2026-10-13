@@ -75,11 +75,11 @@
 				<ac:scSingleFileUploadButton id="scDocUploadBtn"
 					popupWidgetVar="qtLoaSuppUploadDlg"
 					rendered="#{(scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload or
-					scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSupplierUploadAndDownload and !scLoaReport.uploadlampiranA3) and (!isQtAudit)}"
+					scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSupplierUploadAndDownload and !scLoaReport.uploadlampiranA3) and (!isQtAudit and !isProposalRender)}"
 					attachment="#{scLoaReport.scLoaReportAttachment}"
 					update=":#{p:component('contentsTbl')}"
 					readonly="#{lOADetailBackingBean.managedBean.readOnly}"
-					rowIndex="#{rowIndex}">
+					rowIndex="#{rowIndex}"><ui:remove>#29661 #41511 -start-</ui:remove>
 					<f:setPropertyActionListener for="actionEvent"
 						target="#{lOADetailBackingBean.managedBean.selectedScLoaReport}"
 						value="#{scLoaReport}" />
