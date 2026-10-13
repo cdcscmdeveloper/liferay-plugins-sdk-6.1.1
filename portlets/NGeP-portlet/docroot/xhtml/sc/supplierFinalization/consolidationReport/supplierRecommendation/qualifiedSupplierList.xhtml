@@ -317,7 +317,8 @@
 							style="width:10%; text-align:right;" />
 						<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}"
 							style="width:5%; text-align:right;" />
-						<p:column rowspan="2" style="width:5%; text-align:center;">
+						<p:column rowspan="2" style="width:5%; text-align:center;"
+							rendered="#{!consolidationReportBackingBean.evaluateWIP(consolidationReportBackingBean.managedBean.scQt)}">
 							<f:facet name="header">
 								<h:outputText value="#{lbl['lbl.sc.rating']}" />
 								<ac:iconTooltip value="#{lbl['lbl.sc.tec.rating.tooltip']}" />
@@ -462,6 +463,11 @@
 					</h:outputText>
 				</p:column>
 				
+				<p:column style="text-align:center;"
+					rendered="#{!consolidationReportBackingBean.evaluateWIP(consolidationReportBackingBean.managedBean.scQt)}">
+					<h:outputText
+						value="#{empty disqualifiedSupp.totalRating? 0: disqualifiedSupp.totalRating}" />
+				</p:column>
 				<p:column style="text-align:center;">
 					<h:outputText value="#{disqualifiedSupp.evalRank}">
 						<f:convertNumber

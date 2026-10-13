@@ -4,7 +4,7 @@
  * 
  * Release 1.00    
  *    
- * Copyright ï¿½ 2013 Archisoft. All rights reserved.
+ * Copyright © 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
  */
@@ -11535,7 +11535,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	////ahmaa-#25138 -start
 	/**
 	 * @return the scQtScoreOfferPrice
-	 *
+	 */
 	public ScQtScoreOfferPrice getScQtScoreOfferPrice() {
 		return scQtScoreOfferPrice;
 	}

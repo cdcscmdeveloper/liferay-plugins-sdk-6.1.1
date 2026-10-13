@@ -1,5 +1,5 @@
 /**
- * Copyright ï¿½ 2013 Archisoft. All rights reserved.
+ * Copyright © 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.sc.supplierfinalization;
 
@@ -12289,7 +12289,7 @@ public class SupplierFinalizationBackingBean extends
 	        for (ScQtEvaluationResultDtl supplier : qualifiedSuppliers) {
 	            updateSupplierRegistrationLabel(supplier);
 	            if (isOfferExceedingThreshold(item, supplier, committeeThreshold)) {
-	                return true; // early exit ï¿½ one exceed is enough
+	                return true; // early exit – one exceed is enough
 	            }
 	        }
 	    }
