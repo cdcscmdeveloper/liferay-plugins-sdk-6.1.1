@@ -12,11 +12,11 @@ import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Arrays; //#27868
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Iterator;//#27868
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -41,16 +41,16 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.pm.common.reason.IReasonSO;
+import my.ep.biz.service.pm.common.reason.IReasonSO;//#27868
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
-import my.ep.biz.service.pm.map.IPmPK7MapSO;
+import my.ep.biz.service.pm.map.IPmPK7MapSO;//#27868
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO; //#25886
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
-import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO; //#25886 , #27868
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;//#26284
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -78,15 +78,15 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.dto.pm.authorization.userorg.UserOrgReqDTO;
-import my.ep.dto.pm.authorization.userorg.UserOrgResDTO;
+import my.ep.dto.pm.authorization.userorg.UserOrgReqDTO;//#27868
+import my.ep.dto.pm.authorization.userorg.UserOrgResDTO;//#27868
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
-import my.ep.dto.pm.common.reason.ReasonReqDTO;
-import my.ep.dto.pm.common.reason.ReasonResDTO;
+import my.ep.dto.pm.common.reason.ReasonReqDTO;//#27868
+import my.ep.dto.pm.common.reason.ReasonResDTO;//#27868
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
@@ -96,8 +96,8 @@ import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
-import my.ep.dto.sm.search.SupplierSearchReqDTO;
-import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;//#27868
+import my.ep.dto.sm.search.SupplierSearchResDTO;//#27868
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;//#26284
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
@@ -117,7 +117,7 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;//#27868
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -127,14 +127,14 @@ import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
-import my.ep.persistence.entity.pm.common.PmReasonDesc;
-import my.ep.persistence.entity.pm.common.PmReasonRestr;
+import my.ep.persistence.entity.pm.common.PmReasonDesc;//#27868
+import my.ep.persistence.entity.pm.common.PmReasonRestr;//#27868
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
-import my.ep.persistence.entity.pm.map.PmPK7Mapping;
+import my.ep.persistence.entity.pm.map.PmPK7Mapping;//#27868
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScBusinessNatureQuoteCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationDistrictCriteria;
@@ -179,17 +179,17 @@ import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
-import my.ep.web.constant.sc.DPConstants;
+import my.ep.web.constant.sc.DPConstants;//#27868
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.sc.simplequote.SimpleQuoteManagedBean;
-import my.ep.web.util.CommonUtils;
+import my.ep.web.util.CommonUtils; //#26059
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
-import my.ep.web.util.pm.helper.ReasonHelper;
+import my.ep.web.util.pm.helper.ReasonHelper;//#27868
 import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sc.helper.SourcingLocationHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
@@ -457,7 +457,6 @@ public class SimpleQuoteBackingBean extends
 			//27868 - start
 			handleInactiveReason();
 			//27868 - end
-			
 			//#25886 - start
 			if(getManagedBean().getScQuote().getPurchaseInDefault() != null){
 				getPurchaseInDefaultSO().finaliseSourceMethod(getManagedBean().getScQuote().getPurchaseInDefault(),
@@ -567,6 +566,10 @@ public class SimpleQuoteBackingBean extends
 		return items;
 	}
 
+	// #27868 - end
+	
+	
+	// #27868 - start
 	/**
 	 * Initializes procurement type options and related settings for the given
 	 * quotation. Determines available procurement types, validates eligibility,
@@ -603,7 +606,6 @@ public class SimpleQuoteBackingBean extends
 	}
 
 	// #27868 - end
-	
 		
 	private boolean isPanelItemAddable(CtPanelItem panelItem) {
 		boolean addable = false;
@@ -612,8 +614,8 @@ public class SimpleQuoteBackingBean extends
 			CtPanelItem existPanelItem = getTopPanelItem();
 			if(existPanelItem != null) {
 				if(panelItem.getItemCategoryId()
-									.getParameterCode()
-									.equalsIgnoreCase(ParameterConst.SQ_PANEL_ITEM_GENERAL)) {//#26059 - Fix simpleQuotePanel
+						.getParameterCode()
+						.equalsIgnoreCase(ParameterConst.SQ_PANEL_ITEM_GENERAL)) {//#26059 - Fix simpleQuotePanel
 					addable = false;
 				} else {
 					CtPanelItemGroup existGroup = existPanelItem.getCtPanelItemGroup();
@@ -1083,7 +1085,7 @@ public class SimpleQuoteBackingBean extends
 				scQuote.setSupplierId(getManagedBean().getPanelSuppliers().get(0).getSmSupplier().getSupplierId());
 		}
 		// #34579 - end
-		
+
 		// 27868 - start
 		Date dataCreatedDate;
 		dataCreatedDate = assignActualDate();
@@ -1383,7 +1385,7 @@ public class SimpleQuoteBackingBean extends
 				if (scRequestItem.getCmItem() != null) {
 					extensionCode = cmItem.getExtensionCode();
 					ItemName = cmItem.getItemName();
-				
+					
 				// #26059 - Start
 				} else if (DbValueConst.ITEM_TYPE_SERVICE.equals(ctPanelItem.getItemType().getParameterId())) {
 					isProduct = false;
@@ -1391,7 +1393,6 @@ public class SimpleQuoteBackingBean extends
 					isProduct = true;
 				}
 				// #26059 - End
-				
 				if (ctPanelItem.getItemCategoryId().getParameterCode()
 						.equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)) {
 					ItemName = ctPanelItem.getItemName();
@@ -1689,7 +1690,6 @@ public class SimpleQuoteBackingBean extends
 
 			}
 			// 27868 - end
-
 			// location level
 			if (quote.isZonal()) {
 				quote.setZoneLocatonLevel(getParameterByTypeAndCode(
@@ -1725,8 +1725,8 @@ public class SimpleQuoteBackingBean extends
 						.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
 					if (quote.getJustificationType().getReasonCode() != null) {
 						quote.setJustificationType(getReasonByCategoryAndCode(
-								ReasonCategory.JUSTIFICATION_PK7.value(), quote
-								.getJustificationType().getReasonCode()));
+								 ReasonCategory.JUSTIFICATION_PK7W.value(), quote
+								.getJustificationType().getReasonCode()));//27868 
 	
 					}
 					else {
@@ -2454,7 +2454,7 @@ public class SimpleQuoteBackingBean extends
 		getManagedBean().setCreatedDate(dataCreatedDate);
 		getManagedBean().setParameterTypeRPT(ParameterTypeConst.PROCUREMENT_TYPE_RPT);
 		// 27868 - end
-
+		
 		getManagedBean().setScQuote(scQuote);
 		// duration calc
 		calculateDuration(scQuote);
@@ -2525,7 +2525,7 @@ public class SimpleQuoteBackingBean extends
 			quote.setProcurementType(getParameterByTypeAndCode(procParameterType, getManagedBean().getScQuote()
 					.getProcurementType().getParameterCode()));
 			// 27868 - end
-			
+
 			// location level
 			if (quote.isZonal()) {
 				quote.setZoneLocatonLevel(getParameterByTypeAndCode(
@@ -2560,13 +2560,13 @@ public class SimpleQuoteBackingBean extends
 							.getPmParameter();
 					quote.setProcurementTypeCategory(procTypeCategory);
 				}
-			}
-			
+			}	
+
 			//27868 - start
 			String procurementCode = quote.getProcurementType().getParameterCode();
 			String parameterType = quote.getProcurementType().getParameterType();
 			//27868 - end
-
+			
 			log.info(" in submitSimpleQuote : --- HERE 6 : QuoteNo = " + quote.getQuoteNo() + " | Title = "+quote.getTitle());
 			// justification type
 			if (quote.getProcurementType().getParameterCode()
@@ -2589,7 +2589,7 @@ public class SimpleQuoteBackingBean extends
 				quote.setJustificationType(getReasonByCategoryAndCode(
 						ReasonCategory.JUSTIFICATION_AD_HOC.value(), quote
 								.getJustificationType().getReasonCode()));
-			}//27868 - start 
+			} //27868 - start 
 			else if (quote.getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
 				if (quote.getJustificationType().getReasonCode() == null) {
 					throw new EpException(MessageConst.ERROR_760706, new String[] { ResourceBundleUtils.getMessage(
@@ -2626,7 +2626,6 @@ public class SimpleQuoteBackingBean extends
 				validateSupplierAccountType(quote);
 				
 			}// 27868 - end
-			
 			else {
 				quote.setJustificationType(null);
 			}
@@ -2685,7 +2684,7 @@ public class SimpleQuoteBackingBean extends
 							suppliers.addAll(getManagedBean().getSupplierList());
 						}
 					}
-					// 27868 - end
+					// 27868 - end					
 					else {
 						// by supplier
 						if (getManagedBean().getSupplierList() != null) {
@@ -2750,7 +2749,6 @@ public class SimpleQuoteBackingBean extends
 							combineClItemAndExtension(tplSpecQuestion);
 						}
 						//#26059 - End
-						
 						doc.setSpecMaster(getManagedBean()
 								.getProductTemplateSpecBean().getSpecMaster());
 						quoteDocs.add(doc);
@@ -2830,7 +2828,6 @@ public class SimpleQuoteBackingBean extends
 							//#26059 - Start
 							combineClItemAndExtension(tplSpecQuestion);
 							//#26059 - End
-							
 						}
 						// Bug #35514 - end
 						quoteDoc.setSpecMaster(specMaster);
@@ -3066,44 +3063,46 @@ public class SimpleQuoteBackingBean extends
 		//#29209 - End
 
 		procurementTypeEvent();
-		// 27868 - start
+		//27868 - start
 		getSpecialItemAndPK7InfoMessage(getManagedBean().getScQuote().getProcurementType());
-		// 27868 - end
-		
-		// when procurement type as pk7 selected 
-		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)){
-			// Temp(#34274 - Start)
-			// MaxProcurementAmt
-			// BigDecimal maxProcurementAmt = getPRThresholdAmount();
-			// DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
-			// .getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
-
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-							MessageConst.INFO_760440, null, MessageUtils.BUNDLE_COMMON_MESSAGES,
-							new FacesScopes().getUserLocale())));
-			// Temp(#34274 - End)
-		}
+		//27868 - end
+		// 27868 - start - remove #34274 code, remove info 760440
+		// 27868 - end - remove #34274 code
 		// #28536 - start
+		// #40654 - start
+		// Changing procurement type changes which suppliers are eligible, so
+		// every
+		// switch starts from a clean slate. All THREE collections are cleared,
+		// not
+		// just the two UI lists: splitSuppliers() replaces supplierList and
+		// govtSellers with fresh ArrayLists whenever a supplier or government
+		// seller
+		// is picked, so from then on they no longer alias scQuoteSuppliers -
+		// and
+		// splitSuppliers() rebuilds them FROM scQuoteSuppliers, which would
+		// resurrect a supplier that had only been cleared from the UI lists.
+		clearSupplierSelections();
+		// #40654 - end
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
-			//40234 - start
-			if (CollectionUtils.isNotEmpty(getManagedBean().getSupplierList())) {
-				removeSupplierListFromGovtSeller(getManagedBean().getSupplierList());
-		    }
-			//40234 - end
 			getGovtSellerCriteria();
 		} else {
-			//40234 - start
-			if (CollectionUtils.isNotEmpty(getManagedBean().getSupplierList())) {
-				removeGovtSellerFromSupplierList(getManagedBean().getSupplierList());
-			} else if (CollectionUtils.isNotEmpty(getManagedBean().getGovtSellers())) {
-				removeGovtSellerFromSupplierList(getManagedBean().getGovtSellers());
-			}
-			//40234 - end
 			getSupplierListCriteria();
 		}
 		// #28536 - end
+		// #40654 - start
+		// procurementTypeEvent() above has just changed locAndBusinessFlag /
+		// g2GFlag,
+		// which decide WHICH tabs of the supplier-criteria tabView are
+		// rendered. The
+		// previously active index can then point past the end of the new tab
+		// set, so
+		// the tabView comes back with no tab selected and the table looks
+		// collapsed
+		// until the user clicks a tab header. Reset to the first rendered tab,
+		// the
+		// same way byLocAndBusinessEvent() does when it changes the tab set.
+		getManagedBean().setTabActiveIndex(0);
+		// #40654 - end
 	}
 
 	/**
@@ -3122,11 +3121,25 @@ public class SimpleQuoteBackingBean extends
 		templateSpecBackingBean.getManagedBean().setG2G(false);
 		
 		String procurementType = getManagedBean().getScQuote().getProcurementType().getParameterCode();
-		
+
 		// 27868 - start
 		Date dataCreatedDate;
 		dataCreatedDate = assignActualDate();
 		// 27868 - end
+		//#40654, #27868 - start
+		// As this managedBean under #27868, so this block of code will be merge with 27868.
+		// Double tab for special item still not exist in pds/prd code.
+		// These three are derived from the selected reason's supplier-account-type
+		// restrictions and are only meaningful for Special Item / PK7. Without a
+		// clean slate they leak across a procurement-type change, so the Agency tab
+		// kept rendering under Normal after leaving Special Item. Every Special Item
+		// and PK7 path re-derives them through inactiveReasonChecking(), so resetting
+		// here is safe - the same reset procurementTypeBackProcess() already does.
+		getManagedBean().setIncludeMofSupplier(Boolean.FALSE);
+		getManagedBean().setIncludeBasicSupplier(Boolean.FALSE);
+		getManagedBean().setIncludeG2gSupplier(Boolean.FALSE);
+		//#40654, #27868 - end
+		
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)) {
 			getManagedBean().setProcTypeOption(Boolean.FALSE);
 			getManagedBean().setJustTypeOption(Boolean.FALSE);
@@ -3161,14 +3174,13 @@ public class SimpleQuoteBackingBean extends
 				finalizeWIPDropdownPK7();
 			} else {
 				getManagedBean()
-						.setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7W.value()));
+				        .setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7W.value()));
 				inactiveReasonChecking();
-			}
+			}	
 			// 27868 - end
-		    getManagedBean().setJustDropdown(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7.value()));
-		    getManagedBean().getScQuote().setJustificationRemark("");
+			getManagedBean().getScQuote().setJustificationRemark("");
 		    getManagedBean().getScQuote().setJustificationType(null);
-		}// 27868 - start
+		} // 27868 - start
 		else if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
 			getManagedBean().setProcTypeOption(Boolean.TRUE);
 			getManagedBean().setG2GFlag(Boolean.FALSE);
@@ -3185,7 +3197,7 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().getScQuote().setJustificationRemark("");
 			getManagedBean().getScQuote().setJustificationType(null);
 		}
-		// 27868 - end 
+		// 27868 - end
 
 		if (getManagedBean().getScQuote().isPanel()) {
 			getManagedBean().setLocAndBusinessFlag(Boolean.FALSE);
@@ -3239,6 +3251,7 @@ public class SimpleQuoteBackingBean extends
 					new FacesScopes().getUserLocale()) });
 		}
 		// 27868 - end
+		
 		
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)) {
 			getManagedBean().setProcTypeOption(Boolean.FALSE);
@@ -3321,7 +3334,7 @@ public class SimpleQuoteBackingBean extends
 		splitSuppliers();
 		// #27868 - end
 	}
-	
+
 	// #27868 - start
 	/**
 	 * Splits quote suppliers into government sellers and regular suppliers for
@@ -3338,7 +3351,7 @@ public class SimpleQuoteBackingBean extends
 				&& !procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
 			return;
 		}
-
+		
 		if (!getManagedBean().isIncludeG2gSupplier()) {
 			return;
 		}
@@ -3351,6 +3364,7 @@ public class SimpleQuoteBackingBean extends
 
 		getManagedBean().setSupplierList(new ArrayList<ScQuoteSupplier>());
 		getManagedBean().setGovtSellers(new ArrayList<ScQuoteSupplier>());
+
 
 		if (CollectionUtils.isNotEmpty(getManagedBean().getScQuote().getScQuoteSuppliers())) {
 			for (ScQuoteSupplier supplier : getManagedBean().getScQuote().getScQuoteSuppliers()) {
@@ -3372,7 +3386,7 @@ public class SimpleQuoteBackingBean extends
 	}
 
 	// #27868 - end
-	
+
 	/**
 	 * delete business nature from business nature in supplier criteria
 	 */
@@ -5032,21 +5046,21 @@ public class SimpleQuoteBackingBean extends
 											question.setClUomFrequency(null);
 										}
 										// #35514 @zaim end
-										
-										//#26059 - Start
-										getCltemNameFromQuestion(question);
-										question.setDisabledColumnItem(true);
-										//#26059 - End
-										
+											
+											//#26059 - Start
+											getCltemNameFromQuestion(question);
+											question.setDisabledColumnItem(true);
+											//#26059 - End
+											
 										prodItemQuestions.add(question);
 									} else {
 										isProduct = false;
-										
-										//#26059 - Start
-										preparedClItemName(question);
-										question.setDisabledColumnItem(true);
-										//#26059 - End
-										
+											
+											//#26059 - Start
+											preparedClItemName(question);
+											question.setDisabledColumnItem(true);
+											//#26059 - End
+											
 										serviceItemQuestions.add(question);
 									}
 								}
@@ -5054,20 +5068,20 @@ public class SimpleQuoteBackingBean extends
 						} else if (question != null && question.getQuestionType().equalsIgnoreCase(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)) {
 							if (question.getParentSpecQuestion().getSpecQuestionId().equals(itemSpecQuestionId)) {
 								if (isProduct) {
-									
-									//#26059 - Start
-									getCltemNameFromQuestion(question);
-									question.setDisabledColumnItem(true);
-									//#26059 - End
-									
+										
+										//#26059 - Start
+										getCltemNameFromQuestion(question);
+										question.setDisabledColumnItem(true);
+										//#26059 - End
+										
 									prodItemQuestions.add(question);
 								} else {
-									
-									//#26059 - Start
-									preparedClItemName(question);
-									question.setDisabledColumnItem(true);
-									//#26059 - End
-									
+										
+										//#26059 - Start
+										preparedClItemName(question);
+										question.setDisabledColumnItem(true);
+										//#26059 - End
+										
 									serviceItemQuestions.add(question);
 								}
 							}
@@ -5586,6 +5600,9 @@ public class SimpleQuoteBackingBean extends
 		}
 		// #28536 - end
 		
+		// #27868 - start
+		buildSupplierTypeCriteria(criteria);
+		// #27868 - end
 		// #26284 - Start
 		recordStatus.append(DbValueConst.RECORD_STATUS_ACTIVE).append(",");
 		recordStatus.append(DbValueConst.RECORD_STATUS_CANCELLED).append(",");
@@ -5664,7 +5681,6 @@ public class SimpleQuoteBackingBean extends
 		.append("govtSeller^1");
 		return criteria.toString();
 	}
-
 
 	/**
 	 * render the view based on the task id page navigation to simple quote
@@ -5835,6 +5851,7 @@ public class SimpleQuoteBackingBean extends
 			scQuote.setRemarks(cloneScQuote.getRemarks());
 		}
 		// #29800 - end
+
 		// 27868 - start
 		Date dataCreatedDate;
 		dataCreatedDate = assignActualDate();
@@ -5842,7 +5859,7 @@ public class SimpleQuoteBackingBean extends
 		getManagedBean().setParameterTypeRPT(ParameterTypeConst.PROCUREMENT_TYPE_RPT);
 		getManagedBean().setInactiveJustDropdown(null);
 		// 27868 - end
-
+		
 		// page navigation to simple quote
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
@@ -5859,7 +5876,6 @@ public class SimpleQuoteBackingBean extends
 			panelItemListener(resDTO.getCtPanelItem().getCtPanelSuppliers(), scQuote);
 		}
 	}
-
 	// end - 27868
 
 	/**
@@ -7608,7 +7624,7 @@ public class SimpleQuoteBackingBean extends
 						}
 					}
 					//#26059 - End
-					
+
 					productTplSpecBean.setSpecMaster(specMaster);
 					getManagedBean().setProductTemplateSpecBean(
 							productTplSpecBean);
@@ -8338,7 +8354,7 @@ public class SimpleQuoteBackingBean extends
 		// #29209 - start
 		PmConfigRuleValue ruleValue = null;
 		String procurementType = getManagedBean().getScQuote().getProcurementType() != null ? getManagedBean()
-				.getScQuote().getProcurementType().getParameterCode() : ParameterConst.PROC_TYPE_NORMAL; // #27868
+				.getScQuote().getProcurementType().getParameterCode() : ParameterConst.PROC_TYPE_NORMAL; // #27868	
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
 			ruleValue = getAdHocDurationValue();
 		} else {
@@ -9166,7 +9182,7 @@ public class SimpleQuoteBackingBean extends
 		if (getManagedBean().getScQuote().getJustificationType() != null
 				&& getManagedBean().getScQuote().getJustificationType().getReasonId() != null) {
 			PmReason reason = retrieveReasonDtlById(getManagedBean().getScQuote().getJustificationType().getReasonId());
-
+			
 			if (reason == null) {
 				return;
 			}
@@ -9182,7 +9198,7 @@ public class SimpleQuoteBackingBean extends
 					getManagedBean().setCurrentReasonId(reason.getReasonId());
 					getManagedBean().setInactiveJustificationRemark(
 							getManagedBean().getScQuote().getJustificationRemark() != null ? getManagedBean()
-									.getScQuote().getJustificationRemark() : DPConstants.EMPTY_STRING);
+									.getScQuote().getJustificationRemark()	: DPConstants.EMPTY_STRING);
 					getManagedBean().getScQuote().setProcurementType(pmParameter);
 					getManagedBean().setProcTypeOption(Boolean.FALSE);
 					getManagedBean().setJustTypeOption(Boolean.FALSE);
@@ -9197,10 +9213,10 @@ public class SimpleQuoteBackingBean extends
 
 		}
 	}
-
+	
 	/**
 	 * Retrieves the PK7 reason status by reason ID.
-	 * 
+	 *
 	 * @param reasonId
 	 *            the reason ID
 	 * @return true if the reason is active, otherwise false
@@ -9483,20 +9499,20 @@ public class SimpleQuoteBackingBean extends
 	protected void distinctSupplierAccType(List<PmReasonRestr> listReasonRestr,
 			List<PmReasonRestr> distinctReasonRestrList) {
 		for (PmReasonRestr rr : listReasonRestr) {
-			if (rr.getSupplAcctTypeId() != null) {
+			if(rr.getSupplAcctTypeId() != null){
 				PmParameter param = rr.getSupplAcctTypeId();
 				boolean exists = false;
-
+	
 				for (PmReasonRestr dr : distinctReasonRestrList) {
 					PmParameter existingParam = dr.getSupplAcctTypeId();
-
+	
 					if (param == null ? existingParam == null : param.getParameterCode().equalsIgnoreCase(
 							existingParam != null ? existingParam.getParameterCode() : "")) {
 						exists = true;
 						break;
 					}
 				}
-
+	
 				if (!exists) {
 					distinctReasonRestrList.add(rr);
 				}
@@ -9764,7 +9780,7 @@ public class SimpleQuoteBackingBean extends
 	 * @param cmItem
 	 *            The source item data.
 	 */
-	public void fetchItemNameAndExtension(TplSpecQuestion specQuestion, CmItem cmItem) {
+	public void fetchItemNameAndExtension(TplSpecQuestion specQuestion,	CmItem cmItem) {
 		try {
 			if (cmItem == null || cmItem.getItemId() == null) {
 				handleMissingItem(specQuestion);
@@ -9776,7 +9792,7 @@ public class SimpleQuoteBackingBean extends
 			specQuestion.setCmExtensionValue(buildExtensionName(refreshedItem));
 
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.DIRECT_PURCHASE, "fetchCmTypeName", StringUtils.EMPTY,
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.DIRECT_PURCHASE,	"fetchCmTypeName", StringUtils.EMPTY,
 					"fetchCmTypeName", getUserIdSessionFromLoginId(), e);
 		}
 	}
@@ -9924,7 +9940,7 @@ public class SimpleQuoteBackingBean extends
 			}
 
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.DIRECT_PURCHASE, "getCltemNameForClone",
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.DIRECT_PURCHASE,	"getCltemNameForClone",
 					StringUtils.EMPTY, "getCltemNameForClone", getUserIdSessionFromLoginId(), e);
 		}
 	}
@@ -10054,9 +10070,7 @@ public class SimpleQuoteBackingBean extends
 	public boolean checkIsPanel() {
 		return getManagedBean().getScQuote() != null && getManagedBean().getScQuote().isPanel();
 	}
-
 	// #26059 - End
-	
 	//40234 - start
 		/**
 		 * To remove govt seller from supplier list 
@@ -10099,6 +10113,130 @@ public class SimpleQuoteBackingBean extends
 
 		    return pmOrgProfile != null && pmOrgProfile.isGovtSeller();
 		}
+		
+		
+		//#40654 - start
+		/**
+		 * Clears every supplier selection held for the quote, so that a
+		 * procurement-type change always starts from a clean slate.
+		 *
+		 * <p>All three collections are cleared deliberately. splitSuppliers() replaces
+		 * supplierList and govtSellers with fresh ArrayLists whenever a supplier or
+		 * government seller is picked, so after that they no longer alias
+		 * scQuoteSuppliers. Clearing only the two UI lists would leave the persisted
+		 * collection populated, and splitSuppliers() rebuilds the UI lists from it -
+		 * resurrecting the supplier that was supposed to be gone.
+		 *
+		 * <p>Rows already persisted are stashed in deletedSupplierMap first, the same
+		 * way deleteSupplier() does (#8648), so that re-picking the same supplier
+		 * reuses the existing row instead of inserting a duplicate that would violate
+		 * SC_QUOTE_SUPPLIER_UK (EclipseLink inserts before it deletes the orphan).
+		 */
+		private void clearSupplierSelections() {
+			stashPersistedSuppliers(getManagedBean().getSupplierList());
+			stashPersistedSuppliers(getManagedBean().getGovtSellers());
+			if (getManagedBean().getScQuote() != null) {
+				stashPersistedSuppliers(getManagedBean().getScQuote().getScQuoteSuppliers());
+			}
+			if (CollectionUtils.isNotEmpty(getManagedBean().getSupplierList())) {
+				getManagedBean().getSupplierList().clear();
+			}
+			if (CollectionUtils.isNotEmpty(getManagedBean().getGovtSellers())) {
+				getManagedBean().getGovtSellers().clear();
+			}
+			ScQuote quote = getManagedBean().getScQuote();
+			if (quote != null && CollectionUtils.isNotEmpty(quote.getScQuoteSuppliers())) {
+				quote.getScQuoteSuppliers().clear();
+			}
+		}
+
+		/**
+		 * Keeps every already-persisted supplier of the given list in
+		 * deletedSupplierMap, keyed by supplier id, so a later re-pick reuses it.
+		 * Unsaved selections have no row yet and are not kept.
+		 *
+		 * @param suppliers the suppliers about to be cleared; may be null
+		 */
+		private void stashPersistedSuppliers(List<ScQuoteSupplier> suppliers) {
+			if (CollectionUtils.isEmpty(suppliers)) {
+				return;
+			}
+			Map<Long, ScQuoteSupplier> deletedSupplierMap = getManagedBean().getDeletedSupplierMap();
+			if (deletedSupplierMap == null) {
+				deletedSupplierMap = new HashMap<Long, ScQuoteSupplier>();
+				getManagedBean().setDeletedSupplierMap(deletedSupplierMap);
+			}
+			for (ScQuoteSupplier supplier : suppliers) {
+				if (supplier.getQuoteSupplierId() != null && supplier.getSmSupplier() != null) {
+					deletedSupplierMap.put(supplier.getSmSupplier().getSupplierId(), supplier);
+				}
+			}
+		}
+
+		/**
+		 * Removes a supplier the user deleted from the quote's persisted collection.
+		 *
+		 * <p>For Special Item / PK7, splitSuppliers() gives supplierList and
+		 * govtSellers their own ArrayLists, so deleting from a tab alone leaves the
+		 * supplier in scQuoteSuppliers; the next splitSuppliers() then brings it back
+		 * and the save persists it. For Normal / G2G the lists are the same instance
+		 * and this is a no-op.
+		 *
+		 * @param supplier the supplier deleted from the Supplier or Agency tab
+		 */
+		private void removeFromQuoteSuppliers(ScQuoteSupplier supplier) {
+			ScQuote quote = getManagedBean().getScQuote();
+			if (quote != null && quote.getScQuoteSuppliers() != null) {
+				quote.getScQuoteSuppliers().remove(supplier);
+			}
+		}
+
+		/**
+		 * Rebuilds the quote's persisted supplier collection IN PLACE.
+		 *
+		 * <p>scQuoteSuppliers is mapped @OneToMany(orphanRemoval = true), so
+		 * clear()-then-re-add is not a rebuild: EclipseLink treats every cleared
+		 * element as an orphan and issues a DELETE, then an INSERT for the very same
+		 * primary key when the same instance is added back - both inside one flush.
+		 * retainAll + add touches only what actually changed, so unchanged rows
+		 * produce no SQL at all.
+		 *
+		 * @param quote   the quote whose supplier collection is being rebuilt
+		 * @param desired the suppliers that should remain; may be null or empty
+		 */
+		private void syncQuoteSuppliers(ScQuote quote, List<ScQuoteSupplier> desired) {
+			if (quote == null) {
+				return;
+			}
+			List<ScQuoteSupplier> target = quote.getScQuoteSuppliers();
+			if (target == null) {
+				target = new ArrayList<>(); //#41211
+				quote.setScQuoteSuppliers(target);
+			}
+
+			// copy first: `desired` may BE the same List instance as `target`, in which
+			// case retainAll below would otherwise operate on itself
+			//#41212 & #41213 - start
+			List<ScQuoteSupplier> keep;
+			if (desired == null) {
+			    keep = new ArrayList<>();
+			} else {
+			    keep = new ArrayList<>(desired);
+			}
+			//#41212 & #41213 - end
+			// delete only the rows that really left; survivors are left untouched
+			target.retainAll(keep);
+
+			// insert only genuinely new rows
+			for (ScQuoteSupplier supplier : keep) {
+				if (!target.contains(supplier)) {
+					supplier.setQuote(quote);
+					target.add(supplier);
+				}
+			}
+		}
+		//#40654 - end
+		
 		/**
 		 * To remove non g2g supplier from govt list when change procurement type
 		 * 
