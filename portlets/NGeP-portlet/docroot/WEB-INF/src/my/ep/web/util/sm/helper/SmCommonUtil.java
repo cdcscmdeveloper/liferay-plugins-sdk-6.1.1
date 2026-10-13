@@ -1942,7 +1942,7 @@ public class SmCommonUtil {
 		DecimalFormat formatter = new DecimalFormat("###,##0.00");
 		return formatter.format(amount);
 	}
-
+//38885
 	/**
 	 * Create a default TrackingDiaryVO object.
 	 * 
