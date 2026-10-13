@@ -60,12 +60,15 @@ import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.rpt.ReportTempInfo;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportAttachment;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.report.ReportBaseBackingBean;
+import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;
 import my.ep.web.bean.report.ScReportFieldsSearchBean;
 import my.ep.web.constant.report.QtReportConst;
 import my.ep.web.constant.report.ReportConst;
@@ -807,6 +810,7 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	protected void resetSearchBB() {
 		this.getManagedBean().setQuotationNumber(null);
 		this.getManagedBean().setQuotationId(null);
+		this.getManagedBean().setQtReportDocumentList(new ArrayList<ScQtFinalizationReport>()); //#25651
 		ScReportFieldsSearchBean reportFileSearchBean = this.getManagedBean().getScReportSearchBean();
 		String reportCode = this.getManagedBean().getReportCode();
 		if ((QtReportConst.SC_PROP_VALID_PERIOD_EXT_RPT_VAL.equals(reportCode) 
@@ -1321,4 +1325,30 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		return false;
 	}
 	//#29580 - End 
+	
+	//#25651 - Start
+	/**
+	 * To download report for every each attachment 
+	 * 
+	 * @param scQtFinalizationReport
+	 *            selected report which would be downloaded
+	 * @throws Exception
+	 *             the exception that would be thrown in case of any error while
+	 *             downloading the report
+	 */
+	public void downloadReport(ScQtFinalizationReport scQtFinalizationReport)
+			throws Exception {
+	
+		SupplierFinalizationBackingBean supplierFinalization = new SupplierFinalizationBackingBean();
+		ScQtFinalizationReportAttachment reportAttachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
+
+		if (reportAttachment == null) {
+			reportAttachment = supplierFinalization.generateDocumentAttachment(scQtFinalizationReport, false);
+			scQtFinalizationReport
+					.setScQtFinalizationReportAttachment(reportAttachment);
+		}
+		supplierFinalization.downloadFile(reportAttachment);
+	}
+	//#25651 - End
+	
 }
