@@ -552,23 +552,23 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						.getScQt().isZonal());
 			}
 			// #34915 idham @01/08/2023 - End
+			
+			triggerPK7AndSpecialItemAlert(); //#27868
+			assignListOfPtjAllowedForSpecialItem();//#27868
+			// 27868 - start
+			if (validateProcurementTypeisRPT(resDTO.getScLoa().getCreatedDate()).equalsIgnoreCase(
+					ParameterTypeConst.PROCUREMENT_TYPE)
+					&& null != getManagedBean().getScLoa()
+					&& ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(getManagedBean().getScLoa().getScLoiLoa()
+							.getDocType())) {
+				finalizeWIPCodePK7();
+			}
+			// 27868 - end
 
 		} finally {
 			//qtAwardSO = null;
 		}
 		removeUnwantedLampiranA3Report(1); //#29006 - note 650
-		
-		triggerPK7AndSpecialItemAlert(); //#27868
-		assignListOfPtjAllowedForSpecialItem();//#27868
-		// 27868 - start
-		if (validateProcurementTypeisRPT(resDTO.getScLoa().getCreatedDate()).equalsIgnoreCase(
-				ParameterTypeConst.PROCUREMENT_TYPE)
-				&& null != getManagedBean().getScLoa()
-				&& ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(getManagedBean().getScLoa().getScLoiLoa()
-						.getDocType())) {
-			finalizeWIPCodePK7();
-		}
-		// 27868 - end
 
 		// Bug 34404 - related to 29007 - start
 		if (this.getManagedBean().getScLoa() != null) {
