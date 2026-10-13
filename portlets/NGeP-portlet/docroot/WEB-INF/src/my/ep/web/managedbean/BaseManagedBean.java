@@ -224,7 +224,7 @@ public abstract class BaseManagedBean implements Serializable {
     
     // #34444 START
  	@ManagedProperty("#{lbl}")
- 	private ResourceBundle resourceBundle;
+ 	private transient ResourceBundle resourceBundle;
  	// #34444 END
 	
 	public BaseManagedBean(){
