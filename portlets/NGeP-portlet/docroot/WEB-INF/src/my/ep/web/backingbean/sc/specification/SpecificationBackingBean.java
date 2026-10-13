@@ -4584,6 +4584,38 @@ public class SpecificationBackingBean extends
 		return items;
 	}
 
+	/** #21695 FARID START */
+	/**
+	 * Gets the technical checklist def type values.display Technical Checklist IF PARTIAL
+	 * Type Dropdown values.
+	 * 
+	 * @param type
+	 *            (String type)
+	 * @return SelectItem[].
+	 */
+	public SelectItem[] getTechnicalChecklistDefTypeValuesPartial(String type) {
+
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		List<String> recommendList = new ArrayList<String>();
+		recommendList.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
+		recommendList.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION);
+		
+		if (null != this.getManagedBean().getQt()
+				&& ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this.getManagedBean().getQt()
+						.getEvaluationType())) {
+
+			recommendList.remove(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO);
+		}
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(), recommendList));
+
+		SelectItem[] items = getDropdownValuesBySearchBean(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE, searchBean);
+		searchBean = null;
+		recommendList = null;
+		return items;
+	}
+
 	/**
 	 * Spec title change.Event handle change Title in Template Spec.
 	 * 
@@ -5344,6 +5376,16 @@ public class SpecificationBackingBean extends
 						.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
 				TemplateSpecResDTO templateresDTO = templateSpecSO
 						.getTemplateMaster(specReqDTO);
+
+				//#25138(wip 4serangkai) bug -Start 8/6/2023
+				reqDTO.setScQt(checkList.getScQt());
+				if (reqDTO.getScQt() != null) {
+					specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTSpecSO.class);
+					
+					this.getManagedBean().setWipStatusMax(specSo.checkWipScoreSettingMax(reqDTO));
+				}
+				//#25138(wip 4serangkai) bug -End 8/6/2023
 				checkList.getScQtDoc().setTplSpecMaster(
 						templateresDTO.getSpecMaster());
 				TemplateSpecBean templateSpecBean = getManagedBean()
@@ -6254,20 +6296,57 @@ public class SpecificationBackingBean extends
 					reqDTO.setScQtCheckList(checkList);
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
 					if (null == resDTO.getScQtCheckListValue()) {
-						this.getManagedBean().setStartYear(String.valueOf(year));
-						this.getManagedBean().setEndYear(String.valueOf(year));
-						//Bug #32862 - start
-						this.getManagedBean().setBankstmntTomonth(null);
-						this.getManagedBean().setToMonth(null);
-						this.getManagedBean().setFromMonth(null);
-						//Bug #32862 - end
-						this.getManagedBean().setChecklistScoreType(null);
+						// #21695, #25138 -start-
+						// fix lazy -start (adding condition isnotempty checklistscore) -start-
+						// Bug #34412@Syazani 20/06/2023 -start-						
+						if (null != checkList.getScQtCheckListValue()
+								&& isIndirectWithInstantiated(checkList.getScQtCheckListScores())
+								&& CollectionUtils.isNotEmpty(checkList.getScQtCheckListScores()))
+							// Bug #34412@Syazani 20/06/2023 -end-
+						{
+							// fix lazy -start (adding condition isnotempty checklistscore) -end-
+							List<ScQtCheckListScore> bankStatement = new ArrayList<ScQtCheckListScore>();
+							
+							for (ScQtCheckListScore checklistScore : checkList.getScQtCheckListScores()) {
+								if (checklistScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_AVERAGE_OF_BANK_STATEMENT) {
+									if (checklistScore.getScoreType().intValue() == Integer
+											.valueOf(QTConstants.AUTO_SCORE)) {
+										this.getManagedBean().setChecklistScoreType(
+												String.valueOf(checklistScore.getScoreType().intValue()));
+										
+										bankStatement.add(checklistScore);
+									
+										this.getManagedBean().setCheckListScore(bankStatement);
+									} else if (checklistScore.getScoreType().intValue() == Integer
+											.valueOf(QTConstants.USER_SCORE)) {
+										this.getManagedBean().setChecklistScoreType(
+												String.valueOf(checklistScore.getScoreType().intValue()));
+										this.getManagedBean().setScQtCheckListScore(checklistScore);
+									}
 
-						ScQtCheckListValue checkListValue = new ScQtCheckListValue();
-						setUserDetails(checkListValue);
+								}
+							}
 
-						checkListValue.setScQtCheckList(checkList);
-						checkList.setScQtCheckListValue(checkListValue);
+							checkList.setScQtCheckListScores(null);
+							checkList.setScQtCheckListValue(null);
+						} else {
+							// #21695, #25138 -end-
+							this.getManagedBean().setStartYear(String.valueOf(year));
+							this.getManagedBean().setEndYear(String.valueOf(year));
+							//Bug #32862 - start
+							this.getManagedBean().setBankstmntTomonth(null);
+							this.getManagedBean().setToMonth(null);
+							this.getManagedBean().setFromMonth(null);
+							//Bug #32862 - end
+
+							this.getManagedBean().setChecklistScoreType(null);
+
+							ScQtCheckListValue checkListValue = new ScQtCheckListValue();
+							setUserDetails(checkListValue);
+
+							checkListValue.setScQtCheckList(checkList);
+							checkList.setScQtCheckListValue(checkListValue);
+						} // #21695, #25138
 
 					} else {
 
@@ -6346,11 +6425,55 @@ public class SpecificationBackingBean extends
 
 					reqDTO.setScQtCheckList(checkList);
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
-					if (null == resDTO.getCheckListScores()) {
-						checkList.setScQtCheckListValue(resDTO
-								.getScQtCheckListValue());
-						this.getManagedBean().setChecklistScoreType(null);
+					// #21695, #25138 -start-
+					if (null == resDTO.getCheckListScores() || (resDTO.getCheckListScores().size() == 0)) {
+						if (isIndirectWithInstantiated(checkList.getScQtCheckListScores())) {
+							List<ScQtCheckListScore> assetLiability = new ArrayList<ScQtCheckListScore>();
+							List<ScQtCheckListScore> currentRation = new ArrayList<ScQtCheckListScore>();
+							
+							for (ScQtCheckListScore checklistScore : checkList.getScQtCheckListScores()) {
+								if (checklistScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_ASSETS_AND_LIABILITIES_ACID_RATIO) {
+									if (checklistScore.getScoreType().intValue() == Integer
+											.valueOf(QTConstants.AUTO_SCORE)) {
+										this.getManagedBean().setChecklistScoreType(
+												String.valueOf(checklistScore.getScoreType().intValue()));
+										
+										assetLiability.add(checklistScore);
+										
+										this.getManagedBean().setCheckListScore(assetLiability);
+									} else if (checklistScore.getScoreType().intValue() == Integer
+											.valueOf(QTConstants.USER_SCORE)) {
+										this.getManagedBean().setChecklistScoreType(
+												String.valueOf(checklistScore.getScoreType().intValue()));
+										this.getManagedBean().setScQtCheckListScore(checklistScore);
+									}
 
+								} else if (checklistScore.getCriteriaType() == QTConstants.CRITERIA_TYPE_ASSETS_AND_LIABILITIES_CURRENT_RATIO) {
+
+									if (checklistScore.getScoreType().intValue() == Integer
+											.valueOf(QTConstants.AUTO_SCORE)) {
+
+										this.getManagedBean().setCompanyScoreType(
+												String.valueOf(checklistScore.getScoreType().intValue()));
+										
+										currentRation.add(checklistScore);
+										
+										this.getManagedBean().setScoringForYears(currentRation);
+									} else if (checklistScore.getScoreType().intValue() == Integer
+											.valueOf(QTConstants.USER_SCORE)) {
+										this.getManagedBean().setCompanyScoreType(
+												String.valueOf(checklistScore.getScoreType().intValue()));
+										this.getManagedBean().setScQtContractScore(checklistScore);
+									}
+
+								}
+
+							}
+						} else {
+							checkList.setScQtCheckListValue(resDTO.getScQtCheckListValue());
+							this.getManagedBean().setChecklistScoreType(null);
+						}
+						// #21695, #25138 -end-
 					} else {
 
 						List<ScQtCheckListScore> assetLiability = new ArrayList<ScQtCheckListScore>();
@@ -8462,6 +8585,17 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	// #21695, #25138 -start-
+	private boolean isIndirectWithInstantiated(Object o) {
+
+		if (o instanceof IndirectList) {
+			boolean inst = ((IndirectList) o).isInstantiated();
+			return inst;
+		}
+
+		return true;
+	}
+
 	/**
 	 * Compare checklist value current year.check checklist year greater than
 	 * current year.
@@ -8756,6 +8890,12 @@ public class SpecificationBackingBean extends
 
 			List<ScQtCheckListScore> noOfContractScore = new ArrayList<ScQtCheckListScore>();
 			if (checkList.isScoringReq()) {
+				//bug #30438, #21695 - start
+				if (null == contractScoreType
+						|| "".equalsIgnoreCase(contractScoreType) || "0".equalsIgnoreCase(contractScoreType)) {
+					throw new EpException(MessageConst.ERROR_760190);
+				}
+				//bug #30438, #21695 - end
 				if (QTConstants.USER_SCORE.equalsIgnoreCase(contractScoreType)) {
 					ScQtCheckListScore noContract = this.getManagedBean()
 							.getScQtCheckListScore();
@@ -9607,7 +9747,28 @@ public class SpecificationBackingBean extends
 	 *            (ScQtCheckList checkList).
 	 */
 	public void finScoringCheckList(ScQtCheckList checkList) {
-		finScoreSum();
+		// #25138 - settotalpoints - start
+		if (this.getManagedBean().getQt().isZonal()) {
+			BigDecimal totalPoints = null;
+			finScoreSum();
+			int finalScorePoint = this.getManagedBean().getFinPoints();
+			TplSpecZoneDtl specZoneDtl = this.getManagedBean().getSelectedZone();
+
+			if (specZoneDtl != null) {
+				totalPoints = specZoneDtl.getTotalMaxScore();
+
+			} else {
+				totalPoints = this.getManagedBean().getTemplateSpecZoneDtls().get(0).getTotalMaxScore();
+			}
+			
+			finalScorePoint = finalScorePoint + totalPoints.intValue();
+			this.getManagedBean().setFinPoints(finalScorePoint);
+		} else {
+			finScoreSum();
+
+		}
+		// #25138 - settotalpoints - end
+		
 		finWeightageSum(false);	// Bug #35688@Syazani 10/07/2024
 		List<ScQtCheckList> financialCheckList = this.getManagedBean()
 				.getScQtCheckSt2financeProposalList();
@@ -9615,7 +9776,7 @@ public class SpecificationBackingBean extends
 			financialCheckList = new ArrayList<ScQtCheckList>();
 		}
 		
-		// Bug #33249@Syazani 28/07/2022 -- Start
+		// #25138, Bug #33249@Syazani 28/07/2022 -- Start
 		String curCheckList = checkList.getTitle() + "_" + (checkList.getDefinationType() != null ? checkList.getDefinationType().getParameterId() : "");
 		for (int i = 0; i < financialCheckList.size(); i++) {
 			ScQtCheckList localCheckList = financialCheckList.get(i);	
@@ -9627,7 +9788,10 @@ public class SpecificationBackingBean extends
 				// financialCheckList.remove(localCheckList);
 				// financialCheckList.add(checkList);
 				financialCheckList.set(i, checkList);
-				// Bug #33249@Syazani 28/07/2022 -- End
+				// #25138, Bug #33249@Syazani 28/07/2022 -- End
+				// #25138 - set score weightage for dettype 217 - start
+				financialCheckList.get(i).getQtScoreWeightage().setScore(checkList.getQtScoreWeightage().getScore());
+				// #25138 - set score weightage for dettype 217 - end
 				break;
 			}
 		}
@@ -9715,9 +9879,17 @@ public class SpecificationBackingBean extends
 							.setWeightage(new BigDecimal(0));
 				}
 				if (null != weight.getQtScoreWeightage()) {
-					total = total
-							+ weight.getQtScoreWeightage().getScore()
-									.intValue();
+					// #25138 - start
+					if (this.getManagedBean().getQt().isZonal()) {
+						if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION.equalsIgnoreCase(weight
+								.getDefinationType().getParameterCode())) {
+							total = total + weight.getQtScoreWeightage().getScore().intValue();
+						}
+					} else {
+						total = total + weight.getQtScoreWeightage().getScore().intValue();
+					}
+					// #25138 - end
+					
 				}
 				BigDecimal techScore = new BigDecimal(total);
 				this.getManagedBean().setFinPoints(techScore.intValue());
@@ -11097,6 +11269,7 @@ public class SpecificationBackingBean extends
 										.getParameterCode())) {
 							// Bug #33249@Syazani 27/07/2022 -- End
 							if (null != financialSpecs.getQtScoreWeightage()
+									&& financialSpecs.getQtScoreWeightage().getScore() != null //#25138
 									&& financialSpecs.getQtScoreWeightage()
 											.getScore().intValue() > 0) {
 								financialList
@@ -11812,18 +11985,37 @@ public class SpecificationBackingBean extends
 				if (demoScoreSetting != null) {
 					specReqDTO.setScoreSetting(demoScoreSetting);
 				}
-
+				
+				// #21695 farid Start
+				ScQtScoreSetting technicalItemScoreSetting = this.getManagedBean().getTechnicalItemScoreSetting();
+			
+				if (technicalItemScoreSetting != null) {
+					specReqDTO.setScoreSetting(technicalItemScoreSetting);
+				}
+				// #21695 End
+				
 				specReqDTO.setCheckLists(technicalScoring);
 				specReqDTO.setSpecType(ParameterConst.SPECIFICATION_TYPE_TECHNICAL);
 				specReqDTO.setScQt(scoring);
 				specSO.validateSCScoreSettings(specReqDTO);
-				validateTechnicalPassingScoring(this.getManagedBean()
-						.getTechnicalScoreSetting());
+
+				// #21695 START FARID
+				validateTechnicalPassingScoring(this.getManagedBean().getTechnicalScoreSetting(), this.getManagedBean()
+						.getTechnicalItemScoreSetting());
+				// #21695 -end-
+				
 				validateTechnicalDemoPassingScoring(this.getManagedBean()
 						.getDemoScoreSetting());
 				validateTechnicalUserScoringAttachment(this.getManagedBean()
 						.isTechnicalUserScoringSchema());
 				technicalWeightageCalculate();
+			
+				// #21695 -start-
+				technicalItemScoreCalculate(this.getManagedBean().getTechnicalItemScoreSetting());
+
+				checkTechnicalItemPassingScore(this.getManagedBean().getTechnicalItemScoreSetting());
+				// #21695 -end-
+				
 				resDTO = specSO.saveQTDtl(specReqDTO);
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getScQt());
@@ -11848,12 +12040,12 @@ public class SpecificationBackingBean extends
 				specReqDTO.setCheckLists(financialScoring1);
 				specReqDTO.setSpecType(ParameterConst.SPECIFICATION_TYPE_FINANCIAL);
 				specReqDTO.setScQt(recommendation);
-
+				
 				// #25138 -start-
 				SpecificationReqDTO specReqDto=new SpecificationReqDTO();//34852_start
 				specReqDto.setScQt(this.getManagedBean().getQt());
 				this.getManagedBean().setWipStatusMax(specSO.checkWipScoreSettingMax(specReqDto));//34852_End
-				if(this.getManagedBean().getWipStatusMax()<SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM){//34852_Start
+				if(this.getManagedBean().getWipStatusMax()<SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM){//34852_Start	
 					this.getManagedBean().setOfferScoreType(ParameterConst.FINANCE_SCORE_TYPE_AUTO);
 					scoreTypeN=ParameterConst.FINANCE_SCORE_TYPE_AUTO;
 				}//34852_End
@@ -11864,7 +12056,7 @@ public class SpecificationBackingBean extends
 				specReqDTO.setZonesQt(this.getManagedBean().getQt().isZonal());
 				}//34852_End
 				// #25138 -end-
-
+				
 				specReqDTO.setAllowZeroVariance(true);
 				validateFinancialPackageItemPassingScoring(this
 						.getManagedBean().getFinancialScoreSetting(), this
@@ -11876,8 +12068,25 @@ public class SpecificationBackingBean extends
 						.getFinacialItemScoreSetting());
 				validateFinancialUserScoringAttachment(this.getManagedBean()
 						.isFinancialUserScoringSchema());
+				
+				// #25138 - start
+				if (!this.getManagedBean().getQt().isZonal()) {
+					retriveFinancialScoring(null);// Bug #35688@Syazani 10/07/2024 // Enhancement(ahmaa) #25138
+				}
+				// #25138 - end
+				
 				resDTO = specSO.saveQTDtl(specReqDTO);
+				
+				// #31944, #21695, #25138 - Start.
+				Long currentStatusId = getManagedBean().getCurrentStatusId();
+				// #31944, #21695, #25138 - End.
+				
 				renewSesionObject();
+				
+				// #31944, #21695, #25138 - Start.
+				getManagedBean().setCurrentStatusId(currentStatusId);
+				// #31944, #21695, #25138 - End.
+				
 				this.getManagedBean().setQt(resDTO.getScQt());
 				getfulfilmentDtls(resDTO.getScQt());
 				retriveSpecdetails(resDTO.getScQt().getQtId());
@@ -13501,6 +13710,7 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setTechnicalScoreSetting(null);
 		this.getManagedBean().setFinancialScoreSetting(null);
 		this.getManagedBean().setDemoScoreSetting(null);
+		this.getManagedBean().setTechnicalItemScoreSetting(null); // #21695
 		this.getManagedBean().setFinacialItemScoreSetting(null);
 		this.getManagedBean().setRecommendationPackageScore(null);
 		this.getManagedBean().setRecommendationScore(null);
@@ -14277,6 +14487,7 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setFinancialScoring(null);
 				this.getManagedBean().setOfferPricePackage(null);
 				this.getManagedBean().setPanelSpecExistedOrNot(false);
+				this.getManagedBean().setOfferPricePackageList(null); // 33587, #21695, #25138
 				specCommitteeResetData();
 				if (reqDTO.isZonesQt() || (this.getManagedBean().getQt().isZonal()&& SourcingConstants.FINANCIAL_DOCTYPE.equalsIgnoreCase(specType))) {
 					this.getManagedBean().setZoneGeneralTrees(new ArrayList<TreeNode>());
@@ -15271,19 +15482,21 @@ public class SpecificationBackingBean extends
 		try {
 			if (null != financialPackageScore
 					&& financialPackageScore.getSettingType() == 2) {
+				// #25138 - add if condition for one item only - start
+				if (!this.getManagedBean().isSingleItem()) {
+					if (null == financialPackageScore.getPassingScore()) {
 
-				if (null == financialPackageScore.getPassingScore()) {
-
-					this.getManagedBean().setActiveIndex(5);
-					throw new EpException(MessageConst.ERROR_760193);
-				} else {
-
-					if (financialPackageScore.getPassingScore().intValue() < 0) {
 						this.getManagedBean().setActiveIndex(5);
-						throw new EpException(MessageConst.ERROR_760174);
-					}
+						throw new EpException(MessageConst.ERROR_760193);
+					} else {
 
+						if (financialPackageScore.getPassingScore().intValue() < 0) {
+							this.getManagedBean().setActiveIndex(5);
+							throw new EpException(MessageConst.ERROR_760174);
+						}
+					}
 				}
+				// #25138 - add if condition for one item only - end
 
 				if (null != financialPackageScore.getPassingScore()
 						&& financialPackageScore.getPassingScore().intValue() > 100) {
@@ -15308,7 +15521,7 @@ public class SpecificationBackingBean extends
 
 		}
 
-	}
+	}	
 
 	
 	
@@ -17456,59 +17669,127 @@ public class SpecificationBackingBean extends
 	private void checkFinancialSpecEstimations(List<ScQtCheckList> financialChecklist,ScQtCheckList qtChecklist,ScQt qt,
 			boolean isSave){
 		log.info("checkFinancialSpecEstimations");
-		int count = 0;
-		if (CollectionUtils.isNotEmpty(financialChecklist)) {
-			for (ScQtCheckList checklist : financialChecklist) {
+		int count=0;
+		if(CollectionUtils.isNotEmpty(financialChecklist)){
+			for(ScQtCheckList checklist:financialChecklist){
 				if(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION.equalsIgnoreCase(checklist.getDefinationType().getParameterCode()) && QTStatusConst.TS_COMPLETED.equals(checklist.getPmStatus().getStatusId()) && checklist.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
 					count++;
 					break;
 				}
 			}
 			log.debug("checkFinancialSpecEstimations count"+count);
-
+			
 			//#25729 #142 start - checking total indicative price <= 20k
-			//Intended Price				
+			//Intended Price
 			BigDecimal totalSpecEstimatedAmount=BigDecimal.valueOf(0);//Bug #29806
-
+				
 			if (totalSpecEstimatedAmount == null) {
 				totalSpecEstimatedAmount = BigDecimal.valueOf(0);
 			}
 
 			if (qtChecklist != null && null!=qtChecklist.getScQtDoc() && null!=qtChecklist.getScQtDoc().getTplSpecMaster()
 					&& qtChecklist.getScQtDoc().getTplSpecMaster().getTplSpecQuestions() != null) {
-				for (TplSpecQuestion tplSpecQuestion : qtChecklist.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()) {
-					for (TplSpecEstimation tplSpecEstimation : tplSpecQuestion.getTplSpecEstimations()) {
-						if (tplSpecEstimation.getEstimatedCost() != null) {
-							//20201217@haziq- Bug #29806 - Start
-							BigDecimal estimatedCost = tplSpecEstimation.getEstimatedCost();
-								
-							//20210205@haziq- Bug #30046 - Start
-							BigDecimal indicativeUnitPrice = tplSpecEstimation.getIndicativeUnitPrice();
+				for (TplSpecQuestion tplSpecQuestion : qtChecklist.getScQtDoc().getTplSpecMaster()
+						.getTplSpecQuestions()) {
+					// #32130, #25138 - Start.
+					if (qt.isZonal() && CollectionUtils.isNotEmpty(tplSpecQuestion.getTplSpecEstimations())
+							&& CollectionUtils.isNotEmpty(tplSpecQuestion.getTplSpecZoneQties())) {
+						Iterator<TplSpecEstimation> iterator = tplSpecQuestion.getTplSpecEstimations().iterator();
+						
+						while (iterator.hasNext()) {
+							TplSpecEstimation tplSpecEstimation = iterator.next();
 							
-							if (indicativeUnitPrice == null && !isSave) {
-								throw new EpException(MessageConst.ERROR_760520);
-							} else if ( indicativeUnitPrice != null  && estimatedCost.compareTo(BigDecimal.ZERO) == 0) {	
-								throw new EpException(MessageConst.ERROR_760519, 
-										new String[]{ 
-										ResourceBundleUtils.getMessage(
-												"lbl.tpl.spec.content.Indicative.unit.price", 
-												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-												new FacesScopes().getUserLocale()) });
+							if (tplSpecEstimation.getTplSpecZoneDtl() == null) {
+								iterator.remove();
 							}
-							
-							//20210205@haziq- Bug #30046 - End
-							if (null != estimatedCost) {
-								totalSpecEstimatedAmount = totalSpecEstimatedAmount
-										.add(estimatedCost.setScale(2, QTConstants.QT_ROUNDING_MODE));	//Bug #35600@Syazani 19/09/2024
-							}
-							//20201217@haziq- Bug #29806 - Start
 						}
 					}
+
+					if (CollectionUtils.isNotEmpty(tplSpecQuestion.getTplSpecEstimations())) {
+						for (TplSpecEstimation tplSpecEstimation : tplSpecQuestion.getTplSpecEstimations()) {
+							// #32130, #25138 - End.
+							//20201217@haziq- Bug #29806 - Start
+			log.debug("totalSpecEstimatedAmount" + totalSpecEstimatedAmount);
+							BigDecimal estimatedCost = tplSpecEstimation.getEstimatedCost();
+							
+							//20210205@haziq- Bug #30046 - Start
+							BigDecimal indicativeUnitPrice = tplSpecEstimation.getIndicativeUnitPrice();
+
+							//#25138  - Allow indicativeUnitPrice & estimatedCost null if qty 0 - start
+							if (CollectionUtils.isNotEmpty(tplSpecQuestion.getTplSpecZoneQties())) {
+								for (TplSpecZoneQty zoneQty : tplSpecQuestion.getTplSpecZoneQties()) {
+									if (zoneQty.getQty().compareTo(BigDecimal.ZERO) > 0
+											// #25138 - Bug #32194 - Start
+											&& null != zoneQty.getTplSpecZoneDtl()
+											&& null != tplSpecEstimation.getTplSpecZoneDtl()
+											&& zoneQty.getTplSpecZoneDtl().getSpecZoneId()
+													.equals(tplSpecEstimation.getTplSpecZoneDtl().getSpecZoneId())
+									// #25138 - Bug #32194 - End
+									) {
+										if (indicativeUnitPrice == null && !isSave) {
+											throw new EpException(MessageConst.ERROR_760520);
+										}
+										// #33493 - Start.
+										// #25138 - Bug #32194 - Start.
+										else if (indicativeUnitPrice.compareTo(BigDecimal.ZERO) == 0) {
+										// #25138 - Bug #32194 - End.
+										// #33493 - End.
+											throw new EpException(MessageConst.ERROR_760519,
+													new String[] { ResourceBundleUtils.getMessage(
+															"lbl.tpl.spec.content.Indicative.unit.price",
+															ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+															new FacesScopes().getUserLocale()) });
+										}
+									}
+								}
+								
+								// #33493, #25138 - Start.
+								if (estimatedCost == null) {
+									estimatedCost = BigDecimal.valueOf(0);
+								}
+								
+								if (indicativeUnitPrice == null) {
+									indicativeUnitPrice = BigDecimal.valueOf(0);
+								}
+								// #33493, #25138 - End.
+							}
+							// #25138 - Allow indicativeUnitPrice & estimatedCost null if qty 0 - end
+							
+							// #33572, #25138 - Start.
+							if (null != this.getManagedBean().getQt() && !this.getManagedBean().getQt().isZonal()) {
+								if (indicativeUnitPrice == null && !isSave) {
+									throw new EpException(MessageConst.ERROR_760520);
+								} else if (indicativeUnitPrice != null && estimatedCost.compareTo(BigDecimal.ZERO) == 0) {
+									throw new EpException(MessageConst.ERROR_760519,
+											new String[] { ResourceBundleUtils.getMessage(
+													"lbl.tpl.spec.content.Indicative.unit.price",
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+													new FacesScopes().getUserLocale()) });
+								}
+							}
+							// #33572, #25138 - End.
+
+							// 20210205@haziq- Bug #30046 - End
+							if (null != estimatedCost) { // #32130, #25138
+								totalSpecEstimatedAmount = totalSpecEstimatedAmount
+										.add(estimatedCost.setScale(2, QTConstants.QT_ROUNDING_MODE));	//Bug #35600@Syazani 19/09/2024
+							} // #32130, #25138
+							// 20201217@haziq- Bug #29806 - End
+						}
+						// #32130, #25138 - Start.
+					} else {
+						// Bug #34100 - Start
+						this.getManagedBean().getScQtChecklist().getPmStatus()
+								.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+						// Bug #34100 - End
+
+						throw new EpException(MessageConst.ERROR_760520);
+					}
+					// #32130, #25138 - End.
 				}
 			}
-			log.debug("totalSpecEstimatedAmount" + totalSpecEstimatedAmount);
 				
-			if (count == 0) { //Bug #29806
+			if(count==0){ //Bug #29806
 				// Intended Price
 				if (qt.isPanel()) {
 					BigDecimal panelThreshold = getPanelThresholdAmount();
@@ -17529,13 +17810,17 @@ public class SpecificationBackingBean extends
 				//Bug #29808
 				qt.setEstimatedAmount(totalSpecEstimatedAmount.setScale(2, QTConstants.QT_ROUNDING_MODE));	//Bug #35600@Syazani 19/09/2024
 			}
-			
+				
 			// Check Intended Price
 			BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
 			
-			if (null == qt.getTmpExpectedIntendedPrice() || (qt.getTmpExpectedIntendedPrice().compareTo(indPriceThreshold) <= 0)) {
-				if (null == totalSpecEstimatedAmount || (totalSpecEstimatedAmount.compareTo(indPriceThreshold) > 0)) {
-					throw new EpException(MessageConst.ERROR_760504, new String[] { SourcingConstants.DF_AMOUNT.format(indPriceThreshold) });
+			if (null == qt.getTmpExpectedIntendedPrice()
+					|| (qt.getTmpExpectedIntendedPrice().compareTo(indPriceThreshold) <= 0)) {
+				if (null == totalSpecEstimatedAmount
+						|| (totalSpecEstimatedAmount.compareTo(indPriceThreshold) > 0)) {
+					throw new EpException(MessageConst.ERROR_760504,
+							new String[] { SourcingConstants.DF_AMOUNT
+								.format(indPriceThreshold) });
 				}
 
 				// #32134, #32275, #25729 - start
