@@ -51,7 +51,7 @@ import javax.faces.validator.ValidatorException;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
-import my.ep.bean.application.NgepApplicationBean;
+import my.ep.bean.application.NgepApplicationBean; //#27868
 import my.ep.biz.bean.sc.QtCommitteeMemberBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -208,7 +208,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
-import my.ep.type.pm.ReasonCategory;
+import my.ep.type.pm.ReasonCategory; //#27868
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.EvaluationReport;
 import my.ep.util.CustomUtils;
@@ -224,7 +224,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.constant.SSTConstant;
 import my.ep.web.constant.report.ReportConst;
-import my.ep.web.constant.sc.DPConstants;
+import my.ep.web.constant.sc.DPConstants; //#27868
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentDefaultFormat;
@@ -2168,7 +2168,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 			//#24540 - start -
 			boolean setBondReq = true;
 			//#25726 - Start
-				
+			
 			/*
 			 * #29766 Start Vinod updated
 			 * getQTTypeItemInPK7AndPK7WPChecking to check 2 QT type
@@ -3104,12 +3104,18 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 	//40107,35321 - start
 	/**
 	 * Gets the procurement type tool tip.
-	 *
+	 * 
+	 * @param date
 	 * @return the procurement type tool tip
 	 */
-	public String getProcurementTypeToolTip() {
-		return ResourceBundleUtils.getMessage("lbl.sc.procurementtype.tooltip",
+	public String getProcurementTypeToolTip(Date date) {
+		// MaxProcurementAmt
+		// 27868 & 35321 - start
+		String message;
+		message = ResourceBundleUtils.getMessage("lbl.sc.procurementtype.tooltip.rpt", null,
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		// 27868 & 35321 - end
+		return message;
 	}
 	//40107,35321 - end
 	
@@ -7286,6 +7292,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 	}
 
 	// 26247 - end
+	
 	// 27868 - start
 
 	/**
@@ -7429,7 +7436,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 	}
 
 	// 27868 - end
-	
 	//#28784 - Start
 	public boolean checkParentRepublishQT(ScQt scQt) {
 		try {

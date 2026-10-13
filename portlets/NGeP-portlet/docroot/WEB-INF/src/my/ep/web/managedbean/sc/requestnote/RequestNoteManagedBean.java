@@ -30,12 +30,12 @@ import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
-import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;//#27868
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
-import my.ep.persistence.entity.sc.directpurchase.ScQuote;
+import my.ep.persistence.entity.sc.directpurchase.ScQuote; //#26059
 import my.ep.persistence.entity.sc.directpurchase.ScRNZone;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
@@ -46,7 +46,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
-import my.ep.web.backingbean.sc.requestnote.CommodityGroup;
+import my.ep.web.backingbean.sc.requestnote.CommodityGroup;//#26059
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -406,7 +406,6 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	/** The new sourcing dp bpm version flag */
 	private boolean sourcingDpNewBpmVer = Boolean.FALSE;
 	// #36119 - end
-	
 	// 27868 & 35321 - start
     private Date createdDate;
     private PmParameter selectedOrgType;
@@ -431,7 +430,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private ScQuote scQuote;
 	private String selectedBpmAction;
 	// #26059 - End
-    
+
     /**
      * Instantiates a new request note managed bean.
      */
@@ -2460,7 +2459,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
-
+	
 	public PmParameter getSelectedOrgType() {
 		if (this.selectedOrgType == null) {
 			this.selectedOrgType = new PmParameter();
@@ -2471,7 +2470,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setSelectedOrgType(PmParameter selectedOrgType) {
 		this.selectedOrgType = selectedOrgType;
 	}
-
+	
 	public PmUserOrg getSelectedUserPtj() {
 		return selectedUserPtj;
 	}
@@ -2479,6 +2478,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setSelectedUserPtj(PmUserOrg selectedUserPtj) {
 		this.selectedUserPtj = selectedUserPtj;
 	}
+	
 
 	public PmOrgProfile getSelectedPtj() {
 		return selectedPtj;
@@ -2487,7 +2487,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setSelectedPtj(PmOrgProfile selectedPtj) {
 		this.selectedPtj = selectedPtj;
 	}
-
+	
 	public PmOrgProfile getMinistryOrgProfile() {
 		return ministryOrgProfile;
 	}
@@ -2505,7 +2505,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 
 	/**
 	 * @param getSupplierAccountTypeErrorMessage
-	 *            the getSupplierAccountTypeErrorMessage to set
+	 * 			  the getSupplierAccountTypeErrorMessage to set
 	 */
 	public void setSupplierAccountTypeErrorMessage(String getSupplierAccountTypeErrorMessage) {
 		this.supplierAccountTypeErrorMessage = getSupplierAccountTypeErrorMessage;
@@ -2527,17 +2527,17 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 * @return the thresholdDataReasonGroupMap
 	 */
 	public Map<Long, Object> getThresholdDataReasonGroupMap() {
-		return thresholdDataReasonGroupMap;
+	    return thresholdDataReasonGroupMap;
 	}
 
 	/**
 	 * @param thresholdDataReasonGroupMap
-	 *            the thresholdDataReasonGroupMap to set
+	 * 			 the thresholdDataReasonGroupMap to set
 	 */
 	public void setThresholdDataReasonGroupMap(Map<Long, Object> thresholdDataReasonGroupMap) {
-		this.thresholdDataReasonGroupMap = thresholdDataReasonGroupMap;
+	    this.thresholdDataReasonGroupMap = thresholdDataReasonGroupMap;
 	}
-
+	
 	public Integer getCurrentGroupIndex() {
 		return currentGroupIndex;
 	}
@@ -2545,7 +2545,6 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setCurrentGroupIndex(Integer currentGroupIndex) {
 		this.currentGroupIndex = currentGroupIndex;
 	}
-
 	// 27868 & 35321 - end
 	// #26059 - start
 	/**
@@ -2646,7 +2645,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setCounter(Integer counter) {
 		this.counter = counter;
 	}
-
+	
 	/**
 	 * Retrieves the current counter reason value.
 	 * 
@@ -2719,7 +2718,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 
 	/**
 	 * @param selectedBpmAction
-	 *            the selectedBpmAction to set
+	 * 			 the selectedBpmAction to set
 	 */
 	public void setSelectedBpmAction(String selectedBpmAction) {
 		this.selectedBpmAction = selectedBpmAction;

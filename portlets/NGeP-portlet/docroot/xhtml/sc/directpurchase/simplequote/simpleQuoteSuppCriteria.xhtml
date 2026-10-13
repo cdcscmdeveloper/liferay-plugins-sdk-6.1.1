@@ -259,8 +259,9 @@
 				</p:tab>
 
 				<!--  BY Government Seller   -->
+				<ui:remove>#27868</ui:remove>
 				<p:tab title="#{lbl['lbl.sc.agency']}"
-					rendered="#{simpleQuoteBackingBean.managedBean.g2GFlag}">
+					rendered="#{simpleQuoteBackingBean.managedBean.g2GFlag or simpleQuoteBackingBean.managedBean.includeG2gSupplier}">
 					<p:dataTable id="govtSellerId" var="data" rowKey="#{data}"
 						rowIndexVar="index"
 						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"

@@ -148,7 +148,8 @@ import my.ep.persistence.logging.LogKey;//#31849 #32682
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.ReasonCategory; //#8411
-import my.ep.type.pm.RoleCode;import my.ep.util.EpPropertiesUtils;
+import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;//#31341
@@ -157,7 +158,7 @@ import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;//#31341
 import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.constant.CommonUIConst;
-import my.ep.web.constant.SSTConstant;
+import my.ep.web.constant.SSTConstant; //#27868
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -756,7 +757,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 		return items;
 	}
-	
+
 	// 27868 - start
 	/**
 	 * Combines current WIP reason into dropdown items if not already present.
@@ -920,7 +921,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		return items.toArray(new SelectItem[0]);
 	}
-
+	
 	/**
 	 * Retrieves dropdown values by combining new and old WIP parameters.
 	 * 
@@ -964,9 +965,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		return items.toArray(new SelectItem[0]);
 	}
+	
 
 	// 27868 - end
-
+	
 	/**
 	 * Get reason by reason category code and reason code
 	 * 
@@ -4752,5 +4754,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return items;
 	}
 	//#8411 - END
+
 
 }
