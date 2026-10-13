@@ -39,7 +39,9 @@
 			<h:column>
 							<p:selectOneMenu id="approvalAuth"  label="#{lbl['lbl.sc.sf.mof.approval.auth']}"
 							value="#{suppFinalizationBackingBean.managedBean.approvalAuthority.authId}" style="width:333px;"
-							disabled="#{suppFinalizationBackingBean.managedBean.readOnly}" >
+							disabled="#{suppFinalizationBackingBean.managedBean.readOnly}"
+							required="true"
+							requiredMessage="#{lbl['lbl.sc.sf.mof.validate.message']}" >
 							       <p:ajax process="@this"
 									  update="approvalAuthComm"
 						              listener="#{suppFinalizationBackingBean.changeApprovalAuth()}" />
