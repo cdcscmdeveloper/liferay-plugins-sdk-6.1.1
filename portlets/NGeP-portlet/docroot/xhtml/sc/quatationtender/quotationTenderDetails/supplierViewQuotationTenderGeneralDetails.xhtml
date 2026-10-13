@@ -472,6 +472,19 @@
 								</tr>
 					</table>
 				</td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.qt.partiallyoffer']}" /></td>
+				<td>
+					<table>
+						<tr>
+							<td>
+								<p:inputText id="partialTxt"
+								value="#{createQtBB.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(scQt.partial))}"
+								style="width:195px;" disabled="true" />
+							</td>
+							<td ><ac:iconTooltip value="#{lbl['lbl.sc.qt.partiallyoffer.tooltip']}" /></td>
+						</tr>				
+					</table>
+				</td>
 			</tr>
 <!-- END #21695 farid End-->
 			<tr>
