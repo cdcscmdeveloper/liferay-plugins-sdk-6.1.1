@@ -4,7 +4,7 @@
  *                ePerolehan 
  * Release 1.00    
  *    
- * Copyright ï¿½ 2013 Archisoft. All rights reserved.
+ * Copyright © 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
  */
@@ -7630,10 +7630,19 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 									retriveNonScoringComplianceFinancial(true); // #28856,
 																				// #25138
 
-									// #30722, #25138 - start
-									financialSpecQuestionOneItem(this.getManagedBean()
-											.getEvaluationStgTechnicalCheckList().get(0).getDocCategory());
-									// #30722, #25138 - end
+									// #30722, #25138, #38528 - start
+									String docCategory = CollectionUtils
+											.isEmpty(this
+													.getManagedBean()
+													.getEvaluationStgTechnicalCheckList()) ? this
+											.getManagedBean()
+											.getEvaluationStgfinancialCheckList()
+											.get(0).getDocCategory()
+											: this.getManagedBean()
+													.getEvaluationStgTechnicalCheckList()
+													.get(0).getDocCategory();
+									financialSpecQuestionOneItem(docCategory);
+									// #30722, #25138, #38528 - end
 
 									outputTab = 3;
 
@@ -11710,7 +11719,22 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 							} else if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equalsIgnoreCase(this
 									.getManagedBean().getCommitteeType())) {
 								if (this.getManagedBean().getScQt().isTechEvaluationReq()) {
-									finreqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+									// #21695, #25138 -start-
+									// wip status start
+									if (this.getManagedBean().getScQt().isPartial()
+											|| !this.getManagedBean().getScQt().isPartial()) {
+										IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+												ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+										int wipstatus = evaluationSO.checkWipScoreSetting(finreqDTO);
+										
+										if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
+											finreqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+										} else {
+											finreqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
+										}
+									}
+									// wip status end
+									// #21695, #25138 -end-
 								} else {
 									finreqDTO.setEvalStage(SourcingConstants.COMPLAINCE_STAGE);
 								}
