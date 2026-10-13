@@ -7,8 +7,17 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-
+<!-- #25725 - Check and display Italic value - Start -->
+<style>
+.italic-item {
+	font-style: italic !important;
+}
+</style>
+<!-- #25725 - Check and display Italic value - End -->
 	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 		<p:messages id="loaMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		<ui:include src="dploaListButtons.xhtml" />
 		<ui:include src="dpLoaListHeader.xhtml" />
@@ -35,7 +44,8 @@
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sc.request.note.fulfill.type']}"
-					style="width:10%">
+					style="width:10%"
+					styleClass="#{dpLOABackingBean.checkItalicCodeNameForMy(scPurchaseRequest.requestNoteDtls[0].fulfilmentType.parameterId) ? 'italic-item' : ''}"><!-- #25725 - Check and display Italic value -->
 					#{dpLOABackingBean.getParameterDesc(scPurchaseRequest.requestNoteDtls[0].fulfilmentType)}
 				</p:column>
 				

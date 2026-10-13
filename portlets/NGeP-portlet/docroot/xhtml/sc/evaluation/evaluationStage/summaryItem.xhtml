@@ -12,6 +12,12 @@
        <h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.eva.summary.item.instruction']}"
 			escape="false" />
+		<!-- #21695 Start -->
+		<br/>
+       <h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.eva.summary.item.zonal.instruction']}"
+			escape="false" rendered="#{evaluationBackingBean.managedBean.scQt.zonal}"/>
+		<!-- #21695 End -->
 		<p:dataTable var="summaryItem" id="evaluationSummaryItem"
 		    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			editable="true" value="#{itemList}" rows="10"
@@ -23,11 +29,24 @@
 			<p:ajax event="rowSelect" process="@this" partialSubmit="true"
 				update="@form"
 				listener="#{evaluationBackingBean.recommendationSummaryItemSelect}"></p:ajax>
-			<p:column headerText="#{lbl['lbl.sc.item']}" style="width:35%;white-space: normal;">
+			<!-- #21695 Start -->				
+					<p:column 
+						style="pointer-events:none !important"
+						rendered="#{!summaryItem.selectable}">
+						<f:facet name="header" >
+							<h:outputText value="#{lbl['lbl.sc.item']}"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{summaryItem.tplSpecQuestion.clItem}" 
+								styleClass="ui-state-disabled">
+						</h:outputText>
+					</p:column>
+				
+					<p:column headerText="#{lbl['lbl.sc.item']}" style="width:35%;white-space: normal;"
+							rendered="#{summaryItem.selectable}">
+						<h:outputText value="#{summaryItem.tplSpecQuestion.clItem}"></h:outputText>
 
-				<h:outputText value="#{summaryItem.tplSpecQuestion.clItem}"></h:outputText>
-
-			</p:column>
+					</p:column>
+			<!-- #21695 End -->	
 		</p:dataTable>
 	</p:panel>
 
@@ -93,7 +112,8 @@
 				</p:column>
 				<ui:remove><!-- 6906 - end --></ui:remove>
 
-				<p:column headerText="#{lbl['lbl.sc.total.score']}"
+				<ui:remove><!-- 38151 start (headertext) --></ui:remove>
+				<p:column headerText="#{evaluationBackingBean.managedBean.weightage35384WIP ? lbl['lbl.sc.total.score'] : lbl['lbl.sc.total.score.percent']}"
 					style="text-align:right">
 					<h:outputText value="#{summaryqualSup.totalScore}"></h:outputText>
 				</p:column>
@@ -177,7 +197,8 @@
 				</p:column>
 				<ui:remove><!-- 6906 - end  note 233--></ui:remove>
 
-				<p:column headerText="#{lbl['lbl.sc.total.score']}"
+				<ui:remove><!-- 38151 start (headertext) --></ui:remove>
+				<p:column headerText="#{evaluationBackingBean.managedBean.weightage35384WIP ? lbl['lbl.sc.total.score'] : lbl['lbl.sc.total.score.percent']}"
 					style="text-align:right">
 					<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
 				</p:column>

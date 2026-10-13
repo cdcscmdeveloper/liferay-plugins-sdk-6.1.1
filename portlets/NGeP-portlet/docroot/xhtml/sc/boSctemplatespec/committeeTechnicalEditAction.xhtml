@@ -78,7 +78,7 @@
 							<p:inputTextarea rows="2" cols="95"
 								disabled="#{!(!specificationBackingBean.managedBean.readOnly 
 									or (specificationBackingBean.isMemberChairpersonSpecPreparationTask() 
-									and specificationBackingBean.managedBean.readOnly))}"
+									and specificationBackingBean.managedBean.readOnly))}"	
 								style="margin-bottom:5px;width:83%;" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
 								onmouseout="limitTextArea(this,200);"
 								value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specName}"> 
@@ -129,14 +129,11 @@
 						<td>
 							<table>
 								<tr>
-									<td>
-										<!-- 1873 note 74 -start- -->
-										<p:selectOneRadio
-											disabled="#{!(!specificationBackingBean.managedBean.readOnly or 
-												(specificationBackingBean.isMemberChairpersonSpecPreparationTask() 
-												and specificationBackingBean.managedBean.readOnly))}"
+								<!-- #farid #21695 disable start #38679 remove condition disable for PO -->
+								<ui:remove><!-- 1873 note 74 update disabled condition--></ui:remove>
+									<td><p:selectOneRadio 
+									disabled="#{specificationBackingBean.managedBean.specItemWeightageRequired and specificationBackingBean.managedBean.readOnly or !(!specificationBackingBean.managedBean.readOnly or (specificationBackingBean.isMemberChairpersonSpecPreparationTask() and specificationBackingBean.managedBean.readOnly))}"
 											value="#{specificationBackingBean.managedBean.templateSpecBean.specMaster.weightageReq}">
-											<!-- 1873 note 74 -end- -->
 											<f:selectItems
 												value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.itemWeightage)}" />
 
@@ -144,8 +141,7 @@
 											<p:ajax event="change" partialSubmit="true" process="@this"
 												listener="#{templateSpecBackingBean.updateItemWeightageReq(specificationBackingBean.managedBean.templateSpecBean)}" />
 
-										</p:selectOneRadio>
-									</td>
+										</p:selectOneRadio></td>	<!-- #farid #21695 disable end -->	
 									<td style="margin-top: -3px"><ac:iconTooltip
 											value="#{lbl['lbl.sc.spec.item.weightage.tooltip']}" /></td>
 								</tr>

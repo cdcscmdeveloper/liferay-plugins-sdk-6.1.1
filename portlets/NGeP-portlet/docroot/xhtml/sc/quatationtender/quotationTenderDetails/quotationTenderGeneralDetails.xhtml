@@ -6,6 +6,36 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<!-- Start #25725/25726 -->
+  <style>
+     .italic-item {
+	font-style: italic !important;
+    }
+  </style>
+	
+ <h:outputScript>
+    // Pass the list of IDs from server to JS
+    var fulfilmentItalicIds = [
+        <ui:repeat value="#{qTDetailBB.getItalicCodeNames(ParameterTypeConst.fulfilmentType)}" var="label" varStatus="st">
+            '#{label}'#{not st.last ? ',' : ''}
+        </ui:repeat>
+    ];
+	
+    function styleFulfilmentDropdown() {
+        $('.fulfil-panel li.ui-selectonemenu-item').each(function () {
+            var label = $(this).attr('data-label');
+            if (fulfilmentItalicIds.indexOf(label) !== -1) {
+                $(this).addClass('italic-item');
+            }
+        });
+    }
+    // Run when the page is ready
+    $(function () {
+        styleFulfilmentDropdown();
+    });
+
+  </h:outputScript>
+ <!-- End #25725/25726 -->
 
 	<ui:param name="scQt" value="#{createQtBB.managedBean.qt}" />
 	<ui:param name="qtStatusAfterChecklistScoring"
@@ -50,6 +80,10 @@
 	<ui:param name="isDemoSpecialCase"  
 		value="#{qTDetailBB.managedBean.demoSpecialCase ? qTDetailBB.managedBean.demoSpecialCase : specMaintenanceBB.managedBean.demoSpecialCase}" />
 	<!-- END #28784 -->
+	<!-- #40237/25726 - Start -->
+	<ui:param name="isGenInfo"
+		value="#{specificationBackingBean.managedBean.genInfo}" />
+	<!-- #40237/25726 - End -->
 	<ac:lovPopup />
 	<!-- START #28784 -->
 	<p:blockUI block=":form" widgetVar="blockWidget">
@@ -483,8 +517,7 @@
 								<c:choose>
 										<c:when	test="#{!isReadOnly and (!isDemoDisabled and !isMaintenanceFlow and !isDemoSpecialCase)}">
 											<p:outputPanel id="demoPop">												
-												<p:selectOneRadio value="#{scQt.demoRequired}">
-												<!-- disabled="#{scQt.partial}"> 4ser -->
+												<p:selectOneRadio value="#{scQt.demoRequired}" disabled="#{scQt.partial}">
 													<f:selectItems
 														value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 													<p:ajax event="change" update="@form" partialSubmit="true" process="@this"
@@ -496,8 +529,7 @@
 										</c:when>
 										<c:when	test="#{isDemoDisabled and !isReadOnly or isDemoDisabled and isMaintenanceFlow}">
 											<p:outputPanel id="demoPop">
-												<p:selectOneRadio value="#{scQt.demoRequired}">
-												<!-- disabled="#{scQt.partial}"> 4ser -->
+												<p:selectOneRadio value="#{scQt.demoRequired}" disabled="#{scQt.partial}">
 													<f:selectItems
 														value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 													<p:ajax event="change" update="@form" partialSubmit="true" process="@this"
@@ -524,7 +556,7 @@
 
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
-				<td colspan="3">
+				<td> <!-- #21695 farid remove colspan="3"-->
 					<table>
 						<tr>
 							<td><c:choose><!-- #28784 Disable zonal for qt maintanance-->
@@ -549,7 +581,75 @@
 						</tr>
 					</table>
 				</td>
+				<!-- START #21695 farid -->
+				<td><h:outputLabel value="#{lbl['lbl.sc.qt.partiallyoffer']}" /></td>
+				<td>
+					<table>
+						<tr>
+							<td><c:choose>
+									<c:when
+										test="#{!isMaintenanceFlow and !qtStatusChecklistScoring and !qtStatusScheduleDocAndAfter and !qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_EVALUATION_TYPE) and !isReadOnly}">
+										<ui:remove>#9019 note-501</ui:remove>
+										<p:outputPanel id="partialPop">
+											<p:selectOneRadio value="#{scQt.partial}"
+												disabled="#{scQt.sampleReq}">
+												<f:selectItems
+													value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+												<p:ajax event="change" partialSubmit="true"
+													update="@form,generalLocationList" process="@this"
+													listener="#{createQtBB.partialChange}">
+												</p:ajax>
+												<p:ajax render="confirmDialog"></p:ajax>
+											</p:selectOneRadio>
+										</p:outputPanel>
+
+										<p:confirmDialog
+											message="#{lbl['lbl.sc.spec.partial.confirm']}"
+											header="#{lbl['lbl.cm.dialog.cofirm.header']}"
+											widgetVar="confirmDialogWidgetVar" closable="false"
+											severity="alert">
+											<div class="ppRightBtn">
+												<p:commandButton id="conf"
+													value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
+													action="#{createQtBB.partialChangePopUpYes}"
+													oncomplete="confirmDialogWidgetVar.hide()"
+													update="@form,partialPop" process="@this" />
+												<p:commandButton id="decline"
+													value="#{lbl['lbl.cm.dialog.cofirm.no']}"
+													action="#{createQtBB.partialChangePopUpNo}"
+													oncomplete="confirmDialogWidgetVar.hide()"
+													update="partialPop" process="@this" />
+												<h:inputHidden id="rowIndex"></h:inputHidden>
+											</div>
+										</p:confirmDialog>
+
+									</c:when>
+									<c:otherwise>
+										<p:inputText id="partialTxt"
+											value="#{createQtBB.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(scQt.partial))}"
+											style="width:195px;" disabled="true" />
+									</c:otherwise>
+								</c:choose></td>
+							<td><ac:iconTooltip
+									value="#{lbl['lbl.sc.qt.partiallyoffer.tooltip']}" /></td>
+						</tr>
+					</table>
+				</td>
+				<!-- END #21695 farid End-->
 			</tr>
+				<tr>
+					<td colspan="3"></td>
+					<td>
+						<table>
+							<tr>
+								<td style="width: 255px; float: left;"><h:outputText
+										styleClass="instruction"
+										value="#{lbl['lbl.sc.spec.partial.info']}" escape="false" /></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<!-- END #21695 farid End-->
 
 			<tr>
 				<td><p:outputLabel
@@ -727,6 +827,11 @@
 			<tr>
 				<td><p:outputLabel value=" #{lbl['lbl.sc.fullfillent.type']}" />
 					<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
+			<!-- #25726 Start -->	
+			<td>
+			 <table>
+			   <tr>
+			<!-- #25726 End -->
 				<td><c:choose>
 						<!-- 15391 -start- -->
 						<c:when
@@ -737,7 +842,9 @@
 								disabled="#{scQt.contractType ne null and scQt.contractType.parameterCode eq 'CC'}"
 								label="#{lbl['lbl.sc.fullfillent.type']}"
 								value="#{scQt.fulfilmentType.parameterId}"
-								style="width: 205px;margin-bottom: 5px;">
+								style="width: 205px;margin-bottom: 5px;"
+								styleClass="#{qTDetailBB.checkItalicCodeNameForMy(scQt.fulfilmentType.parameterId) ? 'italic-item' : ''}"
+                 				panelStyleClass="fulfil-panel"><!-- #25726/25725 - Check and display Italic value -->
 								<ui:remove>9019 -end</ui:remove>
 								<f:selectItems
 									value="#{createQtBB.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
@@ -750,7 +857,8 @@
 							<!-- 15391 -start- --><!-- 29464 -start- -->
 							<p:inputText id="fulfilTypeTxt" rendered="#{!specificationBackingBean.managedBean.isGenInfo() or isReadOnly}"
 								value="#{createQtBB.getParameterDesc(scQt.fulfilmentType)}"
-								style="width:195px;" disabled="true" />
+								style="width:195px;" disabled="true" 
+								styleClass="#{qTDetailBB.checkItalicCodeNameForMy(scQt.fulfilmentType.parameterId) ? 'italic-item' : ''}"/><!-- #25726/25725 - Check and display Italic value -->
 							<ui:remove>9019 note-289 -start</ui:remove>
 							 <!-- 26012023@syazani - Bug #34428 - Start -->
 							<p:selectOneMenu required="#{not empty param['skipsubmitvalidation']}"
@@ -758,7 +866,9 @@
 								disabled="#{scQt.contractType ne null and scQt.contractType.parameterCode eq 'CC'}"
 								label="#{lbl['lbl.sc.fullfillent.type']}"
 								value="#{scQt.fulfilmentType.parameterId}"
-								style="width: 205px;margin-bottom: 5px;">
+								style="width: 205px;margin-bottom: 5px;"
+								styleClass="#{createQtBB.checkItalicCodeNameForMy(scQt.fulfilmentType.parameterId) ? 'italic-item' : ''}"
+								panelStyleClass="fulfil-panel"><!-- #25726/25725 - Check and display Italic value -->
 							<!-- 26012023@syazani - Bug #34428 - End -->
 							<ui:remove>9019 note-289 -end</ui:remove>
 							<!-- 29464 -end- -->
@@ -771,6 +881,14 @@
 							<!-- 15391 -end- -->
 						</c:otherwise>
 					</c:choose></td>
+			<!-- #25726 start -->
+					 <td style="margin-top: -3px">
+						<ac:iconTooltip rendered ="#{!isContractTypeAsCentral}" value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
+					 </td>
+			   </tr>
+			 </table>
+			</td>
+			<!-- #25726 end -->			
 				<td style="white-space: nowrap;"><p:outputLabel
 						value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" /> <p:outputLabel
 						value="*" styleClass="mandatory"
@@ -997,19 +1115,20 @@
 				<!--#25729 #142 START -->
 				<c:if test="#{expectTotalIndPriceBelowThreshold}">
 
-					<td><c:choose>
+					<td>
+						<c:choose>
 							<c:when
 								test="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION}">
-								<ui:remove>9019 note-289 -start</ui:remove>
+								<ui:remove>9019 Reopen #note-289 - change required validation from required="true"</ui:remove>
 								<p:inputTextarea id="justificationProcValueId_1"
 									style="margin-bottom:5px; width: 250px;" maxlength="100"
-									value="#{scQt.justificationProcValue}" required="#{not empty param['skipsubmitvalidation']}"
+									value="#{scQt.justificationProcValue}"
+									required="#{not empty param['skipsubmitvalidation']}"
 									label="#{lbl['lbl.sc.spec.justification.procurement.value']}"
 									disabled="#{isReadOnly}" cols="110" rows="3"
 									onkeyup="limitTextArea(this,100);"
 									onkeydown="limitTextArea(this,100);"
 									onmouseout="limitTextArea(this,100);">
-									<ui:remove>9019 note-289 -end</ui:remove>
 									<f:ajax></f:ajax>
 								</p:inputTextarea>
 								<p:message id="title2Msg_1" for="justificationProcValueId_1"
@@ -1046,11 +1165,11 @@
 				<h:panelGroup id="QuotationtenderGeneralSample">
 					 <ui:fragment
 						rendered="#{createQtBB.isSpecScreen() or createQtBB.isSpecEndorsmentScreen()}"> 
-                        <ui:fragment rendered="#{specificationBackingBean.managedBean.sampleShowHide}"><!-- 11104-start -->
+                        <ui:fragment rendered="#{specificationBackingBean.managedBean.sampleShowHide}">
 						<td><p:outputLabel value="#{lbl['lbl.sc.qt.sampel']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td><p:selectOneRadio value="#{scQt.sampleReq}"
-								disabled="#{isReadOnly or createQtBB.isQTSampleStatus(scQt.qtStatus.statusId)}">
+								disabled="#{scQt.partial or isReadOnly or createQtBB.isQTSampleStatus(scQt.qtStatus.statusId)}">
 								<f:selectItems
 									value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 								<p:ajax event="change" partialSubmit="true"
@@ -1059,7 +1178,7 @@
 							</p:selectOneRadio></td>
 						<td style="margin-top: -3px"><ac:iconTooltip
 								value="#{lbl['lbl.sc.qt.sampel.instructions']}" /></td>
-     	              </ui:fragment><!-- 11104-end -->
+     	              </ui:fragment>
 					 </ui:fragment> 
 				</h:panelGroup>
 			</tr>
