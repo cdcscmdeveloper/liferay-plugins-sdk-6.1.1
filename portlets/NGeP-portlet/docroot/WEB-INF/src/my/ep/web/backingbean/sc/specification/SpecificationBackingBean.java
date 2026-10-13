@@ -8389,6 +8389,21 @@ public class SpecificationBackingBean extends
 	public void calculateFinancialItemScore(ScQtScoreSetting financialItem) {
 		try {
 			if (null != financialItem) {
+				// #21695 #28949 START FARID - 15/10/2020
+				String checkDecimal1 = String.valueOf(financialItem.getOverallFin());
+				String checkDecimal2 = String.valueOf(financialItem.getOverallOtherFin());
+				String pattern1 = "^[0-9\\s]+$";
+				
+				if (this.getManagedBean().getFinacialItemScoreSetting().getOverallFin() != null
+						&& this.getManagedBean().getFinacialItemScoreSetting().getOverallOtherFin() != null) {
+					if (!checkDecimal1.matches(pattern1)) {
+						throw new EpException(MessageConst.ERROR_775157);
+					} else if (!checkDecimal2.matches(pattern1)) {
+						throw new EpException(MessageConst.ERROR_775157);
+					}
+				}
+				// #21695 #28949 END FARID - 15/10/2020
+				
 				int value1=	financialItem.getOverallFin()!=null? financialItem.getOverallFin().intValue():0;
 				int value2=	financialItem.getOverallOtherFin()!=null?financialItem.getOverallOtherFin().intValue():0;
 				int local = value1
