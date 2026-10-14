@@ -2318,6 +2318,13 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 
 			}
 			// #21695 -end(#33178 related)
+			
+			//36228 fixing index -issue if No suppliers qualified in package, summary tec next button effected to click two times to proceed to next train station. 
+			if(null != this.getManagedBean().getWipStatusMax() && this.getManagedBean().getWipStatusMax() >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM 
+					&& this.getManagedBean().getScQt().getEvaluateBy().equals(SourcingConstants.EVALUATE_BY__ITEM)
+					&& !this.getManagedBean().getScQt().isPartial()){
+				this.getManagedBean().setNoSupplierPackageExist(true);
+			}
 
 			checkTechnicalSuppliersQualified();
 			localCheckList = null;
