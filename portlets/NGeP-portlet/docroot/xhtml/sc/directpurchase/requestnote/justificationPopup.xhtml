@@ -13,17 +13,20 @@
 				<td><p:inputText disabled="true" size="25"
 					 value="#{requestNoteBackingBean.getParameterDesc(requestNoteBackingBean.managedBean.requestNoteDtl.procurementType)}" /></td>
 	    	</tr>
+	    	<ui:remove> 27868 - start </ui:remove>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.reason']}" /></td>
-				<td><p:inputText disabled="true" size="25"
+				<td><p:inputTextarea rows="4" cols="48" style="margin-bottom: 5px; width: 350px;" disabled="true"
+				autoResize="false"
 				value="#{requestNoteBackingBean.getReasonDesc(requestNoteBackingBean.managedBean.requestNoteDtl.justificationType)}"/></td>
 			 </tr>
 			<tr>
 				<td style="vertical-align:top; text-align:left;"><p:outputLabel
 						value="#{lbl['lbl.sc.justification']}"/></td>
 				<td><p:inputTextarea value="#{requestNoteBackingBean.managedBean.requestNoteDtl.justification}"
-						rows="4" cols="48" style="margin-bottom: 5px; width: 350px;" disabled="true" /></td>
+						rows="4" cols="48" style="margin-bottom: 5px; width: 350px;" disabled="true" autoResize="false" /></td>
 			</tr>
+			<ui:remove> 27868 - end </ui:remove>
 		</table>
 		<div class="ppRightBtn BtnSpacing">
 			<p:commandButton value="#{lbl['lbl.sc.close']}" partialSubmit="true"

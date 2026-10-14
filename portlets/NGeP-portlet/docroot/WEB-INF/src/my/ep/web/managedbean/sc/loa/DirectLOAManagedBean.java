@@ -347,6 +347,9 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	//#11134/#41092 -start-
 	private List<ScLoaRemark> supplierRemarks;
 	//#11134/#41092 -end-	
+	// #29766 Start Vinod
+	private String alertForInactivePK7;
+	// #29766 End Vinod
 
 	/**
 	 * Gets the spki backing bean.
@@ -2094,5 +2097,16 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 		this.supplierRemarks = supplierRemarks;
 	}
 	// #11134/#41092 -end-
+
+	// #29766 Start Vinod
+	public String getAlertForInactivePK7() {
+		return alertForInactivePK7;
+	}
+
+	public void setAlertForInactivePK7(String alertForInactivePK7) {
+		this.alertForInactivePK7 = alertForInactivePK7;
+	}
+	
+	// #29766 End Vinod
 
 }
