@@ -3040,9 +3040,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 		IQTEvaluationSO evaluationSo = null;
 
 		try {
-			financialSpecQuestionOneItem(this.getManagedBean().getSingleItemCheckList().get(0).getDocCategory());// #25138
-																													// (#30722
-																													// related)
+			financialSpecQuestionOneItem(this.getManagedBean().getSingleItemCheckList().get(0).getDocCategory());// #25138 (#30722 related)
 			// #25138-start(#34588 related)
 			evaluationSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 					IQTEvaluationSO.class);
@@ -7367,10 +7365,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 					retriveNonScoringComplianceFinancial(true);
 					retriveFinancialEvaluationStage();
 					this.getManagedBean().setTabFinancialIndex(1);
-					financialSpecQuestionOneItem(this.getManagedBean().getSingleItemCheckList().get(0).getDocCategory());// for
-																															// one
-																															// item
-																															// only
+					financialSpecQuestionOneItem(this.getManagedBean().getSingleItemCheckList().get(0).getDocCategory());// for one item only
 					// #25138 -end(#31766,#30722 related)
 				}
 
@@ -7627,8 +7622,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 									// not offer and qty 0 - end
 
 									retriveFinancialEvaluationStage();
-									retriveNonScoringComplianceFinancial(true); // #28856,
-																				// #25138
+									retriveNonScoringComplianceFinancial(true); // #28856, #25138
 
 									// #30722, #25138, #38528 - start
 									String docCategory = CollectionUtils
@@ -7658,8 +7652,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 						// #25138, #21695 -end-
 						if (currentTab == 0) {
 							retriveFinancialEvaluationStage();
-							retriveNonScoringComplianceFinancial(true); // #28856,
-																		// #25138
+							retriveNonScoringComplianceFinancial(true); // #28856, #25138
 
 							// #30722, #25138 - start
 							financialSpecQuestionOneItem(this.getManagedBean().getEvaluationStgfinancialCheckList()
@@ -7927,8 +7920,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 							retriveNonScoringComplianceFinancial(true);// #28856
 							// #30722 - start
 							financialSpecQuestionOneItem(this.getManagedBean().getEvaluationStgTechnicalCheckList()
-									.get(0).getDocCategory());// #25138 - one
-																// item only
+									.get(0).getDocCategory());// #25138 - one item only
 							// #30722 - end
 							outputTab = 3;
 							this.getManagedBean().setTabFinancialIndex(1);
