@@ -5061,7 +5061,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					SmBulkApplOverlapCatVO voSubRemove = null;
 					String catCode = StringUtils.EMPTY;
 					String isActiveAppl = StringUtils.EMPTY;
-					String applStatus = StringUtils.EMPTY;
+					String applStatus; //#40444- fix sonarqube
 					String language = new FacesScopes().getUserLocale().getLanguage();
 					boolean isAdd = false;
 					boolean isSubAdd = false;
