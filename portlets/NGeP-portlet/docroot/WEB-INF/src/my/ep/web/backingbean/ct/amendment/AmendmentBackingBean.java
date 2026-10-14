@@ -131,6 +131,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;//Fix - #30045
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
@@ -1231,8 +1232,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setAckBy(supplierSigner);
 			}
-
+			
 			ctBackingBean.getManagedBean().setDirectPurchase(isDirectPurchase());//#40005
+			updateProcModeFlag();//Fix - #30045
 
 			getManagedBean().setSecretaryId(null);
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary() != null) {
@@ -6119,13 +6121,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			PmOrgProfile contractMinistry = retrieveMinistryOrgProfile(ctOwnerOrgProfileId);
 			PmOrgProfile committeeMinistry = retrieveMinistryOrgProfile(orgProfileId);
 			
-			log.info(":::allowChairpersonRole() orgProfileId: "+ orgProfileId);
-			
 			if (contractMinistry != null && committeeMinistry != null
-					&& contractMinistry.getOrgProfileId().longValue() == committeeMinistry.getOrgProfileId().longValue()) {	
-				log.info(":::allowChairpersonRole() "+ orgProfileId +". contract ministryOrgProfileId: "+ contractMinistry.getOrgProfileId());
-				log.info(":::allowChairpersonRole() "+ orgProfileId +". committee ministryOrgProfileId: "+ committeeMinistry.getOrgProfileId());
-				
+					&& contractMinistry.getOrgProfileId().longValue() == committeeMinistry.getOrgProfileId().longValue()) {
 				allowChairpersonRole = true;
 			}
 			
@@ -6140,20 +6137,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							|| pm.getPmRole().getRoleCode().equalsIgnoreCase(RoleCode.PPB_CHAIRPERSON.value())){
 						allowChairpersonRole = true;
 						continue;
-						
 					}
 				}
 			}
 			
 			/*end*/
 			
-			//log.info(":::allowChairpersonRole() "+ orgProfileId +". committee type: "+ getManagedBean().getCommitteeType());
-
-			// QCA/QCB, need to be same PTJ
-			// #35238 start
-			allowChairpersonRole = getAmendmentCommitteeHelper().determineChairpersonAccessForQuotationCommmittee(
-					orgProfileId, ctOwnerOrgProfileId, userResDTO, allowChairpersonRole);
-			// #35238 end
+			// #35238, #41383 start
+			if (allowChairpersonRole) {
+				allowChairpersonRole = getAmendmentCommitteeHelper().determineChairpersonAccessForQuotationCommmittee(
+						orgProfileId, ctOwnerOrgProfileId, userResDTO, allowChairpersonRole);
+			}
+			// #35238, #41383  end
 			
 			//Bug #26520 - start
 			if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)
@@ -9357,4 +9352,65 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		return false;
 	}
 	//#40005 end
+
+	// Start Fix - #30045
+	/**
+	 * Determines and sets the "newPk7" flag on the managed bean based on
+	 * quotation type or procurement type conditions.
+	 * 
+	 * <p>
+	 * Logic flow:
+	 * <ul>
+	 * <li>If quotation type (QtType) exists:
+	 * <ul>
+	 * <li>Enable newPk7 when the parameter code matches QUOTATION_TENDER_TYPE
+	 * and procurement data is available.</li>
+	 * </ul>
+	 * </li>
+	 * <li>If quotation type is null:
+	 * <ul>
+	 * <li>Fallback to request note procurement type.</li>
+	 * <li>Enable newPk7 when procurement type matches PROCUREMENT_TYPE or
+	 * PROCUREMENT_TYPE_RPT and justification data is available.</li>
+	 * </ul>
+	 * </li>
+	 * </ul>
+	 * 
+	 * @param ctBackingBean
+	 *            the backing bean containing contract and request data
+	 */
+	private void updateProcModeFlag() {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtContract()
+				.getLoa().getQtType() != null) {
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContract()
+					.getLoa().getQtType().getParameterCode()
+					.equalsIgnoreCase(ParameterTypeConst.QUOTATION_TENDER_TYPE)
+					&& ctBackingBean.newProcurement() != null) {
+				ctBackingBean.getManagedBean().setNewPk7(true);
+			} else {
+				ctBackingBean.getManagedBean().setNewPk7(false);
+			}
+		} else {
+			// The scRequestNote variable is only used to determine the procurement type.
+			// However, the values for reason and procurement type are always retrieved from the CT table.
+			ScRequestNote scRequestNote = (ScRequestNote) EntityHelper
+					.getNestedProperty(ctBackingBean.getManagedBean(),
+							"contractVer.ctContractItems[0].scRequestItem.requestNote");
+			if (scRequestNote != null) {
+				String procType = EntityHelper
+						.getStringNestedProperty(
+								ctBackingBean.getManagedBean(),
+								"contractVer.ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].procurementType.parameterType");
+				if ((procType
+						.equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE) || procType
+						.equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE_RPT))
+						&& ctBackingBean.newJustification() != null) {
+					ctBackingBean.getManagedBean().setNewPk7(true);
+				} else {
+					ctBackingBean.getManagedBean().setNewPk7(false);
+				}
+			}
+		}
+	}
+	// End Fix - #30045
 }

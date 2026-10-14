@@ -183,6 +183,7 @@ import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.constant.cm.CmHelper;
 import my.ep.web.managedbean.cm.catalogue.CatalogueManagedBean;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.cm.helper.CmApplicationUtil;
@@ -6187,7 +6188,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						f.remove();
 					}
 				}
-
+				
+				//#26059 - Start
+				cleanItemNameNA(cmSupplierItem.getCmItem());
+				//#26059 - End
 
 				log.info("*****************end********************");
 
@@ -11918,4 +11922,23 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.declareChecked = declareChecked;
 	}
 	//#30457 - farid - end
+	
+	// #26059 - Start
+	/**
+	 * Cleans the item name by removing "N/A" or related placeholder values.
+	 * This method checks if the provided {@code CmItem} object is not null,
+	 * then utilizes {@link CommonUtils#removeItemNameNA(String)} to process and
+	 * update the item's name.
+	 * 
+	 * @param cmItem
+	 *            the item object whose name needs to be cleaned; if null, no
+	 *            action is taken.
+	 */
+	public void cleanItemNameNA(CmItem cmItem) {
+		CommonUtils common = new CommonUtils();
+		if (cmItem != null) {
+			cmItem.setItemName(common.removeItemNameNA(cmItem.getItemName()));
+		}
+	}
+	// #26059 - End
 }

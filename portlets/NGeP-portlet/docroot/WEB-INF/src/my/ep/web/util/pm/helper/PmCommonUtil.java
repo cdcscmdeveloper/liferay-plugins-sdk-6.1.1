@@ -2405,6 +2405,49 @@ public class PmCommonUtil implements Serializable{
 		return items;
 	}
 	
+	// start - #27868
+	/**
+	 * Retrieves the PTJ dropdown list for the specified Jabatan.
+	 *
+	 * @param jabatanId the Jabatan organization profile ID
+	 * @return an array of {@link SelectItem} containing the PTJ options
+	 */
+	public static SelectItem[] getPtjDropdown(Long jabatanId) {
+		SelectItem[] items = null;
+		IOrgProfileSO orgProfileSO = null;
+
+		try {
+			int i = 1;
+			List<Object[]> list = new ArrayList<>();
+			if (jabatanId != null) {
+				orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setParentOrgProfileId(jabatanId);
+				reqDTO.setOrgCode(OrganizationType.DIVISION.value());
+				OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
+				list = resDTO.getOrgProfileDDList();
+				items = new SelectItem[list.size() + 1];
+			} else {
+				items = new SelectItem[1];
+			}
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+
+			for (Object[] object : list) {
+				items[i++] = new SelectItem(Long.parseLong(object[0].toString()), object[1].toString());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		} finally {
+			orgProfileSO = null;
+		}
+		return items;
+	}
+
+	// end - #27868
 
 	/**
 	 * retrieve org profile dtl

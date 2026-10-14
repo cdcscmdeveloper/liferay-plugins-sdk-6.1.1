@@ -859,7 +859,7 @@
 								styleClass="#{qTDetailBB.checkItalicCodeNameForMy(scQt.fulfilmentType.parameterId) ? 'italic-item' : ''}"/><!-- #25726/25725 - Check and display Italic value -->
 							<ui:remove>9019 note-289 -start</ui:remove>
 							<p:selectOneMenu required="#{not empty param['skipsubmitvalidation']}"
-								id="fulfilId" rendered="#{specificationBackingBean.managedBean.isGenInfo() and !isReadOnly}}"
+								id="fulfilId" rendered="#{specificationBackingBean.managedBean.isGenInfo() and !isReadOnly}"
 								disabled="#{scQt.contractType ne null and scQt.contractType.parameterCode eq 'CC'}"
 								label="#{lbl['lbl.sc.fullfillent.type']}"
 								value="#{scQt.fulfilmentType.parameterId}"
