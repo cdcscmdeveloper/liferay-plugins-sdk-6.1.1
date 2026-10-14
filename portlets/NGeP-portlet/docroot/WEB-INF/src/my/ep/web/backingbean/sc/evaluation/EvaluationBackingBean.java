@@ -16855,6 +16855,13 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 							.getDefinationType().getParameterCode())
 							&& !ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION.equalsIgnoreCase(proposalCheckList
 									.getDefinationType().getParameterCode()) && !proposalCheckList.isScoringReq()) {
+						//#34016 - Start - related to 34748 note 53
+						if (null != proposalCheckList.getPmEvalStatus()
+								&& proposalCheckList.getPmEvalStatus().getStatusId().equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
+							reqDTO2.setCheckList(proposalCheckList);
+							proposalCheckList = evaluationSO.savePendingNonscoringChecklist(reqDTO2);
+						}
+						//#34016 - End - related to 34748 note 53
 						localCheckList.add(proposalCheckList);
 					}
 
