@@ -6583,7 +6583,8 @@ public class SmCommonUtil {
 			log.info("role code : " + fc.getUserRoleList());
 			if (!fc.hasRoleUser(RoleCode.UPS_SDO.value())
 					&& !fc.hasRoleUser(RoleCode.UPS_APPROVER.value())) {
-				log.info("role code besides sdo & approver : " + fc.getUserRoleList());
+				//#38885
+				log.info("38885 - role code besides sdo & approver : " + fc.getUserRoleList());
 				return;
 			}
 
