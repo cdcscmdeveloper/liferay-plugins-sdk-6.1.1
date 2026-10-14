@@ -1315,6 +1315,36 @@ public class TemplateSpecBackingBean extends
 	 */
 	public void zoneQtyPopupAction(TemplateSpecBean templateSpecBean) {
 		debugLogger("zoneQtyPopupAction");
+		// #21695 -START Farid
+		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
+		UserReqDTO reqDTO = new UserReqDTO();
+		List<String> authoriztionList = new ArrayList<String>();
+
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+			reqDTO.setLanguageCode(ReportConst.ENG_LANG);
+			UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
+			List<PmRoleDesc> roleDesc = userResDTO.getRoleDescList();
+
+			if (CollectionUtils.isNotEmpty(roleDesc)) {
+				for (PmRoleDesc pmRoleDesc : roleDesc) {
+					pmRoleDesc.getPmRole().getRoleCode();
+					if (!authoriztionList.contains(pmRoleDesc.getPmRole().getRoleCode())) {
+						authoriztionList.add(pmRoleDesc.getPmRole().getRoleCode());
+					}
+
+					RoleCode[] r = { RoleCode.SC_SECRETARY, 
+							RoleCode.SC_CHAIRPERSON, 
+							RoleCode.SC_MEMBER };
+					if (userHasRole(r)) {
+						getManagedBean().setSecretaryValidate(true);
+					}
+					;
+				}
+			}
+		}
+		// #21695 - END Farid
 
 		TplSpecMaster tplSpecMaster = templateSpecBean
 				.getSpecMaster();
