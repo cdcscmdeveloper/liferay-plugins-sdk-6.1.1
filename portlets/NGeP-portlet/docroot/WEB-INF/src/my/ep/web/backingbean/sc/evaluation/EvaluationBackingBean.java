@@ -11796,23 +11796,35 @@ private void retriveCommitteeRemarksList(){
 		ScAttachment reportAttachment = null;
 		ScAttachment commReportAttachment = null; // 37617
 		ScQt scQt = getManagedBean().getScQt();
+		boolean isWipExistReport = checkWipExistingEvaluationReports();//#25651
 		
 		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 				.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
-			commReportAttachment = scQt.getScEvaluationCommitteeReportAttachment(); // 37617
-			reportAttachment = new ScEvaluationCommitteeReportAttachment(); 
+			commReportAttachment = isWipExistReport ? scQt.getScEvaluationCommitteeReportDetailAttachment() : scQt
+					.getScEvaluationCommitteeReportAttachment(); // 37617,#25651
+			reportAttachment = isWipExistReport ? new ScEvaluationCommitteeReportDetailAttachment()
+					: new ScEvaluationCommitteeReportAttachment(); // #25651
+			
 		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
 				.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
-			commReportAttachment = scQt.getScOpenCommitteeReportAttachment(); // 37617
-			reportAttachment = new ScOpenCommitteeReportAttachment();
+			commReportAttachment = isWipExistReport ? scQt.getScOpenCommitteeReportDetailAttachment() : scQt
+					.getScOpenCommitteeReportAttachment(); // 37617,#25651
+			reportAttachment = isWipExistReport ? new ScOpenCommitteeReportDetailAttachment()
+					: new ScOpenCommitteeReportAttachment(); // #25651
+			
 		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 				.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
-			commReportAttachment = scQt.getScTechnicalEvaluationReportAttachment(); // 37617
-			reportAttachment = new ScTechnicalEvaluationReportAttachment();
+			commReportAttachment = isWipExistReport ? scQt.getScTechnicalEvaluationReportDetailAttachment() : scQt
+					.getScTechnicalEvaluationReportAttachment(); // 37617,#25651
+			reportAttachment = isWipExistReport ? new ScTechnicalEvaluationReportDetailAttachment()
+					: new ScTechnicalEvaluationReportAttachment(); // #25651
+			
 		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 				.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
-			commReportAttachment = scQt.getScFinancialEvaluationReportAttachment(); // 37617
-			reportAttachment = new ScFinancialEvaluationReportAttachment();
+			commReportAttachment = isWipExistReport ? scQt.getScFinancialEvaluationReportDetailAttachment() : scQt
+					.getScFinancialEvaluationReportAttachment(); // 37617,#25651
+			reportAttachment = isWipExistReport ? new ScFinancialEvaluationReportDetailAttachment()
+					: new ScFinancialEvaluationReportAttachment(); // #25651
 		}	
 		
 		// 37617 - end
