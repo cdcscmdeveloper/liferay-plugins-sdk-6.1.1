@@ -77,6 +77,7 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSupplierSystem;
 import my.ep.persistence.entity.sm.SmSvTask;
+import my.ep.persistence.entity.sm.SmSvWorker;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
@@ -605,7 +606,16 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<PmReasonDesc> selectedRecommendRejectReasonDescs;
 	private List<PmReasonDesc> selectedRejectReasonDescs;
 	private boolean showDifferenceRejection;
-	// #30974 && 37896 - END
+	// #30974 && 37896	
+	
+	// 29379 - Site Visit Grouping Enhancement -28775 - start
+	private SmSvWorker[] selectedWorkers;
+	private List<SmSvWorker> deletedWorkers;
+	// 29379 - Site Visit Grouping Enhancement -28775 - end
+	
+	// #28778 -28775 - Start
+	private boolean specialCategoryRechecked;
+	// #28778 - End
 	
 	private boolean poApproverEquityErr;//#31461-start
 	private String msgEquityErr;//#31461-end
@@ -4597,6 +4607,24 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	}
 	// #31461-end
 	
+	// 29379 - Site Visit Grouping Enhancement -28775 START
+	public SmSvWorker[] getSelectedWorkers() {
+		return selectedWorkers;
+	}
+
+	public void setSelectedWorkers(SmSvWorker[] selectedWorkers) {
+		this.selectedWorkers = selectedWorkers;
+	}
+
+	public List<SmSvWorker> getDeletedWorkers() {
+		return deletedWorkers;
+	}
+
+	public void setDeletedWorkers(List<SmSvWorker> deletedWorkers) {
+		this.deletedWorkers = deletedWorkers;
+	}
+	// 29379 - Site Visit Grouping Enhancement -28775 END
+	
 	//#34135 - START - Commit part from Redmine 29727
 	public List<SmSupplierBranch> getDisplayBranches() {
 		return displayBranches;
@@ -4606,8 +4634,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.displayBranches = displayBranches;
 	}
 	//#34135 END
+	public boolean isSpecialCategoryRechecked() {
+		return specialCategoryRechecked;
+	}
 	
-	//13362 START
+	public void setSpecialCategoryRechecked(boolean specialCategoryRechecked) {
+		this.specialCategoryRechecked = specialCategoryRechecked;
+	}
+		//13362 START
 	public List<SmBulkApplOverlapCatVO> getOverlapCategoryListMalay() {
 		return overlapCategoryListMalay;
 	}
