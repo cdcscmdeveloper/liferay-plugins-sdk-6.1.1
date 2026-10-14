@@ -80,6 +80,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.sc.common.ScWorkFlowStatus; //#35500 bug fix 2nd Oct
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMemberHistory;
@@ -880,6 +881,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 				for(ScCommitteeMember committeemember:currentCommitteeMemList){
 					if(committeemember.isSelected()){
 						localList.add(committeemember);
+						//#35500 Start
 						if (CollectionUtils.isNotEmpty(deletedCommitteeMember) && !deletedCommitteeMember.contains(committeemember)){//#35500 Fix Reopen 27th Nov
 							deletedCommitteeMember.add(committeemember);
 						}else if (CollectionUtils.isEmpty(deletedCommitteeMember)) {
@@ -888,6 +890,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 						if (!(newCommitteeMember == null || newCommitteeMember.isEmpty())) {
 							newCommitteeMember.remove(committeemember);
 						}
+						//#35500 End
 					}				
 				}
 				if(CollectionUtils.isNotEmpty(localList)){
@@ -2038,9 +2041,10 @@ if (CollectionUtils.isNotEmpty(
 				saveAction();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, mainPage);
 			}
-
-			prepareCommitteeAuditTrail(newCommitteeMembers,deletedCommitteeMembers);//28895 - 35500
+			//#35500 Start 
+			prepareCommitteeAuditTrail(newCommitteeMembers,deletedCommitteeMembers);
 			prepareCommitteeRoleModified(mapModifiedRoleCommitteeAudit);
+			//#35500 End
 		}
 	}
 
@@ -2358,19 +2362,27 @@ if (CollectionUtils.isNotEmpty(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailSO.class);
 		IAuditTrailSO auditTrailsSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.AUDIT, IAuditTrailSO.class);
+		//#35500 bug fix 2nd Oct Start
+		IQTDetailSO qtDetailSO =  BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+		//#35500 bug fix 2nd Oct End
 		
 		if ((CollectionUtils.isNotEmpty(newCommitteeMembers) || CollectionUtils.isNotEmpty(deletedCommitteeMembers)) &&
 				auditTrailsSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID)) {
 			
 			AuditTrailResDTO auditResDTO = new AuditTrailResDTO();
+			//#35500 bug fix 2nd Oct Start
+			Long docId = this.getManagedBean().getScQt().getQtId();
+			String docNo = this.getManagedBean().getScQt().getQtNo();			
+			Long userId = getUserIdSessionFromLoginId();
+			ScWorkFlowStatus scWorkFlowStatus = qtDetailSO.retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION, docId, docNo, userId);
 
 			auditResDTO.setDocTypeId(this.getManagedBean().getScQt().getProcurementMode().getParameterId());
-			auditResDTO.setDocId(this.getManagedBean().getScQt().getQtId());
-			auditResDTO.setDocNo(this.getManagedBean().getScQt().getQtNo());
-			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
-			auditResDTO.setStatusId(this.getManagedBean().getCurrentStatusId() != null ?
-					this.getManagedBean().getCurrentStatusId() : 
-					this.getManagedBean().getScQt().getCurrentWorkFlowStatus().getPmStatus().getStatusId());
+			auditResDTO.setDocId(docId);
+			auditResDTO.setDocNo(docNo);
+			auditResDTO.setCreatedBy(userId);
+			auditResDTO.setStatusId(scWorkFlowStatus.getPmStatus().getStatusId());
+			//#35500 bug fix 2nd Oct End
 			auditResDTO.setRoleCode(checkRolesForAuditTrail());
 			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_QC);
 			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_COMMITTEE);//#35500 Flag changes
@@ -2406,19 +2418,27 @@ if (CollectionUtils.isNotEmpty(
 		IQTAuditTrailSO qtAuditTrailSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailSO.class);
 		IAuditTrailSO auditTrailsSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.AUDIT, IAuditTrailSO.class);		
+				ModuleCodeConst.AUDIT, IAuditTrailSO.class);
+		// #35500 bug fix 2nd Oct Start
+		IQTDetailSO qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION,IQTDetailSO.class);
+		// #35500 bug fix 2nd Oct End
 
 		if (auditTrailsSO.isAuditConfig(QTAuditConstant.QT_CONFIG_ID) && MapUtils.isNotEmpty(committeeModifiedRole)){
 			ArrayList<AuditTrailReqDTO> auditReqList = new ArrayList<>();
 			AuditTrailResDTO auditResDTO = new AuditTrailResDTO();
-			
+			//#35500 bug fix 2nd Oct Start
+			Long docId = this.getManagedBean().getScQt().getQtId();
+			String docNo = this.getManagedBean().getScQt().getQtNo();			
+			Long userId = getUserIdSessionFromLoginId();
+			ScWorkFlowStatus scWorkFlowStatus = qtDetailSO.retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION, docId, docNo, userId);
+
 			auditResDTO.setDocTypeId(this.getManagedBean().getScQt().getProcurementMode().getParameterId());
-			auditResDTO.setDocId(this.getManagedBean().getScQt().getQtId());
-			auditResDTO.setDocNo(this.getManagedBean().getScQt().getQtNo());
-			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
-			auditResDTO.setStatusId(this.getManagedBean().getCurrentStatusId() != null ?
-					this.getManagedBean().getCurrentStatusId() : 
-					this.getManagedBean().getScQt().getCurrentWorkFlowStatus().getPmStatus().getStatusId());
+			auditResDTO.setDocId(docId);
+			auditResDTO.setDocNo(docNo);
+			auditResDTO.setCreatedBy(userId);
+			auditResDTO.setStatusId(scWorkFlowStatus.getPmStatus().getStatusId());
+			//#35500 bug fix 2nd Oct End
 			auditResDTO.setRoleCode(checkRolesForAuditTrail());
 			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_QC);
 			auditResDTO.setActionType(QTAuditConstant.AU_TYPE_MODIFY);
