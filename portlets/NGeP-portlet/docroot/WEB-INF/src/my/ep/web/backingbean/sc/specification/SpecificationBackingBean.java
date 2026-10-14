@@ -23882,7 +23882,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 						|| StringUtils.isNotBlank(inactive.toString())) {
 					inactive.append(", ");
 				}
-				inactive.append(cl.getTitle());
+				inactive.append("\u2018").append(cl.getTitle()).append("\u2019");
 			}
 		}
 
