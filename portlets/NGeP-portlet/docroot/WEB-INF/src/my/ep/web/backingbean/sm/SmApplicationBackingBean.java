@@ -15641,7 +15641,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				supplier.setLocalAuthorityId(getManagedBean().getSmSupplier()
 						.getLocalAuthorityId());
 			}
-			cleanOwnershipTypeFacilityType();	//#40368
+			cleanOwnershipTypeFacilityType();	//#40368 
 		}
 	}
 
@@ -20422,7 +20422,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			}
 			switch (ownershipType) {
 			case SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN:
-				basicCompanyFacility.setSmAddress(null);
 				basicCompanyFacility.setRentalRate(null);
 				break;
 			case SupplierManagementConst.SM_FACILITY_OWNERSHIP_RENTED:
@@ -20432,7 +20431,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			default:
 				basicCompanyFacility.setPurchaseDate(null);
 				basicCompanyFacility.setPurchasePrice(null);
-				basicCompanyFacility.setSmAddress(null);
 				basicCompanyFacility.setRentalRate(null);
 				break;
 			}
