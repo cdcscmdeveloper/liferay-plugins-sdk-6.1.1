@@ -28,6 +28,11 @@
 		<ui:param name="isPendingVerification"
 			value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_VERIFICATION}" />
 
+		<ui:remove>#29661 #41511 -start-</ui:remove>
+		<ui:param name="isProposalRender"
+			value="#{lOADetailBackingBean.isCheckProposalPortlet() or lOADetailBackingBean.isCheckEvaluationPortlet()}" />
+		<ui:remove>#29661 #41511 -end-</ui:remove>
+
 		<ui:include src="directLoaSupplierButtons.xhtml" />
 
 		<ui:include src="directLoaSupplierHeader.xhtml" />

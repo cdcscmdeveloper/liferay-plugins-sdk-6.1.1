@@ -10,7 +10,15 @@
 	<p:blockUI block=":form" widgetVar="blockWidget">
 		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	</p:blockUI>
-
+	
+	 <ui:remove>#29661 #41511 -start-</ui:remove>
+      <p:commandButton immediate="true"
+		value="#{lbl['lbl.btn.back']}"
+		action="#{directLOABackingBean.backToPrevious}"
+		style="float:left;" 
+		rendered="#{!empty directLOABackingBean.managedBean.backToPreviousPage}" />
+		<ui:remove>#29661 #41511 -end-</ui:remove>
+		
 	<table style="width: 100%">
 		<tr>
 			<td>
@@ -20,14 +28,15 @@
 					<ui:decorate
 						template="/WEB-INF/facelets/templates/claim_template.xhtml">
 						<ui:define name="outComeSection">
+						<ui:remove>#29661 #41511 -start-</ui:remove>
 						<p:commandButton value="#{lbl['lbl.btn.view.loa']}" process="@this" ajax="false" immediate="true"
-									 action="#{directLOABackingBean.downloadViewLoa}"/>
+							rendered="#{!isProposalRender}"		 action="#{directLOABackingBean.downloadViewLoa}"/>
 									 
 							<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
-								partialSubmit="true" update="@form"
+								partialSubmit="true" update="@form" rendered="#{!isProposalRender}"
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								action="#{directLOABackingBean.saveAction(true)}" />
-
+                             <ui:remove>#29661 #41511 -end-</ui:remove>
 							<c:choose>
 								<c:when test="#{!empty directLOABackingBean.managedBean.taskId}">
 									<ui:repeat var="bpmAction"
