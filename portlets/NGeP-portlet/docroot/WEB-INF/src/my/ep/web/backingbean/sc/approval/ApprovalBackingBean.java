@@ -3922,7 +3922,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	     * @param groupTabSection
 	     * @param reqDTO
 	     */
-	public void prepareQtMaintenanceAuditTrail(ScQt scQt, Long groupTabSection, QuationTenderReqDTO reqDTO) {
+	public void prepareQtMaintenanceAuditTrail(ScQt scQt, List<Long> groupTabSectionList, QuationTenderReqDTO reqDTO) {
 		IQTAuditTrailSO qtAuditTrailSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailSO.class);
 
@@ -3934,7 +3934,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		auditResDTO.setDocId(scQt.getQtId());
 		auditResDTO.setDocNo(scQt.getQtNo());
 		auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
-		if (groupTabSection != null) {// BSV Audit Trails Section
+		if (CollectionUtils.isNotEmpty(groupTabSectionList)) {// BSV Audit Trails Section
+			for (Long groupTabSection : groupTabSectionList){
 			auditResDTO.setAuGroupSectionId(groupTabSection);
 			auditResDTO.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
 			auditResDTO.setStatusId(QTStatusConst.EPV_APPROVED);
@@ -3946,6 +3947,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}		
 			AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 			auditReqList.add(auditReqDTO);
+			}
 
 			qtAuditTrailSO.insertAuditTrail(auditReqList);
 		} else if (reqDTO != null) {// DOA Audit Trails Section
