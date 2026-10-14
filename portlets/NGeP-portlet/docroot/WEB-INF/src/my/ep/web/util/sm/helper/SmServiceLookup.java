@@ -59,6 +59,7 @@ import my.ep.biz.service.sm.sst.ISupplierSstSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.biz.service.sm.supplieruseractivation.ISupplierUserActivationSO;
 import my.ep.biz.service.sm.supportingdocinquiry.ISupportingDocInquirySO;
+import my.ep.biz.service.sm.trackingdiary.ISmTrackingDiarySO;//#38885
 import my.ep.biz.service.sm.upgraderole.IUpgradeRoleSO;
 import my.ep.biz.service.sm.virtualcert.IVirtualCertSO;
 import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
@@ -275,6 +276,19 @@ public class SmServiceLookup {
 				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
 						IReviewApplicationSO.class);
 	}
+
+	//#38885 - START
+	/**
+	 * Get ISmTrackingDiarySO
+	 * 
+	 * @return ISmTrackingDiarySO
+	 */
+	public static ISmTrackingDiarySO getSmTrackingDiarySO() {
+		return (ISmTrackingDiarySO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						ISmTrackingDiarySO.class);
+	}
+	//#38885 - END
 
 	/**
 	 * Get ISmRemarksSO
