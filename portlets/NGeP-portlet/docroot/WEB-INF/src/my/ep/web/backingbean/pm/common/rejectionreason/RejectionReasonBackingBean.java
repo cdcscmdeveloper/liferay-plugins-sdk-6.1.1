@@ -331,8 +331,10 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		//#28962 - End
 
 		this.resetAuditBean(); // 35509
-		log.info("initialRejectReason - End");
+		
 		this.getManagedBean().setSelectedSourceMethodId(null);  // 39618
+		
+		log.info("initialRejectReason - End");
 	}
 	
 	/**
@@ -806,6 +808,14 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 
 			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_REASON) && selectedPmReason.getReasonId() != null) {
 				PmReason oldPmReason = retrieveReasonObjById(selectedPmReason.getReasonId());
+				// 28962 - audit 
+				if (ParameterConst.WIP_ITEM_PK7.equalsIgnoreCase(getManagedBean().getSelectedReason()
+						.getReasonCategoryCode().getParameterCode()) ||
+						ParameterConst.SPECIAL_ITEM_WITH_APPROVAL.equalsIgnoreCase(getManagedBean().getSelectedReason()
+								.getReasonCategoryCode().getParameterCode())) {
+					loadSuppType(oldPmReason);
+				}
+				// 28962 - audit
 				getManagedBean().setOldPmReason(oldPmReason);
 			}
 			/************ AUDIT #28895-35509 END *************/
@@ -2045,6 +2055,14 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		this.getManagedBean().setAuditDeleteSuppRestrictions(null);
 		
 		this.getManagedBean().setReasonApplicabilityDuplicate(Boolean.FALSE); //39618
+		
+		// 28962-Audit START
+		this.getManagedBean().setAuditAddSupplAcctType(null);
+		this.getManagedBean().setAuditUpdateSupplAcctType(null);
+		this.getManagedBean().setAuditDeleteSupplAcctType(null);
+		this.getManagedBean().setAuditAddAgency(null);
+		this.getManagedBean().setAuditDeleteAgency(null);
+		// 28962-Audit END
 	}
 	//35509 - END
 
