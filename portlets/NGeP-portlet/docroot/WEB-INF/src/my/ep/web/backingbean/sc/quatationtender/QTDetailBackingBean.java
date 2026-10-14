@@ -3447,8 +3447,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		Long qtId = scQt.getQtId();
 		
 		//#27502 -Start	
-		boolean isBpkCentralContract = false;
-		isBpkCentralContract = isBpkCentralContract(scQt);
+		boolean isBpkCentralContract = isBpkCentralContract(scQt);
 		//#27502 -End
 		
 		String taskName = this.getManagedBean().getTaskName() == null ? "" : this.getManagedBean().getTaskName();  // 25037 - note 372
@@ -3652,40 +3651,44 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					committeTabs.add(new TabBean(fcTitleName, tabType, null));
 				}
 			}
-		} else {		
-			if (isBpkCentralContract) {
-				List<TabBean> newCommitteTabs = new ArrayList<TabBean>();
-				if (!scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_QT_SUBMISSION) 
-						&& !scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL) 
-						&& !Arrays.asList(QTStatusConst.CMT_APPROVAL_GROUP).contains(scQt.getQtStatus().getStatusId())) {
-					for (TabBean t : committeTabs) {
-						if (t.getTabType().equals(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE)) {
-							newCommitteTabs.add(t);
-						} else if (t.getTabType().equals(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE)) {
-							newCommitteTabs.add(t);
-						}
-						else if (t.getTabType().equals(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE)) {//32775-start related to 27502
-							newCommitteTabs.add(t);
-						}
-						else if (t.getTabType().equals(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE)) {
-							newCommitteTabs.add(t);
-						}
-						else if (t.getTabType().equals(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE)) {
-							newCommitteTabs.add(t);
-						}//32775-End related to 27502
-					}
+		} else if (isBpkCentralContract) {
+			List<TabBean> newCommitteTabs = new ArrayList<>();
 
-					StringBuilder fcTitleLabel = new StringBuilder("lbl.ministry.finance");
-					String fcTitleName = ResourceBundleUtils.getMessage(fcTitleLabel.toString(),
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-					String tabType = SourcingConstants.COMMITTE_TYPE_MINISTRY_OF_FINANCE;
-					ScQtCommittee mofCommitte = getQtCommiteDtlsByQtIdNType(tabType, qtId);
-					newCommitteTabs.add(new TabBean(fcTitleName, tabType, mofCommitte));
+			// Check the condition for valid statuses
+			Long statusId = scQt.getQtStatus().getStatusId();
+			if (statusId.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)
+					|| statusId.equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)
+					|| Arrays.asList(QTStatusConst.CMT_APPROVAL_GROUP).contains(statusId)) {
+				return; // Exit early if the status is not valid
+			}
 
-					committeTabs = newCommitteTabs;
+			Set<String> validTabTypes = new HashSet<>();
+			validTabTypes.add(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
+			validTabTypes.add(ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE);
+			// 32775-start related to 27502
+			validTabTypes.add(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE);
+			validTabTypes.add(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE);
+			validTabTypes.add(ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE);
+			// 32775-End related to 27502
+
+			for (TabBean t : committeTabs) {
+				if (validTabTypes.contains(t.getTabType())) {
+					newCommitteTabs.add(t);
+
 				}
-			}//#27502 - End
-		}
+			}
+
+			StringBuilder fcTitleLabel = new StringBuilder("lbl.ministry.finance");
+			String fcTitleName = ResourceBundleUtils.getMessage(fcTitleLabel.toString(),
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			String tabType = SourcingConstants.COMMITTE_TYPE_MINISTRY_OF_FINANCE;
+			ScQtCommittee mofCommitte = getQtCommiteDtlsByQtIdNType(tabType, qtId);
+			newCommitteTabs.add(new TabBean(fcTitleName, tabType, mofCommitte));
+
+			committeTabs = newCommitteTabs;
+
+		}// #27502 - End
+
 		//Bug 32277 - start
 		if(committeeReadOnly){
 			this.getManagedBean().setReadOnlyCommitteeTabBean(committeTabs);
@@ -3699,21 +3702,34 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			this.getManagedBean().setScCommitteeMemberTabList(committeTabs);
 		}
 		//Bug 32277 - end
+		// #27502 - New DO MOF Role and Process - Start
 		for (TabBean tabBean : committeTabs) {
-			if ((!SourcingConstants.COMMITTE_TYPE_FINALIZATION.equals(tabBean
-					.getTabType()) && tabBean.getScQtCommittee()
-					.getScCommittee().getCommitteStatus().getStatusId()
-					.equals(QTStatusConst.CMT_COMPLETED))
-					|| (SourcingConstants.COMMITTE_TYPE_FINALIZATION
-							.equals(tabBean.getTabType())
-							&& scQt.getFinalizationCommitte() != null
-							&& scQt.getFinalizationCommitte().getParameterId() != null
-							&& scQt.getFinalizationSecratery() != null && scQt
-							.getFinalizationSecratery().getUserId() != null) || 
-							SourcingConstants.COMMITTE_TYPE_MINISTRY_OF_FINANCE.equals(tabBean.getTabType())) {//27502
+			String tabType = tabBean.getTabType();
+
+			// Condition 1: If tabType is not FINALIZATION and committee status
+			// is CMT_COMPLETED
+			boolean isTabTypeNotFinalizationAndCompleted = !SourcingConstants.COMMITTE_TYPE_FINALIZATION
+					.equals(tabType)
+					&& QTStatusConst.CMT_COMPLETED.equals(tabBean.getScQtCommittee().getScCommittee()
+							.getCommitteStatus().getStatusId());
+
+			// Condition 2: If tabType is FINALIZATION and necessary fields in
+			// scQt are set
+			boolean isFinalizationWithRequiredFields = SourcingConstants.COMMITTE_TYPE_FINALIZATION.equals(tabType)
+					&& scQt.getFinalizationCommitte() != null
+					&& scQt.getFinalizationCommitte().getParameterId() != null
+					&& scQt.getFinalizationSecratery() != null && scQt.getFinalizationSecratery().getUserId() != null;
+
+			// Condition 3: If tabType is MINISTRY_OF_FINANCE
+			boolean isMinistryOfFinance = SourcingConstants.COMMITTE_TYPE_MINISTRY_OF_FINANCE.equals(tabType);
+
+			// Combine the conditions
+			if (isTabTypeNotFinalizationAndCompleted || isFinalizationWithRequiredFields || isMinistryOfFinance) {
 				tabBean.setIcon("ui-icon-endorse");
 			}
 		}
+		// #27502 - New DO MOF Role and Process - End
+
 		if (!committeTabs.isEmpty()) {
 			// this.getManagedBean().setSelectedTabBean(committeTabs.get(0));
 			this.getManagedBean().setSelectedTabBean(
@@ -4446,8 +4462,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					.equalsIgnoreCase(taskName)) {
 				
 				//#27502 - Start
-				boolean isBpkCentralContract = false;
-				isBpkCentralContract = isBpkCentralContract(scQt);
+				boolean isBpkCentralContract  = isBpkCentralContract(scQt);
 				if (isBpkCentralContract) {	
 					committeSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);

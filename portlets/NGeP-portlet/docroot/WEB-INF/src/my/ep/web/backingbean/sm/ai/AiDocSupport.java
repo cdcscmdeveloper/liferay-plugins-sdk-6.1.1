@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -26,12 +29,14 @@ import org.primefaces.json.JSONObject;
 
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.dto.pm.common.city.CityReqDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.division.DivisionReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.helper.EntityHelper;
+import my.ep.persistence.entity.ai.AIApiResponse;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
@@ -54,6 +59,7 @@ public final class AiDocSupport {
 
 	private static final String BR = "<br/>";
 	private static final String LBL_DOC_INVALID = "lbl.sm.ai.doc.invalid";
+	private static final String LBL_AI_UNAVAILABLE = "lbl.sm.ai.unavailable";
 	private static final String AI_ONOFF = EpPropertiesUtils.getInstance().getProperty("google.doc.ai.onoff");
 	private static final String AI_BANK_OCR = EpPropertiesUtils.getInstance().getProperty("google.doc.bank.co.name.check.onoff");
 	// this filename will always go to API
@@ -206,6 +212,11 @@ public final class AiDocSupport {
 		private static final String PROPERTIES = "properties";
 		private static final String NORM_VALUE = "normalizedValue";
 
+		private static String optString(JSONObject obj, String key, String defaultValue) {
+			Object o = obj.opt(key);
+			return o == null || JSONObject.NULL.equals(o) ? defaultValue : o.toString();
+		}
+
 		private static final double DEFAULT_MIN_CONFIDENCE = 0.8;
 		public static final double MIN_CONFIDENCE = resolveMinConfidence();
 
@@ -239,7 +250,7 @@ public final class AiDocSupport {
 				return null;
 			}
 			try {
-				JSONObject root = new JSONObject(jsonContent);
+				JSONObject root = new JSONObject(toDbChars(jsonContent));
 				if (!root.has("data")) {
 					log.warn("  No data found in JSON");
 					return null;
@@ -260,10 +271,36 @@ public final class AiDocSupport {
 					return null;
 				}
 				return fields;
-			} catch (JSONException | NullPointerException e) {
+			} catch (JSONException | NullPointerException | NumberFormatException e) {
 				log.error(" Error parsing JSON", e);
 			}
 			return null;
+		}
+
+		// the DB is WE8MSWIN1252: what it can't store becomes the 0xBF it would store, raw or backslash-u escaped
+		private static String toDbChars(String json) {
+			CharsetEncoder dbCharset = Charset.forName("windows-1252").newEncoder();
+			StringBuilder sb = new StringBuilder(json.length());
+			int i = 0;
+			while (i < json.length()) {
+				char c = json.charAt(i);
+				if (c == '\\' && i + 1 < json.length()) {
+					char next = json.charAt(i + 1);
+					if (next == 'u' && i + 5 < json.length()
+							&& !dbCharset.canEncode((char) Integer.parseInt(json.substring(i + 2, i + 6), 16))) {
+						sb.append('\u00bf');
+						i += 6;
+					} else {
+						// any other escape is copied whole, so an escaped backslash is not read as an escape
+						sb.append(c).append(next);
+						i += 2;
+					}
+				} else {
+					sb.append(dbCharset.canEncode(c) ? c : '\u00bf');
+					i++;
+				}
+			}
+			return sb.toString();
 		}
 		
 		/**
@@ -280,18 +317,86 @@ public final class AiDocSupport {
 		}
 		
 		/**
+		 * The AI never read this file: unreachable, an error status, or a body that does not parse.
+		 * 415/422 is the AI rejecting the document, which is a wrong document, not an outage.
+		 * Icons and tooltips ask the DTO built by toTenancy/toEpf/toBankDoc instead; only the upload
+		 * messages read it directly.
+		 */
+		static boolean isUnavailable(Long apiId, Integer status, String jsonContent) {
+			if (status != null && (status == 415 || status == 422)) {
+				return false;
+			}
+			return status == null || status != 200 || !isParseable(apiId, jsonContent);
+		}
+
+		private static boolean isParseable(Long apiId, String jsonContent) {
+			try {
+				new JSONObject(toDbChars(jsonContent));
+				return true;
+			} catch (JSONException | NullPointerException | NumberFormatException e) {
+				log.error("AI_API_RESPONSE " + apiId + " unparseable: " + e);
+				return false;
+			}
+		}
+
+		// one stored response into its DTO, the outage folded in, so the DTO alone answers label and verdict
+		public static AiTenancyDTO toTenancy(AIApiResponse res) {
+			return toTenancy(res.getApiResponseId(), res.getResponseStatus(), res.getJsonResponse());
+		}
+
+		public static AiTenancyDTO toTenancy(Long apiId, Integer status, String jsonContent) {
+			JSONArray fields = parseFields(jsonContent);
+			AiTenancyDTO dto;
+			if (fields == null) {
+				dto = new AiTenancyDTO();
+				dto.setError(true);
+			} else {
+				dto = toTenancy(apiId, fields);
+			}
+			if (isUnavailable(apiId, status, jsonContent)) {
+				dto.setUnavailable(true);
+			}
+			return dto;
+		}
+
+		public static AiEpfResultDTO toEpf(AIApiResponse res) {
+			return toEpf(res.getApiResponseId(), res.getResponseStatus(), res.getJsonResponse());
+		}
+
+		public static AiEpfResultDTO toEpf(Long apiId, Integer status, String jsonContent) {
+			AiEpfResultDTO dto = toEpf(apiId, parseFields(jsonContent));
+			dto.setApiId(apiId);
+			if (isUnavailable(apiId, status, jsonContent)) {
+				dto.setUnavailable(true);
+			}
+			return dto;
+		}
+
+		public static AiBankDocDTO toBankDoc(AIApiResponse res) {
+			return toBankDoc(res.getApiResponseId(), res.getResponseStatus(), res.getJsonResponse());
+		}
+
+		public static AiBankDocDTO toBankDoc(Long apiId, Integer status, String jsonContent) {
+			AiBankDocDTO dto = toBankDoc(apiId, parseFields(jsonContent));
+			if (isUnavailable(apiId, status, jsonContent)) {
+				dto.setUnavailable(true);
+			}
+			return dto;
+		}
+
+		/**
 		 * Tenancy object
 		 * @param entities
 		 * @return
 		 */
-		public static AiTenancyDTO toTenancy(JSONArray entities) {
+		public static AiTenancyDTO toTenancy(Long apiId, JSONArray entities) {
 			AiTenancyDTO dto = new AiTenancyDTO();
 			try {
 				for (int i = 0; i < entities.length(); i++) {
 					JSONObject entity = entities.getJSONObject(i);
 					String type = entity.optString("type", "");
-					String text = entity.optString(VALUE, "");
-					String value = entity.optString(NORM_VALUE, text);
+					String text = optString(entity, VALUE, "");
+					String value = optString(entity, NORM_VALUE, text);
 					double conf = entity.optDouble(CONFIDENCE, 0.0);
 
 					if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text) || conf < MIN_CONFIDENCE) {
@@ -299,22 +404,33 @@ public final class AiDocSupport {
 					}
 					value = value.trim();
 					if ("landlords_name".equals(type)) {
-						dto.setLandlordsName(value);
+						dto.setLandlordsName(StringUtils.left(value, 50).trim());	// form maxlength; OWNER_NAME is 200
 					} else if ("tenants_name".equals(type)) {
 						dto.setTenantsName(value);
 					} else if ("monthly_rental".equals(type)) {
-						dto.setMonthlyRental(new BigDecimal(value));
+						try {
+							// the rental input takes 2 decimals within the SM amount range
+							BigDecimal rental = new BigDecimal(value).setScale(2, RoundingMode.HALF_UP);
+							if (rental.doubleValue() >= SupplierManagementConst.MIN_AMT_RANGE
+									&& rental.doubleValue() <= SupplierManagementConst.MAX_AMT_RANGE) {
+								dto.setMonthlyRental(rental);
+							} else {
+								log.error("Error TenancyEntity monthly_rental out of range '" + value + "'");
+							}
+						} catch (NumberFormatException e) {
+							log.error("Error TenancyEntity monthly_rental '" + value + "'");
+						}
 					} else if ("premises_address".equals(type)) {
 						dto.setPremisesAddress(value);
 						setTenancyAddress(dto, entity.optJSONObject("addressComponents"));
 					}
 				}
-			} catch (JSONException | NumberFormatException e) {
-				log.error("Error TenancyEntity", e);
-				dto.setError(true);
+			} catch (JSONException e) {
+				log.error("Error TenancyEntity " + apiId, e);
+				dto.setUnavailable(true);
 			} catch (NullPointerException e) {
-				log.error("Error TenancyEntity-NPE");
-				dto.setError(true);
+				log.error("Error TenancyEntity-NPE " + apiId);
+				dto.setUnavailable(true);
 			}
 			if (dto.getLandlordsName() == null && dto.getTenantsName() == null
 					&& dto.getMonthlyRental() == null && dto.getPremisesAddress() == null) {
@@ -325,12 +441,15 @@ public final class AiDocSupport {
 
 		private static void setTenancyAddress(AiTenancyDTO dto, JSONObject addr) {
 			if (addr != null) {
-				dto.setPostcode(addr.optString("postcode", "").trim());
-				String fullAddr = addr.optString("normalized_Address", "").trim();
-				truncateAddressAtPostcode(dto, fullAddr, dto.getPostcode());
-				dto.setCodeCity(addr.optString("city_code", "").trim());
-				setTenancyArea(dto, addr.optString("state_code", "").trim(),
-						addr.optString("district_code", "").trim());
+				// form maxlength; POSTCODE is 10, ADDRESS_1/2/3 are 255
+				// the postcode input accepts 5 digits only; the address is cut at the postcode as printed
+				String postcode = optString(addr, "postcode", "").trim();
+				dto.setPostcode(StringUtils.left(postcode.replaceAll("[^0-9]", ""), 5));
+				String fullAddr = optString(addr, "normalized_Address", "").trim();
+				truncateAddressAtPostcode(dto, fullAddr, postcode);
+				dto.setCodeCity(optString(addr, "city_code", "").trim());
+				setTenancyArea(dto, optString(addr, "state_code", "").trim(),
+						optString(addr, "district_code", "").trim());
 			}
 		}
 
@@ -392,7 +511,7 @@ public final class AiDocSupport {
 
 		// Truncate the normalized address at the postcode and split into addr1/2/3.
 		private static void truncateAddressAtPostcode(AiTenancyDTO dto, String addr, String postcode) {
-			dto.setAddr1(addr);
+			dto.setAddr1(StringUtils.left(addr, 100).trim());
 			dto.setAddr2("");
 			dto.setAddr3("");
 			if (StringUtils.isEmpty(addr) || StringUtils.isEmpty(postcode)) {
@@ -410,13 +529,13 @@ public final class AiDocSupport {
 			String[] parts = pattern.split(result, 3);
 
 			if (parts.length > 0) {
-				dto.setAddr1(parts[0].trim());
+				dto.setAddr1(StringUtils.left(parts[0].trim(), 100).trim());
 			}
 			if (parts.length > 1) {
-				dto.setAddr2(parts[1].trim());
+				dto.setAddr2(StringUtils.left(parts[1].trim(), 100).trim());
 			}
 			if (parts.length > 2) {
-				dto.setAddr3(parts[2].trim());
+				dto.setAddr3(StringUtils.left(parts[2].trim(), 100).trim());
 			}
 		}
 		
@@ -425,9 +544,12 @@ public final class AiDocSupport {
 		 * @param entities
 		 * @return
 		 */
-		public static AiEpfResultDTO toEpf(JSONArray entities) {
+		public static AiEpfResultDTO toEpf(Long apiId, JSONArray entities) {
 			AiEpfResultDTO dto = new AiEpfResultDTO();
 			List<AiEpfResultDTO.AiEmployeeDTO> employees = new ArrayList<>();
+			if (entities == null) {
+				return dto;
+			}
 			try {
 				for (int i = 0; i < entities.length(); i++) {
 					JSONObject entityObj = entities.getJSONObject(i);
@@ -435,15 +557,22 @@ public final class AiDocSupport {
 					JSONArray properties = entityObj.getJSONArray(PROPERTIES);
 
 					if (entityId.startsWith("employee-")) {
-						employees.add(toEmployee(properties));
+						AiEpfResultDTO.AiEmployeeDTO emp = toEmployee(properties);
+						// a row the AI could not read a name, IC/passport or EPF No. for is dropped
+						if (StringUtils.isNotBlank(emp.getEmployeeName()) && StringUtils.isNotBlank(emp.getIdNo())
+								&& StringUtils.isNotBlank(emp.getKwspNumber())) {
+							employees.add(emp);
+						}
 					} else if (entityId.startsWith("employer-")) {
 						dto.setEmployerName(toEmployerName(properties));
 					}
 				}
 			} catch (JSONException e) {
-				log.error("Error EPFEntity", e);
+				log.error("Error EPFEntity " + apiId, e);
+				dto.setUnavailable(true);
 			} catch (NullPointerException e) {
-				log.error("Error EPFEntity-NPE");
+				log.error("Error EPFEntity-NPE " + apiId);
+				dto.setUnavailable(true);
 			}
 			dto.setEmployees(employees);
 			return dto;
@@ -454,24 +583,39 @@ public final class AiDocSupport {
 			for (int i = 0; i < properties.length(); i++) {
 				JSONObject property = properties.getJSONObject(i);
 				String type = property.optString("type", "");
-				String text = property.optString(VALUE, "");
-				String value = property.optString(NORM_VALUE, text);
+				String text = optString(property, VALUE, "");
+				String value = optString(property, NORM_VALUE, text);
 				double conf = property.optDouble(CONFIDENCE, 0.0);
 				if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text) || conf < MIN_CONFIDENCE) {
 					continue;
 				}
 				value = value.trim();
 				if ("KWSP_number".equals(type)) {
-					emp.setKwspNumber(value);
+					// the EPF No. input accepts digits only
+					emp.setKwspNumber(StringUtils.left(value.replaceAll("[^0-9]", ""), 10));
 				} else if ("NRIC_number".equals(type)) {
 					// the statement prints the NRIC dashed or spaced; eP stores the 12 digits
-					emp.setNricNumber(AiDocValidator.normalizeNric(value));
+					String nric = StringUtils.left(AiDocValidator.normalizeNric(value), 12);
+					// IC wins over passport, whichever the AI sends first
+					if (StringUtils.isNotBlank(nric)) {
+						emp.setIdNo(nric);
+						emp.setPassport(false);
+					}
+				} else if ("Passport_number".equals(type)) {
+					setPassport(emp, StringUtils.left(AiDocValidator.normalizeIdNo(value), 12));
 				} else if ("employee_name".equals(type)) {
 					// the OCR keeps the statement's own line breaks inside a name
-					emp.setEmployeeName(AiDocValidator.normalizePersonName(value));
+					emp.setEmployeeName(StringUtils.left(AiDocValidator.normalizePersonName(value), 80).trim());
 				}
 			}
 			return emp;
+		}
+
+		private static void setPassport(AiEpfResultDTO.AiEmployeeDTO emp, String passport) {
+			if (StringUtils.isNotBlank(passport) && (StringUtils.isBlank(emp.getIdNo()) || emp.isPassport())) {
+				emp.setIdNo(passport);
+				emp.setPassport(true);
+			}
 		}
 
 		private static String toEmployerName(JSONArray properties) throws JSONException {
@@ -479,8 +623,8 @@ public final class AiDocSupport {
 			for (int i = 0; i < properties.length(); i++) {
 				JSONObject property = properties.getJSONObject(i);
 				String type = property.optString("type", "");
-				String text = property.optString(VALUE, "");
-				String value = property.optString(NORM_VALUE, text);
+				String text = optString(property, VALUE, "");
+				String value = optString(property, NORM_VALUE, text);
 				double conf = property.optDouble(CONFIDENCE, 0.0);
 				if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text) || conf < MIN_CONFIDENCE) {
 					continue;
@@ -511,11 +655,11 @@ public final class AiDocSupport {
 				// deduped in validateBank, so nothing is scored until the duplicates are gone
 				dto.setBankStatements(parsed);
 			} catch (JSONException e) {
-				log.error("Error DocEntity", e);
-				dto.setError(true);
+				log.error("Error DocEntity " + apiId, e);
+				dto.setUnavailable(true);
 			} catch (NullPointerException e) {
-				log.error("Error DocEntity-NPE");
-				dto.setError(true);
+				log.error("Error DocEntity-NPE " + apiId);
+				dto.setUnavailable(true);
 			}
 			return dto;
 		}
@@ -527,8 +671,8 @@ public final class AiDocSupport {
 			for (int i = 0; i < properties.length(); i++) {
 				JSONObject property = properties.getJSONObject(i);
 				String type = property.optString("type", "");
-				String text = property.optString(VALUE, "");
-				String value = property.optString(NORM_VALUE, text);
+				String text = optString(property, VALUE, "");
+				String value = optString(property, NORM_VALUE, text);
 				double conf = property.optDouble(CONFIDENCE, 0.0);
 				if (StringUtils.isEmpty(type) || StringUtils.isEmpty(text) || conf < MIN_CONFIDENCE) {
 					continue;
@@ -629,12 +773,11 @@ public final class AiDocSupport {
 
 		public static final double MIN_BANK_MATCH_SCORE = 0.4;
 		public static final double MIN_BANK_MATCH_MARGIN = 0.15;
-		public static final double MIN_TEXT_MATCH_SCORE = 0.6;
 
 		/**
 		 * Verify a tenancy extraction against the rental info keyed in Premises Type; sets the per-field verdict
 		 * flags on the DTO. A field absent from either side is excluded from the verdict (left valid). Landlord's
-		 * Name / Company / Monthly Rental match exactly; the address is matched on tokens.
+		 * Name / Company / Monthly Rental / Address match exactly.
 		 */
 		public static void validateTenancy(AiTenancyDTO te, String landlordName, String companyName,
 				BigDecimal rentalRate, SmAddress addr) {
@@ -665,8 +808,7 @@ public final class AiDocSupport {
 			}
 			String suppAddr = joinParts(addr.getAddress1(), addr.getAddress2(), addr.getAddress3());
 			String jsonAddr = joinParts(te.getAddr1(), te.getAddr2(), te.getAddr3());
-			double score = tokenSimilarity(suppAddr, jsonAddr);
-			if (score < MIN_TEXT_MATCH_SCORE) {
+			if (!normalizedEquals(suppAddr, jsonAddr)) {
 				return;
 			}
 			te.setValidAddress(true);
@@ -901,6 +1043,19 @@ public final class AiDocSupport {
 		}
 
 		/**
+		 * Personnel identity key for an IC or a passport: upper-cased letters and digits only. An IC comes
+		 * out the same as {@link #normalizeNric}; a passport keeps its letters.
+		 * @param idNo
+		 * @return empty when there is nothing left
+		 */
+		public static String normalizeIdNo(String idNo) {
+			if (StringUtils.isBlank(idNo)) {
+				return "";
+			}
+			return idNo.toUpperCase().replaceAll("[^A-Z0-9]", "");
+		}
+
+		/**
 		 * Collapse every run of whitespace - including the line breaks the OCR keeps inside a
 		 * name - to one space, so a name reads the same however the statement printed it.
 		 * @param name
@@ -947,24 +1102,6 @@ public final class AiDocSupport {
 				}
 			}
 			return sb.toString().trim();
-		}
-
-		/**
-		 * Share of tokens the two strings have in common, for free text with no reference list behind it.
-		 * @param st1
-		 * @param st2
-		 * @return 0.0 when either side has no tokens
-		 */
-		public static double tokenSimilarity(String st1, String st2) {
-			Set<String> shared = new HashSet<>(tokenize(st1));
-			Set<String> other = new HashSet<>(tokenize(st2));
-			if (shared.isEmpty() || other.isEmpty()) {
-				return 0.0;
-			}
-			Set<String> union = new HashSet<>(shared);
-			union.addAll(other);
-			shared.retainAll(other);
-			return (double) shared.size() / union.size();
 		}
 
 		// Skim Perbankan Islam entries are separate legal entities, so they never match a conventional name.
@@ -1159,6 +1296,7 @@ public final class AiDocSupport {
 		private List<AiEmployeeDTO> employees = new ArrayList<>();
 
 		private boolean validEmployerName = true;
+		private boolean unavailable;
 
 		public Long getApiId() {
 			return apiId;
@@ -1173,6 +1311,9 @@ public final class AiDocSupport {
 		 * employee rows carry no verdict of their own and are not rendered here.
 		 */
 		public String getLabel() {
+			if (unavailable) {
+				return AiDocParser.label(LBL_AI_UNAVAILABLE);
+			}
 			// nothing mapped out of this file, same verdict as Bank and Tenancy report
 			if (employerName == null && getEmployees().isEmpty()) {
 				return AiDocParser.label(LBL_DOC_INVALID);
@@ -1189,12 +1330,28 @@ public final class AiDocSupport {
 			return sb.toString();
 		}
 
+		// 1-ok, 2-wrong or no employer name, 3-the AI never read the file
+		public int getVerdict() {
+			if (unavailable) {
+				return 3;
+			}
+			return validEmployerName ? 1 : 2;
+		}
+
 		public boolean isValidEmployerName() {
 			return validEmployerName;
 		}
 
 		public void setValidEmployerName(boolean validEmployerName) {
 			this.validEmployerName = validEmployerName;
+		}
+
+		public boolean isUnavailable() {
+			return unavailable;
+		}
+
+		public void setUnavailable(boolean unavailable) {
+			this.unavailable = unavailable;
 		}
 
 		public String getEmployerName() {
@@ -1221,8 +1378,26 @@ public final class AiDocSupport {
 			private static final long serialVersionUID = 1L;
 
 			private String kwspNumber;
-			private String nricNumber;
+			// IC or passport, as SM_PERSONNEL.IDENTIFICATION_NO; passport says which
+			private String idNo;
+			private boolean passport;
 			private String employeeName;
+
+			public String getIdNo() {
+				return idNo;
+			}
+
+			public void setIdNo(String idNo) {
+				this.idNo = idNo;
+			}
+
+			public boolean isPassport() {
+				return passport;
+			}
+
+			public void setPassport(boolean passport) {
+				this.passport = passport;
+			}
 
 			public String getKwspNumber() {
 				return kwspNumber;
@@ -1230,14 +1405,6 @@ public final class AiDocSupport {
 
 			public void setKwspNumber(String kwspNumber) {
 				this.kwspNumber = kwspNumber;
-			}
-
-			public String getNricNumber() {
-				return nricNumber;
-			}
-
-			public void setNricNumber(String nricNumber) {
-				this.nricNumber = nricNumber;
 			}
 
 			public String getEmployeeName() {
@@ -1278,9 +1445,13 @@ public final class AiDocSupport {
 		private boolean validAddress;
 
 		private boolean error;
+		private boolean unavailable;
 
 		// Field labels from the common bundle (locale-sensitive at render time).
 		public String getLabel() {
+			if (this.unavailable) {
+				return AiDocParser.label(LBL_AI_UNAVAILABLE);
+			}
 			if (this.error) {
 				return AiDocParser.label(LBL_DOC_INVALID);
 			}
@@ -1288,16 +1459,21 @@ public final class AiDocSupport {
 			appendField(sb, "lbl.cm.company.name", tenantsName, validTenantsName);
 			appendField(sb, "lbl.sm.facility.landLordName", landlordsName, validLandlordsName);
 			appendField(sb, "lbl.sm.facility.monthRent", monthlyRental, validMonthlyRental);
-			appendField(sb, "lbl.sm.facility.address", premisesAddress, validAddress);
+			appendField(sb, "lbl.sm.companyaddress", premisesAddress, validAddress);
 			return sb.toString();
 		}
 
-		// One labelled field row: a green tick when valid, red cross wrapped in red when not; skips null values.
+		// One labelled field row: a green tick when valid, red cross wrapped in red when not, and a
+		// darkgoldenrod warning naming the field the OCR read nothing into, same as Bank.
 		private void appendField(StringBuilder sb, String labelKey, Object value, boolean valid) {
+			String label = AiDocParser.label(labelKey);
 			if (value == null) {
+				sb.append("<span style='color: darkgoldenrod;'>").append("&#x26A0; ").append(label)
+						.append(": ").append(AiDocParser.label("lbl.sm.ai.doc.notextracted"))
+						.append(BR).append("</span>");
 				return;
 			}
-			String s = AiDocParser.label(labelKey) + ": " + value + BR;
+			String s = label + ": " + value + BR;
 			if (!valid) {
 				sb.append("<span style='color: red;'>").append("&#x2717; ").append(s).append("</span>");
 			} else {
@@ -1308,6 +1484,20 @@ public final class AiDocSupport {
 		public boolean hasError() {
 			return this.error || !this.validLandlordsName || !this.validMonthlyRental
 					|| !this.validTenantsName || !this.validAddress;
+		}
+
+		// read only partly: a field the OCR missed, nothing contradicting; the caller tests hasError() first
+		public boolean hasWarning() {
+			return !this.error && (landlordsName == null || tenantsName == null || monthlyRental == null
+					|| premisesAddress == null);
+		}
+
+		// 1-ok, 2-mismatch or wrong document, 3-read only partly; the AI never reading it warns, never blocks
+		public int getVerdict() {
+			if (unavailable) {
+				return 3;
+			}
+			return hasError() ? 2 : hasWarning() ? 3 : 1;
 		}
 
 		public String getLandlordsName() {
@@ -1453,6 +1643,14 @@ public final class AiDocSupport {
 		public void setError(boolean error) {
 			this.error = error;
 		}
+
+		public boolean isUnavailable() {
+			return unavailable;
+		}
+
+		public void setUnavailable(boolean unavailable) {
+			this.unavailable = unavailable;
+		}
 	}
 
 	/**
@@ -1466,6 +1664,7 @@ public final class AiDocSupport {
 		private Long apiId;
 		private List<AiBankStatementDTO> bankStatements = new ArrayList<>();
 		private boolean error;
+		private boolean unavailable;
 
 		public Long getApiId() {
 			return apiId;
@@ -1491,8 +1690,19 @@ public final class AiDocSupport {
 			this.error = error;
 		}
 
+		public boolean isUnavailable() {
+			return unavailable;
+		}
+
+		public void setUnavailable(boolean unavailable) {
+			this.unavailable = unavailable;
+		}
+
 		public String getLabel() {
 			StringBuilder sb = new StringBuilder();
+			if (this.unavailable) {
+				return AiDocParser.label(LBL_AI_UNAVAILABLE);
+			}
 			if (this.error) {
 				return AiDocParser.label(LBL_DOC_INVALID);
 			}
@@ -1538,6 +1748,14 @@ public final class AiDocSupport {
 				}
 			}
 			return false;
+		}
+
+		// 1-ok, 2-mismatch or wrong document, 3-read only partly; the AI never reading it warns, never blocks Declare
+		public int getVerdict() {
+			if (unavailable) {
+				return 3;
+			}
+			return hasError() ? 2 : hasWarning() ? 3 : 1;
 		}
 
 		/**

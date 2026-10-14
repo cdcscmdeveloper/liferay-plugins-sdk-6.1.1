@@ -1874,6 +1874,7 @@ public class SmApplicationBackingBean extends
 		
 		getManagedBean().setCurrentPageType(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
+		getManagedBean().setTabActiveIndex(getManagedBean().getEditVO().isDisciplinary() ? 4 : 0);	//#40112
 		if (SmCommonUtil.isCollectionEmpty(smAppl.getSmFacilities())
 				&& !smAppl.getApplType().equalsIgnoreCase(
 						ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
@@ -4265,7 +4266,8 @@ public class SmApplicationBackingBean extends
 					SmApplicationUtil
 							.handleShowOrHideFacilityPanels(getManagedBean());
 					//#28775 - start
-					if (getManagedBean().isSupplierUser()) {
+					if (getManagedBean().getSmAppl().getPmStatus() != null
+							&& getManagedBean().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION) {
 						getManagedBean().getSmAppl().setSiteVisitGroup(true);
 					}
 					//#28775 - end
@@ -7438,7 +7440,8 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSelectedWorkShopFacility().setSmSvWorkers(new ArrayList<SmSvWorker>());
 		}
 		getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
-		if (getManagedBean().isSupplierUser()) {
+		if (getManagedBean().getSmAppl().getPmStatus() != null
+				&& getManagedBean().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION) {
 			getManagedBean().getSmAppl().setSiteVisitGroup(true);
 		}
 		// 29379 - Site Visit Grouping Enhancement -28775 - end
@@ -8342,6 +8345,13 @@ public class SmApplicationBackingBean extends
 					: getManagedBean().getSelectedShareHolder().getEmail();
 			SmCommonUtil.checkEmailDomainWithExceptionMsg(getManagedBean()
 					.getSelectedShareHolder().getName(), email);
+			// #28720 Start
+			if (!getManagedBean().isDisableIcEmail() && (email.contains("@yahoo.com") || email.contains("@ymail.com") || email.contains("@rocketmail.com"))) {
+				getManagedBean().getSelectedShareHolder().setEmail("");
+				RequestContext.getCurrentInstance().execute("emailPopUpWidgetVar.show()");
+				return;
+			}
+			// #28720 End
 		}
 
 		// if not authorized, clear justification
@@ -8623,8 +8633,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	//#40112 - start
-	// retriveLatestApplAfterUpdate() swaps in a fresh appl graph, so every @Transient AI field is
-	// null again; re-derive them here so no caller has to remember.
+	// retriveLatestApplAfterUpdate() swaps in a fresh appl graph, so need to set AI fields again
 	private void reseedAiState() {
 		String pageType = getManagedBean().getCurrentPageType();
 		if (!getManagedBean().isSupplierUser() || pageType == null) {
@@ -8637,17 +8646,17 @@ public class SmApplicationBackingBean extends
 			}
 		} else if (SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL.equalsIgnoreCase(pageType)) {
 			SmAIDocBackingBean.loadEpfDocs(getManagedBean().getSmAppl());
-			if (getManagedBean().isAiEnabled()){
-				SmAIDocBackingBean.validateEPF(getManagedBean().getSmAppl());
-			}
 		} else if (SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS.equalsIgnoreCase(pageType)) {
 			SmAIDocBackingBean.attachPendingAiFiles(getManagedBean().getSmAppl());
 			getManagedBean().setAiEnabled(SmAIDocBackingBean.initAiState(getManagedBean().getSmAppl()));
 		}
+		// a task-list re-open resets the page type to BASIC but leaves the personnel tab showing
+		if (getManagedBean().isAiEnabled()
+				&& !SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY.equalsIgnoreCase(pageType)){
+			SmAIDocBackingBean.validateEPF(getManagedBean().getSmAppl());
+		}
 	}
-	//#40112 - end
-
-	//#40112 - start
+	
 	// the appl graph was just replaced, so a selectedShareHolder kept from the previous read is
 	// detached; merging it on the next save fails with an OptimisticLockException
 	private void reattachSelectedShareHolder() {
@@ -10240,7 +10249,10 @@ public class SmApplicationBackingBean extends
 		validateNoChangesBeenMadeToApplication();
 		//#28775 - Site Grouping Enhancement
 		validateAllWorkshops();
-		getManagedBean().getSmAppl().setSiteVisitGroup(true);
+		if (getManagedBean().getSmAppl().getPmStatus() != null
+				&& getManagedBean().getSmAppl().getPmStatus().getStatusId() == SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION) {
+			getManagedBean().getSmAppl().setSiteVisitGroup(true);
+		}
 		//#28775 end
 
 		// try {
@@ -18644,7 +18656,7 @@ public class SmApplicationBackingBean extends
 	//#31407 - START
 	public void checkBeforeSubmit() {
 		//#40112 - start
-		if (getManagedBean().isAiEnabled() && SmAIDocBackingBean.isBankAiMismatch(getManagedBean().getSmAppl(), true)) {
+		if (isAiBlockDeclare(true)) {
 			return;
 		}
 		//#40112 - end
@@ -20233,7 +20245,11 @@ public class SmApplicationBackingBean extends
 	}
 
 	public boolean isAiBlockDeclare() {
-		return getManagedBean().isAiEnabled() && SmAIDocBackingBean.isBankAiMismatch(getManagedBean().getSmAppl(), false);
+		return isAiBlockDeclare(false);
+	}
+
+	private boolean isAiBlockDeclare(boolean emitMessages) {
+		return getManagedBean().isAiEnabled() && SmAIDocBackingBean.isBankAiMismatch(getManagedBean().getSmAppl(), emitMessages);
 	}
 	//40112 - end
 	

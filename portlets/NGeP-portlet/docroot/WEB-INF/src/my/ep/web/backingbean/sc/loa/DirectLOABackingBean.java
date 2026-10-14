@@ -128,6 +128,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
@@ -5766,8 +5767,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				// #29766 Start Vinod
 				boolean isQTTypePK7Inactive = checkQTTypeItemPK7Selected();
 				if (isQTTypePK7Inactive) {
-					RequestContext.getCurrentInstance().update(QTConstants.UPDATE_REVISE_FOR_PK7_ID);
-					RequestContext.getCurrentInstance().execute(QTConstants.REVISE_FOR_PK7_POPUP);
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									this.getManagedBean().getAlertForInactivePK7()));
 					return;
 				}
 				// #29766 End Vinod
@@ -5850,9 +5853,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			ScActorReqDTO actorReqDTO=new ScActorReqDTO();
 			actorSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScActorSO.class);
 			reqDTO.setScLoa(this.getManagedBean().getScLoa());
-			// #29766 Start Vinod.
-			boolean autoRevise = this.getManagedBean().isAutoRevise();
-			// #29766 End Vinod.
 			//#26474 - start
 			if(getManagedBean().getContractSignerUser() != null){
 				reqDTO.getScLoa().setContractSigner(getManagedBean().getContractSignerUser());
@@ -5928,16 +5928,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 							case ParameterConst.PROCUREMENT_MODE_TENDER :	successMessage(MessageConst.INFO_700078,param);
 																				break;
 							case ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO :	
-																				// #29766 Start Vinod.
-																				if (StringUtils.equalsIgnoreCase(outcome,
-																						BpmOutcomeConst.BPM_REVISE) && autoRevise) {
-																					successMessage(MessageConst.INFO_700009,
-																							ParameterTypeConst.DOCUMENT_TYPES,
-																							ParameterConst.DOCTYPE_LETTER_OF_AWARD,
-																							reqDTO.getScLoa().getLoaNo(), Boolean.TRUE);
-																					break;
-																				}
-																				// #29766 End Vinod.
 																				if(null!=loaProcurementMode && loaProcurementMode.getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION)){
 																					successMessage(MessageConst.INFO_700077,param);
 																				}else if(loaProcurementMode != null && loaProcurementMode.getParameterCode().equals(ParameterConst.PROCUREMENT_MODE_TENDER)){
@@ -9952,6 +9942,22 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			sb.append(overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt()));
 			sb.append("^4");
 		}
+		// @asyrafhaziq #27502 - New DO MOF Role and Process - Start
+		if (scLoa.getContractType().getParameterType().equals(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+
+			sb.append("|pmUserOrgs.pmOrgProfile.bpk^");
+			sb.append(true);
+			sb.append("^1");
+
+			PmZone zone = SmCommonUtil.getInstance().getUserZone();
+			if (zone != null) {
+
+				sb.append("|pmUserOrgs.pmOrgProfile.pmZone.zoneId^");
+				sb.append(zone.getZoneId());
+			}
+		}
+		// @asyrafhaziq #27502 - New DO MOF Role and Process - End
+
 		return sb.toString();
 	}
 
@@ -14919,6 +14925,39 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 	}
 	
+	// 29661 && 41511 -start-
+	/**
+	 * supplier acknowledgement view without a bpm task.
+	 * 
+	 * @param sourceId
+	 * @param loaId
+	 * @param previousPageUrl
+	 */
+	public void viewSupplierLoaDetails(Long sourceId, Long loaId,
+			String previousPageUrl) {
+		debugLogger("viewSupplierLoaDetails");
+
+		try {
+			getManagedBean().setSourceId(sourceId);
+			getManagedBean().setBackToPreviousPage(previousPageUrl);
+			getManagedBean().setReadOnly(true);
+
+			getSupplierDeatilsByLoaId(loaId);
+			setDisciplinaryAction(this.getManagedBean().getScLoa());
+			getSmSupplierCategory(this.getManagedBean().getScLoa());
+			this.getManagedBean().setValidatewitness(Boolean.TRUE);
+			this.getManagedBean().setDownloadLOADisabled(false);
+			this.getManagedBean().setReadOnlyLOADownload(false);
+			this.getManagedBean().setSelectedTabIndex(
+					newTabIndexDirectLOA(QTConstants.DIRECT_LOA_TAB_INDEX_TWO));
+
+		} catch (Exception e) {
+			handleException(e);
+		}
+	}
+
+	// 29661 && 41511 -end-
+	
 	/**
 	 * #29661
 	 * Update loa's selected supplier categories
@@ -15054,20 +15093,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			return isNewPK7ReasonInactive;
 		}
 		return false;
-	}
-
-	// #29766 End Vinod
-	// #29766 Start Vinod
-	/**
-	 * This method will call when user click ok in conformation popup for QT
-	 * type "Special Item/Item In PK7".
-	 * 
-	 * @param
-	 * @return
-	 */
-	public void reviseForQTTypeItemInPK7() {
-		this.getManagedBean().setAutoRevise(true);
-		this.updateReviseBPMTaskAction(BpmOutcomeConst.BPM_REVISE);
 	}
 
 	// #29766 End Vinod

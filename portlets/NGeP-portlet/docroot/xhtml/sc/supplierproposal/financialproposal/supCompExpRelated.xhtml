@@ -206,9 +206,22 @@
 				action="#{supplierProposalDetailBackingBean.downloadCompExpLOAReports(experience)}"
 				ajax="false" />
 
-			<h:outputText
-				value="#{supplierProposalDetailBackingBean.getLabelContent(' ')}"
-				rendered="#{!supplierProposalDetailBackingBean.loaReportCheck(experience)}"></h:outputText>
+			<ui:remove> #29661 #41511 - Start </ui:remove>
+
+					<p:commandLink process="@this" partialSubmit="true"
+						styleClass="commandLink_link"
+						rendered="#{supplierProposalDetailBackingBean.loaViewCheck(experience)}"
+						action="#{supplierProposalDetailBackingBean.viewLOADetailsPage(experience, view.viewId)}">
+						<h:outputText escape="false"
+							value="#{supplierProposalDetailBackingBean.getLabelContent(experience.loaNo)}" />
+					</p:commandLink>
+
+
+
+					<h:outputText
+						value="#{supplierProposalDetailBackingBean.getLabelContent(' ')}"
+						rendered="#{!supplierProposalDetailBackingBean.loaReportCheck(experience) and !supplierProposalDetailBackingBean.loaViewCheck(experience)}"></h:outputText>
+					<ui:remove> #29661 #41511 - end </ui:remove>
 		</p:column>
 	</p:dataTable>
 
