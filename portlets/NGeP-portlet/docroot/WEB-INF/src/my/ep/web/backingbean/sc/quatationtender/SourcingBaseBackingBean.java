@@ -280,6 +280,7 @@ import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.ct.CtContractVer;
+import my.ep.web.backingbean.sc.loa.DirectLOABackingBean;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.backingbean.sc.loa.QtLOABackingBean;
 import my.ep.persistence.entity.ct.terminate.CtTermination;
@@ -8018,27 +8019,45 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 			return Boolean.FALSE;
 		}
 
-		return SourcingConstants.SOURECE_TYPE_QT_ID.equals(prpExp
+		return !SourcingConstants.SOURECE_TYPE_SELF_ID.equals(prpExp
 				.getSourceType().getParameterId())
-				&& isQuotationLoa(prpExp.getScLoa());
+				&& isEpSourcingLoa(prpExp.getScLoa());
 	}
+
 	// 29661 && 41511 -end-
 
 	// 29661 && 41511 -start-
 	/**
-	 * loa raised from a quotation and viewable.
+	 * loa raised from a quotation or direct negotiation.
 	 * 
 	 * @param scLoa
 	 * @return true/false.
 	 */
-	private boolean isQuotationLoa(ScLoa scLoa) {
+	private boolean isEpSourcingLoa(ScLoa scLoa) {
 		if (null == scLoa || null == scLoa.getLoaId()
 				|| null == scLoa.getScLoiLoa()) {
 			return Boolean.FALSE;
 		}
 
-		return ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa()
-				.getDocType());
+		String docType = scLoa.getScLoiLoa().getDocType();
+		String loaNo = scLoa.getLoaNo();
+
+		return (ParameterConst.DOCTYPE_QUOTATION.equals(docType) || ParameterConst.DOCTYPE_DIRECT_NEGO
+				.equals(docType)) && isEpLoaNo(loaNo);
+	}
+
+	// 29661 && 41511 -end-
+	// 29661 && 41511 -start-
+	/**
+	 * loa number issued by ep.
+	 * 
+	 * @param loaNo
+	 * @return true/false.
+	 */
+	private boolean isEpLoaNo(String loaNo) {
+		return StringUtils.isNotBlank(loaNo)
+				&& loaNo.trim().toUpperCase()
+						.startsWith(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 	}
 
 	// 29661 && 41511 -end-
@@ -8082,22 +8101,24 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 			String previousPageUrl) {
 		try {
 			ScLoa scLoa = scQtPRPExperience.getScLoa();
-			if (null != scLoa && null != scLoa.getLoaId()) {
-				EnumMap<MapKeyEnum, Object> loaArgs = new EnumMap<>(
-						MapKeyEnum.class);
-				ScLoaForQt scLoaForQt = new ScLoaForQt();
-				Long loaId = scLoa.getLoaId();
-
-				scLoaForQt.setLoaId(loaId);
-				loaArgs.put(MapKeyEnum.loiLoaSelected, scLoaForQt);
-
-				QtLOABackingBean qtLoaBbean = new QtLOABackingBean();
-
-				loaArgs.put(MapKeyEnum.showTrackingDiary, Boolean.TRUE);
-				ScQt scQt = scLoa.getScQt();
-				qtLoaBbean.preRenderViewForQtMaintenance(scQt, previousPageUrl,
-						loaArgs);
+			// 29661 && 41511 -start-
+			if (null == scLoa || null == scLoa.getLoaId()
+					|| null == scLoa.getScLoiLoa()) {
+				return null;
 			}
+
+			boolean directNego = ParameterConst.DOCTYPE_DIRECT_NEGO
+					.equals(scLoa.getScLoiLoa().getDocType());
+			boolean supplierView =isSupplier();
+			if (directNego) {
+				return supplierView ? openDirectLoaForSupplier(scLoa,
+						previousPageUrl) : openDirectLoaForAgency(scLoa,
+						previousPageUrl);
+			} else {
+				return supplierView ? openQtLoaForSupplier(scLoa, previousPageUrl)
+						: openQtLoaForAgency(scLoa, previousPageUrl);
+			}
+			// 29661 && 41511 -end-
 
 		} catch (Exception e) {
 			Long qtPrpExpId = scQtPRPExperience.getQtPrpExperienceId();
@@ -8115,6 +8136,92 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 	}
 
 	// 29661 -end-
+	
+	// 29661 && 41511 -start-
+	/**
+	 * supplier view of a direct nego loa.
+	 * 
+	 * @param scLoa
+	 * @param previousPageUrl
+	 * @return null, navigation is handled downstream.
+	 */
+	private String openDirectLoaForSupplier(ScLoa scLoa, String previousPageUrl) {
+		new DirectLOABackingBean().viewSupplierLoaDetails(scLoa.getScLoiLoa()
+				.getDocId(), scLoa.getLoaId(), previousPageUrl);
+
+		return null;
+	}
+
+	// 29661 && 41511 -end-
+	
+	// 29661 && 41511 -start-
+	/**
+	 * supplier acknowledgement view of a quotation loa.
+	 * 
+	 * @param scLoa
+	 * @param previousPageUrl
+	 * @return the supplier loa page
+	 */
+	private String openQtLoaForSupplier(ScLoa scLoa, String previousPageUrl) {
+		LOADetailBackingBean loaDetailBbean = new LOADetailBackingBean();
+		String page = loaDetailBbean.retrieveSupplierLOADtl(scLoa
+				.getScLoiLoa().getDocId(), scLoa.getLoaId(), previousPageUrl,
+				true);
+
+		loaDetailBbean.getManagedBean().setSelectedTabIndex(
+				QTConstants.TAB_LOA_INDEX);
+		loaDetailBbean.getManagedBean().setDownloadLOADisabled(false);
+		loaDetailBbean.getManagedBean().setReadOnlyLOADownload(false);
+
+		return page;
+	}
+
+	// 29661 && 41511 -end-
+	
+	// 29661 && 41511 -start-
+	/**
+	 * agency view of a direct nego loa.
+	 * 
+	 * @param scLoa
+	 * @param previousPageUrl
+	 * @return the direct loa page
+	 */
+	private String openDirectLoaForAgency(ScLoa scLoa, String previousPageUrl) {
+		DirectLOABackingBean directLoaBbean = new DirectLOABackingBean();
+		String page = directLoaBbean.retriveLoaDetails(scLoa.getLoaId(),
+				previousPageUrl, true);
+
+		directLoaBbean.getManagedBean().setSelectedTabIndex(
+				directLoaBbean
+						.newTabIndexDirectLOA(QTConstants.DIRECT_LOA_TAB_INDEX_TWO));
+
+		return page;
+	}
+
+	// 29661 && 41511 -end-
+	// 29661 && 41511 -start-
+	/**
+	 * agency view of a quotation loa.
+	 * 
+	 * @param scLoa
+	 * @param previousPageUrl
+	 * @return null, navigation is handled downstream.
+	 */
+	private String openQtLoaForAgency(ScLoa scLoa, String previousPageUrl) {
+		EnumMap<MapKeyEnum, Object> loaArgs = new EnumMap<>(MapKeyEnum.class);
+		ScLoaForQt scLoaForQt = new ScLoaForQt();
+		scLoaForQt.setLoaId(scLoa.getLoaId());
+
+		loaArgs.put(MapKeyEnum.loiLoaSelected, scLoaForQt);
+		loaArgs.put(MapKeyEnum.showTrackingDiary, Boolean.TRUE);
+
+		new QtLOABackingBean().preRenderViewForQtMaintenance(scLoa.getScQt(),
+				previousPageUrl, loaArgs);
+
+		return null;
+	}
+
+	// 29661 && 41511 -end-
 
 	// 29661 -start-
 	/**

@@ -561,4 +561,9 @@ public interface QTConstants {
 	public static final String SURAT_SETUJU_TERIMA = "Surat Setuju Terima (Termasuk Lampiran A)";
 	// #25726 - End
 
+	
+	// #40974  - Start
+	public static final int DIRECT_LOA_TAB_INDEX_ONE = 1;
+	public static final int DIRECT_LOA_TAB_INDEX_TWO = 2;
+	// #40974  - End
 }
