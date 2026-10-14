@@ -443,6 +443,7 @@ public class AmendmentCommitteeHelper {
 		}
 	}
 	
+	//#41383 start
 	/**
 	 * Determines whether the user is allowed to access chairperson
 	 * functionality for a quotation committee. When the committee type is QCA
@@ -461,17 +462,19 @@ public class AmendmentCommitteeHelper {
 		boolean allow = allowChairpersonRole;
 
 		if (isQuotationCommitteeTypeAC() || isQCBCommitteeWIP()) {
-			allow = false;
 			for (PmRoleDesc pmRoleDesc : userResDTO.getRoleDescList()) {
 				String roleCode = pmRoleDesc.getPmRole().getRoleCode();
-				if (isValidChairpersonRole(roleCode) && orgProfileId.equals(ctOwnerOrgProfileId)) {
+				if (isValidChairpersonRole(roleCode)) {
 					allow = true;
 					break;
+				} else {
+					allow = false;
 				}
 			}
 		}
 		return allow;
 	}
+	//#41383 end
 	
 	/**
 	 * Validates whether the given role code matches the chairperson role
