@@ -3323,7 +3323,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		    	                || CTProcessNameConst.ACK_FA_HT_NAME.equalsIgnoreCase(taskName));
 		    	
 		    	if (isApproveReviewFa || isAcknowledgeSignOff) {
-		    	    processContractAdminUserStatus(action);
+		    	    processContractAdminUserStatus();
 		    	    return;
 		    	}
 		    	
@@ -6766,21 +6766,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public void downloadSupplementalLetter(CtAttachment ctAttchment) {
 		try {
-			
-			getManagedBean().setAllowAcknowledge(true);
-//			commonDownload(ctAttchment.getFilePath(), ctAttchment.getFileName());
-//
-//			// Supplier only allow to acknowledge after letter is downloaded 
-//			if (getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)) {
-//				BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
-//				if (bb.getManagedBean().getClaim()) {
-//					getManagedBean().setAllowAcknowledge(true);
-//				} else {
-//					getManagedBean().setAllowAcknowledge(false);
-//				}
-//			} else {
-//				getManagedBean().setAllowAcknowledge(false);
-//			}
+			commonDownload(ctAttchment.getFilePath(), ctAttchment.getFileName());
+
+			// Supplier only allow to acknowledge after letter is downloaded 
+			if (getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)) {
+				BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
+				if (bb.getManagedBean().getClaim()) {
+					getManagedBean().setAllowAcknowledge(true);
+				} else {
+					getManagedBean().setAllowAcknowledge(false);
+				}
+			} else {
+				getManagedBean().setAllowAcknowledge(false);
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -8372,6 +8370,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * The method used for validating Remark Cancel/Revise/Reject Button. A
 	 * warning message will display on screen when Remark is null
 	 * 
+	 * @param action the workflow action or outcome selected for the current task
 	 * @throws Exception
 	 *             if an exception occurred
 	 * @see Exception
@@ -8414,14 +8413,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		// #26688 end
 		
-		//#30737 - Start
-		if ((!CTProcessNameConst.SIGN_OFF_HT_NAME.equalsIgnoreCase(getTaskName()) 
-				&& BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) 
-					|| BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(action)) {
-
-			processContractAdminUserStatus(action);
-		}
-		//#30737 - End
+		//#30737
+		validateContractAdminUserStatusForAction(action);
 
 	}
 	
@@ -10556,8 +10549,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		return new ArrayList<>();
 	}
 	
-	private void processContractAdminUserStatus(String action) {
-		
+	private void processContractAdminUserStatus() {
 	    List<UserStatusCheckDTO> userStatusResults =
 	    		getContractAdminUserStatus(
 	    				getContractVer().getContractVerId(),
@@ -10653,5 +10645,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		return null;
 	}
+	
+	private void validateContractAdminUserStatusForAction(String action) {
+	    if ((!CTProcessNameConst.SIGN_OFF_HT_NAME.equalsIgnoreCase(getTaskName())
+	            && BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action))
+	            || BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(action)) {
+	        processContractAdminUserStatus();
+	    }
+	}
+	
 	// #30737 - end
 }
