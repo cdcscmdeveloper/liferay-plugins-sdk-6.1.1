@@ -670,6 +670,7 @@ public class ReportConst implements Serializable{
 	public static final String SUPPL_CONTRACT_MOF_NO = "357-";
 	public static final String PARAM_MODULE_TYPE = "REP";
 	public static final String LA_VALUE="LA";
+	public static final String QT_VALUE="QT";//#25651
 	public static final String AMP_EP_NO_EQ = " epno=";
 	public static final String SM_REPORT_CREDIT="Credit";
 
