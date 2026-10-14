@@ -100,7 +100,7 @@ QtReportBackingBean<EvaluationCommitteeReportManagedBean> implements Serializabl
 	public void getScReports(String qtNumber) {
 
 		boolean isAllReportExisting = false;
-		List<ScQtFinalizationReport> scQtFinalizationReports = new ArrayList<>();
+		List<ScQtFinalizationReport> scQtFinalizationReports;
 		if (StringUtils.isNotEmpty(qtNumber) && qtNumber.startsWith(ReportConst.QT_VALUE)) {
 			quotationNumberValidation();
 
