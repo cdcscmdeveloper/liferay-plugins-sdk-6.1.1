@@ -3915,14 +3915,14 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		//#21692 - End
 		
 
-		/**
-	     * Method to prepare needed audit trails parameters for Briefing Site/Visit & Desk Officer Assistant Maintenance
-	     * #28895-35500
-	     * @param scQt
-	     * @param groupTabSection
-	     * @param reqDTO
-	     */
-		//#35500 Start
+	/**
+    * Method to prepare needed audit trails parameters for Briefing Site/Visit & Desk Officer Assistant Maintenance
+	* #28895-35500
+	* @param scQt
+	* @param groupTabSection
+	* @param reqDTO
+	*/
+	//#35500 Start
 	public void prepareQtMaintenanceAuditTrail(ScQt scQt, List<Long> groupTabSectionList, QuationTenderReqDTO reqDTO) {
 		IQTAuditTrailSO qtAuditTrailSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailSO.class);
