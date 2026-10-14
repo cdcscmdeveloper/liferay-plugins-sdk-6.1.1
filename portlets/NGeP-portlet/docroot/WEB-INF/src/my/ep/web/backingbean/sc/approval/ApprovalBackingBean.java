@@ -4368,6 +4368,7 @@ return scQt;
 	 * @param groupTabSection
 	 * @param reqDTO
 	 */
+	//#35500 Start
 	public void prepareQtMaintenanceAuditTrail(ScQt scQt, List<Long> groupTabSectionList, QuationTenderReqDTO reqDTO) {
 		IQTAuditTrailSO qtAuditTrailSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailSO.class);
@@ -4468,7 +4469,7 @@ return scQt;
 				qtAuditTrailSO.insertAuditTrail(auditReqList);
 			}
 		}
-	}
+	}//#35500 End
 	
 	/**
 	 * #35500
