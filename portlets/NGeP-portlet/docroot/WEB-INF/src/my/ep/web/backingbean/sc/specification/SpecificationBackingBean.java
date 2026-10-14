@@ -11881,7 +11881,9 @@ public class SpecificationBackingBean extends
 
 			}
 
-			List<ScQtCheckList> checklistRemoveList = getToBeRemoveList();
+			// #25635 -start-
+			List<ScQtCheckList> checklistRemoveList = deleteSpecCheckList();
+			// #25635 -end-
 			if (null != checklistRemoveList && !checklistRemoveList.isEmpty()) {
 				for (int i = 0; i < checklistRemoveList.size(); i++) {
 					if (null == checklistRemoveList.get(i).getQtChecklistId()) {
@@ -11890,6 +11892,27 @@ public class SpecificationBackingBean extends
 				}
 
 			}
+			// start #25635 danial
+			List<ScQtScoreSetting> toBeRemoveScoreSettings = new ArrayList<ScQtScoreSetting>();
+		
+			if (null != this.getManagedBean().getMarkDeletedScQtScoreSettingTechnical()
+					&& !this.getManagedBean().getMarkDeletedScQtScoreSettingTechnical().isEmpty()) {
+				toBeRemoveScoreSettings = this.getManagedBean().getMarkDeletedScQtScoreSettingTechnical();
+			}
+			
+			if (null != this.getManagedBean().getMarkDeletedScQtScoreSettingFinancial()
+					&& !this.getManagedBean().getMarkDeletedScQtScoreSettingFinancial().isEmpty()) {
+				toBeRemoveScoreSettings.addAll(this.getManagedBean().getMarkDeletedScQtScoreSettingFinancial());
+			}
+			
+			if (null != this.getManagedBean().getMarkDeletedScQtScoreSettingOverall()
+					&& !this.getManagedBean().getMarkDeletedScQtScoreSettingOverall().isEmpty()) {
+				toBeRemoveScoreSettings.addAll(this.getManagedBean().getMarkDeletedScQtScoreSettingOverall());
+			}
+
+			specReqDTO.setToBeRemoveScoreSettingList(toBeRemoveScoreSettings);
+			// #25635 danial end
+
 			specReqDTO.setTobeRemoveList(checklistRemoveList);
 			specReqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);
 			specReqDTO.setToBeRemoveSchedulesList(this.getManagedBean()
