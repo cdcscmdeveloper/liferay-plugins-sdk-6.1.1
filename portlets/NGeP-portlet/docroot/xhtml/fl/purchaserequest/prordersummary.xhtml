@@ -105,10 +105,21 @@
 							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.code']}" />
 						</f:facet>
 						<h:outputText rendered="#{newItems.scRequestItem.cmItem==null}" value="#{newItems.scRequestItem.tempUnspscCode}" style="float:left;"/>
-						<h:outputText rendered="#{newItems.scRequestItem.cmItem!=null}" value="#{newItems.scRequestItem.cmItem.extensionCode}" style="float:left;"/>
+						<!-- #31344 display item details in popup -->	
+						<p:commandLink rendered="#{newItems.scRequestItem.cmItem!=null}" 
+							oncomplete="itemDescDialogId.show();" 
+							value="#{newItems.scRequestItem.cmItem.extensionCode}" 
+							style="color: #009ae5; font-size:12px; font-style:italic; text-align:left; float:left;"
+							action="#{purchaseRequestBackingBean.showItemDescPopup(newItems.scRequestItem.cmItem.itemId)}" 
+							process="@this" 
+							update="@([id$=itemDescDialogId])"/>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;text-align:center">
-						<h:outputText value="#{newItems.scRequestItem.itemName}" id="itemDesc" style="text-align:left; float:left;" title="#{newItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : newItems.scRequestItem.itemDesc}"/>
+						<!--#31344 filter item name-->
+						<h:outputText
+							value="#{purchaseRequestBackingBean.filterNARequestItemName(newItems.scRequestItem.requestNoteItemId)}"
+							id="itemDesc" style="text-align:left; float:left;"
+							title="#{newItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : newItems.scRequestItem.itemDesc}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.fl.uom']}" style="text-align:center">
 						<h:outputText value="#{newItems.scRequestItem.uom.uomName}" style="float:left;"/>

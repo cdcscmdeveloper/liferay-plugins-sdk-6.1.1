@@ -114,6 +114,12 @@
 					test="#{DpReportConst.dpLoaContentRptVal eq dpReportBackingBean.managedBean.reportCode}">
 					<ui:include src="/xhtml/reports/new/sc/dp/SC_070_loaContentReport.xhtml"></ui:include>
 				</c:when>
+				<ui:remove>26059 - start SC_093</ui:remove>
+				<c:when
+					test="#{DpReportConst.dpItemExceedThresholdRpt eq dpReportBackingBean.managedBean.reportCode}">
+					<ui:include src="/xhtml/reports/new/sc/dp/SC_093_itemExceedThresholdValue.xhtml"></ui:include>
+				</c:when>
+				<ui:remove>26059 - end</ui:remove>
 				<c:otherwise>
         			#{lbl['lbl.rpt.search.REPORTS_NOT_AVAILABLE_BY_MODULE']}    				
 				</c:otherwise>

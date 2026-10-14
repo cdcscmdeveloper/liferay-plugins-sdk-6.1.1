@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.pm.organisation;
 
+import java.util.Arrays;//27868
 import java.util.List;
 
 import javax.el.MethodExpression;
@@ -30,6 +31,7 @@ import my.ep.web.managedbean.pm.organisation.OrgProfileSearchManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import org.apache.commons.collections.CollectionUtils;//27868
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -50,6 +52,33 @@ public class OrgProfileSearchBackingBean extends
 	}
 	
 	public SelectItem[] getJabatanDropdown() {
+		// start - 27868
+		if (getManagedBean().isSpecialItemProcType()) {
+			List<Long> allowedPtjIds = getManagedBean().getPtjIds();
+			SelectItem[] allItems = PmCommonUtil.getJabatanDropdown(getManagedBean().getMinistryProfileId());
+
+			int count = 0;
+			for (int i = 1; i < allItems.length; i++) {
+				Object value = allItems[i].getValue();
+				if (value != null && allowedPtjIds.contains(Long.valueOf(value.toString()))) {
+					count++;
+				}
+			}
+
+			SelectItem[] filteredItems = new SelectItem[count + 1];
+
+			filteredItems[0] = allItems[0];
+
+			int idx = 1;
+			for (int i = 1; i < allItems.length; i++) {
+				Object value = allItems[i].getValue();
+				if (value != null && allowedPtjIds.contains(Long.valueOf(value.toString()))) {
+					filteredItems[idx++] = allItems[i];
+				}
+			}
+			return filteredItems;
+		}
+		// end - 27868
 		return PmCommonUtil.getJabatanDropdown(getManagedBean()
 				.getMinistryProfileId());
 	}
@@ -74,6 +103,7 @@ public class OrgProfileSearchBackingBean extends
 
 	public void initPtjPopupDefaultMinistry(Long orgProfileId) {
 		initPtjPopup();
+		getManagedBean().setSpecialItemProcType(false);//#27868
 		
 		//#26475 - add Approver value
 		//#26474 - add Publication Approver & all FC Secretaries value -start-	
@@ -161,6 +191,16 @@ public class OrgProfileSearchBackingBean extends
 				reqDTO.setOrgProfileSearchBean(searchBeanData);
 				OrgProfileResDTO resDTO = null;
 				if(ParameterConst.ORG_TYPE_PTJ.equals(getManagedBean().getOrgType())){
+					// 27868 - start
+					if (!CollectionUtils.isEmpty(reqDTO.getPtjIds())) {
+						reqDTO.getPtjIds().clear();
+					}
+
+					if (getManagedBean().isSpecialItemSearching() && getManagedBean().getJabatanProfileId() == null) {
+						reqDTO.getPtjIds().addAll(getManagedBean().getPtjIds());
+					}
+					resDTO = orgProfileSO.retrievePtjListByParents(reqDTO);
+					// 27868 - end
 					resDTO = orgProfileSO.retrievePtjListByParents(reqDTO);
 				}else if(ParameterConst.ORG_TYPE_PEGAWAI_PENGAWAL.equals(getManagedBean().getOrgType())){
 					resDTO = orgProfileSO.retrievePegaiPengawaListByParents(reqDTO);
@@ -179,16 +219,36 @@ public class OrgProfileSearchBackingBean extends
 	}
 	
 	public void searchOrgProfiles(String orgType){
+		getManagedBean().setSpecialItemSearching(false); //#27868
 		getManagedBean().setOrgType(orgType);
 		getOrgProfileDataModel().reloadData();
 	}
 	
+	//#27868 - start
+	/**
+	 * Searches organization profiles for special items based on organization
+	 * type.
+	 * 
+	 * @param orgType
+	 *            the organization type to search
+	 */
+	public void searchOrgProfilesSpecialItem(String orgType) {
+		getManagedBean().setSpecialItemSearching(true);
+		getManagedBean().setOrgType(orgType);
+		getOrgProfileDataModel().reloadData();
+	}
+	//#27868 - end
+	
 	public void resetOrgProfiles(){
 		Long ministryId = this.getManagedBean().getMinistryProfileId(); //#26475
-		
+		boolean specialItemProcType = this.getManagedBean().isSpecialItemProcType(); //#27868
+		List<Long> allowedPtjIds = this.getManagedBean().getPtjIds();//#27868
 		this.renewSesionObject();
 		
 		getOrgProfileDataModel().resetData();
+		
+		this.getManagedBean().setSpecialItemProcType(specialItemProcType);//#27868
+	    this.getManagedBean().setPtjIds(allowedPtjIds);//#27868
 		
 		//#26475 - start
 		String portletName = (String) this.getFacesScopes().getRequest().getAttribute("PORTLET_ID");
@@ -314,5 +374,58 @@ public class OrgProfileSearchBackingBean extends
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
+	
+	// start - 27868
+	/**
+	 * Initializes the PTJ popup for special items and configures ministry
+	 * access based on user roles.
+	 * 
+	 * <p>
+	 * This method sets the procurement type flag for special items, clears and
+	 * reloads PTJ IDs, and determines whether the ministry profile should be
+	 * preselected and locked for users with specific roles.
+	 * </p>
+	 * 
+	 * @param orgProfileId
+	 *            the organization profile ID of the ministry
+	 * @param ptjIds
+	 *            the list of PTJ (department) IDs to initialize in the popup
+	 */
+	public void initPtjPopupDefaultSpecialItem(Long orgProfileId, List<Long> ptjIds) {
+		initPtjPopup();
+		getManagedBean().setSpecialItemProcType(true);
+		getManagedBean().getPtjIds().clear();
+
+		if (!ptjIds.isEmpty()) {
+			getManagedBean().getPtjIds().addAll(ptjIds);
+		}
+
+		if (userHasMinistryAccessRole()) {
+			getManagedBean().setMinistryProfileId(orgProfileId);
+			getManagedBean().setDisabledMinistry(true);
+		}
+	}
+
+	/**
+	 * Checks whether the current user holds a role that grants access to the
+	 * ministry profile in the special item PTJ popup.
+	 * 
+	 * @return {@code true} if the user has any of the ministry-related roles;
+	 *         {@code false} otherwise
+	 */
+	private boolean userHasMinistryAccessRole() {
+		List<String> rolesWithAccess = Arrays.asList(RoleCode.DESK_OFFICER.value(), RoleCode.APPROVER.value(),
+				RoleCode.PUBLICATION_APPROVER.value(), RoleCode.PBA_SECRETARY.value(), RoleCode.PBB_SECRETARY.value(),
+				RoleCode.PPB_SECRETARY.value(), RoleCode.QCA_SECRETARY.value(), RoleCode.QCB_SECRETARY.value(),
+				RoleCode.FPB_SECRETARY.value());
+
+		for (String role : rolesWithAccess) {
+			if (getFacesScopes().hasRoleUser(role)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	// end - 27868
 	
 }
