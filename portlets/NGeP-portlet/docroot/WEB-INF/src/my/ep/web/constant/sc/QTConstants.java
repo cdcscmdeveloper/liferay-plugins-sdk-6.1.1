@@ -450,6 +450,11 @@ public interface QTConstants {
 	public static final String QT_SEARCH_DETAILS_ID = "searchQTs";
 	public static final String QT_SEARCH_LOI_LOA_DETAILS_ID = "searchQTLoaLois";
 	// 25791-End
+	
+	public static final String PORTLET_ID = "PORTLET_ID";
+	public static final String PORTLET_NAME_CREATE = "createmanualsourcing";
+	public static final String PORTLET_NAME_REVIEW = "reviewmanualsourcing";
+	public static final String  USER_PTJ_POPUP_HIDE = "userPtjPopup.hide();";
 
 	//#29732 -StartR
 	public static final String LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_1 = "lbl.sc.category.has.changes.on.prerender.view.1";
