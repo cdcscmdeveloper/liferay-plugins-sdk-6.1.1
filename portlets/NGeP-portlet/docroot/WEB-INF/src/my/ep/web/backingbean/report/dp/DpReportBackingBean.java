@@ -200,6 +200,11 @@ public abstract class DpReportBackingBean<T extends DpReportManagedBean>
 		log.info("onChangeReportName");
 		resetSearch();
 		
+		// 26059 - start
+		ItemExceedThresholdRptBackingBean itemExceedThresholdRptBackingBean = new ItemExceedThresholdRptBackingBean();
+		itemExceedThresholdRptBackingBean.resetSearch();
+		// 26059 - end
+				
 		if (StringUtils.isNotBlank(getManagedBean().getReportCode())) {
 			retrieveReportValueFromDb();
 		}
