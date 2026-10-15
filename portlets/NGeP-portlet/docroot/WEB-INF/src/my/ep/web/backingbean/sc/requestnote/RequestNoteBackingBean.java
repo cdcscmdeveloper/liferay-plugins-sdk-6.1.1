@@ -6411,6 +6411,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 		}
 		
+		//#41463 - Start		
 		/**
 		 * Processes a list of disciplinary actions and triggers an error message if
 		 * conditions are met.
@@ -6423,17 +6424,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		 *            the {@link ScRequestNoteDtl} object used for generating error
 		 *            messages.
 		 */
-		private void processDisciplinaryActions(SupplierDataMaintenanceResDTO responseDto,
-				ScRequestNoteDtl rnDtl ,  DisciplinaryActionContext context) {
-			if (responseDto.getSmDisciplinaryActions() != null) {
-				for (SmDisciplinaryAction action : responseDto.getSmDisciplinaryActions()) {
-					if (checkDisciplinaryActionStatusFlag(action)) {
-						errorMessage(rnDtl , responseDto ,context);
-					}
+		private void processDisciplinaryActions(SupplierDataMaintenanceResDTO responseDto, ScRequestNoteDtl rnDtl,
+				DisciplinaryActionContext context) {
+			if (responseDto.getSmDisciplinaryAction() != null) {
+				if (checkDisciplinaryActionStatusFlag(responseDto.getSmDisciplinaryAction())) {
+					errorMessage(rnDtl, responseDto, context);
 				}
 			}
-
 		}
+		//#41463 - End	
+
 		
 		/**
 		 * Determines if an error should be triggered based on the record status and
