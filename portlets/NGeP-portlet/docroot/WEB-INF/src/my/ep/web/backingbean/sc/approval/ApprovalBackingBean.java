@@ -4368,7 +4368,8 @@ return scQt;
 	 * @param groupTabSection
 	 * @param reqDTO
 	 */
-	public void prepareQtMaintenanceAuditTrail(ScQt scQt, Long groupTabSection, QuationTenderReqDTO reqDTO) {
+	//#35500 Start
+	public void prepareQtMaintenanceAuditTrail(ScQt scQt, List<Long> groupTabSectionList, QuationTenderReqDTO reqDTO) {
 		IQTAuditTrailSO qtAuditTrailSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailSO.class);
 
@@ -4379,18 +4380,20 @@ return scQt;
 		auditResDTO.setDocId(scQt.getQtId());
 		auditResDTO.setDocNo(scQt.getQtNo());
 		auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
-		if (groupTabSection != null) {// BSV Audit Trails Section
-			auditResDTO.setAuGroupSectionId(groupTabSection);
-			auditResDTO.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
-			auditResDTO.setStatusId(QTStatusConst.EPV_APPROVED);
-			auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_BSV);//#35500 Flag changes
-			if(this.getManagedBean().getAction().equals(BpmOutcomeConst.BPM_REJECT)){
-				auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_REJECT);
-			}else{
-				auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_APPROVE);
-			}
+		if (CollectionUtils.isNotEmpty(groupTabSectionList)) {// BSV Audit Trails Section
+			for (Long groupTabSection : groupTabSectionList){
+				auditResDTO.setAuGroupSectionId(groupTabSection);
+				auditResDTO.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
+				auditResDTO.setStatusId(QTStatusConst.EPV_APPROVED);
+				auditResDTO.setProcessType(QTAuditConstant.PROCESS_TYPE_UPDATE_BSV);//#35500 Flag changes
+				if(this.getManagedBean().getAction().equals(BpmOutcomeConst.BPM_REJECT)){
+					auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_REJECT);
+				}else{
+					auditResDTO.setProcessFlag(QTAuditConstant.PROCESS_FLAG_APPROVE);
+				}
 			AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 			auditReqList.add(auditReqDTO);
+			}
 
 			qtAuditTrailSO.insertAuditTrail(auditReqList);
 		} else if (reqDTO != null) {// DOA Audit Trails Section
@@ -4466,7 +4469,7 @@ return scQt;
 				qtAuditTrailSO.insertAuditTrail(auditReqList);
 			}
 		}
-	}
+	}//#35500 End
 	
 	/**
 	 * #35500
