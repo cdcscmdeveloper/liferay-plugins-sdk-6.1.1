@@ -237,9 +237,10 @@ public class SupplierFinalizationBackingBean extends
 	private static final int PREPARE_ACTIVE_INDEX_COMMITTEE = 1;
 	private static final int PREPARE_ACTIVE_INDEX_JOIN_IN = 2;
 	
-	//#27502 - New DO MOF Role and Process
+	//#27502 - New DO MOF Role and Process - Start
 	private static final int PREPARE_ACTIVE_INDEX_MINISTRY_OF_FINANCE = 1;
-
+	private final Map<List<Long>, Boolean> bpkCentralContractCache = new HashMap<List<Long>, Boolean>();
+	//#27502 - New DO MOF Role and Process - End
 	
 	private static final Long DEFAULT_ITEM = 0L;
 	private static final Long DEFAULT_ZONE = 0L;
@@ -294,7 +295,7 @@ public class SupplierFinalizationBackingBean extends
 			retrievescoresettings(scQt); //#38151
 			getManagedBean().getScQt().setScQtScoreSettings(this.getManagedBean().getScQt().getScQtScoreSettings()); //#38151
 			
-			boolean isBpkCentralContract = isBpkCentralContract(scQt);
+			boolean isBpkCentralContract = checkBPKCentralContract(scQt);
 			
 			//#31632
 			getManagedBean().setMofCntralCtc(isBpkCentralContract);
@@ -443,7 +444,7 @@ public class SupplierFinalizationBackingBean extends
 		QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
 		qtBackingBean.retrieveQuationTenderDetails(qtId);
 		ScQt scQt = qtBackingBean.getManagedBean().getQt();	
-		boolean isBpkCentralContract = isBpkCentralContract(scQt);
+		boolean isBpkCentralContract = checkBPKCentralContract(scQt);
 		// #27502 -- END
 		
 		// #27502 - New DO MOF Role and Process - Start
@@ -888,7 +889,7 @@ public class SupplierFinalizationBackingBean extends
 		qtBackingBean.retrieveQuationTenderDetails(this.getManagedBean().getScQt().getQtId());
 
 		ScQt scQt = qtBackingBean.getManagedBean().getQt();
-		boolean isBpkCentralContract = isBpkCentralContract(scQt);
+		boolean isBpkCentralContract = checkBPKCentralContract(scQt);
 
 		// Retrieve finalization endorsement remarks
 		if (isBpkCentralContract || this.getManagedBean().isSecretaryUser()) {
@@ -1136,7 +1137,21 @@ public class SupplierFinalizationBackingBean extends
 
 		return scQtCommittee;
 	}
+
+	// #27502 -End-
 	
+	// #27502 -start-
+	private boolean checkBPKCentralContract(ScQt scQt) {
+	    List<Long> key = Arrays.asList(scQt.getQtId(), scQt.getQtStatus().getStatusId());
+	    Boolean cached = bpkCentralContractCache.get(key);
+	    if (cached == null) {
+	        cached = isBpkCentralContract(scQt);   // the only real call per request
+	        bpkCentralContractCache.put(key, cached);
+	    }
+	    return cached;
+	}
+	// #27502 -End-
+
 	// #27502 - New DO MOF Role and Process - end
 
 		private void retrievePreparationDtls(Long qtId, String committeeType) {
@@ -1784,11 +1799,12 @@ public class SupplierFinalizationBackingBean extends
 			qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
 
 			scQt = qtBackingBean.getManagedBean().getQt();
-			boolean isBpkCentralContract = isBpkCentralContract(scQt);
+			boolean isBpkCentralContract = checkBPKCentralContract(scQt);
 
 			if (isBpkCentralContract) {
 				scQtCommittee = recordDtlsInfo();
 				reqDTO = validateInfo(2, skipValidation);
+				validateAuthorityCommittee(reqDTO.getScQtFinalization(),skipValidation);
 			} else { // #27502 - END
 				// Save Preparation and Supplier finalization tab(s) data
 				
@@ -2305,6 +2321,18 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 	// 26247 - end
+	
+	
+	// 27502 - start
+	private void validateAuthorityCommittee(ScQtFinalization scQtFinalization, boolean skipValidation) {
+		if (skipValidation) {
+			return;
+		}
+		if (scQtFinalization.getAuthCommittee() == null) {
+			throw new EpException(MessageConst.ERROR_760832);
+		}
+	}
+	// 27502 - end
 
 	private void renewSessionAndRetrieve(int activeIndex,
 										 SuppFinalizationResDTO resDTO) {
@@ -2346,7 +2374,7 @@ public class SupplierFinalizationBackingBean extends
 		qtBackingBean.retrieveQuationTenderDetails(qtId);
 
 		ScQt scQt = qtBackingBean.getManagedBean().getQt();
-		boolean isBpkCentralContract = isBpkCentralContract(scQt);
+		boolean isBpkCentralContract = checkBPKCentralContract(scQt);
 
 		if (isBpkCentralContract) {
 			this.getManagedBean().setActiveIndex(5);
@@ -3244,7 +3272,7 @@ public class SupplierFinalizationBackingBean extends
 		qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
 		scQt = qtBackingBean.getManagedBean().getQt();
 		Long statusId = scQt.getQtStatus().getStatusId();//#39344
-		boolean isBpkCentralContract = isBpkCentralContract(scQt);
+		boolean isBpkCentralContract = checkBPKCentralContract(scQt);
 		boolean hidden = false;
 
 		if (!isBpkCentralContract && !statusId.equals(QTStatusConst.QT_RE_FINALIZATION)){//#39344
@@ -3556,7 +3584,7 @@ public class SupplierFinalizationBackingBean extends
 				qtBackingBean.retrieveQuationTenderDetails(reqDTO.getScQt().getQtId());
 
 				ScQt scQt = qtBackingBean.getManagedBean().getQt();
-				boolean isBpkCentralContract = isBpkCentralContract(scQt);
+				boolean isBpkCentralContract = checkBPKCentralContract(scQt);
 
 				if (isBpkCentralContract) {
 					this.getManagedBean().setBpkCentralContract(true);
@@ -4109,7 +4137,7 @@ public class SupplierFinalizationBackingBean extends
 				qtBackingBean.retrieveQuationTenderDetails(reqDTO.getScQt().getQtId());
 
 				ScQt scQt = qtBackingBean.getManagedBean().getQt();
-				boolean isBpkCentralContract = isBpkCentralContract(scQt);
+				boolean isBpkCentralContract = checkBPKCentralContract(scQt);
 
 				if (isBpkCentralContract) {
 					this.getManagedBean().setBpkCentralContract(true);
@@ -4311,7 +4339,7 @@ public class SupplierFinalizationBackingBean extends
 			QTDetailBackingBean qtBackingBean =   new QTDetailBackingBean();
 			qtBackingBean.retrieveQuationTenderDetails(this.getManagedBean().getScQt().getQtId());
 			ScQt scQt = qtBackingBean.getManagedBean().getQt();
-			boolean isBpkCentralContract = isBpkCentralContract(scQt);
+			boolean isBpkCentralContract = checkBPKCentralContract(scQt);
 			//27502 - Start.
 			// #28834 - Start.
 			getManagedBean().setBpkCentralContract(isBpkCentralContract);
@@ -5737,7 +5765,7 @@ public class SupplierFinalizationBackingBean extends
 			QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
 			qtBackingBean.retrieveQuationTenderDetails(getManagedBean().getScQt().getQtId());
 			ScQt scQt = qtBackingBean.getManagedBean().getQt();
-			boolean isBpkCentralContract = isBpkCentralContract(scQt);
+			boolean isBpkCentralContract = checkBPKCentralContract(scQt);
 
 			if (isBpkCentralContract) {
 				statusIds.add(QTStatusConst.SF_MOF_COMMITTEE);//#27901
@@ -6800,7 +6828,7 @@ public class SupplierFinalizationBackingBean extends
 		QTDetailBackingBean qtBackingBean =   new QTDetailBackingBean();
 		qtBackingBean.retrieveQuationTenderDetails(this.getManagedBean().getScQt().getQtId());
 		ScQt scQt = qtBackingBean.getManagedBean().getQt();
-		boolean isBpkCentralContract = isBpkCentralContract(scQt);
+		boolean isBpkCentralContract = checkBPKCentralContract(scQt);
 		if (isBpkCentralContract ){
 			getManagedBean().setFinalizationMethod(null);//#27502, null the 'Supplier Finalization Method' for re-evaluation 
 		}
@@ -7113,7 +7141,7 @@ public class SupplierFinalizationBackingBean extends
       String tabMenuChangeCommonAction = "onMainTabMenuChangeAction([ {name : 'selectedTabIndex', value : ";
       
       // #27502 -- Start
-      boolean isBpkCentralContract = isBpkCentralContract(scQt);
+      boolean isBpkCentralContract = checkBPKCentralContract(scQt);
       if (isBpkCentralContract) {
 			// #27502 - New DO MOF Role and Process
 			// Meeting Record
@@ -10923,7 +10951,7 @@ public class SupplierFinalizationBackingBean extends
 		QTDetailBackingBean qtBackingBean =   new QTDetailBackingBean();
 		qtBackingBean.retrieveQuationTenderDetails(this.getManagedBean().getScQt().getQtId());
 		ScQt scQt = qtBackingBean.getManagedBean().getQt();
-		boolean isBpkCentralContract = isBpkCentralContract(scQt);
+		boolean isBpkCentralContract = checkBPKCentralContract(scQt);
 		
 		if (!isBpkCentralContract) {
 
@@ -11441,7 +11469,7 @@ public class SupplierFinalizationBackingBean extends
 					// #34410 - Start
 					QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
 					qtBackingBean.retrieveQuationTenderDetails(this.getManagedBean().getScQt().getQtId());
-					if (!isBpkCentralContract(qtBackingBean.getManagedBean().getQt())) {// #34410 - End
+					if (!checkBPKCentralContract(qtBackingBean.getManagedBean().getQt())) {// #34410 - End
 						this.getManagedBean().getScQtFinalization()
 						.getScQtFinalizationReports()
 						.addAll(this.getManagedBean().getEndorsementReports());
@@ -13047,7 +13075,7 @@ public class SupplierFinalizationBackingBean extends
 		QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
 		qtBackingBean.retrieveQuationTenderDetails(this.getManagedBean().getScQt().getQtId());
 		// #27502 -start-
-		boolean isBpkCentralContract = isBpkCentralContract(qtBackingBean.getManagedBean().getQt());
+		boolean isBpkCentralContract = checkBPKCentralContract(qtBackingBean.getManagedBean().getQt());
 
 		if (isBpkCentralContract) {
 			return;
