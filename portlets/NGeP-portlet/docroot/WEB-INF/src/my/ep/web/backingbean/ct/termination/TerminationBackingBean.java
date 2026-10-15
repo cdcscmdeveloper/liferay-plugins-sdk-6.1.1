@@ -60,7 +60,6 @@ import my.ep.exception.EpException;
 import my.ep.jaxb.ct.termination.CTContractTerminationDataType;
 import my.ep.persistence.entity.ct.CtActor;
 import my.ep.persistence.entity.ct.CtAddress;
-import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.terminate.CtTermination;
@@ -635,7 +634,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)
 				|| BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 			CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
-			List<UserStatusCheckDTO> selectedActor = new ArrayList<>();
+			List<UserStatusCheckDTO> selectedActor = null;
 			
 			selectedActor = getContractAdminUserStatus(
 					ctContractVer.getContractVerId(),
