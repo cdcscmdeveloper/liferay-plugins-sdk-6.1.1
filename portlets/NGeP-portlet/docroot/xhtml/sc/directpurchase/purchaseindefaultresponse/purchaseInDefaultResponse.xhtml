@@ -245,10 +245,21 @@
 						size="51" /></td>
 			</tr>
 			<tr>
+				<ui:remove>#26059 - Start</ui:remove>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.purchase.in.default.prod.code']}" /></td>
 				<td><p:inputText disabled="true" size="51"
-						value="#{purchaseInDefaultBackingBean.getText(purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.scRequestItem.cmItem.extensionCode)}" /></td>
+						rendered="#{purchaseInDefaultBackingBean.getText(purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.scRequestItem.cmItem.extensionCode) eq lbl['lbl.sc.no.available']}"
+						value="#{purchaseInDefaultBackingBean.getText(purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.scRequestItem.cmItem.extensionCode)}" />
+					<p:outputPanel id="commandLinkPanelResponse"
+						rendered="#{purchaseInDefaultBackingBean.getText(purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.scRequestItem.cmItem.extensionCode) ne lbl['lbl.sc.no.available']}">
+						<p:commandLink oncomplete="itemDescDialogId.show();"
+							value="#{purchaseInDefaultBackingBean.getText(purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.scRequestItem.cmItem.extensionCode)}"
+							style="color: #009ae5; font-size:12px; font-style:italic"
+							action="#{lOADetailBackingBean.showItemDescPopup(purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.scRequestItem)}"
+							process="@this" update="@([id$=itemDescDialogId])" />
+					</p:outputPanel></td>
+				<ui:remove>#26059 - End</ui:remove>
 			</tr>
 			<tr>
 				<td><p:outputLabel
