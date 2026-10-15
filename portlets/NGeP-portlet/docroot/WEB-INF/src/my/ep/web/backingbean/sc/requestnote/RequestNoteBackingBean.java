@@ -6423,16 +6423,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		 *            the {@link ScRequestNoteDtl} object used for generating error
 		 *            messages.
 		 */
-		private void processDisciplinaryActions(SupplierDataMaintenanceResDTO responseDto,
-				ScRequestNoteDtl rnDtl ,  DisciplinaryActionContext context) {
-			if (responseDto.getSmDisciplinaryActions() != null) {
-				for (SmDisciplinaryAction action : responseDto.getSmDisciplinaryActions()) {
-					if (checkDisciplinaryActionStatusFlag(action)) {
-						errorMessage(rnDtl , responseDto ,context);
-					}
+		private void processDisciplinaryActions(SupplierDataMaintenanceResDTO responseDto, ScRequestNoteDtl rnDtl,
+				DisciplinaryActionContext context) {
+			if (responseDto.getSmDisciplinaryAction() != null) {
+				if (checkDisciplinaryActionStatusFlag(responseDto.getSmDisciplinaryAction())) {
+					errorMessage(rnDtl, responseDto, context);
 				}
 			}
-
+	
 		}
 		
 		/**
