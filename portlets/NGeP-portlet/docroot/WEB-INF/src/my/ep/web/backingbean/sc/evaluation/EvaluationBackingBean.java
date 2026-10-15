@@ -11796,36 +11796,13 @@ private void retriveCommitteeRemarksList(){
 		ScAttachment reportAttachment = null;
 		ScAttachment commReportAttachment = null; // 37617
 		ScQt scQt = getManagedBean().getScQt();
-		boolean isWipExistReport = checkWipExistingEvaluationReports();//#25651
 		
-		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-				.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
-			commReportAttachment = isWipExistReport ? scQt.getScEvaluationCommitteeReportDetailAttachment() : scQt
-					.getScEvaluationCommitteeReportAttachment(); // 37617,#25651
-			reportAttachment = isWipExistReport ? new ScEvaluationCommitteeReportDetailAttachment()
-					: new ScEvaluationCommitteeReportAttachment(); // #25651
-			
-		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
-				.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
-			commReportAttachment = isWipExistReport ? scQt.getScOpenCommitteeReportDetailAttachment() : scQt
-					.getScOpenCommitteeReportAttachment(); // 37617,#25651
-			reportAttachment = isWipExistReport ? new ScOpenCommitteeReportDetailAttachment()
-					: new ScOpenCommitteeReportAttachment(); // #25651
-			
-		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
-				.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
-			commReportAttachment = isWipExistReport ? scQt.getScTechnicalEvaluationReportDetailAttachment() : scQt
-					.getScTechnicalEvaluationReportAttachment(); // 37617,#25651
-			reportAttachment = isWipExistReport ? new ScTechnicalEvaluationReportDetailAttachment()
-					: new ScTechnicalEvaluationReportAttachment(); // #25651
-			
-		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
-				.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
-			commReportAttachment = isWipExistReport ? scQt.getScFinancialEvaluationReportDetailAttachment() : scQt
-					.getScFinancialEvaluationReportAttachment(); // 37617,#25651
-			reportAttachment = isWipExistReport ? new ScFinancialEvaluationReportDetailAttachment()
-					: new ScFinancialEvaluationReportAttachment(); // #25651
-		}	
+		// #25651 - Start
+		boolean isWipExistReport = checkWipExistingEvaluationReports();
+		String committeeType = getManagedBean().getCommitteeType();
+		commReportAttachment = getCommitteeReportAttachment(scQt, isWipExistReport, committeeType);
+		reportAttachment = createReportAttachment(isWipExistReport, committeeType);
+		// #25651 - End
 		
 		// 37617 - end
 		String taskName = this.getManagedBean().getTaskName();
@@ -11845,6 +11822,79 @@ private void retriveCommitteeRemarksList(){
 		
 		return reportAttachment;
 	}
+	
+	// #25651 - Start
+	private ScAttachment getCommitteeReportAttachment(
+	        ScQt scQt, boolean isWipExistReport,  String committeeType) {
+
+		ScAttachment commReportAttachment = null;
+	    if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+	            .equalsIgnoreCase(committeeType)) {
+	    	commReportAttachment = isWipExistReport
+	                ? scQt.getScEvaluationCommitteeReportDetailAttachment()
+	                : scQt.getScEvaluationCommitteeReportAttachment();// 37617
+	    }
+
+	    if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
+	            .equalsIgnoreCase(committeeType)) {
+	    	commReportAttachment = isWipExistReport
+	                ? scQt.getScOpenCommitteeReportDetailAttachment()
+	                : scQt.getScOpenCommitteeReportAttachment();// 37617
+	    }
+
+	    if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
+	            .equalsIgnoreCase(committeeType)) {
+	    	commReportAttachment = isWipExistReport
+	                ? scQt.getScTechnicalEvaluationReportDetailAttachment()
+	                : scQt.getScTechnicalEvaluationReportAttachment();// 37617
+	    }
+
+	    if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+	            .equalsIgnoreCase(committeeType)) {
+	    	commReportAttachment = isWipExistReport
+	                ? scQt.getScFinancialEvaluationReportDetailAttachment()
+	                : scQt.getScFinancialEvaluationReportAttachment();// 37617
+	    }
+
+	    return commReportAttachment;
+	}
+	// #25651 - End
+	
+	// #25651 - Start
+	private ScAttachment createReportAttachment(boolean isWipExistReport,  String committeeType) {
+
+		ScAttachment reportAttachment = null;
+	    if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+	            .equalsIgnoreCase(committeeType)) {
+	    	reportAttachment = isWipExistReport
+	                ? new ScEvaluationCommitteeReportDetailAttachment()
+	                : new ScEvaluationCommitteeReportAttachment();
+	    }
+
+	    if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
+	            .equalsIgnoreCase(committeeType)) {
+	    	reportAttachment = isWipExistReport
+	                ? new ScOpenCommitteeReportDetailAttachment()
+	                : new ScOpenCommitteeReportAttachment();
+	    }
+
+	    if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
+	            .equalsIgnoreCase(committeeType)) {
+	    	reportAttachment = isWipExistReport
+	                ? new ScTechnicalEvaluationReportDetailAttachment()
+	                : new ScTechnicalEvaluationReportAttachment();
+	    }
+
+	    if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+	            .equalsIgnoreCase(committeeType)) {
+	    	reportAttachment = isWipExistReport
+	                ? new ScFinancialEvaluationReportDetailAttachment()
+	                : new ScFinancialEvaluationReportAttachment();
+	    }
+
+	    return reportAttachment;
+	}
+	// #25651 - End
 	
 	/**
 	 * @param scQtEvaluationReportAttachment
