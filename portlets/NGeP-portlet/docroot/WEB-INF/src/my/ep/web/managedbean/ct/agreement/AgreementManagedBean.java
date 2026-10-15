@@ -95,6 +95,10 @@ public class AgreementManagedBean extends BaseManagedBean {
 	//#24333 - Start
 	private boolean isBondAttachmentCompleted;
 	//#24333 - End
+	
+	//30737 - start
+	private Long userStatusCheckResult;
+	//30737 - end
 		
 	/**
 	 * @return the action
@@ -840,4 +844,20 @@ public class AgreementManagedBean extends BaseManagedBean {
 		this.isBondAttachmentCompleted = isBondAttachmentCompleted;
 	}
 	// 24333 - End
+
+	//30737 - start
+	/**
+	 * @return the userStatusCheckResult
+	 */
+	public Long getUserStatusCheckResult() {
+		return userStatusCheckResult;
+	}
+
+	/**
+	 * @param userStatusCheckResult the userStatusCheckResult to set
+	 */
+	public void setUserStatusCheckResult(Long userStatusCheckResult) {
+		this.userStatusCheckResult = userStatusCheckResult;
+	}
+	//30737 - end
 }

@@ -59,8 +59,8 @@
 	        width: 110px;
 	        vertical-align: top;
          } 
-		 .columnWidth320 {
-			width: 320px;
+		 .columnWidthChangeContractValue {
+			width: 400px;
 			vertical-align: top;
 			text-align: right;
 		 }
@@ -74,10 +74,6 @@
 		 .committee-type-radio {
 			float: left;
 			margin-left: 25px !important;
-		 }
-		 .committee-type-radio tr:first-child label {
-		    display: inline-table;
-		    margin-left: 10px;
 		 }
 		 /* 24336 End*/
 	 </style>
@@ -102,7 +98,8 @@
 		  <f:event listener="#{amendmentBackingBean.preRenderView}" type="preRenderView" />
 
 		<h:panelGroup id="panelHeaderException">
-		  	 <p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{amendmentBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info, warn" />
+		  	 <p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{amendmentBackingBean.managedBean.autoUpdate}" closable="true" severity="error, info, warn" 
+		  	 	escape="false" /> <!-- #30737 -->
 			 <ui:include src="amendmentButtons.xhtml" />
 			 <!-- Enhancement 15851 - shaqimi start -->
 			 <ui:fragment rendered="#{!ctBackingBean.managedBean.viewSCL}">

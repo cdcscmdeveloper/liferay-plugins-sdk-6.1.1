@@ -471,7 +471,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
     private boolean newPK7Code = Boolean.FALSE;
 	private ScQuoteSupplier tempScQuoteSupplier = null;
 	private String wipReasonCategory;
-	private Long inactiveReasonId;
+	private Long currentReasonId;
 	private String inactiveJustificationRemark;
 	private SelectItem[] inactiveJustDropdown = null; 
 	//27868 - end
@@ -3032,12 +3032,12 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 		this.wipReasonCategory = wipReasonCategory;
 	}
 	
-	public Long getInactiveReasonId() {
-		return inactiveReasonId;
+	public Long getCurrentReasonId() {
+		return currentReasonId;
 	}
 
-	public void setInactiveReasonId(Long inactiveReasonId) {
-		this.inactiveReasonId = inactiveReasonId;
+	public void setCurrentReasonId(Long currentReasonId) {
+		this.currentReasonId = currentReasonId;
 	}
 	
 	public String getInactiveJustificationRemark() {

@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.ct.termination;
 
@@ -42,6 +42,7 @@ import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.termination.IContractTerminationSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.InactiveUserConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
@@ -54,6 +55,7 @@ import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
+import my.ep.dto.pm.authorization.user.UserStatusCheckDTO; //#30737
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.termination.CTContractTerminationDataType;
 import my.ep.persistence.entity.ct.CtActor;
@@ -115,6 +117,24 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	private CtAgency selectedRecommendedAgency;
 	private IPagingDataModel<CtAgency> agencyDataModel = new AgencyPagingDataModel();	
 	SimpleDateFormat dateformat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+	
+	//#30737 - Start 
+    @Override
+    protected List<PmUser> getSelectedApprovers() {
+        return getManagedBean().getApproverModel().getTarget();
+    }
+    
+    @Override
+    protected CtContractVer getContractVer() {
+    	return getManagedBean().getContractVer();
+    }
+    
+    @Override
+    protected String getTaskName() {
+    	return getManagedBean().getTaskName();
+    }
+    //#30737 - End
+	    
 	
 	private String confirmationContentMsg;//34442 
 	/**
@@ -425,7 +445,12 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 
 			if(getManagedBean().getPmDigiSign() !=null){
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
-			}    
+			}   
+			
+			// 30737 - END
+			reqDTO.setScLoa(getContractVer().getCtContract().getLoa());
+			reqDTO.setUserStatusCheckResult(getManagedBean().getInactiveActor());
+			// 30737 - END
 
 			resDTO = contractTerminationSO.saveContractTerminationDetails(reqDTO);
 			if(resDTO.isSuccessful()) {
@@ -592,8 +617,47 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 				&& getManagedBean().getApproverModel().getTarget().size()==0) {
 			throw new EpException(MessageConst.ERROR_750010); //Approver is mandatory for document submission. Please select at least one approver.
 		}
+		
+		//#30737 - Start
+		String docType = ctBB.getManagedBean().getContractVer().getDocType();
+		
+		//SUBMIT
+		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
+			String approverType = determineRoleCode();
+	        List<UserStatusCheckDTO> userStatusResults =
+	        		checkUserStatus(approverType, getSelectedApprovers(), docType, null);
+	        handleInactiveUserValidation(userStatusResults);
+	        
+			log.info(" action : "+outcome);
+		}
+		// approve/revise
+		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)
+				|| BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
+			CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
+			List<UserStatusCheckDTO> selectedActor = null;
+			
+			selectedActor = getContractAdminUserStatus(
+					ctContractVer.getContractVerId(),
+					ctContractVer.getDocType());
+			
+			 if (!selectedActor.isEmpty()) {
+				 Long userStatus = null;
+				 for(UserStatusCheckDTO inActiveActor : selectedActor){
+					 userStatus = inActiveActor.getStatus();
+					 this.getManagedBean().setInactiveActor(inActiveActor.getStatus());
+					 break;
+					}
+				 
+				 if(InactiveUserConst.INACTIVE_USER_5.equals(userStatus)){
+		        	log.info("INACTIVE_USER_5 + return 5");
+	                handleInactiveUserValidation(selectedActor);
+				 }
+            }
+			log.info("INACTIVE_USER action : "+outcome);
+		}
+		//#30737 - End
 	}
-
+	
 	/**
 	 * This method is used to change the type of termination 
 	 * such as termination, mutual termination and termination remedy

@@ -29,11 +29,13 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTSpecSO;//#38151
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.constant.CompositeValidityConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.QTStatusConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
@@ -670,14 +672,21 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, renderPage);//29464
 		// #10141 Start Vinod
-		boolean isReadOnly = this.getManagedBean().isReadOnly();
-		if (!isReadOnly
+		// BUG #40852 WIP QT - Confirmation box not displayed upon clicking pencil Icon
+		if (isEditable
 				&& QTStatusConst.getQTSpecMaintenanceInactiveChecklistUpdateGroup().contains(
-						this.getManagedBean().getCurrentStatusId())) {
+						scQt.getQtStatus().getStatusId())) {						
+				//#40980 - Start
+				ScQt tmpScQt = this.getManagedBean().getQt();
+				specBB.checkAndUpdateNewMandatoryChecklist(tmpScQt, SourcingConstants.FINANCIAL_DOCTYPE);
+				specBB.checkAndUpdateNewMandatoryChecklist(tmpScQt, SourcingConstants.TECHNICAL_DOCTYPE);		
+				//#40980 - End
+
 			boolean isInactiveChecklistPopup = specBB.checkInactiveChecklistForPopup(this.getManagedBean()
 					.isShowInactiveChecklistPopup(), QTConstants.SPEC_MAINTENANCE);
 
 			if (isInactiveChecklistPopup) {
+				this.getManagedBean().setPreRenderInactiveChecklist(true);
 				RequestContext.getCurrentInstance()
 				.execute(QTConstants.INACTIVE_CHECKLIST_NOTIFICATION);
 				return;
@@ -876,12 +885,11 @@ public boolean isSpecCommittee() {
 	}
 	//29732 -End
 	
-	// #38151 Start
+	//#38151 & #38679 Start
 	private void checkWeightage35384WIP() {
 		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTDetailSO.class);
 		ScQt qt = this.getManagedBean().getQt();
-		Date publishDate = qt.getPublishDate();
 		Date createdDate = qt.getCreatedDate();
 
 		QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
@@ -892,28 +900,17 @@ public boolean isSpecCommittee() {
 
 		Date effDate = appVerDtls.getEffDate();
 		Timestamp effTimestamp = new Timestamp(effDate.getTime());
+		boolean checkStatusWip =(checkWipScoreSettingFlag(qt.getQtId()));
 
-		if (createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus() || null != publishDate
-				&& publishDate.before(effDate)) {
+		if ((createdDate.before(effTimestamp) && !checkStatusWip)) {
 			this.getManagedBean().setWeightage35384WIP(true);
 		}
 	}
 
-	// #38151 End
-
-	// #38151 start
-	public boolean checkWeightage35384WIPbyStatus() {
-		Long currentStatusId = this.getManagedBean().getCurrentStatusId();
-		if (QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT.equals(currentStatusId)
-				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF.equals(currentStatusId)
-				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH.equals(currentStatusId)
-				|| QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(currentStatusId) 
-				|| QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL.equals(currentStatusId) 
-				|| QTStatusConst.SE_PENDING_ENDORSMENT.equals(currentStatusId)
-				|| QTStatusConst.SE_PENDING_SIGNOFF.equals(currentStatusId)) {
-			return Boolean.TRUE;
-		}
-		return Boolean.FALSE;
+	private boolean checkWipScoreSettingFlag(Long qtId) {
+	    IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+	            IQTSpecSO.class);
+	    return specSo.checkWipScoreFlag(qtId);
 	}
-	// #38151 end
+	//#38151 & #38679 end
 }

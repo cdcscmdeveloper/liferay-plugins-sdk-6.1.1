@@ -35,18 +35,19 @@
 		<!-- #9133 - start -->
 		<ui:param name="draft" value="DRAFT" />
 		<!-- #9133 - end -->
+		<ui:remove>34449 - start</ui:remove>
 		<ac:cancelRejectPopup id="#{rejectPID}" widget="rejectPID" width="30%"
 			height="100"
 			okAction="#{purchaseInDefaultBackingBean.approverAction(reject)}"
-			title="#{lbl['lbl.reject.details']}"
+			title="#{lbl['lbl.sc.header.message.reject']}"
 			content="#{lbl['lbl.reject.dialog.confirm.message']}" update="@this,@([id$=messages])" />
 		<!-- 20190417@asyrafhaziq_12095 - End -->
+		<ui:remove>34449 - end</ui:remove>
 
 		<ac:gpkiPopup
 			textBeforeSign="#{purchaseInDefaultBackingBean.textBeforeSign}"
 			postSignAction="#{purchaseInDefaultBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" 
 			enableAutoUpdate="#{purchaseInDefaultBackingBean.enableAutoUpdate()}" />
-
 		<c:if
 			test="#{purchaseInDefaultBackingBean.managedBean.taskId eq null}">
 			<table style="width: 100%">
@@ -141,6 +142,7 @@
 							update="@form,@([id$=messages])" process="@form" partialSubmit="true"
 							rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}" />
 					<!-- #9133 - end -->
+					<ui:remove>34449 - start</ui:remove>
 					<ui:repeat var="bpmAction"
 							value="#{purchaseInDefaultBackingBean.managedBean.outComes}">
 							<ui:param name="buttonLabel"
@@ -150,32 +152,37 @@
 
 							<p:commandButton value="#{lbl[buttonLabel]}" process="@all"
 							    onstart="#{isReject ? '' : 'blockWidget.show();'}" oncomplete="#{isReject ? '' : 'blockWidget.hide();'}" 
-								styleClass="ui-button" update="#{isReject ? '@form' : ''},@([id$=messages])"
+								styleClass="ui-button" update="#{isReject ? '@form' : ':form:pidConformDlgWrapper'},@([id$=messages])"
 								partialSubmit="true"
 								actionListener="#{purchaseInDefaultBackingBean.beforeApproverAction(bpmAction)}" />
-
-						</ui:repeat></td>
+						</ui:repeat>
+						<ui:remove>34449 - end</ui:remove>
+						</td>
 				</tr>
 			</table>
+			<ui:remove> 34449 - Popup button from bpm</ui:remove>
+			<p:outputPanel id="pidConformDlgWrapper">
+				<ac:confirmationPopupSM id="pidConformDlgPid" widget="pidConformDlg"
+					width="400" height="100"
+					okAction="#{purchaseInDefaultBackingBean.approverAction(purchaseInDefaultBackingBean.managedBean.selectedAction)}"
+					title="#{purchaseInDefaultBackingBean.managedBean.confirmationMessageTitle}"
+					content="#{purchaseInDefaultBackingBean.managedBean.confirmationMessageContent}"
+					update="@form" />
+			</p:outputPanel>
+			<ui:remove>34449 - end</ui:remove>					
 		</c:if>
-		<!-- #28865 start -->
-		<p:confirmDialog message="#{lbl['lbl.ct.pid.confirm.msg']}"
-			severity="alert" widgetVar="submitSuppDlg" closable="true"
-			appendToBody="true" header="#{lbl['lbl.sc.submit.confirmation']}">
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
-					action="#{purchaseInDefaultBackingBean.submitPurchaseInDefault(null)}"
-					onstart="submitSuppDlg.hide();blockWidget.show();"
-					oncomplete="blockWidget.hide();" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
-					onclick="submitSuppDlg.hide();" />
-			</div>
-		</p:confirmDialog>
-		<!-- #28865 end -->
-		<!-- #9133 - start -->
+		<ui:remove> #28865, 34449 - start</ui:remove>
+		<ac:confirmationPopupSM id="submitSuppDlgPid"
+			widget="submitSuppDlg" width="400" height="100" hasParam="true"
+			okParam="#{purchaseInDefaultBackingBean.submitPurchaseInDefault(null)}"
+			title="#{lbl['lbl.sc.header.message.submit']}"
+			content="#{lbl['lbl.ct.pid.confirm.msg']}"
+			update="@this" loadingWidget="blockWidget" />
+		<ui:remove> 28865, 34449 - end</ui:remove>
+		<ui:remove> 9133, 34449 - start</ui:remove>
 		<p:confirmDialog message="#{lbl['lbl.cancel.dialog.confirm.message']}"
 			severity="alert" widgetVar="cancelDlg" closable="true"
-			appendToBody="true" header="#{lbl['lbl.sc.cancel.confirm']}">
+			appendToBody="true" header="#{lbl['lbl.sc.header.message.cancel']}">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}"
 					actionListener="#{purchaseInDefaultBackingBean.updateBPMTasks('CANCEL')}"
@@ -185,7 +192,17 @@
 					oncomplete="cancelDlg.hide();" />
 			</div>
 		</p:confirmDialog>
-		<!-- #9133 - end -->
+		<ui:remove> 9133, 34449 - end</ui:remove>
+		<ui:remove>34449 - start</ui:remove>
+		<ui:remove> Popup Submit Action </ui:remove>
+		<ac:confirmationPopupSM id="submitConformDlgPid"
+			widget="submitConformDlg" width="400" height="100"
+			okAction="#{purchaseInDefaultBackingBean.submitPurchaseInDefault(null)}"
+			title="#{lbl['lbl.sc.header.message.submit']}"
+			content="#{lbl['lbl.sc.confirmation.message.submit']}"
+			update="@form" />
+		
+		<ui:remove>34449 - end</ui:remove>
 		<ui:include
 			src="/xhtml/sc/directpurchase/purchaseindefault/purchaseInDefaultHeader.xhtml" />
 		<ui:include src="/xhtml/sc/directpurchase/purchaseindefault/purchaseInDefault.xhtml" />

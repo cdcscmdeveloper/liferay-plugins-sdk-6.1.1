@@ -3,6 +3,8 @@ package my.ep.web.backingbean.pm.notify;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;//#28188
+import java.util.Map;//#28188
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -18,10 +20,12 @@ import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.common.notify.INotifySO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.NotificationTextConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.pm.common.notify.NotifyReqDTO;
 import my.ep.dto.pm.common.notify.NotifyResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmNotifyDashboard;//#28188
 import my.ep.persistence.entity.pm.common.PmNotifyUser;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
@@ -459,7 +463,11 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 			  
 			  if( null != pmNotifyUser.getPmNotifyDashboard()
 					&& StringUtils.isNotEmpty(pmNotifyUser.getPmNotifyDashboard().getContent())){
-				  return pmNotifyUser.getPmNotifyDashboard().getContent();
+					
+					// 28188 -start-
+					 return returnDashBoardContent(pmNotifyUser.getPmNotifyDashboard(),
+							notificationId);
+					// 28188 -end-
 				}
 			}
 		}
@@ -497,4 +505,161 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 	}
 	// #14291 - End
 	
+	
+
+	// 28188 -start-
+	// English to Malay day name mapping
+	private static final Map<String, String> ENGLISH_TO_MALAY_DAY;
+	static {
+		ENGLISH_TO_MALAY_DAY = new HashMap<>();
+		ENGLISH_TO_MALAY_DAY.put("Sunday", "Ahad");
+		ENGLISH_TO_MALAY_DAY.put("Monday", "Isnin");
+		ENGLISH_TO_MALAY_DAY.put("Tuesday", "Selasa");
+		ENGLISH_TO_MALAY_DAY.put("Wednesday", "Rabu");
+		ENGLISH_TO_MALAY_DAY.put("Thursday", "Khamis");
+		ENGLISH_TO_MALAY_DAY.put("Friday", "Jumaat");
+		ENGLISH_TO_MALAY_DAY.put("Saturday", "Sabtu");
+	}
+
+	// English table headers to Malay
+
+	private static final String HEADER_ASAL_MS = "<th bgcolor='#d0eaee' width='45%'>Tarikh Taklimat/ Lawatan Tapak Asal</th>";
+	private static final String HEADER_BAHARU_MS = "<th bgcolor='#d0eaee' width='45%'>Tarikh Taklimat/ Lawatan Tapak Baharu</th>";
+
+	private static final String HEADER_ASAL_EN = "<th bgcolor='#d0eaee' width='45%'>Original Briefing/ Site Visit Date</th>";
+	private static final String HEADER_BAHARU_EN = "<th bgcolor='#d0eaee' width='45%'>New Briefing/ Site Visit Date</th>";
+	private static final String DOC_TYPE_QT = "QT";
+	private static final String LANGUAGE_MY = "Notifikasi Pindaan  Taklimat/Lawatan Tapak";
+
+  //28188 -start-
+  	/**
+  	 * return dashBoard content data.
+  	 * @param dashBoard
+  	 * @param notificationId
+  	 * @return content of String.
+  	 */
+  	private String returnDashBoardContent(PmNotifyDashboard dashBoard,
+  			String notificationId) {
+  		String subject = dashBoard.getSubject();
+  		String content = dashBoard.getContent();
+  		subject = removeQtNumber(subject);
+  		if (NotificationTextConst.TEMPLATE_ID_401215.equals(notificationId)
+  				&& StringUtils.isNotEmpty(subject)
+  				&& subject.equals(LANGUAGE_MY)) {
+
+  			return contentReplaceLanguage(content);
+  		} else {
+
+  			return dashBoard.getContent();
+  		}
+
+  	}
+  	//28188 -end-
+    
+  //28188 -start-
+    /**
+     * replace language during BSV notification display.
+     * @param content
+     * @return content .
+     */
+	private String contentReplaceLanguage(String content){
+		return replaceToMalay(content);
+	}
+	//28188 -end-
+	
+	// 28188 -start-
+	/**
+	 * Replace Malay table headers and day names with English in notification
+	 * content.
+	 * 
+	 * @param content
+	 *            original HTML notification content
+	 * @return content with English headers and day names
+	 */
+	public static String replaceToMalay(String content) {
+		if (content == null || content.trim().isEmpty()) {
+			return content;
+		}
+
+		// Step 1: Replace Malay table headers with English
+
+		content = content.replace(HEADER_ASAL_EN, HEADER_ASAL_MS);
+		content = content.replace(HEADER_BAHARU_EN, HEADER_BAHARU_MS);
+
+		// Step 2: Replace Malay day names with English inside <td> tags
+		content = replaceEnglishDaysInTd(content);
+
+		return content;
+	}
+
+	// 28188 -end-
+    
+    //28188 -start-
+    /**
+     * Scans all  values and replaces any English day name found.
+     * e.g. "13/08/2026 11:15 Khamis" -> "13/08/2026 11:15 Thursday"
+     * @param content
+     * @return string with day.
+     */
+    private static String replaceEnglishDaysInTd(String content) {
+        for (Map.Entry<String, String> entry : ENGLISH_TO_MALAY_DAY.entrySet()) {
+            String malayDay  = entry.getKey();
+            String englishDay = entry.getValue();
+
+            // Replace only inside td tags — match " Khamis" with space prefix
+            // to avoid partial word replacement e.g. "Khamis" inside other words
+            content = content.replace(" " + malayDay + "</td>",
+                                      " " + englishDay + "</td>");
+        }
+        return content;
+    }
+    //28188 -end-
+    
+	// 28188 -start-
+	/**
+	 * Removes the QT number suffix from the notification subject string. e.g.
+	 * "Notifikasi Pindaan Taklimat/Lawatan Tapak QT260000000001709" ->
+	 * "Notifikasi Pindaan Taklimat/Lawatan Tapak"
+	 * 
+	 * @param subject
+	 *            original string containing QT number at the end
+	 * @return string without the QT number, trimmed
+	 */
+	public static String removeQtNumber(String subject) {
+		if (subject == null || subject.trim().isEmpty()) {
+			return subject;
+		}
+
+		// Find the index of "QT" prefix and cut everything from there
+		int qtIndex = subject.indexOf(DOC_TYPE_QT);
+		if (qtIndex > 0) {
+
+			return subject.substring(0, qtIndex).trim();
+		}
+
+		// No QT found — return original
+		return subject.trim();
+	}
+	// 28188 -end-
+	
+	//#38107 - Start
+	/**
+	 * Retrieve notification sender, either original or eGPA
+	 * based on notification id
+	 * 
+	 * @param notify
+	 * @return
+	 */
+	public String retrieveeGPASender(PmNotifyUser notify) {
+		if (notify.getPmNotification() != null) {
+			//Convert notification id (long) to String
+			String notificationId = String.valueOf(notify.getPmNotification().getNotificationId());
+			
+			//Compare notification id with eGPA notification, if true return eGPA
+			return notificationId.equals(NotificationTextConst.TEMPLATE_ID_401223) ? SourcingConstants.ROLE_CODE_EGPA
+					: notify.getSender().getUserName();
+		}
+		return notify.getSender() != null ? notify.getSender().getUserName() : "";
+	}
+	//#38107 - End
 }

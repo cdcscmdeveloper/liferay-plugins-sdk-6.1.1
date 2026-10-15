@@ -14,6 +14,8 @@ import javax.faces.bean.SessionScoped;
 import my.ep.biz.bean.sc.BidItemBean;
 import my.ep.biz.bean.sc.BidPackageBean;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.persistence.entity.pm.common.PmAuthority;
+import my.ep.persistence.entity.pm.common.PmAuthorityCommittee;
 import my.ep.persistence.entity.sc.bidding.ScBid;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidPrice;
@@ -28,6 +30,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportDetail;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
@@ -179,7 +182,17 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 
 	// #28777 & #29729 - End
 	
+	
+	//#27502 - New DO MOF Role and Process - Start
+	private PmAuthority approvalAuthority;
+	private PmAuthorityCommittee approvalAuthCommittee;
+	private List<PmAuthority> listApprovalAuthority;
+	private List<PmAuthorityCommittee> listApprovalAuthCommittee;
+	//#27502 - New DO MOF Role and Process - End
+	
 	//#25651 - Start
+	private List<ScQtFinalizationReportDetail> documentDetailList;
+	
 	private static final List<String> directDownloadDocDefKeys = setDirectDownloadDocDefKeys(); 
 	private static List<String> setDirectDownloadDocDefKeys(){
 		List<String> list = new ArrayList<>();
@@ -1422,5 +1435,48 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 		this.flagBranchDeleted = flagBranchDeleted;
 	}
 	// #28777 & #29729 - End
+	
+	//#25651 - Start
+	public List<ScQtFinalizationReportDetail> getDocumentDetailList() {
+		return documentDetailList;
+	}
+
+	public void setDocumentDetailList(List<ScQtFinalizationReportDetail> documentDetailList) {
+		this.documentDetailList = documentDetailList;
+	}
+	//#25651 - End
+	//#27502 - New DO MOF Role and Process - Start
+	public PmAuthority getApprovalAuthority() {
+		return approvalAuthority;
+	}
+
+	public void setApprovalAuthority(PmAuthority approvalAuthority) {
+		this.approvalAuthority = approvalAuthority;
+	}
+
+	public PmAuthorityCommittee getApprovalAuthCommittee() {
+		return approvalAuthCommittee;
+	}
+
+	public void setApprovalAuthCommittee(PmAuthorityCommittee approvalAuthCommittee) {
+		this.approvalAuthCommittee = approvalAuthCommittee;
+	}
+
+	public List<PmAuthority> getListApprovalAuthority() {
+		return listApprovalAuthority;
+	}
+
+	public void setListApprovalAuthority(List<PmAuthority> listApprovalAuthority) {
+		this.listApprovalAuthority = listApprovalAuthority;
+	}
+
+	public List<PmAuthorityCommittee> getListApprovalAuthCommittee() {
+		return listApprovalAuthCommittee;
+	}
+
+	public void setListApprovalAuthCommittee(List<PmAuthorityCommittee> listApprovalAuthCommittee) {
+		this.listApprovalAuthCommittee = listApprovalAuthCommittee;
+	}
+	//#27502 - New DO MOF Role and Process - End
 
 }

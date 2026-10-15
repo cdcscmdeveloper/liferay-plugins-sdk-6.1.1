@@ -43,6 +43,15 @@
 					</h:panelGroup></td>
 			</tr>
 			</table>
+		<ui:remove>34449 - start</ui:remove>
+		<ui:remove> Popup Accept Action </ui:remove>
+		<ac:confirmationPopupSM id="acceptSuppDlgPid"
+			widget="acceptSuppDlg" width="400" height="100"
+			okAction="#{purchaseInDefaultBackingBean.wrappedUpdateBPMTask(accept)}"
+			title="#{lbl['lbl.sc.header.message.accept']}"
+			content="#{lbl['lbl.sc.confirmation.message.accept']}"
+			update="@form" />
+		<ui:remove>34449 - end</ui:remove>	
 		<p:confirmDialog message="#{lbl['lbl.ct.pid.confirm.reject.msg']}"
 			severity="alert" widgetVar="rejectDlg" closable="true"
 			appendToBody="true" header="#{lbl['lbl.sc.dialog.confirm.header.reject']}">

@@ -57,6 +57,7 @@ import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
+import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -65,7 +66,6 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
-import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
 import my.ep.web.backingbean.fl.invoice.InvoiceBackingBean;
@@ -680,13 +680,20 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 	 */
 	public String gpkiSignAction(String outcome) throws ParseException{
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+			FlFulfilmentRequest flRequest = getManagedBean().getAdjustment().getFlRequest();
 			IUserSO userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setRoleCode(RoleCode.PAY_OFFICER.toString());
-			userReqDTO.setOrgProfileId(getManagedBean().getAdjustment().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
+			userReqDTO.setRoleCode(RoleCode.PAY_OFFICER.value());
+			userReqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
 			UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 			if(userResDTO.getUserList() == null || userResDTO.getUserList().isEmpty()){
-				throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.paymentMatchOfficer",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+				// 31788 - Update alert message and send notification
+				userReqDTO.setDocNo(getManagedBean().getAdjustment().getDocNo());
+				userReqDTO.setDocType(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
+				userSO.sendNotifyToPtjAdminInactive(userReqDTO);
+				throw new EpException(MessageConst.ERROR_700128, new String[] {
+						getEpRoleDescByRoleCode(RoleCode.PAY_OFFICER.value()),
+						flRequest.getPreparedOrgProfile().getOrgValidity().getOrgName() });
 			}
 			// Temp setTextBeforeSign : DocNo+Type
 			StringBuilder sb = new StringBuilder();

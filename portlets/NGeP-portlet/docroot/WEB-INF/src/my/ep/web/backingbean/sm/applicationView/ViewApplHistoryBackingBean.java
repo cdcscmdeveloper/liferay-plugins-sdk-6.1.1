@@ -1253,11 +1253,12 @@ public class ViewApplHistoryBackingBean extends
 			SmBulkApplOverlapCatVO voSubRemove = null;
 			String catCode = StringUtils.EMPTY;
 			String isActiveAppl = StringUtils.EMPTY;
-			String applStatus = StringUtils.EMPTY;
+			String applStatus; //#41307 - fix sonarqube issue 41129
 			String language = new FacesScopes().getUserLocale().getLanguage();
 			boolean isAdd = false;
 			boolean isSubAdd = false;
 			for (Object[] arr : resultList) {
+				applStatus = StringUtils.EMPTY; //#40444
 				catCode = arr[0] + "" + arr[1] + arr[2] + "";
 				isActiveAppl = arr[20] + "";
 				voTmp = (SmBulkApplOverlapCatVO) EntityHelper
@@ -2176,4 +2177,10 @@ public class ViewApplHistoryBackingBean extends
 		reqSO.saveSmApplSectionReview(reqDTO);
 	
 	} //#35759 --END	
+	
+	//#40444 --START
+	public boolean checkOverLappedCategoryExists(SmAppl smAppl) {
+		SmOverlapCategoryVO vo = getOverlapCategoryVO(smAppl);
+		return vo != null && vo.isOverLappedCategoryExist();
+	}//#40444 --END
 }
