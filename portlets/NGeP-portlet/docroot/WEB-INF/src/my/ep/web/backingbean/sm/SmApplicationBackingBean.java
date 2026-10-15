@@ -5774,6 +5774,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	public void addOrUpdateCompanyExperienceToSmAppl() {
 		//#40165 - START
 		SmCompanyExperience exp = getManagedBean().getSelectedCompanyExperience();
+
+		//9299 - 40960 START
+		exp.setNewlyAdded(true);
+		//9299 - 40960 END		
 		
 		Map<String, String> fieldsToCheck = new LinkedHashMap<String, String>();
 		fieldsToCheck.put(SmCommonUtil.getMessage("lbl.sm.projDtls.projTitle", null), exp.getTitle());
@@ -11876,6 +11880,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 								ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY_APPROVER,
 								getManagedBean().getApplnOverLapRemarks());
 			}
+			//#9299 - Start
+			if(getAppVersionDetailsWithRedmineNo() && checkCompanyExperienceNewlyAdded(getManagedBean().getSmAppl().getSmCompanyExperiences())){
+				SmApplicationUtil.setCompExpDraft(getManagedBean().getSmAppl());
+			}
+			//#9299 - End
 
 			// #17064 - update establish_date in supplier if there is any
 			// changes
@@ -19052,6 +19061,37 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			break;
 		}
 	}
+	// #9299 - Start
+	public boolean getAppVersionDetailsWithRedmineNo() {
+		return SmApplicationUtil.getAppVersionDetailsWithRedmineNo(getManagedBean().getSmAppl(), SupplierManagementConst.APP_VERSION_REDMINE_NO_9299,
+				SupplierManagementConst.PHASE_1);
+	}
+
+	public boolean checkCompanyExperienceNewlyAdded(List<SmCompanyExperience> list) {
+		for (SmCompanyExperience exp : list) {
+			if (exp.isNewlyAdded()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public String getCompanyExperienceLabel() {
+		boolean isNewAppl = getManagedBean().getSmAppl().getApplType()
+				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF);
+		boolean isSupplier = getManagedBean().isSupplierUser();
+		boolean isPoOrApprover = getManagedBean().isPoUser() || getManagedBean().isApproverUser();
+
+		if (isSupplier) {
+			return SmCommonUtil.getMessage(isNewAppl ? "lbl.sm.comp.exp.new.version.new.application.supplier"
+					: "lbl.sm.comp.exp.new.version.other.application.supplier", null);
+		} else if (isPoOrApprover) {
+			return SmCommonUtil.getMessage(isNewAppl ? "lbl.sm.comp.exp.new.version.new.application.supplier"
+					: "lbl.sm.comp.exp.new.version.other.application.ups", null);
+		}
+		return "";
+	}
+	// #9299 - End
 	//#34135 START - Commit half part from redmine 29727 into pds
 	public void setBranchDisplayTable() {
 		List<SmSupplierBranch> displayBranches = new ArrayList<>();

@@ -591,6 +591,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	public SelectItem[] getDropdownValues(String parameterType) {
 		return getDropdownValuesBySearchBean(parameterType, null);
 	}
+	
+	//9299 - 40712 Start
+	public SelectItem[] getProcurementMethodDropdownValues (String parameterType){
+		return getDropdownValuesByProcurementMethod(parameterType, null);
+	}
+	//9299 - 40712 End
 
 	/**
 	 * Get parameter id select items by parameter type and search bean for
@@ -681,6 +687,47 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return items;
 	}
 	
+	// 9299 -40712 Start
+	public SelectItem[] getDropdownValuesByProcurementMethod(String parameterType,
+			ISearchBean<PmParameterDesc> searchBean) {
+
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+
+		try {
+			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(
+					parameterType, searchBean);
+
+			List<PmParameterDesc> filteredList = new ArrayList<PmParameterDesc>();
+
+			for (PmParameterDesc parameterDesc : parameterDescs) {
+				if (!ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE.equalsIgnoreCase(parameterDesc.getPmParameter()
+						.getParameterCode())) {
+					filteredList.add(parameterDesc);
+				}
+			}
+
+			items = new SelectItem[filteredList.size() + 1];
+
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+
+			int i = 1;
+
+			for (PmParameterDesc parameterDesc : filteredList) {
+				items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(),
+						parameterDesc.getCodeName());
+			}
+
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+
+		return items;
+	}
+	// 9299 -40712 End	
 	/** #21695 FARID START*/	
 	/**
 	 * Get parameter id select items by parameter type and search bean for

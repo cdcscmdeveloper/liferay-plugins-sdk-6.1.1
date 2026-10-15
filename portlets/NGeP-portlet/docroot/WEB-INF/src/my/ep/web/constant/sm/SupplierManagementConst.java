@@ -768,9 +768,25 @@ public class SupplierManagementConst {
 	// #28895_35501 End
 	// #34031
 	public static final String SM_REVISIT_FILE_PATH = "/SM/REVISIT/";
+	// #9299 Start
+	public static final String SM_COMP_EXP_FILE_PATH = "/SM/COMPEXP/";
+	public static final Long APP_VERSION_REDMINE_NO_9299 = 9299L;
+	
+
+	/** Procurement Mode (PARAMETER_TYPE = 'PM') */
+	public static final long PM_QUOTATION    = 121L;
+	public static final long PM_TENDER       = 122L;
+	public static final long PM_DIRECT_NEGO  = 123L;
+
+	/** Procurement Mode Quotation (PARAMETER_TYPE = 'PMQ') */
+	public static final long PMQ_QUOTATION   = 185L;
+	public static final long PMQ_TENDER      = 186L;
+	public static final long PMQ_DIRECT_NEGO = 187L;
+	
+	// #9299 End
 	
 	public static final Long COMPOSITE_VALIDITY_ID_SM_DEL_PEN=38195L;//38195
-	public static final int PHASE_1 = 1;	//#9299
+	public static final int PHASE_1 = 1;
 	public static final Long APP_VERSION_REDMINE_NO_40112 = 40112L;		//#40112
 	//26238 - START
 	public static final String MTO_CODE_04 = "04";
@@ -1660,4 +1676,31 @@ public class SupplierManagementConst {
 		return APPL_TYPE_RENEW_MOF;
 	}
 	// 36504 - END
+	
+	
+	//Start 9299
+	public static long getPmDirectNego() {
+		return PM_DIRECT_NEGO;
+	}
+
+	public static long getPmQuotation() {
+		return PM_QUOTATION;
+	}
+
+	public static long getPmTender() {
+		return PM_TENDER;
+	}
+
+	public static long getPmqQuotation() {
+		return PMQ_QUOTATION;
+	}
+
+	public static long getPmqTender() {
+		return PMQ_TENDER;
+	}
+
+	public static long getPmqDirectNego() {
+		return PMQ_DIRECT_NEGO;
+	}
+	//End 9299
 }

@@ -229,6 +229,12 @@ import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.kernel.util.StringUtil;
+// #9299 - Start
+import my.ep.persistence.entity.pm.common.PmAppVersion;
+import my.ep.persistence.entity.sm.SmCompanyExperienceCat;
+import my.ep.persistence.entity.sm.SmCompExpCatDraft;
+import my.ep.persistence.entity.sm.SmCompExpDraft;
+// #9299 - End
 
 
 public class SmApplicationUtil {
@@ -16346,5 +16352,91 @@ public class SmApplicationUtil {
 
 		return false;
 	}
+
+	/**
+	 * Save sm remarks.
+	 * 
+	 * @param remarks
+	 *            - SmRemark object
+	 */
+	public static void setCompExpDraft(SmAppl smAppl) {
+		List<SmCompExpDraft> smCompExpDraft = new ArrayList<>();
+		for (SmCompanyExperience exp : smAppl.getSmCompanyExperiences()) {
+			boolean isConsultant = false;
+			if (exp.getSupplierType().equals(ParameterConst.SUPPLIER_TYPE_CONSULTANT)) {
+				isConsultant = true;
+			}
+			if (exp.isNewlyAdded()) {
+				SmCompExpDraft draft = new SmCompExpDraft();
+				draft.setSmSupplier(smAppl.getSmSupplier());
+				draft.setSmAppl(smAppl);
+				draft.setTitle(exp.getTitle());
+				draft.setContractValue(exp.getContractValue());
+				draft.setSourceType(retrievePmParameterById(ParameterConst.SOURCE_TYPE_ID_SM));
+				draft.setClientType(exp.getClientType());
+				draft.setOriAgencyName(exp.getClientName());
+				draft.setAgencyName(exp.getClientName());	
+				/*if(exp.getClientType().equalsIgnoreCase("F")){Latest FRS 2.9 Store all agency name
+					draft.setOriAgencyName(exp.getClientName());
+				}else if(exp.getClientType().equalsIgnoreCase("O")){
+					draft.setAgencyName(exp.getClientName());	
+				}*/
+				if(exp.getPaymentMethodId() != null && exp.getPaymentMethodId().longValue() > 0) {
+					draft.setPaymentMethod(retrievePmParameterById(exp.getPaymentMethodId().longValue()));
+				}				
+				draft.setContractEffDate(exp.getProcurementDate());
+				if(isConsultant){
+					draft.setFileReferenceNo(exp.getRefNo());
+					draft.setProjectLoc(exp.getProjectLocation());
+					draft.setWorkServDesc(exp.getWorkServiceDesc());
+					draft.setConsultantFee(exp.getConsultantFee());
+				} else {
+					
+					if(exp.getProcurementModeId() != null && exp.getProcurementModeId().longValue() > 0) {
+					    long pmId = exp.getProcurementModeId().longValue();
+					    long procurementModeId;
+					    if (pmId == SupplierManagementConst.PM_QUOTATION) {
+					        procurementModeId = SupplierManagementConst.PMQ_QUOTATION;
+					    } else if (pmId == SupplierManagementConst.PM_TENDER) {
+					        procurementModeId = SupplierManagementConst.PMQ_TENDER;
+					    } else if (pmId == SupplierManagementConst.PM_DIRECT_NEGO) {
+					        procurementModeId = SupplierManagementConst.PMQ_DIRECT_NEGO;
+					    } else {
+					        procurementModeId = pmId;
+					    }
+					    draft.setProcumentMode(retrievePmParameterById(procurementModeId));
+					}
+				}
+				List<SmCompExpCatDraft> catDraftList = new ArrayList<>();
+				for (SmCompanyExperienceCat cat : exp.getSmCompanyExperienceCats()) {
+					SmCompExpCatDraft catDraft = new SmCompExpCatDraft();
+					CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+					
+					reqDTO.setCategoryL1Id(cat.getPmCategoryL1().getCategoryL1Id());
+					catDraft.setCategoryL1(SmServiceLookup.getCategoryCodeSO().retrieveCategoryL1DtlById(reqDTO).getCategoryL1());
+					catDraft.setCategoryL1(cat.getPmCategoryL1());
+					catDraft.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName());
+
+					reqDTO.setCategoryL2Id(cat.getPmCategoryL2().getCategoryL2Id());
+					catDraft.setCategoryL2(SmServiceLookup.getCategoryCodeSO().retrieveCategoryL2DtlById(reqDTO).getCategoryL2());
+					catDraft.setCategoryL2(cat.getPmCategoryL2());
+					catDraft.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName());
+
+					reqDTO.setCategoryL3Id(cat.getPmCategoryL3().getCategoryL3Id());
+					catDraft.setCategoryL3(SmServiceLookup.getCategoryCodeSO().retrieveCategoryL3DtlById(reqDTO).getCategoryL3());
+					catDraft.setCategoryL3(cat.getPmCategoryL3());
+					catDraft.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName());
+
+					catDraft.setCompExpDraft(draft);
+					catDraftList.add(catDraft);
+				}
+				draft.setCompExpDraftCats(catDraftList);
+				smCompExpDraft.add(draft);
+			}
+			
+		}
+		smAppl.setSmCompExpDraft(smCompExpDraft);
+	}
 	// #9299 - End
+	
 }

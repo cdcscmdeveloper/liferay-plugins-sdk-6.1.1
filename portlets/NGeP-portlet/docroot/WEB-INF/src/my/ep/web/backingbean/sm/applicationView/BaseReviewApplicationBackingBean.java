@@ -1128,6 +1128,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			getManagedBean().getSmAppl().setSmCompanyExperiences(
 					activeCompanyExperiences);
 		}
+		// #9299 - Start
+		if (!getAppVersionDetailsWithRedmineNo()) {
+			this.getManagedBean().getMasterAllDataModel().reloadData();
+		}
+		// #9299 - End
 
 	}
 
@@ -5361,6 +5366,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		});
 	}
 	// #34031#note-111 : Issue 20 - End
+	
+	// #9299 - Start
+	public boolean getAppVersionDetailsWithRedmineNo() {
+		return SmApplicationUtil.getAppVersionDetailsWithRedmineNo(getManagedBean().getSmAppl(), SupplierManagementConst.APP_VERSION_REDMINE_NO_9299,
+				SupplierManagementConst.PHASE_1);
+	}
+	// #9299 - End
 	
 	// 36504 - START
 	/**
