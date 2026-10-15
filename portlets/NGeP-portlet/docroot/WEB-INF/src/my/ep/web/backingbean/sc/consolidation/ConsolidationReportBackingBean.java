@@ -3163,6 +3163,29 @@ public class ConsolidationReportBackingBean extends
 					break;
 				}
 			}
+			// #38151 technical evaluated by package (no Technical By Item setting): TI not found,
+			// show supplier package TEC score (T) same as recommendation by item calculation -start-
+			if (null == totalScoreTecEval && SourcingConstants.EVAL_STAGE_TECHNICAL_ITEM.equals(evalstageT)) {
+				IQTEvaluationSO evalSOTecPkg = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+				IQTSpecSO specSOTecPkg = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+				EvaluationReqDTO reqTecPkg = new EvaluationReqDTO();
+				reqTecPkg.setQtId(qtId);
+				if (evalSOTecPkg.checkWipScoreSetting(reqTecPkg) < SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM
+						&& specSOTecPkg.checkWipScoreFlag(qtId)) {
+					List<Object[]> findListTecPkg = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(
+							SourcingConstants.EVAL_STAGE_TECHNICAL, qtId, null, null);
+					for (Object[] rowTecPkg : findListTecPkg) {
+						if (supplierId == ((BigDecimal) rowTecPkg[0]).longValue()
+								&& SourcingConstants.EVAL_STAGE_TECHNICAL.equalsIgnoreCase(rowTecPkg[4].toString())) {
+							totalScoreTecEval = (BigDecimal) rowTecPkg[3];
+							break;
+						}
+					}
+				}
+			}
+			// #38151 -end-
 		}
 		//#38679 end
 
