@@ -1253,7 +1253,7 @@ public class ViewApplHistoryBackingBean extends
 			SmBulkApplOverlapCatVO voSubRemove = null;
 			String catCode = StringUtils.EMPTY;
 			String isActiveAppl = StringUtils.EMPTY;
-			String applStatus = StringUtils.EMPTY;
+			String applStatus; //#41307 - fix sonarqube issue 41129
 			String language = new FacesScopes().getUserLocale().getLanguage();
 			boolean isAdd = false;
 			boolean isSubAdd = false;
