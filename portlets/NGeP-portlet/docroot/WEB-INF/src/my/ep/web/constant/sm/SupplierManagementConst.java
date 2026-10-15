@@ -770,6 +770,8 @@ public class SupplierManagementConst {
 	public static final String SM_REVISIT_FILE_PATH = "/SM/REVISIT/";
 	
 	public static final Long COMPOSITE_VALIDITY_ID_SM_DEL_PEN=38195L;//38195
+	public static final int PHASE_1 = 1;	//#9299
+	public static final Long APP_VERSION_REDMINE_NO_40112 = 40112L;		//#40112
 	//26238 - START
 	public static final String MTO_CODE_04 = "04";
 	public static final String MTO_CODE_05 = "05";

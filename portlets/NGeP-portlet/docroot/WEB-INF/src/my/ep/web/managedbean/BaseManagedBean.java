@@ -1140,4 +1140,9 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 	// #25726 end
 
+	// #40112 - Start
+	public boolean isAiEnabled() {
+		return false;
+	}
+	// #40112 - End
 }
