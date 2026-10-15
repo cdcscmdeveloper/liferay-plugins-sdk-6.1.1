@@ -1137,6 +1137,7 @@ public class SupplierFinalizationBackingBean extends
 
 		return scQtCommittee;
 	}
+
 	// #27502 -End-
 	
 	// #27502 -start-
@@ -1151,6 +1152,7 @@ public class SupplierFinalizationBackingBean extends
 	    return cached;
 	}
 	// #27502 -End-
+
 	// #27502 - New DO MOF Role and Process - end
 
 		private void retrievePreparationDtls(Long qtId, String committeeType) {
@@ -1802,7 +1804,6 @@ public class SupplierFinalizationBackingBean extends
 
 			if (isBpkCentralContract) {
 				scQtCommittee = recordDtlsInfo();
-				
 				reqDTO = validateInfo(2, skipValidation);
 				validateAuthorityCommittee(reqDTO.getScQtFinalization(),skipValidation);
 			} else { // #27502 - END
