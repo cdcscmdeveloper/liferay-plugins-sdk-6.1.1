@@ -99,28 +99,20 @@ QtReportBackingBean<EvaluationCommitteeReportManagedBean> implements Serializabl
 	 */
 	public void getScReports(String qtNumber) {
 
-		boolean isAllReportExisting = false;
-		List<ScQtFinalizationReport> scQtFinalizationReports;
-		if (StringUtils.isNotEmpty(qtNumber) && qtNumber.startsWith(ReportConst.QT_VALUE)) {
+		List<ScQtFinalizationReport> reports = new ArrayList<>();
+		boolean isValidQtNumber = StringUtils.isNotEmpty(qtNumber) && qtNumber.startsWith(ReportConst.QT_VALUE);
 
-			List<ScQtFinalizationReport> reports = getSourcingIntegrationSO().retriveFinalizationScReport(qtNumber,
-					SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT);
+		if (isValidQtNumber) {
+			List<ScQtFinalizationReport> retrievedReports = getSourcingIntegrationSO().retriveFinalizationScReport(
+					qtNumber, SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT);
 
-			if (CollectionUtils.isNotEmpty(reports)) {
-				isAllReportExisting = true;
-				scQtFinalizationReports = reports;
-			} else {
-				isAllReportExisting = false;
-				scQtFinalizationReports = new ArrayList<>();
+			if (CollectionUtils.isNotEmpty(retrievedReports)) {
+				reports = retrievedReports;
 			}
-
-		} else {
-			isAllReportExisting = false;
-			scQtFinalizationReports = new ArrayList<>();
 		}
 
-		this.getManagedBean().setAllReportExisting(isAllReportExisting);
-		this.getManagedBean().setQtReportDocumentList(scQtFinalizationReports);
+		this.getManagedBean().setAllReportExisting(CollectionUtils.isNotEmpty(reports));
+		this.getManagedBean().setQtReportDocumentList(reports);
 	}
 
 	// #25651 - End
