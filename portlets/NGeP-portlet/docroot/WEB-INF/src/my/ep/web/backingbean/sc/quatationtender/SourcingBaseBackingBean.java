@@ -171,8 +171,11 @@ import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMemberHistory;
 import my.ep.persistence.entity.sc.quationtender.ScEvaluationCommitteeReportAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScEvaluationCommitteeReportDetailAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScFinancialEvaluationReportAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScFinancialEvaluationReportDetailAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScOpenCommitteeReportAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScOpenCommitteeReportDetailAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;//#28188
@@ -198,6 +201,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScTechnicalEvaluationReportAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScTechnicalEvaluationReportDetailAttachment;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalReportAttachment;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
@@ -460,7 +464,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				|| scAttachment instanceof ScOpenCommitteeReportAttachment
 				|| scAttachment instanceof ScTechnicalEvaluationReportAttachment
 				|| scAttachment instanceof ScFinancialEvaluationReportAttachment
-				|| scAttachment instanceof ScQtProposalReportAttachment) {
+				|| scAttachment instanceof ScQtProposalReportAttachment 
+			    || scAttachment instanceof ScEvaluationCommitteeReportDetailAttachment
+			    || scAttachment instanceof ScOpenCommitteeReportDetailAttachment
+			    || scAttachment instanceof ScTechnicalEvaluationReportDetailAttachment
+			    || scAttachment instanceof ScFinancialEvaluationReportDetailAttachment) {//#25651
 
 			return new AttachmentDateFormat();
 		} else {
