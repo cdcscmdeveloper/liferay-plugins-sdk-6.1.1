@@ -171,6 +171,10 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	private Long newSupplierUserId;
 	//28221 - end
 	
+	//24956 start
+    private boolean ctTypeMinistry;
+    //24956 end
+	
 	//32678-start
 	private String backToPrevious;
 	private List<FlRemark> previousRemarkList;
@@ -1654,6 +1658,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 		this.newSupplierUserId = newSupplierUserId;
 	}
 	//28221 - end
+	
+	// 24956 - start
+	public boolean isCtTypeMinistry() {
+		return ctTypeMinistry;
+	}
+
+	public void setCtTypeMinistry(boolean ctTypeMinistry) {
+		this.ctTypeMinistry = ctTypeMinistry;
+	}
+
+	// 24956 - end
 	
 	// 32678 - start
 	/**

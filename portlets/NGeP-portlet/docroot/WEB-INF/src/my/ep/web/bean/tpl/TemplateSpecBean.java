@@ -14,6 +14,8 @@ import java.io.Serializable;
 import java.util.List;
 
 import my.ep.constant.tpl.TemplateSpecConst;
+import my.ep.persistence.entity.sc.quationtender.ScQt; //#25138
+import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist; //#25138
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecEstimation;
@@ -43,8 +45,17 @@ public class TemplateSpecBean implements Serializable {
 	private boolean updateSpecByAnswers;
 	private List<TplSpecAnswer> specAnswersToDelete;
 	private TplSpecEstimation specEstimation;
-
+	// #25138 - start
+	private List<TplSpecQuestion> specQuestionList;
+	private List<TplSpecMaster> specMasterList;
+	private int evaluatioStageActiveIndex;
+	private String answerRemove;
+	private ScQtProposalChecklist qtProposalChecklist;
+	private ScQt qt;
+	private List<TplSpecAnswer> hideanswerList;
+	// #25138 -End
 	private boolean wordBreakForQT;//#29007 Added Vinod
+	private boolean weightage35384WIP;;//#38151
 	
 
 	/**
@@ -160,6 +171,13 @@ public class TemplateSpecBean implements Serializable {
 	 */
 	public void setSelectedSpecQuestion(TplSpecQuestion selectedSpecQuestion) {
 		this.selectedSpecQuestion = selectedSpecQuestion;
+		
+		// #25138 - Bug #32194 - Start.
+		if (this.getSelectedScoreTypeId() == null && null != this.getSelectedSpecQuestion()
+				&& null != this.getSelectedSpecQuestion().getScoreTypeCode()) {
+			this.setSelectedScoreTypeId(this.getSelectedSpecQuestion().getScoreTypeCode().getParameterId());
+		}
+		// #25138 - Bug #32194 - End.
 	}
 
 	/**
@@ -248,6 +266,95 @@ public class TemplateSpecBean implements Serializable {
 	}
 	//#25039 End
 
+	// #25138 - start
+	public List<TplSpecQuestion> getSpecQuestionList() {
+		return specQuestionList;
+	}
+
+	public void setSpecQuestionList(List<TplSpecQuestion> specQuestionList) {
+		this.specQuestionList = specQuestionList;
+	}
+
+	public List<TplSpecMaster> getSpecMasterList() {
+		return specMasterList;
+	}
+
+	public void setSpecMasterList(List<TplSpecMaster> specMasterList) {
+		this.specMasterList = specMasterList;
+	}
+
+	public int getEvaluatioStageActiveIndex() {
+		return evaluatioStageActiveIndex;
+	}
+
+	public void setEvaluatioStageActiveIndex(int evaluatioStageActiveIndex) {
+		this.evaluatioStageActiveIndex = evaluatioStageActiveIndex;
+	}
+	// #25138 - end
+	
+	// 32453, #21695, #25138 -start
+	/**
+	 * 
+	 * @return the answerRemove
+	 */
+	public String getAnswerRemove() {
+		return answerRemove;
+	}
+
+	/**
+	 * @param answerRemove
+	 *            the answerRemove to set
+	 */
+	public void setAnswerRemove(String answerRemove) {
+		this.answerRemove = answerRemove;
+	}
+
+	/**
+	 * @return the qtProposalChecklist
+	 */
+	public ScQtProposalChecklist getQtProposalChecklist() {
+		return qtProposalChecklist;
+	}
+
+	/**
+	 * @param qtProposalChecklist
+	 *            the qtProposalChecklist to set
+	 */
+	public void setQtProposalChecklist(ScQtProposalChecklist qtProposalChecklist) {
+		this.qtProposalChecklist = qtProposalChecklist;
+	}
+
+	/**
+	 * @return the qt
+	 */
+	public ScQt getQt() {
+		return qt;
+	}
+
+	/**
+	 * @param qt
+	 *            the qt to set
+	 */
+	public void setQt(ScQt qt) {
+		this.qt = qt;
+	}
+
+	/**
+	 * @return the hideanswerList
+	 */
+	public List<TplSpecAnswer> getHideanswerList() {
+		return hideanswerList;
+	}
+
+	/**
+	 * @param hideanswerList
+	 *            the hideanswerList to set
+	 */
+	public void setHideanswerList(List<TplSpecAnswer> hideanswerList) {
+		this.hideanswerList = hideanswerList;
+	}
+	// 32453, #21695, #25138 -End
+	
 	// #29007 Start Vinod
 	public boolean isWordBreakForQT() {
 		return wordBreakForQT;
@@ -257,5 +364,14 @@ public class TemplateSpecBean implements Serializable {
 		this.wordBreakForQT = wordBreakForQT;
 	}
 	// #29007 End Vinod
-	
+
+	//#38151
+	public boolean isWeightage35384WIP() {
+		return weightage35384WIP;
+	}
+
+	public void setWeightage35384WIP(boolean weightage35384WIP) {
+		this.weightage35384WIP = weightage35384WIP;
+	}
+	//#38151
 }

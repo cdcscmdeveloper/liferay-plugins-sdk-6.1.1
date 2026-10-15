@@ -16,7 +16,21 @@
 		value="#{specificationBackingBean.managedBean.fulfilmentType == ParameterConst.fulfilmentTypeScheduled}" />
 	<ui:param name="isItemTypeService" value="#{templateSpecBean.specMaster.itemTypeCode.parameterCode == ParameterConst.itemTypeService}" />
 
-	<p:dataTable id="zoneEstimationTbl" widgetVar="tierQtyWidget"
+	<!-- #21695 farid add instruction START -->
+	<ui:remove>
+		<!-- //#25138(wip 4serangkai) bug -Start 8/6/2023 -->
+	</ui:remove>
+	<table>
+		<tr>
+			<td><h:outputText style="float: left;" styleClass="instruction" escape="false" 
+					rendered="#{specificationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}"
+					value="#{lbl['lbl.tpl.qty.estimation.instruction']}" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+		<!-- #21695 END -->
+		<p:dataTable id="zoneEstimationTbl" widgetVar="tierQtyWidget"
 		var="tplSpecEstimation"
 		rowIndexVar="rowIndex"
 		value="#{templateSpecBean.selectedSpecQuestion.tplSpecEstimations}"
@@ -83,12 +97,13 @@
 				<h:outputText value="* " styleClass="mandatory" rendered="#{editable}" />
 				<h:outputText value="#{lbl['lbl.tpl.spec.content.Indicative.unit.price']}"/>
 			</f:facet>
+			<!-- #21695 adding disable -start- -->
 			<p:inputText id="zoneEstCost" 
 				value="#{tplSpecEstimation.indicativeUnitPrice}" style="width:165px; text-align:right;" 
 				required="#{empty tplSpecEstimation.estimatedCost}" maxlength="19"
 				label="#{lbl['lbl.tpl.spec.content.Indicative.unit.price']}"
-				disabled="#{!editable}">
-
+				disabled="#{!editable or templateSpecBean.selectedSpecQuestion.tplSpecZoneQties[rowIndex].qty eq 0}">
+			<!-- #21695 adding disable -end- -->
 				<f:converter converterId="dynamicNumberConverter" />
 				<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />						
 				<f:validator validatorId="quantityDoubleRangeValidator" />
@@ -128,4 +143,10 @@
 
 		</p:column>
 	</p:dataTable>
+	<!-- 21695 -start- -->
+			</td>
+		</tr>
+	</table>
+	<!-- 21695 -end- -->
+	
 </ui:composition>

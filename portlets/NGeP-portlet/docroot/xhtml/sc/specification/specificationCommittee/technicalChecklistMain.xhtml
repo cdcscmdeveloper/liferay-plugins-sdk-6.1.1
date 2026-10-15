@@ -189,8 +189,19 @@
 							id="techChecklistTitletypenotnullType"
 							label="#{lbl['lbl.sc.type']}"
 							value="#{stageTwoTechnical.definationType.parameterId}"><!-- 11104wip -->
-							<f:selectItems
-								value="#{specificationBackingBean.getTechnicalChecklistDefTypeValues(ParameterTypeConst.documentDefinitionType)}"></f:selectItems>
+								<!--#21695 Farid Start -->
+								<c:choose>
+									<c:when
+										test="#{specificationBackingBean.managedBean.qt.partial}">
+										<f:selectItems
+											value="#{specificationBackingBean.getTechnicalChecklistDefTypeValuesPartial(ParameterTypeConst.documentDefinitionType)}"></f:selectItems>
+									</c:when>
+									<c:otherwise>
+										<f:selectItems
+											value="#{specificationBackingBean.getTechnicalChecklistDefTypeValues(ParameterTypeConst.documentDefinitionType)}"></f:selectItems>
+									</c:otherwise>
+								</c:choose>
+								<!--#21695 Farid End -->
 							<p:ajax event="change" process="@this"
 								update="technicalChecklistsupplier,scoreView,uploadtech,technicalSpecificationStatus"
 								partialSubmit="true"

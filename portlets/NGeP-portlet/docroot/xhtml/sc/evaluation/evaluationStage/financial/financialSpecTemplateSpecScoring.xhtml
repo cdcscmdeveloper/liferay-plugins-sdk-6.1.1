@@ -29,8 +29,8 @@
 			<ac:templateSpec
 				templateSpecBean="#{evaluationBackingBean.managedBean.templateSpecBean}"
 				title="#{lbl['lbl.sc.spec.financial.title']}" />
-
-			<h:panelGroup>
+			<ui:remove><!-- #25138 --></ui:remove>
+			<h:panelGroup rendered="#{evaluationBackingBean.managedBean.showSchema}" >
 				<p:panel header="#{lbl['lbl.sc.spec.scoring.offered.price']}"
 					id="evaluationsStageFinancialSpecSupplierSeletedItemsSpecCommitteeOfferPrice"
 					toggleable="true">

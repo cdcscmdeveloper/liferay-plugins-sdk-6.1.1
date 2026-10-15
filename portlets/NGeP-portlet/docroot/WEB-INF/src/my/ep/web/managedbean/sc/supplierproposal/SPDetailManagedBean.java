@@ -43,6 +43,7 @@ import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.backingbean.sc.supplierproposal.TechnicalStaffBean;
@@ -55,6 +56,7 @@ import my.ep.web.vo.SmPersonnleCalcVO;
 
 import org.apache.log4j.Logger;
 import org.primefaces.model.MenuModel;
+import org.primefaces.model.TreeNode;
 
 /**
  * Supplier Proposal Managed Bean
@@ -215,11 +217,16 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private ScQtCheckList financialQtChecklist;
 	private int supplierInfoActiveIndex; //25089@hatta
 	private boolean tierType = false; //#11715 danial
-	
+	private List<TreeNode> zoneGeneralTrees; //#21695 Farid
+
 	/** report download filename. */
 	private String reportDownloadFileName = "NGeP-QT-Supplier-Proposal-Report";
 	private boolean supplierBranchDeleted = false; // #28777 & #29729
 	private boolean isFinancialAttchment;//#28792
+
+	// #21695 - #33391 - Start.
+	private Map<Long, List<TplSpecAnswer>> zoneTplSpecAnsMap;
+	// #21695 - #33391 - End.	
 	
 	// #30609, #26247 - Start.
 	private boolean disableUpdateProposal;
@@ -1914,6 +1921,22 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	}
 	//25089@hatta - end
 
+	//#21695 Farid start
+	/**
+	 * @return the zoneGeneralTrees
+	 */
+	public List<TreeNode> getZoneGeneralTrees() {
+		return zoneGeneralTrees;
+	}
+
+	/**
+	 * @param zoneGeneralTrees the zoneGeneralTrees to set
+	 */
+	public void setZoneGeneralTrees(List<TreeNode> zoneGeneralTrees) {
+		this.zoneGeneralTrees = zoneGeneralTrees;
+	}
+	//#21695 Farid End
+	
 	//#11715 danial start
 	public boolean isTierType() {
 		return tierType;
@@ -1968,4 +1991,20 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	}
 	// #30609, #26247 - End.
 
+	// #21695 - #33391 - Start.
+	/**
+	 * @return the zoneTplSpecAnsMap
+	 */
+	public Map<Long, List<TplSpecAnswer>> getZoneTplSpecAnsMap() {
+		return zoneTplSpecAnsMap;
+	}
+
+	/**
+	 * @param zoneTplSpecAnsMap
+	 *            the zoneTplSpecAnsMap to set
+	 */
+	public void setZoneTplSpecAnsMap(Map<Long, List<TplSpecAnswer>> zoneTplSpecAnsMap) {
+		this.zoneTplSpecAnsMap = zoneTplSpecAnsMap;
+	}
+	// #21695 - #33391 - End.
 }

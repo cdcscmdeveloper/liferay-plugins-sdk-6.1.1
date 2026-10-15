@@ -99,7 +99,7 @@
 						rendered="#{!isSqSpec and isSpecTypeFinancial and templateSpecBackingBean.checkPriceTierEnableColumn(templateSpecBean)}">
 						<f:converter converterId="dynamicNumberConverter" />
 					</h:outputText>
-					<!-- #31134 #11104 Farid End -->				
+					<!-- #31134 Farid End 25/6/2021-->
 					<h:outputText value="#{tplSpecAnswer.tplSpecTierQty.fromQty}" rendered="#{isQuestionTypeItem}">
 						<f:converter converterId="dynamicNumberConverter" />
 						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, tplSpecAnswer.tplSpecQuestion.clUom.uomCode)}" />
@@ -131,21 +131,41 @@
 		</h:outputText>
 	</p:column>
 	
-	<p:column style="width:10%;" rendered="#{isSpecTypeFinancial}">
-		
+	<!-- #32110, #21695 -start- -->
+	<p:column style="width:10%;"
+		rendered="#{isSqSpec and isSpecTypeFinancial or (!qtyZero and isSpecTypeFinancial) or (!isSqSpec and !isZonal and isSpecTypeFinancial)}">
+		<!-- #32110, #21695 -end- -->
 		<f:facet name="footer">
 			<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isAllPriceTypesStandard and !(isZonal and isSqSpec)}" />
+			<!-- <h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isAllPriceTypesStandard and isZonal and isSqSpec}" /> #31789  -->
 		</f:facet>
-		
-		<p:inputText id="ratePerUom" style="min-width:0px !important; width:calc(100% - 40px); text-align:right;"
-			value="#{tplSpecAnswer.ratePerUom}"
-			disabled="#{!editable}" required="false"
-			rendered="#{isQuestionTypeItem}"  maxlength="19"
+				
+		<!-- #21695 -start- -->
+		<p:inputText id="ratePerUom"
+			style="min-width:0px !important; width:calc(100% - 40px); text-align:right;"
+			value="#{tplSpecAnswer.ratePerUom}" required="false"
+			rendered="#{isQuestionTypeItem}" maxlength="19"
 			label="#{lbl['lbl.tpl.spec.content.unit.price']}"
-			onkeypress="if (event.keyCode == 13) { return false; }"> <!-- #32362 -->
+			disabled="#{!editable or 
+			tplSpecAnswer ne null 
+			and tplSpecAnswer.tplSpecZoneQty ne null 
+			and tplSpecAnswer.tplSpecZoneQty.qty eq 0 
+			or tplSpecAnswer.notOfferSingle}"
+			onkeypress="if (event.keyCode == 13) { return false; }"><!-- #32362 -->
+			<!-- #21695 -end- -->
 			<p:ajax event="change" partialSubmit="true" process="@this" update="@this, ratePerUomMsg, ansYearPG, ansPG, @(.calcAmount)" listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, tplSpecAnswer, isItemTypeService)}" />
-			<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
-			<f:validateDoubleRange minimum="0.01" maximum="99999999999.99" />
+
+			<!-- #21695 START -->
+			<c:if test="#{!isSqSpec and tplSpecAnswer.ratePerUom eq null}">
+			<!-- #21695 END -->
+				<ui:remove>Bug #34780 07/06/2023 @idham - Start</ui:remove>
+				<f:converter converterId="dynamicNumberConverter" />
+				<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />						
+				<f:validator validatorId="quantityDoubleRangeValidator" />
+				<ui:remove>Bug #34780 07/06/2023 @idham - End</ui:remove>
+			<!-- #21695 START -->
+			</c:if>
+			<!-- #21695 END -->
 		</p:inputText>
 		
 		<p:message id="ratePerUomMsg" for="ratePerUom" display="icon" />
@@ -190,12 +210,16 @@
 		</f:facet>
 		
 		<h:panelGroup id="ansPG">
-			<!-- 25201 -start- -->
-			<p:inputTextarea id="answerText" style="width:calc(100% - 40px);" value="#{tplSpecAnswer.answerText}" 
-			onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,1000);"
-				rendered="#{isAnswerTypeText}" required="false" rows="1" 
-				label="#{lbl[answerlbl]}" disabled="#{!editable}">
-				<!-- 25201 -end- -->
+			<!-- #32952, #21695 -start- -->
+			<p:inputTextarea id="answerText" style="width:calc(100% - 40px);"
+				value="#{tplSpecAnswer.answerText}"
+				onkeyup="limitTextArea(this,1000);"
+				onkeydown="limitTextArea(this,1000);"
+				onmouseout="limitTextArea(this,1000);"
+				rendered="#{isAnswerTypeText}" required="false" rows="1"
+				label="#{lbl[answerlbl]}"
+				disabled="#{(!editable or !isSqSpec and tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal) or (!isSqSpec and isSpecTypeTechnical and isZonal and templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and templateSpecBackingBean.evaluateSpecDisable(tplSpecAnswer))}">
+				<!-- #32952, #21695 -end- -->
 				<p:ajax partialSubmit="true" process="@this" update="@this, answerTextMsg" />
 				<f:validateLength for="answerText" maximum="1000" />
 			</p:inputTextarea>
@@ -203,12 +227,15 @@
 			<!-- #29007	Vinod Added -start- -->
 			<h:outputText value="#{templateSpecBackingBean.getParameterDesc(tplSpecAnswer.tplSpecQuestion.answerTypeCode)}" rendered="#{isAnswerTypeText}"/>
 			<!-- #29007	Vinod Added -end- -->
-			<!-- 25201 -start- -->
-			<p:inputText id="answerNumeric" style="width:calc(100% - 40px); text-align:right;" 
+			
+			<!-- #32952, #21695 -start- -->
+			<p:inputText id="answerNumeric"
+				style="width:calc(100% - 40px); text-align:right;"
 				value="#{tplSpecAnswer.answerNumeric}" maxlength="19"
-				rendered="#{isAnswerTypeNumeric and !isSpecTypeFinancial}" required="false"
-				label="#{lbl[answerlbl]}" disabled="#{!editable}">
-				<!-- 25201 -end- -->
+				rendered="#{isAnswerTypeNumeric and !isSpecTypeFinancial}"
+				required="false" label="#{lbl[answerlbl]}"
+				disabled="#{!editable or (!isSqSpec and tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal) or (!isSqSpec and isSpecTypeTechnical and isZonal and templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and templateSpecBackingBean.evaluateSpecDisable(tplSpecAnswer))}">
+				<!-- #32952, #21695 -end- -->
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
 				<p:ajax partialSubmit="true" process="@this" update="@this, answerNumericMsg" />
 			</p:inputText>
@@ -216,20 +243,58 @@
 			<ui:remove> #29007	Vinod Added -start- </ui:remove>
 			<h:outputText value="#{templateSpecBackingBean.getParameterDesc(tplSpecAnswer.tplSpecQuestion.answerTypeCode)}" rendered="#{isAnswerTypeNumeric and !isSpecTypeFinancial}"/>
 			<ui:remove> #29007	Vinod Added -end- </ui:remove>
-			<h:outputText id="answerNumText" 
+			
+			<!-- #32952, #21695 -start- -->
+			<h:outputText id="answerNumText"
 				value="#{tplSpecAnswer.answerNumeric}"
-				rendered="#{isAnswerTypeNumeric and (isSpecTypeFinancial and !isPriceTypeTier)}">
+				rendered="#{isAnswerTypeNumeric and (isSpecTypeFinancial and !isPriceTypeTier)}"
+				disabled="#{!editable or (!isSqSpec and tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal) or (!isSqSpec and  isSpecTypeTechnical and isZonal and templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and templateSpecBackingBean.evaluateSpecDisable(tplSpecAnswer))}">
+				<!-- #32952, #21695 -end- -->
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</h:outputText>
-			<!-- 25201 -start- -->
-			<h:selectOneMenu id="answerCompliance" style="width:calc(100% - 30px);" 
-				value="#{tplSpecAnswer.answerCompliance}" 
+			
+			<!-- #32952, #21695 -start- -->
+			<h:selectOneMenu id="answerCompliance"
+				style="width:calc(100% - 30px);"
+				value="#{tplSpecAnswer.answerCompliance}"
 				rendered="#{isAnswerTypeDropdown}" required="false"
-				label="#{lbl[answerlbl]}" disabled="#{!editable}">
-				<!-- 25201 -end- -->
+				label="#{lbl[answerlbl]}"
+				disabled="#{!editable or (!isSqSpec and tplSpecAnswer.offer ne null and !tplSpecAnswer.offer and !isZonal) or (!isSqSpec and isSpecTypeTechnical and isZonal and templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and templateSpecBackingBean.evaluateSpecDisable(tplSpecAnswer))}">
+				<!-- #32952, #21695 -end- -->
 				<f:selectItems value="#{templateSpecBackingBean.getDropdownCodeValues(ParameterTypeConst.yesNoFlag)}" />
 			</h:selectOneMenu>
 			<p:message id="answerComplianceMsg" for="answerCompliance" display="icon" rendered="#{isAnswerTypeDropdown}" />
+
+			<!-- #21695 -start- -->
+			<h:panelGroup layout="div"
+				rendered="#{!isSqSpec and !isSpecTypeFinancial}">
+				<h:selectOneMenu id="answerOffer" style="width:calc(100% - 30px);"
+					value="#{tplSpecAnswer.offer}"
+					rendered="#{!isSqSpec and templateSpecBean.specMaster.scQtDoc.scQt.partial ne null and 
+						templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and
+						!isSpecTypeFinancial and isQuestionTypeItem}"
+					label="#{lbl[answerlbl]}"
+					disabled="#{isZonal and tplSpecAnswer.disableRow or !editable}">
+					<f:selectItems
+						value="#{templateSpecBackingBean.getOfferDetails(tplSpecAnswer)}"></f:selectItems>
+
+					<p:ajax event="change" partialSubmit="true" process="@form"
+						update="@form"
+						listener="#{templateSpecBackingBean.offerTypeChange(tplSpecAnswer.offer,tplSpecAnswer.tplSpecQuestion.specQuestionId,row)}" />
+				</h:selectOneMenu>
+				<c:if test="#{isZonal}">
+					<h:panelGroup layout="div"
+						rendered="#{!tplSpecAnswer.offer and tplSpecAnswer.offer ne null and
+						templateSpecBean.specMaster.scQtDoc.scQt.partial ne null and
+						templateSpecBean.specMaster.scQtDoc.scQt.partial eq true and isZonal
+						and isQuestionTypeItem}"
+						disabled="#{!editable}">
+
+						<ui:decorate template="specColumnAnswerOfferZone.xhtml" />
+					</h:panelGroup>
+				</c:if>
+			</h:panelGroup>
+			<!-- #21695 END -->
 		</h:panelGroup>
 	</p:column>
 	<p:column style="width:8%;" rendered="#{!isItemTypeService and isDeliveryTermReq}">

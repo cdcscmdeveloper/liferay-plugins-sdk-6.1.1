@@ -61,15 +61,19 @@
 				<ui:remove><!-- 6906 - end --></ui:remove>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.total.score']}"
+			<ui:remove><!-- #38151 (headertext) --></ui:remove>
+				<p:column headerText="#{evaluationBackingBean.managedBean.weightage35384WIP ? lbl['lbl.sc.total.score'] : lbl['lbl.sc.total.score.percent']}"
 				style="width:10%;text-align:right">
 				<h:outputText value="#{prefQualSupplier.totalScore}"></h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}"
-				style="width:15%">
-				<h:outputText value="#{evaluationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
-					fn:toUpperCase(prefQualSupplier.qtEvaluationResult.scQtProposal.bumi))}" />
+			<ui:remove>
+				<!-- //#25138(wip 4serangkai) bug -Start 8/6/2023 -->
+			</ui:remove>
+			 <p:column headerText="#{lbl['lbl.sc.bumiputra.status']}"
+				style="width:15%"
+				rendered="#{evaluationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
+				<h:outputText value="#{evaluationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag,fn:toUpperCase(prefQualSupplier.qtEvaluationResult.scQtProposal.bumi))}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.offered.price']}"
@@ -81,8 +85,10 @@
 				</h:outputText>
 
 			</p:column>
-
-			<p:column style="width:15%; text-align:right;">
+			<ui:remove>
+				<!-- //#25138(wip 4serangkai) bug -Start 8/6/2023 -->
+			</ui:remove>
+			 <p:column style="width:15%; text-align:right;" rendered="#{evaluationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.difference.rm']}" />
 					<ac:iconTooltip id="summaryPrefMargin#{row}"
@@ -95,9 +101,10 @@
 
 
 			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.difference.perc']}"
-				style="width:15%; text-align:right;">
+		<!-- #34588 - start -->
+			 <p:column headerText="#{lFbl['lbl.sc.difference.perc']}"
+				style="width:15%; text-align:right;"
+				rendered="#{evaluationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.difference.perc']}" />
 					<ac:iconTooltip id="summaryPriceDiff#{row}"
@@ -109,10 +116,12 @@
 				</h:outputText>
 
 
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.pref.margin']}"
-				style="width:25%; text-align:right;">
+			</p:column> 
+		<!-- #34588 - end -->
+		<!-- #34588 - start -->
+		 <p:column headerText="#{lbl['lbl.sc.pref.margin']}"
+				style="width:25%; text-align:right;"
+				rendered="#{evaluationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
 
 				<h:outputText
 					rendered="#{prefQualSupplier.qtEvaluationResult.scQtProposal.proposalAmount.preferenceMargin gt 0}"
@@ -123,6 +132,7 @@
 
 
 			</p:column>
+		<!-- #34588 - end -->
 
 
 		</p:dataTable>
@@ -197,16 +207,19 @@
 				</table>
 			</p:column> 
 			<ui:remove><!-- 6906 - end note 233--></ui:remove>
-			<p:column headerText="#{lbl['lbl.sc.total.score']}"
+			<ui:remove><!-- #38151 (headertext) --></ui:remove>
+				<p:column headerText="#{evaluationBackingBean.managedBean.weightage35384WIP ? lbl['lbl.sc.total.score'] : lbl['lbl.sc.total.score.percent']}"
 				style="width:10%;text-align:right;">
 				<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}"
-				style="width:25%">
+		<!-- #34588 - start -->
+			 <p:column headerText="#{lbl['lbl.sc.bumiputra.status']}"
+				style="width:25%" rendered="#{evaluationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
 				<h:outputText value="#{evaluationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
-					fn:toUpperCase(disQualifiedSupplier.qtEvaluationResult.scQtProposal.bumi))}" />
+																	  		fn:toUpperCase(disQualifiedSupplier.qtEvaluationResult.scQtProposal.bumi))}" />
 			</p:column>
+		<!-- #34588 - end -->
 
 
 		</p:dataTable>
@@ -215,10 +228,10 @@
 		<table>
 
 			<tr>
-				<td style="width: 230px;"><h:outputLabel
+				<td style="width: 230px; text-align:center"><h:outputLabel
 						value="#{lbl['lbl.sc.evaluation.total.suppliers']}" /></td>
 				<td><p:inputText readonly="true" disabled="true"
-						style="text-align:right"
+						style="text-align:center"
 						value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM.rowCount}"></p:inputText>
 				</td>
 			</tr>
@@ -226,4 +239,19 @@
 		</table>
 
 	</p:panel>
+	<ui:remove>	
+<!-- #21695 Start Farid -->
+<c:if test ="#{evaluationBackingBean.managedBean.scQt.partial ne null and evaluationBackingBean.managedBean.scQt.partial ne 'false'}">			
+		<p:panel toggleable="true">
+			<f:facet name="header">
+			<h:outputText
+				value="#{lbl['lbl.sc.eva.not.offer.supplier.list.fec.evaluation.package.stage']}" />
+			<ac:iconTooltip
+				value="#{lbl['lbl.sc.eva.not.offer.supplier.list.fec.evaluation.package.stage.tooltip']}" />
+		   </f:facet>		
+				<ui:include src="notOfferSupplierSummary.xhtml"></ui:include>  
+		</p:panel>
+</c:if>		
+<!-- #21695 End Farid -->		
+</ui:remove>	
 </ui:composition>

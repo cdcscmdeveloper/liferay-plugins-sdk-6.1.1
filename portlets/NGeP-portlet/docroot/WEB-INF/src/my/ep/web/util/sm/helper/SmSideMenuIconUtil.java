@@ -244,6 +244,17 @@ public class SmSideMenuIconUtil {
 				if (step6CatCodeHasDifference(true, bean.getLatestApproveAppl(), bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditCategory(true);
 				}
+				
+				// 36504 - START
+				if (bean.isOtherDescChangePO() || bean.isOtherDescChangeSupPO()) {
+					bean.getEditVO().setPoEditCategory(true);
+				}
+				
+				if (bean.isOtherDescChangeApprover() || bean.isOtherDescChangeSupApprover()) {
+					bean.getEditVO().setAppEditCategory(true);
+				}
+				// 36504 - END
+				
 			} else if (bean.isApproverUser()) {
 				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditCategory(false);
@@ -253,6 +264,17 @@ public class SmSideMenuIconUtil {
 				if (step6CatCodeHasDifference(true, bean.getLatestApproveAppl(), bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditCategory(true);
 				}
+				
+				// 36504 - START
+				if (bean.isOtherDescChangeApprover() || bean.isOtherDescChangeSupApprover()) {
+					bean.getEditVO().setAppEditCategory(true);
+				}
+				
+				if (bean.isOtherDescChangePO() || bean.isOtherDescChangeSupPO()) {
+					bean.getEditVO().setPoEditCategory(true);
+				}
+				// 36504 - END
+				
 			}
 			// #31230 START
 			if (step6OverlappedCategory(bean.isOverLappedCategoryExists())) {

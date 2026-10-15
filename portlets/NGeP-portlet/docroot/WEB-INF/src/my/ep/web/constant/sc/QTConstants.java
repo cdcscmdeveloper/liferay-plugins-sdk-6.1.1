@@ -182,6 +182,7 @@ public interface QTConstants {
 	public static final String FINANCIAL_PAID_UP_CAPITAL_CODE = "PC";
 	public static final String FINANCIAL_SUPPLIER_DETAILS_CODE = "SD";
 
+	public static final String INITIAl_SCORE = "0";//#29168, #25138
 	public static final String AUTO_SCORE = "1";
 	public static final String USER_SCORE = "2";
 
@@ -190,6 +191,7 @@ public interface QTConstants {
 	// Evaluation Constants
 	public static final String COMPLIANCE_CHECK = "C";
 	public static final String TECHNICAL_EVALUATION = "T";
+	public static final String TECHNICAL_EVALUATION_BY_ITEM = "TI"; // #21695
 	public static final String PRESENTATION_DEMO_EVALUATION = "P";
 	public static final String FINANCIAL_EVALUATION_BY_PACKAGE = "FP";
 	public static final String FINANCIAL_EVALUATION_BY_ITEM = "FI";
@@ -199,6 +201,7 @@ public interface QTConstants {
 	public static final String AWARD_TYPE_ITEM = "I";
 	public static final String RECOMMENDATION_PREFERENCE_MARGIN = "RPM";
 	public static final String FINANCIAL_PREFERENCE_MARGIN = "FPM";
+	public static final String TECHNICAL_PREFERENCE_MARGIN = "TPM"; // #21695
 	public static final String FINANCIAL_EVALUATION = "F";
 
 	public static final int CHECKLIST_USER_SCORE = 2;
@@ -257,6 +260,10 @@ public interface QTConstants {
 	public static final String FINANCIAL_SUMMARY_ITEM="FI";
 	public static final String RECOMMENDATION_SUMMARY_PACKAGE_MARGIN="RPM";
 	public static final String RECOMMENDATION_SUMMARY_ITEM="RI";
+	// **** #21695 farid start
+	public static final String TECHNICAL_SUMMARY_PACKAGE_MARGIN="TPM";
+	public static final String TECHNICAL_SUMMARY_ITEM="TI";
+	// **** #21695 end
 	
 	public static final String REPORT_ACKNOWLEDGEMENT_LOA_RECEIPT = "Perakuan Penerimaan Surat Setuju Terima";
 	
@@ -335,6 +342,11 @@ public interface QTConstants {
 	public static final int EVALUATION_MAIN_ACTIVE_INDEX = 7;// 35148&11104
 	public static final String SAMPLE_PENDING_SUBMISSION = "lbl.sc.qt.sample.proposal.checklist.status.pending.submission";
 	// #11104 -end-
+
+	public static final String SERVICE_OBJECT_CC = "cc";//#28784
+	//#38151
+	public static final Long APP_VERSION_REDMINE_NO_38151 = 35384L;
+	public static final Integer APP_VERSION_REDMINE_NO_38151_PHASE = 2;
 
 	// 6906 - start
 	public static final String SELECTION_MODE_MULTIPLE = "multiple";
@@ -430,4 +442,12 @@ public interface QTConstants {
 	public static final String LBL_SC_TEC_COMPLIANCE = "lbl.sc.tec.compliance";
 	public static final String LBL_TPL_SPEC_CONTENT_USER_SCORE = "lbl.tpl.spec.content.user.score";
 	// #29187 End Vinod
+
+	// #25726 - Start
+	public static final String SURAT_SETUJU_TERIMA = "Surat Setuju Terima (Termasuk Lampiran A)";
+	// #25726 - End
+	// 32453, #21695, #25138 -start-
+	public static final String FINANCIAL_ITEM_SPEC_ANSWER = "FISA";
+	public static final String PORTLET_NAME_SUPPLIER_PROPOSAL = "scSupplierProposal_WAR_NGePportlet";
+	// #33831, #21695, #25138 - End
 }

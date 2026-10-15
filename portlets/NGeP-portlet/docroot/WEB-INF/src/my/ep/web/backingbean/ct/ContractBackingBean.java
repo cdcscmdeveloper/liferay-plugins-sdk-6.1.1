@@ -53,6 +53,7 @@ import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.sc.document.IQTDocumentSO;
+import my.ep.biz.service.sc.quationtender.IQTAwardSO; //#25002
 import my.ep.biz.service.sc.quationtender.IQTDetailSO; // Fix - #33491
 import my.ep.biz.service.sc.requestitem.IRequestItemSO; //#28854
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
@@ -129,6 +130,7 @@ import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus; //#24333
+import my.ep.persistence.entity.sc.common.ScAttachment; //#25002
 import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;//#28854
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
@@ -4919,6 +4921,29 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    return filteredList.isEmpty() ? originalList : filteredList;
 	}
 	// 24333 - End
+	
+	//#25002 - start
+	public List<ScAttachment> getApprovalLetter(){
+		IQTAwardSO awardSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+		Long loaid = getManagedBean().getContractVer().getCtContract().getLoa().getLoaId();
+		return awardSO.retrieveScAttachmentByDocID(loaid,ParameterConst.EP_DOC_LOA);
+	}
+	
+	/**
+	 * Downloads the selected SC attachment file.
+	 * This method is invoked from the UI via a command link in the XHTML page.
+	 *
+	 * @param scAttachment The attachment to download.
+	 */
+	public void downloadScAttachmentFile(ScAttachment scAttachment){
+		LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
+		try {
+			loaDetailBackingBean.downloadFile(scAttachment);
+		} catch (IOException e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "downloadScAttachmentFile", scAttachment.getDocNo(), "scAttachment", getUserIdSessionFromLoginId(), e);
+		}
+	}
+	//#25002 - end
 			
 	//Enhancement 29418 - shaqimi start
 	

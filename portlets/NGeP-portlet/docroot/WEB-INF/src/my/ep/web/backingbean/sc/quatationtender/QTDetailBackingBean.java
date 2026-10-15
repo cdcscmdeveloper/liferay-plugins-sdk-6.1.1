@@ -171,6 +171,7 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -1277,6 +1278,26 @@ public class QTDetailBackingBean extends
 				}
 				
 			}
+			
+			// #25726 - start
+			if (null == this.getManagedBean().getQt().getFulfilmentType()) {
+
+				this.getManagedBean().getQt().setFulfilmentType(new PmParameter());
+
+			}
+			if (null != this.getManagedBean().getQt().getFulfilmentType()) {
+				this.getManagedBean().setFulfilmentType(
+						this.getManagedBean().getQt().getFulfilmentType().getParameterCode());
+			}
+			if (null != status && (status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT))
+					&& this.getManagedBean().isQtSpecMaintanance()) {
+				this.getManagedBean().setGenInfo(editable);
+			} else {
+				this.getManagedBean().setGenInfo(false);
+			}
+
+			// #25726 - end
+
 
 			// 9019 - Start (Harun) WIP Transaction add information message
 			if (!getTaskByDocNoModule()) {
@@ -2448,23 +2469,27 @@ public class QTDetailBackingBean extends
 					supplierSearchSO = null;
 				}
 			} else {
-				if (isDeskOfficer()) {
-					// Filter By - actor user id
-					reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
-					
-					// Only DO Actor with edit access right. 
-					// Otherwise (Audit Search), user can view QT based on user roles match with actor.
-					if (isQTMaintenanceScreen() || isQTSearchScreen()) {
-						reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
-					}
+				/*
+				 * 38524 - start 
+				 * Update codes with caution! 
+				 * 1. For uncatered roles(bounded as an actor only), please add roleCodes in SourcingConstants.QT_MAINTENANCE_ALLOWED_ACTOR 
+				 * 2. To prevent unauthorize access from multi-role user, only roles listed was allowed for the last fallback scenario
+				 * 3. Any new role that requires global search can be added at the first "if"
+				 */
+				reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+				boolean isMaintenanceScreen = isQTMaintenanceScreen() || isQTSearchScreen();
+
+				if (isAuditor() || isAdmin()) {
+					// Auditor/Admin got previlidge for global search
+					reqDTO.setPmUser(null);
+				} else if (isDeskOfficer() && isMaintenanceScreen
+						&& reqDTO.getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)) {
+					reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
+				} else {
+					// last fallback
+					reqDTO.setRoleCode(null);
 				}
-				//Bug_33484 - start
-				else if (isQcaSecretary() || isQcbSecretary() || isPbbSecretary() 
-						|| isFpbSecretary() || isApprover()){
-					// Filter By - actor user id
-					reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
-				}
-				//Bug_33484 - end
+				// 38524 - end
 				
 				 /* Enhancement #27668 -start-
 				 * TO INCLUDE QT WHICH PPB SECRETARY INVOLVE IN IT, IF HIGHER_AUTHORITY LINK ALSO
@@ -2546,7 +2571,9 @@ public class QTDetailBackingBean extends
 		}
 	}
 	
-	private boolean isQTMaintenanceScreen() {
+	// #25635 -start-
+	public boolean isQTMaintenanceScreen() {
+		// #25635 -end-
 		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	
@@ -5321,6 +5348,37 @@ public class QTDetailBackingBean extends
 		
 		debugLogger("retrieveQuationTenderDetails, @qtId"+qtId);
 		if (null != qtId) {
+			// #21695 - Farid Start 30/7/2020
+			IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IUserSO.class);
+			UserReqDTO reqDTO = new UserReqDTO();
+			List<String> authoriztionList = new ArrayList<String>();
+		
+			if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+				reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+				reqDTO.setLanguageCode(ReportConst.ENG_LANG);
+				
+				UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
+				List<PmRoleDesc> roleDesc = userResDTO.getRoleDescList();
+				
+				if (CollectionUtils.isNotEmpty(roleDesc)) {
+					for (PmRoleDesc pmRoleDesc : roleDesc) {
+						pmRoleDesc.getPmRole().getRoleCode();
+					
+						if (!authoriztionList.contains(pmRoleDesc.getPmRole().getRoleCode())) {
+							authoriztionList.add(pmRoleDesc.getPmRole().getRoleCode());
+						}
+
+						RoleCode[] r = { RoleCode.SC_SECRETARY };
+						
+						if (userHasRole(r)) {
+							getManagedBean().setSecretaryValidate(true);
+						}
+						;
+					}
+				}
+			}
+			// #21695 - Farid End 30/7/2020
 			// this.getManagedBean().setActiveIndex(0);
 			IQTDetailSO QtDetailsSO;
 			try {
@@ -5348,10 +5406,11 @@ public class QTDetailBackingBean extends
 						if (scQt != null) {
 							demoRequired = scQt.isDemoRequired();
 							evalType = scQt.getEvaluationType();
+						//#25726 - Start
+						}else{
+							scQt = tenderResDTO.getQtDetail();
 						}
-
-						scQt = tenderResDTO.getQtDetail();
-
+						//#25726 - End
 						getManagedBean().setQt(scQt);
 
 						// #28784 - Demo WIP -start-
@@ -5363,9 +5422,13 @@ public class QTDetailBackingBean extends
 						}
 						// #28784 -end-
 						this.getManagedBean().setPanel(scQt.isPanel());
-						Long currentStatus = this.getManagedBean().getQt()
-								.getQtStatus().getStatusId();
-						this.getManagedBean().setCurrentStatusId(currentStatus);
+						//#25726 - Start
+						if (!this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE) && this.getManagedBean().getQt().getQtStatus() != null){
+							Long currentStatus = this.getManagedBean().getQt()
+									.getQtStatus().getStatusId();
+							this.getManagedBean().setCurrentStatusId(currentStatus);
+						}
+						//#25726 - End
 						getManagedBean().getCtContract().setContractNo(
 								this.getManagedBean().getQt()
 										.getExistingContractNo());
@@ -7990,7 +8053,7 @@ public class QTDetailBackingBean extends
 	}
 	// Bug #32425, #19336 - End
 	
-	private boolean isDeskOfficer() {
+	public boolean isDeskOfficer() {//35142
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value());
 	}
@@ -10352,6 +10415,9 @@ public class QTDetailBackingBean extends
 							if (null == approverAction || null == approverAction.getParameterId()) {
 								this.getManagedBean().setResetBpkCurrentArea(false);
 								
+								//25635,37892 -start-
+								setOtherApprovalLoaded();
+								//25635,37892 -end-
 								throw new EpException(MessageConst.ERROR_760149);
 							}
 
@@ -12713,4 +12779,17 @@ public class QTDetailBackingBean extends
         final List<Long> triggerStatuses = Arrays.asList(QTStatusConst.RESET_COMMITTEE_BY_STATUS);
         return triggerStatuses.contains(statusId);
 	}//#35320 - End 
+
+	// 37892,25635 -start-
+	/**
+	 * check other approval tab loaded during clone.
+	 */
+	private void setOtherApprovalLoaded() {
+		List<TabBean> approvalOthersTab = this.getManagedBean()
+				.getTabOtherApproval();
+		if (CollectionUtils.isEmpty(approvalOthersTab)) {
+			this.getManagedBean().setApproverTabLoaded(Boolean.FALSE);
+		}
+	}
+	// 37892,25635 -end-
 }

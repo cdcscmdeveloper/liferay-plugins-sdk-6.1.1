@@ -373,6 +373,17 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private Long reqItemAssignButtonSession = 0L;
 	// #32280 - end
 	
+	// #25725 start
+	private boolean disabledButton = true;
+	private BigDecimal limit = new BigDecimal(500000); 
+	private boolean above500K = true;
+	private boolean AgreementReqChange = false;
+	private String docStatus;
+	private String procurementType; 
+	private boolean showApprovalLetter = false;
+
+	// #25725 end
+	
     /**
      * Gets the spki backing bean.
      *
@@ -2173,4 +2184,67 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 		this.listSpecAnswer = listSpecAnswer;
 	}
 	// 29006 @zaim end
+	
+	//#25725 start
+	public boolean isDisabledButton() {
+		return disabledButton;
+	}
+	public void setDisabledButton(boolean disabledButton) {
+		this.disabledButton = disabledButton;
+	}
+	public BigDecimal getLimit() {
+		return limit;
+	}
+	public void setLimit(BigDecimal limit) {
+		this.limit = limit;
+	}
+	public boolean isAbove500K() {
+		return above500K;
+	}
+	public void setAbove500K(boolean above500k) {
+		above500K = above500k;
+	}	
+
+	public boolean isAgreementReqChange() {
+		return AgreementReqChange;
+	}
+
+	public void setAgreementReqChange(boolean agreementReqChange) {
+		AgreementReqChange = agreementReqChange;
+	}
+
+	public String getDocStatus() {
+		return docStatus;
+	}
+
+	public void setDocStatus(String docStatus) {
+		this.docStatus = docStatus;
+	}
+	
+	public String getProcurementType() {
+		return procurementType;
+	}
+
+	public void setProcurementType(String procurementType) {
+		this.procurementType = procurementType;
+	}
+	
+	/**
+	 * @return the showApprovalLetter
+	 */
+	public boolean isShowApprovalLetter() {
+		return showApprovalLetter;
+	}
+
+	/**
+	 * @param showApprovalLetter
+	 *            the showApprovalLetter to set
+	 */
+	public void setShowApprovalLetter(boolean showApprovalLetter) {
+		this.showApprovalLetter = showApprovalLetter;
+	}
+
+	//#25725 end
+
+	
 }

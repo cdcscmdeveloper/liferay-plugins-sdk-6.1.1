@@ -457,13 +457,16 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		try {
 			if (null != this.getManagedBean().getLoginRoleType() && !"".equals(this.getManagedBean().getLoginRoleType())
 					&& "SC".equalsIgnoreCase(this.getManagedBean().getLoginRoleType())) {
-				if (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())) {
 
 					Long currentStatus = this.getManagedBean().getQt().getQtStatus().getStatusId();
 
-					if (currentStatus.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)
-							|| currentStatus.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION)
-							|| isQTStatusGreaterThan(currentStatus, QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)) {
+					// #25726
+					PmParameter contractType = this.getManagedBean().getQt().getContractType();
+				if ((currentStatus.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)
+						|| currentStatus.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION) || isQTStatusGreaterThan(
+							currentStatus, QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING))
+						&& contractType != null
+						&& !ParameterConst.CONTRACT_TYPE_CENTRAL.equalsIgnoreCase(contractType.getParameterCode())) {// #25726
 
 						SpecificationBackingBean specificationBackingBean = new SpecificationBackingBean();
 						List<ScQtCheckList> financialSpecCheckList = this.getManagedBean().getScQtCheckSt2financeProposalList();
@@ -480,7 +483,6 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							}
 						}
 					}
-				}
 			}
 		} finally {
 
@@ -1202,6 +1204,52 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 	}
 
+	// #21695 start
+	/**
+	 * Partial offer change.change partialy offer(offer/not offer) radion button
+	 * in owner.
+	 * 
+	 * @param event
+	 *            (String partialChange)
+	 */
+	public void partialChange(AjaxBehaviorEvent event) {
+		Boolean type = (Boolean) event.getComponent().getAttributes().get("value");
+
+		this.getManagedBean().getQt().setPartial(type);
+
+		if (type == false) {
+			RequestContext.getCurrentInstance().execute("confirmDialogWidgetVar.hide()");
+		} else {
+			RequestContext.getCurrentInstance().execute("confirmDialogWidgetVar.show()");
+		}
+	}
+
+	// #21695 end
+
+	/** #21695 START */
+	public void partialChangePopUpNo() {
+		if (this.getManagedBean().getQt().isPartial() == false) {
+			this.getManagedBean().getQt().setPartial(true);
+		} else if (this.getManagedBean().getQt().isPartial() != false) {
+			this.getManagedBean().getQt().setPartial(false);
+		}
+	}
+
+	/** #21695 END */
+
+	/** #21695 START */
+	public void partialChangePopUpYes() {
+		if (this.getManagedBean().getQt().isPartial() != true) {
+			this.getManagedBean().getQt().setPartial(false);
+		} else if (this.getManagedBean().getQt().isPartial() == true) {
+			this.getManagedBean().getQt().setPartial(true);
+		}
+
+		this.getManagedBean().getQt().setSampleReq(Boolean.FALSE); // #11104
+	}
+
+	/** #21695 END */
+	
 	/**
 	 * Fulfilment change.changed Fulfilemnt Dropdown in specification committee.
 	 * 
@@ -1214,6 +1262,9 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		 * SpecificationReqDTO();
 		 */try {
 			Long type = (Long) event.getComponent().getAttributes().get("value");
+			//#25726
+			PmParameter previousFulfilmentType = this.getManagedBean().getQt().getFulfilmentType();
+
 			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.FULFILMENT_TYPE);
 
 			for (PmParameterDesc paramDesc : localParamDesc) {
@@ -1245,7 +1296,13 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			this.getManagedBean().getQt().setScQtSchedules(null);
 			this.getManagedBean().getQt().setScQtProgressivePayments(null);
 			removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
-			removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
+			//#25726 - Start
+			PmParameter newFulfilmentType = this.getManagedBean().getQt().getFulfilmentType();
+			boolean isUpdatefulfillment = updatefullfillmentDetails(newFulfilmentType, previousFulfilmentType);
+			if (!isUpdatefulfillment) {
+				removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
+			}
+			//#25726 - End
 
 			// 20210615@asyrafahaziq - Bug #30891 - Start
 			// 9019 Start - Harun change comparing null done by Haziq
@@ -1259,6 +1316,34 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 
 	}
+	
+	//25726 - Start
+	/**
+	 * this method is used to update fulfillment details objects in fulfillment
+	 * details side menu.
+	 * 
+	 * @Param String(String scheduleType).
+	 * 
+	 */
+	private boolean updatefullfillmentDetails(PmParameter newFulfilmentType, PmParameter previousFulfilmentType) {
+
+		if (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(newFulfilmentType.getParameterCode())
+				&& ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(previousFulfilmentType.getParameterCode())) {
+
+			List<ScQtSchedule> scheduleList = this.getManagedBean().getScheduleList();
+
+			if (CollectionUtils.isNotEmpty(scheduleList)) {
+
+				for (ScQtSchedule qtSchedule : scheduleList) {
+					qtSchedule.setScheduleType(newFulfilmentType);
+				}
+			}
+			return true;
+		}
+
+		return false;
+	}
+	//25726 - End
 
 	private void removefullfillmentDetails(String scheduleType) {
 

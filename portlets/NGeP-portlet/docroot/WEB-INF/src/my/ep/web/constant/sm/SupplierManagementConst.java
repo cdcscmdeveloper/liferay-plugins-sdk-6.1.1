@@ -813,6 +813,24 @@ public class SupplierManagementConst {
 	public static final Pattern FOREIGN_REG_NO_PATTERN = Pattern.compile("^99[0-9]{4}-[A-Z]$");
 //	#37925 END
 	
+	
+	// 36504 - START
+	public static final String SUPPLIER_APPROVER = "SA";
+	public static final String SUPPLIER_PO = "SP";
+	public static final String APPROVER_SDM = "SDMA";
+	public static final String SECTION_ROLE_APP_SDM = "SDM";
+	public static final String SUPPLIER_RENEWAL = "S";
+	public static final String SUPPLIER_DATA = "SUPD";
+	public static final String APPLIED_CAT = "APPLIED";
+	public static final String PREVIOUS_CAT = "PREVIOUS";
+	public static final String SECTION_MAIN = "MAIN";
+	public static final String SECTION_RENEWAL = "RENEWAL";
+	public static final String APPL_TYPE_UPDATE_MOF = "U";
+	public static final String APPL_TYPE_RENEW_MOF = "R";
+	public static final long STATUS_PENDING_SITE_VISIT = 20105;
+	public static final long STATUS_PENDING_REVIEW_SITE_VISIT_REPORT_BEFORE = 20103;
+	// 36504 - END
+	
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {
 		return SUPP_TYPE_CONTRACTOR;
@@ -1596,4 +1614,53 @@ public class SupplierManagementConst {
 		return SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG;
 	}
 	//33248 - reopen 31/05: Disciplinary Action - 26238 - end 
+	// 36504 - START
+	public String getSECTION_REV_ROLE_PO() {
+		return SECTION_REV_ROLE_PO;
+	}
+
+	public String getSECTION_REV_ROLE_APP() {
+		return SECTION_REV_ROLE_APP;
+	}
+	
+	public String getSUPPLIER_APPROVER() {
+		return SUPPLIER_APPROVER;
+	}
+
+	public String getSUPPLIER_PO() {
+		return SUPPLIER_PO;
+	}
+	
+	public String getAPPROVER_SDM() {
+		return APPROVER_SDM;
+	}
+	
+	public String getSECTION_ROLE_APP_SDM() {
+		return SECTION_ROLE_APP_SDM;
+	}
+	
+	public long getPM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED() {
+		return PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED;
+	}
+	
+	public long getSTATUS_PENDING_SITE_VISIT() {
+		return STATUS_PENDING_SITE_VISIT;
+	}
+	
+	public long getSTATUS_PENDING_REVIEW_SITE_VISIT_REPORT_BEFORE() {
+		return STATUS_PENDING_REVIEW_SITE_VISIT_REPORT_BEFORE;
+	}
+
+	public String getSECTION_MAIN() {
+		return SECTION_MAIN;
+	}
+	
+	public String getSECTION_RENEWAL() {
+		return SECTION_RENEWAL;
+	}
+	
+	public String getAPPL_TYPE_RENEW_MOF() {
+		return APPL_TYPE_RENEW_MOF;
+	}
+	// 36504 - END
 }

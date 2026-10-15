@@ -6,6 +6,38 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<!-- #25726/25725 - Check and display Italic value - Start -->
+<style>
+.italic-item {
+	font-style: italic !important;
+}
+</style>
+	
+<h:outputScript>
+    // Pass the list of IDs from server to JS
+    var fulfilmentItalicIds = [
+        <ui:repeat value="#{createQtBB.getItalicCodeNames(ParameterTypeConst.fulfilmentType)}" var="label" varStatus="st">
+            '#{label}'#{not st.last ? ',' : ''}
+        </ui:repeat>
+    ];
+	
+    function styleFulfilmentDropdown() {
+        $('.fulfil-panel li.ui-selectonemenu-item').each(function () {
+            var label = $(this).attr('data-label');
+            if (fulfilmentItalicIds.indexOf(label) !== -1) {
+                $(this).addClass('italic-item');
+            }
+        });
+    }
+
+    // Run when the page is ready
+    $(function () {
+        styleFulfilmentDropdown();
+    });
+
+</h:outputScript>
+
+<!-- #25726/25725 - Check and display Italic value - End-->
 
 	<ui:param name="scQt" value="#{createQtBB.managedBean.qt}" />
 	<ui:param name="qtStatusAfterChecklistScoring"
@@ -37,6 +69,10 @@
 		value="#{qTDetailBB.managedBean.demoEvalDisabled}" />	
 	<ui:param name="isDemoSpecialCase"  
 		value="#{qTDetailBB.managedBean.demoSpecialCase}" />			
+	<!-- #40237/25726 - Start -->
+	<ui:param name="isGenInfo"
+		value="#{specificationBackingBean.managedBean.genInfo}" />
+	<!-- #40237/25726 - End -->
 	<ac:lovPopup />
 	<!-- START #28784 -->
 	<p:blockUI block=":form" widgetVar="blockWidget">
@@ -436,6 +472,19 @@
 								</tr>
 					</table>
 				</td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.qt.partiallyoffer']}" /></td>
+				<td>
+					<table>
+						<tr>
+							<td>
+								<p:inputText id="partialTxt"
+								value="#{createQtBB.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(scQt.partial))}"
+								style="width:195px;" disabled="true" />
+							</td>
+							<td ><ac:iconTooltip value="#{lbl['lbl.sc.qt.partiallyoffer.tooltip']}" /></td>
+						</tr>				
+					</table>
+				</td>
 			</tr>
 <!-- END #21695 farid End-->
 			<tr>
@@ -610,7 +659,9 @@
 								disabled="#{scQt.contractType ne null and scQt.contractType.parameterCode eq 'CC'}"
 								label="#{lbl['lbl.sc.fullfillent.type']}"
 								value="#{scQt.fulfilmentType.parameterId}"
-								style="width: 205px;margin-bottom: 5px;">
+								style="width: 205px;margin-bottom: 5px;"
+								styleClass="#{createQtBB.checkItalicCodeNameForMy(scQt.fulfilmentType.parameterId) ? 'italic-item' : ''}"
+                 				panelStyleClass="fulfil-panel"><!-- #25726/25725 - Check and display Italic value -->
 								<f:selectItems
 									value="#{createQtBB.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
 								<p:ajax event="change" process="@this" partialSubmit="true"
@@ -622,14 +673,17 @@
 							<ui:remove><!-- 29464 note 42 add readonly to renderred --></ui:remove>
 							<p:inputText id="fulfilTypeTxt" rendered="#{!specificationBackingBean.managedBean.isGenInfo() or isReadOnly}"
 								value="#{createQtBB.getParameterDesc(scQt.fulfilmentType)}"
-								style="width:195px;" disabled="true" />
+								style="width:195px;" disabled="true" 
+								styleClass="#{createQtBB.checkItalicCodeNameForMy(scQt.fulfilmentType.parameterId) ? 'italic-item' : ''}"/><!-- #25726/25725 - Check and display Italic value -->
 							<ui:remove><!-- 29464 note 42 add readonly to renderred --></ui:remove>
 							<p:selectOneMenu required="#{empty param['skipvalidation']}" 
 								id="fulfilId" rendered="#{specificationBackingBean.managedBean.isGenInfo() and !isReadOnly}}"
 								disabled="#{scQt.contractType ne null and scQt.contractType.parameterCode eq 'CC'}"
 								label="#{lbl['lbl.sc.fullfillent.type']}"
 								value="#{scQt.fulfilmentType.parameterId}"
-								style="width: 205px;margin-bottom: 5px;">
+								style="width: 205px;margin-bottom: 5px;"
+								styleClass="#{createQtBB.checkItalicCodeNameForMy(scQt.fulfilmentType.parameterId) ? 'italic-item' : ''}"
+                 				panelStyleClass="fulfil-panel"><!-- #25726/25725 - Check and display Italic value -->
 								<f:selectItems
 									value="#{createQtBB.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
 								<p:ajax event="change" process="@this" partialSubmit="true"
@@ -639,6 +693,13 @@
 						</c:otherwise>
 					</c:choose>
 					</td>
+					<!-- #25726 start -->
+					<c:if test="#{!scQt.contractType.parameterCode eq ParameterConst.contractTypeCentral}">
+						<td style="margin-top: -3px">
+							<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
+						</td>
+					</c:if>
+					<!-- #25726 end -->
 					</tr></table></td>
 										
 				<td style="white-space: nowrap;"><p:outputLabel

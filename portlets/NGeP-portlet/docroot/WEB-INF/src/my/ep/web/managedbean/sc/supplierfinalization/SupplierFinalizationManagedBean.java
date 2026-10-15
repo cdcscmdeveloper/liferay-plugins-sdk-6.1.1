@@ -31,6 +31,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
+import my.ep.persistence.entity.sc.quationtender.ScQtScoreSetting;//#38151
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -41,6 +42,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationMeetingBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.quatationtender.TabBean;
+import my.ep.web.bean.sc.quatationtender.WeightageScoreBean;//#38151
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.key.sc.supplierfinalization.MapKey;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -175,6 +177,10 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<ScQtCommitteeActivity> onlineBiddingEndorsementList;
 	private List<ScQtCommitteeActivity> onlineBiddingReminderList;
 
+	// #33174, #21695 Farid start
+	private boolean pacDisable;
+	// #33174, #21695 End
+	
 	// 6906 note 117 - start
 	private SelectItem[] decisionDropdown;
 	private boolean supplierFinalizationReadOnly = true;
@@ -289,7 +295,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private String selectedSupplierOfferedPrice;
 	// #35320 - End
 
-	
+	//#38151 start
+	private List<WeightageScoreBean> weightageScoreBeans;
+	private Long overallTechnicalRecommendationPercent;
+	private Long overallFinancialRecommendationPercent;
+	private List<ScQtScoreSetting> scoreSettings;
+	private boolean WeightageReq;
+	private boolean weightage35384WIP;
+	//#38151 end
 
 	/**
 	 * @return the activeIndex
@@ -2272,6 +2285,22 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 	// 25037 - end
 
+	// //#33174 #21695 Farid
+	/**
+	 * @return
+	 */
+	public boolean isPacDisable() {
+		return pacDisable;
+	}
+
+	/**
+	 * @param for disable if there is no supplier is qualified by package
+	 */
+	public void setOfferAll(boolean pacDisable) {
+		this.pacDisable = pacDisable;
+	}
+	// //#33174 #21695 End
+	
 	// #29466 - START
 	/**
 	 * @return the checkCategoryCodeQt
@@ -2406,5 +2435,55 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setSelectedSupplierOfferedPrice(String selectedSupplierOfferedPrice) {
 		this.selectedSupplierOfferedPrice = selectedSupplierOfferedPrice;
 	}
-	// #35320 - End	
+	// #35320 - End
+
+	//#38151 - Start
+	public List<WeightageScoreBean> getWeightageScoreBeans() {
+		return weightageScoreBeans;
+	}
+
+	public void setWeightageScoreBeans(List<WeightageScoreBean> weightageScoreBeans) {
+		this.weightageScoreBeans = weightageScoreBeans;
+	}
+
+	public Long getOverallTechnicalRecommendationPercent() {
+		return overallTechnicalRecommendationPercent;
+	}
+
+	public void setOverallTechnicalRecommendationPercent(Long overallTechnicalRecommendationPercent) {
+		this.overallTechnicalRecommendationPercent = overallTechnicalRecommendationPercent;
+	}
+
+	public List<ScQtScoreSetting> getScoreSettings() {
+		return scoreSettings;
+	}
+
+	public void setScoreSettings(List<ScQtScoreSetting> scoreSettings) {
+		this.scoreSettings = scoreSettings;
+	}
+
+	public Long getOverallFinancialRecommendationPercent() {
+		return overallFinancialRecommendationPercent;
+	}
+
+	public void setOverallFinancialRecommendationPercent(Long overallFinancialRecommendationPercent) {
+		this.overallFinancialRecommendationPercent = overallFinancialRecommendationPercent;
+	}
+
+	public boolean isWeightageReq() {
+		return WeightageReq;
+	}
+
+	public void setWeightageReq(boolean weightageReq) {
+		WeightageReq = weightageReq;
+	}
+
+	public boolean isWeightage35384WIP() {
+		return weightage35384WIP;
+	}
+
+	public void setWeightage35384WIP(boolean weightage35384WIP) {
+		this.weightage35384WIP = weightage35384WIP;
+	}
+	//#38151 - End
 }

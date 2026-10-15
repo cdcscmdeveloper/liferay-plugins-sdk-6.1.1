@@ -51,7 +51,7 @@ public class PaymentAcknowledgeBackingBean extends BaseBackingBean<PaymentAcknow
 			paramMap.put(ReportConst.PARAM_PAYMENT_PREPRINT, ReportConst.PARAM_PAYMENT_PREPRINT_ASAL);
 			resDTO.getPyPayment().setReprintReceipt(true);
 			reqDTO.setPyPayment(resDTO.getPyPayment());
-			reqSO.updatePaymentReceipt(reqDTO);
+			reqSO.updatePaymentReceiptNative(reqDTO);
 		} else if (resDTO.getPyPayment().getReprintReceipt()) {
 			paramMap.put(ReportConst.PARAM_PAYMENT_PREPRINT, ReportConst.PARAM_PAYMENT_PREPRINT_SALINAN);
 		}
