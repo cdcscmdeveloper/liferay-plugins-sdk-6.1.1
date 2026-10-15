@@ -8,7 +8,8 @@
 	
 	<p:commandButton value="#{lbl['lbl.sm.submitForPay']}"
 		onclick="printConfirm.show()" 
-		style="margin-bottom:5px;" />
+		style="margin-bottom:5px;"
+		disabled="#{backingBean.aiBlockDeclare}"/><!-- #40112 -->
 	
 	<p:confirmDialog id="printConfirm" closable="true"
 		message="#{lbl['lbl.sm.supp.declare.print.confirmmsg']}"

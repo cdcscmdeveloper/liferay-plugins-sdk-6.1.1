@@ -9,6 +9,7 @@ import org.primefaces.context.RequestContext;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -322,7 +323,7 @@ public class AmendmentCommitteeHelper {
 	private boolean loaAmountQCBCommitteeWIP() {
 		long loaAmt = ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa().getLoaAmt().longValue();
 		return ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbqcAuthorityReq()
-				&& loaAmt >= 20000L && loaAmt <= 50000L;
+				&& loaAmt >= ContractConst.COMMITTEE_20000 && loaAmt <= ContractConst.COMMITTEE_50000;
 	}
 
 	/**
@@ -442,6 +443,7 @@ public class AmendmentCommitteeHelper {
 		}
 	}
 	
+	//#41383 start
 	/**
 	 * Determines whether the user is allowed to access chairperson
 	 * functionality for a quotation committee. When the committee type is QCA
@@ -460,17 +462,19 @@ public class AmendmentCommitteeHelper {
 		boolean allow = allowChairpersonRole;
 
 		if (isQuotationCommitteeTypeAC() || isQCBCommitteeWIP()) {
-			allow = false;
 			for (PmRoleDesc pmRoleDesc : userResDTO.getRoleDescList()) {
 				String roleCode = pmRoleDesc.getPmRole().getRoleCode();
-				if (isValidChairpersonRole(roleCode) && orgProfileId.equals(ctOwnerOrgProfileId)) {
+				if (isValidChairpersonRole(roleCode)) {
 					allow = true;
 					break;
+				} else {
+					allow = false;
 				}
 			}
 		}
 		return allow;
 	}
+	//#41383 end
 	
 	/**
 	 * Validates whether the given role code matches the chairperson role

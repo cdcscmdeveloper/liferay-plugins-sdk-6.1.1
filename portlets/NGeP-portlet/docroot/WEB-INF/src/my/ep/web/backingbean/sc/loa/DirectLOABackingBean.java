@@ -63,6 +63,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
+import my.ep.constant.sc.QTSearchBeanConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
@@ -113,6 +114,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
@@ -162,6 +164,7 @@ import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.ApprovalAction;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -3829,7 +3832,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				getManagedBean().getScLoa().setBondReq(false);
 			}
 			getManagedBean().setAgreementReqChange(false);
-			getManagedBean().getScLoa().setScLoaAttachment(null);
 			RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
 		} else {
 			getManagedBean().setBondReqSelectedVal(null);
@@ -3837,7 +3839,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			getManagedBean().getScLoa().setBondReq(false);
 			getManagedBean().getScLoa().setAgreementReq(false);
 			getManagedBean().setAgreementReqChange(false);
-			getManagedBean().getScLoa().setScLoaAttachment(null);
 			RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
 		}
 	}
@@ -3890,13 +3891,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 
 			getManagedBean().setAgreementReqChange(false);
-			getManagedBean().getScLoa().setScLoaAttachment(null);
 			RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
 		} else {
 			getManagedBean().setAgreemetSelectedVal(null);
 			getManagedBean().getScLoa().setAgreementReq(false);
 			getManagedBean().setAgreementReqChange(false);
-			getManagedBean().getScLoa().setScLoaAttachment(null);
 			RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
 		}
 	}
@@ -3961,10 +3960,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		checkAgreementMandatory();
 
 		// #25726 - START
-		Boolean isPK7 = ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(this.getManagedBean().getScLoa().getQtType()
-				.getParameterType())
-				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(this.getManagedBean().getScLoa().getQtType()
-						.getParameterCode());
+		// #29766 Start Vinod updated getQTTypeItemInPK7AndPK7WPChecking to check 2 QT type codes
+		Boolean isPK7 = ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(this
+				.getManagedBean().getScLoa().getQtType().getParameterType())
+				&& ParameterConst.getQTTypeItemInPK7AndPK7WPChecking()
+						.contains(
+								this.getManagedBean().getScLoa().getQtType()
+										.getParameterCode());
+		// #29766 End Vinod
 		Boolean isOneOff = this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode()
 				.equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 
@@ -4008,9 +4011,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			Long oldParmValue = responseDTO.getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterId();
 			Long currentParmValue = scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterId();
 
+			// #29766 Start Vinod updated getQTTypeItemInPK7AndPK7WPChecking to
+			// check 2 QT type codes
 			if (!oldParmValue.equals(currentParmValue)
-					&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(scLoa.getQtType().getParameterCode())
+					&& ParameterConst.getQTTypeItemInPK7AndPK7WPChecking()
+							.contains(scLoa.getQtType().getParameterCode())
 					&& this.getManagedBean().isFullfilmentTypeChange()) {
+				// #29766 End Vinod
 				return Boolean.TRUE;
 			}
 		}
@@ -4925,10 +4932,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		scLoa.setScLoaRemarks(initializeRemarks(scLoa, 
 				scLoa.getCurrentStatus(),
 				scLoa.getScLoaRemarks(), ScLoaRemark.class));
-		
-		// #11134 - start
-		scLoa.setScLoaRemarks(filterSupplierRemarks(scLoa.getScLoaRemarks(), false));
-		// #11134 - end		
+				
+		// #11134/#41092  - start
+		List<ScLoaRemark> supplierRemarks = filterSupplierRemarks(scLoa.getScLoaRemarks(), false);
+		getManagedBean().setSupplierRemarks(supplierRemarks);
+		// #11134/#41092  - end
 		
 		// bond calculation
 		//Enhancement #24259 #24269
@@ -5009,6 +5017,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			this.getManagedBean().setSelectedTabIndex(QTConstants.TAB_MAIN_INDEX);
 		}
 		// 25791 -end-
+		// #29766 Start Vinod
+		checkQTTypePk7WpItem();
+		// #29766 End Vinod
 
 		return QTConstants.SC_DIRECT_LOA_MAIN_PAGE;
 	}
@@ -5239,6 +5250,16 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			this.getManagedBean().setAction(outcome);
 			 		
 			if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
+				// #29766 Start Vinod
+				boolean isQTTypePK7Inactive = checkQTTypeItemPK7Selected();
+				if (isQTTypePK7Inactive) {
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									this.getManagedBean().getAlertForInactivePK7()));
+					return;
+				}
+				// #29766 End Vinod
         			// #26770 - Start.
         			validateReportAttachment();
         			// #26770 - End.
@@ -8266,26 +8287,48 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 */
 	public SelectItem[] getQTTypesDropdownValues() {
 		ScLoa scLoa = getManagedBean().getScLoa();
-		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
-		List<String> qtTypes = new ArrayList<String>();
-		
-		/*#34162 Start Vinod
-		if (null != scLoa &&null != scLoa.getProcurementMode()
-				&& ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scLoa
-						.getProcurementMode().getParameterCode())) {*/
-			qtTypes.add(ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER);
-			
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmParameter.parameterCode",
-							SearchOperator.OPERATOR_NOT_IN.value(), qtTypes));
-		//}
-		if (null != scLoa
-			&& scLoa.getQtType()!= null 
-			&& scLoa.getQtType().getParameterCode()!=null
-			&& scLoa.getQtType().getParameterCode().equals(ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER)) {
-				searchBean = new SearchBean<PmParameterDesc>();
+		// #29766 Start Vinod - code refactoring also.
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<>();
+		List<String> qtTypes = new ArrayList<>();
+
+		/* #34162 Start Vinod */
+		String qtType = null != scLoa && scLoa.getQtType() != null
+				&& scLoa.getQtType().getParameterCode() != null ? scLoa
+				.getQtType().getParameterCode() : StringUtils.EMPTY;
+
+		// Added to remove "PK7" from QT Types Dropdown list.
+		qtTypes.add(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7);
+		qtTypes.add(ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER);
+
+		List<Long> submitStatus = Arrays.asList(
+				QTStatusConst.LOA_PENDING_SUBMISSION,
+				QTStatusConst.LOA_PENDING_REVISION);
+
+		boolean isPendingSubmit = null != this.getManagedBean().getScLoa()
+				.getPmStatus()
+				&& submitStatus.contains(this.getManagedBean().getScLoa()
+						.getPmStatus().getStatusId());
+
+		// if the LOA already added ITEM IN PK7 we remove the code from the list
+		// to display in dropdown only if the status is not submit.
+		if (StringUtils.isNotEmpty(qtType)
+				&& qtType
+						.equals(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7)
+				&& !isPendingSubmit) {
+			qtTypes.remove(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7);
 		}
-		//#34162 End Vinod
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean(
+						QTSearchBeanConst.SEARCH_PMPARAMETER_PARAMETERCODE,
+						SearchOperator.OPERATOR_NOT_IN.value(), qtTypes));
+		if (StringUtils.isNotEmpty(qtType)
+				&& qtType
+						.equals(ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER)) {
+			searchBean = new SearchBean<>();
+		}
+		// #29766 End Vinod
+		// #34162 End Vinod
 
 		return super.getDropdownValuesBySearchBean(ParameterTypeConst.QUOTATION_TENDER_TYPE,
 				searchBean);
@@ -8375,10 +8418,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 			if (null != this.getManagedBean().getScLoa()) {
 				if (null != this.getManagedBean().getScLoa().getQtType()) {
+					// #29766 Start Vinod updated getQTTypeItemInPK7AndPK7WPChecking to check 2 QT type codes
 					isPK7 = ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(this.getManagedBean().getScLoa()
 							.getQtType().getParameterType())
-							&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(this.getManagedBean().getScLoa()
+							&& ParameterConst.getQTTypeItemInPK7AndPK7WPChecking().contains(this.getManagedBean().getScLoa()
 									.getQtType().getParameterCode());
+					// #29766 End Vinod
 				}
 			}
 
@@ -9666,8 +9711,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 		}
 			
-		if (null != qtType && ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType()) 
-				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode())) {
+		// #29766 Start Vinod updated getQTTypeItemInPK7AndPK7WPChecking to
+		// check 2 QT type codes
+		if (null != qtType
+				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType
+						.getParameterType())
+				&& ParameterConst.getQTTypeItemInPK7AndPK7WPChecking()
+						.contains(qtType.getParameterCode())) {
+			// #29766 End Vinod
 			QtTypepk7 = true;
 
 			if (null == getManagedBean().getScLoa().getJustificationType()) {
@@ -9797,6 +9848,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		// 34420-end
 		// #25726 START
 		// set for PK7 and one off default agreementreq is false.
+		/*
+		 * #29766 Start Vinod updated
+		 * getQTTypeItemInPK7AndPK7WPChecking to check 2 QT type
+		 * codes and refactor old code.
+		 */
 		List<String> periodicTypeCodes = Arrays.asList(ParameterConst.FULFILMENT_TYPE_SCHEDULED,
 				ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
 
@@ -9805,7 +9861,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 		boolean isQTtypeNotPK7 = null != qtType
 				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType())
-				&& !ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode());
+				&& !ParameterConst.getQTTypeItemInPK7AndPK7WPChecking().contains(qtType.getParameterCode());
 
 		boolean isFlType = null != fulfilmentType
 				&& ParameterTypeConst.FULFILMENT_TYPE.equals(fulfilmentType.getParameterType())
@@ -9833,12 +9889,20 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	}
 		
 		public void setPk7DropDownValues() {
-		    getManagedBean().setPk7Reasons(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7.value()));
+			// #29766 Start Vinod
+			// Replaced JUSTIFICATION_PK7 with JUSTIFICATION_PK7W as the old reason
+			// codes are inactive from PM.
+			getManagedBean().setPk7Reasons(getReasonCodeDropdownValues(ReasonCategory.JUSTIFICATION_PK7W.value()));
+			// #29766 End Vinod
 		}
 		
 		public void reasonChanged(String reasonCode) {
+			// #29766 Start Vinod
+			// Replaced JUSTIFICATION_PK7 with JUSTIFICATION_PK7W as the old reason
+			// codes are inactive from PM.
 			getManagedBean().getScLoa().setJustificationType(getReasonByCategoryAndCode(
-					ReasonCategory.JUSTIFICATION_PK7.value(), reasonCode));
+					ReasonCategory.JUSTIFICATION_PK7W.value(), reasonCode));
+			// #29766 End Vinod
 		}
 		
 	public boolean isPk7Periodic() {
@@ -9860,22 +9924,26 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		// #34413 - End
 		// new #25726 - Start
+		/*
+		 * #29766 Start Vinod updated
+		 * getQTTypeItemInPK7AndPK7WPChecking to check 2 QT type
+		 * codes and refactor old code.
+		 */	
 		boolean isQTtypePK7 = null != qtType
 				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType())
-				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode());
+				&& ParameterConst.getQTTypeItemInPK7AndPK7WPChecking().contains(qtType.getParameterCode());
 		boolean isFulfilmentTypeInPK7 = null != fulfilmentType
 				&& ParameterTypeConst.FULFILMENT_TYPE.equals(fulfilmentType.getParameterType())
-				&& (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(fulfilmentType.getParameterCode()) || ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
-						.equals(fulfilmentType.getParameterCode()));
+				&& ParameterConst.getFulfilmentTypeCodesForQTTypePK7AndPK7WPChecking().contains(
+						fulfilmentType.getParameterCode());
 
 		if (isQTtypePK7 && isFulfilmentTypeInPK7) {
-			// new #25726 - End
 			if (null == getManagedBean().getScLoa().getJustificationType()) {
 				getManagedBean().getScLoa().setJustificationType(new PmReason());
 			}
-
 			return true;
 		}
+		//#29766 End Vinod
 
 		return false;
 	}
@@ -9890,8 +9958,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @return true or false
 	 **/
 	private Boolean resetJustificatonPmReasonIfNull(PmParameter qtType) {
-		if (null != qtType && ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode())
+		// #29766 Start Vinod updated getQTTypeItemInPK7AndPK7WPChecking to check 2 QT type codes
+		if (null != qtType
+				&& ParameterConst.getQTTypeItemInPK7AndPK7WPChecking()
+						.contains(qtType.getParameterCode())
 				&& null != getManagedBean().getScLoa().getJustificationType()) {
+			// #29766 End Vinod
 			return Boolean.TRUE;
 		}
 
@@ -9901,13 +9973,24 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		
 	/* ***19336#83 - start */
 	public String getReasonDesc(String reasonCode) {
-		PmReason reason = getReasonByCategoryAndCode(ReasonCategory.JUSTIFICATION_PK7.value(), reasonCode);
+		// #29766 Start Vinod
+		// Added checking to retrieve the reason desc based on QT type for WIP
+		// data.
+		PmParameter qtType = null;
+		if (null != getManagedBean().getScLoa().getQtType()) {
+			qtType = getManagedBean().getScLoa().getQtType();
+		}
+		boolean isQTtypeOldPK7 = null != qtType
+				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType())
+				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode());
+		String reasonCategory = isQTtypeOldPK7 ? ReasonCategory.JUSTIFICATION_PK7.value()
+				: ReasonCategory.JUSTIFICATION_PK7W.value();
+		PmReason reason = getReasonByCategoryAndCode(reasonCategory, reasonCode);
+		// #29766 End Vinod
 		String reasonDesc = getReasonDesc(reason);
-
-		if (!StringUtils.isEmpty(reasonDesc)) {
+		if(!StringUtils.isEmpty(reasonDesc)){
 			return reasonDesc;
 		}
-
 		return "";
 	}
 	/* ***19336#83 - end */
@@ -12170,9 +12253,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (this.getManagedBean().getScLoa() != null) {
 			scLoa = this.getManagedBean().getScLoa();
 			if (scLoa.getQtType() != null) {
+				// #29766 Start Vinod updated getQTTypeItemInPK7AndPK7WPChecking
+				// to check 2 QT type codes
 				isPK7 = ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(scLoa.getQtType().getParameterType())
-						&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7
-								.equals(scLoa.getQtType().getParameterCode());
+						&& ParameterConst.getQTTypeItemInPK7AndPK7WPChecking().contains(
+								scLoa.getQtType().getParameterCode());
+				// #29766 End Vinod
 			}
 			if (scLoa.getContractType() != null) {
 				isContractTypeAsMinistry = ParameterConst.CONTRACT_TYPE_MINISTRY.equals(scLoa.getContractType()
@@ -12199,7 +12285,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					|| agreementReqChoice.equalsIgnoreCase(ParameterConst.YES_SELECTED)) {
 				getManagedBean().setAgreemetSelectedVal(getManagedBean().getYesParameterId());
 				getManagedBean().getScLoa().setAgreementReq(true);
-				getManagedBean().getScLoa().setScLoaAttachment(null);
 				RequestContext.getCurrentInstance().update(AGREEMENT_REQ_PG);
 				RequestContext.getCurrentInstance().update(UPLOAD_APPROVAL_LETTER_PG);
 			} else {
@@ -12306,9 +12391,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				}
 
 				if (scLoa.getQtType() != null) {
-					isPK7 = ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(scLoa.getQtType().getParameterType())
-							&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(scLoa.getQtType()
-									.getParameterCode());
+					// #29766 Start Vinod updated
+					// getQTTypeItemInPK7AndPK7WPChecking to check 2 QT type
+					// codes
+					isPK7 = ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(this.getManagedBean().getScLoa()
+							.getQtType().getParameterType())
+							&& ParameterConst.getQTTypeItemInPK7AndPK7WPChecking().contains(
+									this.getManagedBean().getScLoa().getQtType().getParameterCode());
+					// #29766 End Vinod
 				}
 			}
 
@@ -12386,8 +12476,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		boolean isOneOff = ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fulfilmentCode);
 		boolean isContractDurationAbove4 = loa.getContractDuration().compareTo(BigDecimal.valueOf(CONTRACT_DURATION_4)) > 0;
 
+		// #29766 Start Vinod updated getQTTypeItemInPK7AndPK7WPChecking to
+		// check 2 QT type codes
 		boolean isPK7 = ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(loa.getQtType().getParameterType())
-				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(loa.getQtType().getParameterCode());
+				&& ParameterConst.getQTTypeItemInPK7AndPK7WPChecking().contains(loa.getQtType().getParameterCode());
+		// #29766 End Vinod
 
 		boolean conditionForApprovalLetter = (isPeriodic && !isContractDurationAbove4) || isOneOff;
 
@@ -12457,5 +12550,186 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	}
 
 	// #25726 - End
+	
+	
+	// 41092 - start
+	/**
+	 * Sorts SC LOA remarks in descending order by created date (latest first).
+	 * 
+	 * @return
+	 */
+	public List<ScLoaRemark> getSortedRemarksByDate() {
+		List<ScLoaRemark> remarks = getManagedBean().getScLoa().getScLoaRemarks();
+
+		if (remarks == null || remarks.isEmpty()) {
+			return remarks;
+		}
+
+		List<ScLoaRemark> sortedList = new ArrayList<>(remarks);
+
+		Collections.sort(sortedList, new Comparator<ScLoaRemark>() {
+			@Override
+			public int compare(ScLoaRemark r1, ScLoaRemark r2) {
+				return DateUtils.compareDatesForRemark(r1.getCreatedDate(), r2.getCreatedDate());
+			}
+		});
+
+		return sortedList;
+	}
+	// 41092 - end
+	
+	// #29766 Start Vinod
+	/**
+	 * This method will check QT Type ’PK 7/WP Item’ and will show warning.
+	 * 
+	 * @param
+	 * @return
+	 */
+	public void checkQTTypePk7WpItem() {
+		ScLoa scLoa = getManagedBean().getScLoa();
+		PmParameter qtType = scLoa != null ? scLoa.getQtType() : null;
+
+		boolean isQTtypePK7WP = qtType != null
+				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType
+						.getParameterType())
+				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7_WP
+						.equals(qtType.getParameterCode());
+
+		List<Long> displayStatus = Arrays.asList(
+				QTStatusConst.LOA_PENDING_SUBMISSION,
+				QTStatusConst.LOA_PENDING_REVISION,
+				QTStatusConst.LOA_PENDING_APPROVAL,
+				QTStatusConst.LOA_PENDING_REVISION_APPROVAL);
+
+		boolean isShowInfo = scLoa != null && scLoa.getPmStatus() != null
+				&& displayStatus.contains(scLoa.getPmStatus().getStatusId());
+
+		if (isQTtypePK7WP && isShowInfo) {
+			String qtTypeDesc = getParameterDesc(qtType);
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(MessageConst.WARN_7602694,
+									new String[] { qtTypeDesc },
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			return;
+		}
+	}
+
+	// #29766 End Vinod
+	// #29766 Start Vinod
+	/**
+	 * This method will check QT Type "Special Item/Item In PK7" selected and
+	 * show warning to revise.
+	 * 
+	 * @param
+	 * @return
+	 */
+	private boolean checkQTTypeItemPK7Selected() {
+		ScLoa scLoa = this.getManagedBean().getScLoa();
+		PmParameter qtType = (scLoa != null) ? scLoa.getQtType() : null;
+		PmReason justificationQTType = (scLoa != null) ? scLoa
+				.getJustificationType() : null;
+
+		if (qtType == null) {
+			return false;
+		}
+		
+		boolean showPopup = checkQTtypeAndReasonInaciveForPopup(qtType,
+				justificationQTType);
+
+		if (!showPopup) {
+			return false;
+		}
+
+		String reasonCode = justificationQTType != null
+				&& justificationQTType.getReasonCode() != null ? justificationQTType
+				.getReasonCode() : "";
+
+		String reasonDescription = this.getReasonDesc(reasonCode);
+		String qtTypeDescription = getParameterDesc(qtType);
+
+		String alertForPK7 = MessageUtils.getMessage(MessageConst.WARN_7602695,
+				new String[] { qtTypeDescription, reasonDescription },
+				MessageUtils.BUNDLE_COMMON_MESSAGES,
+				new FacesScopes().getUserLocale());
+
+		this.getManagedBean().setAlertForInactivePK7(alertForPK7);
+
+		return true;
+	}
+
+	// #29766 End Vinod
+	// #29766 Start Vinod
+	/**
+	 * This method will check if qtType is old pk7 or new pk7/wp and reason is
+	 * inactive to show the popup.
+	 * 
+	 * @param qtType
+	 * @param justificationQTType
+	 * 
+	 * @return boolean
+	 */
+	private boolean checkQTtypeAndReasonInaciveForPopup(PmParameter qtType,
+			PmReason justificationQTType) {
+		boolean isQTtypeOldPK7 = ParameterTypeConst.QUOTATION_TENDER_TYPE
+				.equals(qtType.getParameterType())
+				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7
+						.equals(qtType.getParameterCode());
+
+		if (isQTtypeOldPK7) {
+			return isQTtypeOldPK7;
+		}
+
+		boolean isNewPK7ReasonInactive = ParameterTypeConst.QUOTATION_TENDER_TYPE
+				.equals(qtType.getParameterType())
+				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7_WP
+						.equals(qtType.getParameterCode())
+				&& justificationQTType != null
+				&& !justificationQTType.isRecordStatus();
+
+		if (isNewPK7ReasonInactive) {
+			return isNewPK7ReasonInactive;
+		}
+		return false;
+	}
+
+	// #29766 End Vinod
+	// #29766 Start Vinod
+	/**
+	 * This method will check QT Type "Special Item/Item In PK7" selected and if
+	 * the status is pending approval and pending approval revision will make
+	 * the reason non editable.
+	 * 
+	 * @param
+	 * @return boolean
+	 */
+	public boolean checkOldPK7PselectedToDisable() {
+		ScLoa scLoa = this.getManagedBean().getScLoa();
+		PmParameter qtType = (scLoa != null) ? scLoa.getQtType() : null;
+
+		boolean isQTtypePK7 = qtType != null
+				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType
+						.getParameterType())
+				&& (ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7
+						.equals(qtType.getParameterCode()) || ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7_WP
+						.equals(qtType.getParameterCode()));
+
+		PmStatus pmStatus = (scLoa != null) ? scLoa.getPmStatus() : null;
+		List<Long> approvalStatus = Arrays.asList(
+				QTStatusConst.LOA_PENDING_APPROVAL,
+				QTStatusConst.LOA_PENDING_REVISION_APPROVAL);
+		boolean isPendingApproval = pmStatus != null
+				&& approvalStatus.contains(pmStatus.getStatusId());
+
+		if (isQTtypePK7 && isPendingApproval) {
+			return true;
+		}
+
+		return false;
+	}
+
+	// #29766 End Vinod
 
 }

@@ -43,7 +43,7 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 						itemValue="#{null}" />
 					<f:selectItems
-						value="#{sqSummaryRptBackingBean.getRadioButtonCodeValues(ParameterTypeConst.procurementType)}" />
+						value="#{sqSummaryRptBackingBean.getDropdownValuesWithWIP(ParameterTypeConst.procurementTypeRpt,ParameterTypeConst.procurementType,ParameterTypeConst.procurementCodePk7)}" />
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
 		</tr>

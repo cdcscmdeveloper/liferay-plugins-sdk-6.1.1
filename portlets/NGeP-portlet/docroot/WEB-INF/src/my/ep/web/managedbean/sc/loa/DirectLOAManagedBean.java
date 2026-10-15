@@ -15,6 +15,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCurrency;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
+import my.ep.persistence.entity.sc.loaloi.ScLoaRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaSupportingDoc;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
@@ -342,6 +343,13 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	private boolean requiredAgreementChange = false;
 
 	// #25726 END
+	
+	//#11134/#41092 -start-
+	private List<ScLoaRemark> supplierRemarks;
+	//#11134/#41092 -end-	
+	// #29766 Start Vinod
+	private String alertForInactivePK7;
+	// #29766 End Vinod
 
 	/**
 	 * Gets the spki backing bean.
@@ -2079,5 +2087,26 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 
 	// #25726 END
+	
+	// #11134/#41092 -start-
+	public List<ScLoaRemark> getSupplierRemarks() {
+		return supplierRemarks;
+	}
+
+	public void setSupplierRemarks(List<ScLoaRemark> supplierRemarks) {
+		this.supplierRemarks = supplierRemarks;
+	}
+	// #11134/#41092 -end-
+
+	// #29766 Start Vinod
+	public String getAlertForInactivePK7() {
+		return alertForInactivePK7;
+	}
+
+	public void setAlertForInactivePK7(String alertForInactivePK7) {
+		this.alertForInactivePK7 = alertForInactivePK7;
+	}
+	
+	// #29766 End Vinod
 
 }

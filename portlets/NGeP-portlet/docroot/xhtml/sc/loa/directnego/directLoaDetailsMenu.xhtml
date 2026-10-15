@@ -79,6 +79,9 @@ a:hover.blue_font {
 	<ui:param name="StatusLOAApproval"
 		value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_APPROVAL || directLOABackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_REVISION_APPROVAL}"></ui:param>
 	<!-- #25726 END -->
+	<ui:remove>#29766 Start Vinod</ui:remove>
+	<ui:param name = "isOldpK7selected" value = "#{directLOABackingBean.checkOldPK7PselectedToDisable()}"/>
+	<ui:remove>#29766 End Vinod</ui:remove>
 	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}"
 		toggleable="true">
 		
@@ -297,7 +300,9 @@ a:hover.blue_font {
 				</td>
 				<td>
 					<c:choose>
-						<c:when test="#{!isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod -->
+						<ui:remove>#29766 Start Vinod added isPendingRevApprovalStatus</ui:remove>
+						<c:when test="#{!isPendingRevApprovalStatus and !isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod -->
+						<ui:remove>#29766 End Vinod</ui:remove>	
 							<p:selectOneMenu id="procMode" required="true"
 								value="#{directLOABackingBean.managedBean.scLoa.procurementMode.parameterId}"
 								style="margin-bottom:5px;width:246px;"
@@ -323,7 +328,9 @@ a:hover.blue_font {
 				</td>
 				<td>
 					<c:choose>
-						<c:when test="#{!isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod -->
+						<ui:remove>#29766 Start Vinod added isPendingRevApprovalStatus</ui:remove>
+						<c:when test="#{!isPendingRevApprovalStatus and !isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod -->
+						<ui:remove>#29766 End Vinod</ui:remove>	
 							<p:selectOneMenu id="qtType" required="true"
 								value="#{directLOABackingBean.managedBean.scLoa.qtType.parameterId}"
 								style="margin-bottom:5px;width:206px;"
@@ -343,6 +350,11 @@ a:hover.blue_font {
 								<p:ajax event="change"
 									listener="#{directLOABackingBean.isPk7Periodic()}"
 									partialSubmit="true" update="bondReqPG, menuItems, agreementReqPG" />
+								<ui:remove>#29766 Start Vinod</ui:remove>
+								<p:ajax event="change"
+									listener="#{directLOABackingBean.checkQTTypePk7WpItem()}"
+									update="bondReqPG, menuItems, agreementReqPG" />
+								<ui:remove>#29766 End Vinod</ui:remove>
 							</p:selectOneMenu>
 							<p:message id="qtTypeMsg" for="qtType" display="icon" />
 						</c:when>
@@ -399,7 +411,9 @@ a:hover.blue_font {
 						<c:if test="#{directLOABackingBean.isPbDropDown() || directLOABackingBean.isPk7Periodic()}">
 							<!-- 19336 -start- -->
 							<c:choose>
-							<c:when test="#{directLOABackingBean.managedBean.disableFields or directLOABackingBean.managedBean.readOnly}" >
+							<ui:remove>#29766 Start Vinod added isOldpK7selected</ui:remove>
+							<c:when test="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly or isOldpK7selected}" ><!-- #35335_haziq -->
+							<ui:remove>#29766 End Vinod</ui:remove>
 							<p:inputText 
 								value="#{directLOABackingBean.getReasonDesc(directLOABackingBean.managedBean.scLoa.justificationType.reasonCode)}"
 								size="35" disabled="true" />
@@ -1155,15 +1169,15 @@ a:hover.blue_font {
 		</table>
 	</p:panel>
 	
-	<!-- 11134 -start- -->
+	<!-- #11134/#41092 -start- -->
 	<p:outputPanel id="remarksPanel">
 		<ac:scRemarkAndAttachment
-			rendered="#{not empty directLOABackingBean.managedBean.scLoa.scLoaRemarks}"
-			remarkList="#{directLOABackingBean.managedBean.scLoa.scLoaRemarks}"
+			rendered="#{not empty directLOABackingBean.managedBean.supplierRemarks}"
+			remarkList="#{directLOABackingBean.managedBean.supplierRemarks}"
 			showAttachment="false" readonly="true" />
 	</p:outputPanel>
-	<!-- 11134 -end- -->
-<!-- #25726 START -->
+	<!-- #11134/#41092 -end- -->
+	<!-- #25726 START -->
 	<p:confirmDialog id="qtChangeAgreementReqDlg" widgetVar="qtChangeAgreementReqDlg"  appendToBody="true" 
 		message="#{lbl['lbl.msg.confirm.change']}" 	severity="alert"  closable="false">
 		<div class="ppRightBtn">
@@ -1182,8 +1196,8 @@ a:hover.blue_font {
 		<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false"
 		    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" showButtons="false"
 			fileUploadListener="#{directLOABackingBean.fileUpload}" multiple="false"
-			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="approvalLetterUploadWV"
-			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+			allowTypes="#{CommonConstants.FILE_UPLOAD_AGREEMENT_TYPES}" widgetVar="approvalLetterUploadWV"
+			invalidFileMessage="#{lbl['lbl.txt.upload.agreement.invalid.file']}"
 			invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}" 
 			update=":form:uploadedPage" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadApprovalLetterDlg.hide();" >
 		</p:fileUpload>
