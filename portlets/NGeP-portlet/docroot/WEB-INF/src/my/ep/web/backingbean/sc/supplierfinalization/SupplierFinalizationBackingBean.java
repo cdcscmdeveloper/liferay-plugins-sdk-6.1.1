@@ -11056,8 +11056,6 @@ public class SupplierFinalizationBackingBean extends
 								log.info("Inside qualified Supplier package == ");
 								BigDecimal suppOfferPrice = qualSupplierByPackage.getProposalAmount().getProposalAmt();
 								log.info("OFFER PRICE BY PACKAGE == " + suppOfferPrice);
-								log.info("actualTotalIntendedPrice == " + actualTotalIntendedPrice);
-								log.info("committeeAuthorityAmount == " + committeeAuthorityAmount);
 								if (actualTotalIntendedPrice
 										.compareTo(new BigDecimal(SourcingConstants.QT_BELOW_50MILL)) < 1) {
 									if (!getManagedBean().isRefinalizedAndBiddingAward()) {
