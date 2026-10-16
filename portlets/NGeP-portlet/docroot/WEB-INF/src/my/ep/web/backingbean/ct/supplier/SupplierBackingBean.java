@@ -616,34 +616,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		}
 		
 		//#30737 - Start
-		// change bank request
-		String docType = getManagedBean().getDocType();
-		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
-			
-			String roleCode = (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-					ParameterConst.CONTRACT_TYPE_MINISTRY)) 
-					? RoleCode.MIN_CONTRACT_ADMIN.value() 
-							: RoleCode.BPK_CCA.value();
-					
-			List<UserStatusCheckDTO> userStatusResults = 
-					checkInactiveUsers(roleCode, getManagedBean().getContractAdminlist(), docType);
-					
-			if (!userStatusResults.isEmpty()) {
-				Long userStatus = null;
-				 
-				for(UserStatusCheckDTO ctActor : userStatusResults){
-					 userStatus = ctActor.getStatus(); // expected only 1 actor
-					 break;
-					}
-				 
-				 if(InactiveUserConst.INACTIVE_USER_5.equals(userStatus)){
-		        	log.info(" BPM_SUBMIT + return 5");
-	                handleInactiveUserValidation(userStatusResults);
-				 }
-	         }
-				
-			log.info(" action : "+action);
-		}
+		checkUserStatusForSubmit(action);
 		//#30737 - End
 		
 	}
@@ -859,51 +832,52 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			}
 			
 			//#30737 - Start
-			String docType = getManagedBean().getDocType();
-			
 			if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equalsIgnoreCase(action)) {
-				
+				String docType = getManagedBean().getDocType();
 				String approverType = (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
 						ParameterConst.CONTRACT_TYPE_MINISTRY)) ? RoleCode.CT_APPROVER.value() : RoleCode.BPK_CC_APPROVER.value();
 				List<UserStatusCheckDTO> userStatusResults = 
 						checkInactiveUsers(approverType, getSelectedApprovers(), docType);
 		        handleInactiveUserValidation(userStatusResults);
-		        
 				log.info(" action : "+action);
 			}
 			
 			// if supplier submit to MCA, 
 			// when selected MCA is inactive, please send group task
-			if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
-				
-				String roleCode = (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-						ParameterConst.CONTRACT_TYPE_MINISTRY)) 
-						? RoleCode.MIN_CONTRACT_ADMIN.value() 
-								: RoleCode.BPK_CCA.value();
-						
-				List<UserStatusCheckDTO> userStatusResults = 
-						checkInactiveUsers(roleCode, getManagedBean().getContractAdminlist(), docType);
-						
-				if (!userStatusResults.isEmpty()) {
-					Long userStatus = null;
-					 
-					for(UserStatusCheckDTO ctActor : userStatusResults){
-						 userStatus = ctActor.getStatus(); // expected only 1 actor
-						 break;
-						}
-					 
-					 if(InactiveUserConst.INACTIVE_USER_5.equals(userStatus)){
-			        	log.info(" BPM_SUBMIT + return 5");
-		                handleInactiveUserValidation(userStatusResults);
-					 }
-		         }
-					
-				log.info(" action : "+action);
-			}
+			checkUserStatusForSubmit(action);
 			//#30737 - End
 			
 		}
 	}
+	
+	// 30737 start
+	private void checkUserStatusForSubmit(String action) {
+		// change bank request
+		String docType = getManagedBean().getDocType();
+		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
+			log.info(" action : "+action);
+			String roleCode = (getManagedBean().getCtContract().getContractType().getParameterCode()
+					.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) ? RoleCode.MIN_CONTRACT_ADMIN.value()
+					: RoleCode.BPK_CCA.value();
+
+			List<UserStatusCheckDTO> userStatusResults = checkInactiveUsers(roleCode, getManagedBean()
+					.getContractAdminlist(), docType);
+
+			if (!userStatusResults.isEmpty()) {
+				Long userStatus = null;
+
+				for (UserStatusCheckDTO ctActor : userStatusResults) {
+					userStatus = ctActor.getStatus(); // expected only 1 actor
+				}
+
+				if (InactiveUserConst.INACTIVE_USER_5.equals(userStatus)) {
+					log.info(" BPM_SUBMIT + return 5");
+					handleInactiveUserValidation(userStatusResults);
+				}
+			}
+		}
+	}
+	
 	// getInactiveUsers
 	private List<UserStatusCheckDTO> checkInactiveUsers(String roleCode, List<PmUser> users, String docType) {
   		
@@ -943,7 +917,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
   	
   	private List<UserStatusCheckDTO> buildUserStatusCheckResults(List<PmUser> users, InactiveUserResDTO resDto) {
 
-  	    List<UserStatusCheckDTO> selectedUsers = new ArrayList<UserStatusCheckDTO>();
+  	    List<UserStatusCheckDTO> selectedUsers = new ArrayList<>();
   	    if (!users.isEmpty()) {
   	    	String[] statuses = resDto.getStatus().split(",");
   	  	    for (int i = 0; i < statuses.length; i++) {
@@ -959,6 +933,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
   	    }
   	    return selectedUsers;
   	}
+  	// 30737 end
 
 	/**
 	 * The method used to authenticate user during submit the change bank request.
@@ -2072,4 +2047,5 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	    this.confirmationContentMsg = confirmationContentMsg;
 	}
 	//34442 - end
+
 }
