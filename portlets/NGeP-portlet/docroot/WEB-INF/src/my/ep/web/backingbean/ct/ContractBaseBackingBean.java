@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.ct.actor.ICtActorSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.constant.MessageConst;
+import my.ep.constant.MessageConst; //#30737
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractStatusConst;//34442
 import my.ep.constant.pm.ParameterConst;
@@ -33,7 +33,7 @@ import my.ep.dto.pm.authorization.user.InactiveUserResDTO; // #30737
 import my.ep.dto.pm.authorization.user.UserStatusCheckDTO; // #30737
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.exception.EpException;
+import my.ep.exception.EpException; //#30737
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.CtActor;
 import my.ep.persistence.entity.ct.CtContract; //#30737
@@ -497,42 +497,61 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
      * @param errorCode -inactive user validation error code
      * @param selectedUserNames -selected user name used in message parameter generation
      * @return message parameters for inactive user validation message
-     * 
-     * NOTE:
-     * Complexity is caused by explicit business error code mapping.
     */
     private String[] getInactiveUserMessageKeys(String errorCode, String selectedUserNames, String[] parameters) {
 
-    	CtContract ctContract = getContractVer().getCtContract();
-    	if (ctContract == null) {
-    		return new String[0];
-    	}
-    	String contractNo = ctContract.getContractNo();
-    	
-        if (MessageConst.ERROR_750096.equals(errorCode)
-        		|| MessageConst.ERROR_750098.equals(errorCode)) {
-        	if(parameters != null){
-        		return parameters;
-        	}
-            return new String[]{selectedUserNames};
+        CtContract ctContract = getContractVer().getCtContract();
+
+        if (ctContract == null) {
+            return new String[0];
+        }
+
+        String contractNo = ctContract.getContractNo();
+
+        if (isSelectedUserError(errorCode)) {
+            return getSelectedUserMessageKeys(selectedUserNames, parameters);
         }
 
         if (MessageConst.ERROR_750097.equals(errorCode)) {
-            if (parameters != null) {
-            	List<String> result = new ArrayList<>();
-            	result.add(contractNo);
-            	Collections.addAll(result, parameters);
-            	return result.toArray(new String[result.size()]);
-            }
-            return new String[] {contractNo, selectedUserNames};
+            return getAcknowledgementMessageKeys(contractNo, selectedUserNames, parameters);
         }
 
-        if ((MessageConst.ERROR_750099.equals(errorCode)
-        		|| MessageConst.ERROR_750100.equals(errorCode)) && parameters != null) {
-        	return parameters;
+        if (isParameterBasedError(errorCode) && parameters != null) {
+            return parameters;
         }
-        
+
         return new String[0];
+    }
+    
+    private boolean isSelectedUserError(String errorCode) {
+        return MessageConst.ERROR_750096.equals(errorCode) || MessageConst.ERROR_750098.equals(errorCode);
+    }
+    
+    private String[] getSelectedUserMessageKeys(String selectedUserNames, String[] parameters) {
+        if (parameters != null) {
+            return parameters;
+        }
+        return new String[] { selectedUserNames };
+    }
+    
+    private String[] getAcknowledgementMessageKeys(
+            String contractNo,
+            String selectedUserNames,
+            String[] parameters) {
+
+        if (parameters == null) {
+            return new String[] { contractNo, selectedUserNames };
+        }
+
+        List<String> result = new ArrayList<>();
+        result.add(contractNo);
+        Collections.addAll(result, parameters);
+
+        return result.toArray(new String[result.size()]);
+    }
+    
+    private boolean isParameterBasedError(String errorCode) {
+        return MessageConst.ERROR_750099.equals(errorCode) || MessageConst.ERROR_750100.equals(errorCode);
     }
     
     /**
@@ -550,74 +569,106 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
      * Validates the status of users selected for the current action and throws an
      * exception when one or more users are inactive or unavailable.
      * 
-     * NOTE:
-     * The cyclomatic complexity is higher than the recommended threshold because
-     * the validation must handle multiple user status combinations and
-     * task-specific error handling for different business processes.
+     * @param userStatusResults the status check results for the selected users
     */
     public void validateUserStatusOnAction(List<UserStatusCheckDTO> userStatusResults) {
 
         List<UserStatusCheckDTO> inactiveUsers = new ArrayList<>();
 
-        CtContract ctContract = getContractVer().getCtContract();
-        
-        int activeUserCount = 0;
         for (UserStatusCheckDTO userStatus : userStatusResults) {
-
-            Long status = userStatus.getStatus();
-            if (Long.valueOf(1L).equals(status)) {
-            	activeUserCount++;
-            }
-
-            if (Long.valueOf(2L).equals(status)
-                    || Long.valueOf(3L).equals(status)
-                    || Long.valueOf(4L).equals(status)) {
-            	inactiveUsers.add(userStatus);
+            if (isInactiveUserStatus(userStatus.getStatus())) {
+                inactiveUsers.add(userStatus);
             }
         }
-        
+
+        // Validate inactive users
+        if (!inactiveUsers.isEmpty()) {
+            validateInactiveUsers(userStatusResults, inactiveUsers);
+        }
+
+        // Validate status 5
+        validateUnavailableUser(userStatusResults);
+    }
+    
+    /**
+     * Validates inactive users and delegates error handling based on the number
+     * of selected users.
+     *
+     * @param userStatusResults the status check results for all selected users
+     * @param inactiveUsers the list of users with inactive statuses
+     */
+    private void validateInactiveUsers(List<UserStatusCheckDTO> userStatusResults, List<UserStatusCheckDTO> inactiveUsers) {
+
         String userNames = getInactiveUserNames(inactiveUsers);
-        
+
         // Single selected user and inactive
-        if (userStatusResults.size() == 1 && !inactiveUsers.isEmpty()) {
-        	String message = MessageConst.ERROR_750096;
-        	String[] parameters = null;
-            if (CTProcessNameConst.REVIEW_FA_HT_NAME.equalsIgnoreCase(getTaskName())){
-            	message = MessageConst.ERROR_750098;
-            	parameters = new String[] { userNames };
-            }
-            else if (CTProcessNameConst.ACK_FA_HT_NAME.equalsIgnoreCase(getTaskName())){
-            	message = MessageConst.ERROR_750097;
-            	parameters = new String[] { userNames };
-            }
-        	throw new EpException(message, parameters);
+        if (userStatusResults.size() == 1) {
+            validateSingleInactiveUser(userNames);
+            return;
         }
 
-        // Mixed active and inactive
-        if (activeUserCount > 0 && !inactiveUsers.isEmpty()) {
-        	if (CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME.equalsIgnoreCase(getTaskName())){
-        		throw new EpException(MessageConst.ERROR_750099, new String[] { buildInactiveCommitteeUserParameters(inactiveUsers) });
-        	} else {
-                throw new EpException(MessageConst.ERROR_750096, new String[] { userNames });
-        	}
+        // Multiple selected users with inactive users
+        validateMultipleInactiveUsers(inactiveUsers, userNames);
+    }
+    
+    /**
+     * Handles validation errors when a single selected user is inactive,
+     * using the appropriate error message for the current task.
+     *
+     * @param userNames the names of the inactive users
+     */
+    private void validateSingleInactiveUser(String userNames) {
+    	
+        String message = MessageConst.ERROR_750096;
+        String[] parameters = null;
+
+        if (CTProcessNameConst.REVIEW_FA_HT_NAME.equalsIgnoreCase(getTaskName())) {
+
+            message = MessageConst.ERROR_750098;
+            parameters = new String[] { userNames };
+
+        } else if (CTProcessNameConst.ACK_FA_HT_NAME.equalsIgnoreCase(getTaskName())) {
+
+            message = MessageConst.ERROR_750097;
+            parameters = new String[] { userNames };
+        }
+        throw new EpException(message, parameters);
+    }
+    
+    /**
+     * Handles validation errors when multiple users are selected and at least
+     * one user is inactive, using the appropriate error message for the current task.
+     *
+     * @param inactiveUsers the list of users with inactive statuses
+     * @param userNames the names of the inactive users
+     */
+    private void validateMultipleInactiveUsers(List<UserStatusCheckDTO> inactiveUsers, String userNames) {
+
+        if (CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME.equalsIgnoreCase(getTaskName())) {
+            throw new EpException(
+                    MessageConst.ERROR_750099,
+                    new String[] {
+                        buildInactiveCommitteeUserParameters(inactiveUsers)
+                    });
         }
 
-        // All inactive (2,3,4)
-        if (activeUserCount == 0 && !inactiveUsers.isEmpty()) {
-        	if (CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME.equalsIgnoreCase(getTaskName())){
-        		throw new EpException(MessageConst.ERROR_750099, new String[] { buildInactiveCommitteeUserParameters(inactiveUsers) });
-        	} else {
-                throw new EpException(MessageConst.ERROR_750096, new String[] { userNames });
-        	}
-        }
-
-        // All status = 5
+        throw new EpException(MessageConst.ERROR_750096, new String[] { userNames });
+    }
+    
+    /**
+     * Validates whether the first selected user's status indicates that all
+     * users in the list are unavailable and throws the corresponding exception.
+     *
+     * @param userStatusResults the status check results for the selected users
+     */
+    private void validateUnavailableUser(List<UserStatusCheckDTO> userStatusResults) {
         if (Long.valueOf(5L).equals(userStatusResults.get(0).getStatus())) {
-        	String[] parameters = new String[] { userStatusResults.get(0).getUserRoleDesc() , ctContract.getOwnerOrgProfile().getOrgValidity().getOrgName()};
+            String[] parameters = new String[] {
+                userStatusResults.get(0).getUserRoleDesc(),
+                getContractVer().getCtContract().getOwnerOrgProfile().getOrgValidity().getOrgName()
+            };
             throw new EpException(MessageConst.ERROR_750100, parameters);
         }
-
-        return;
     }
     
     /**
@@ -805,6 +856,18 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean> extends
 	        return RoleCode.BPK_CC_APPROVER.value();
 	    }
 	    return null;
+  	}
+  	
+  	/**
+  	 * Determines whether the specified user status represents an inactive user.
+  	 *
+  	 * @param status the user status to check
+  	 * @return {@code true} if the status indicates an inactive user; {@code false} otherwise
+  	 */
+  	private boolean isInactiveUserStatus(Long status) {
+  	    return Long.valueOf(2L).equals(status)
+  	            || Long.valueOf(3L).equals(status)
+  	            || Long.valueOf(4L).equals(status);
   	}
     //#30737 - End
     

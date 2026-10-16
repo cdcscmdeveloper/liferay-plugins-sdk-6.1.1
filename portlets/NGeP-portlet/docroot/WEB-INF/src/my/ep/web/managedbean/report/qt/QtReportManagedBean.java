@@ -11,8 +11,11 @@
 
 package my.ep.web.managedbean.report.qt;
 
+import java.util.List;
+
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.web.bean.report.ScReportFieldsSearchBean;
 import my.ep.web.managedbean.report.ReportBaseManagedBean;
 
@@ -34,6 +37,10 @@ public abstract class QtReportManagedBean extends ReportBaseManagedBean {
 	private ScQt scQt;
 	private PmParameter decisionType;//#21692
 	private String quotationTitle;//#29580
+	//#25651 - Start
+	private boolean isAllReportExisting = false;  
+	private List<ScQtFinalizationReport> qtReportDocumentList;
+	//#25651 - End
 	
 	/**
 	 * @return the quotationNumner
@@ -138,5 +145,19 @@ public abstract class QtReportManagedBean extends ReportBaseManagedBean {
 	}
 	//#29580 - End
 	
-
+	//#25651 - Start
+	public boolean isAllReportExisting() {
+		return isAllReportExisting;
+	}
+	public void setAllReportExisting(boolean isAllReportExisting) {
+		this.isAllReportExisting = isAllReportExisting;
+	}
+	
+	public List<ScQtFinalizationReport> getQtReportDocumentList() {
+		return qtReportDocumentList;
+	}
+	public void setQtReportDocumentList(List<ScQtFinalizationReport> qtReportDocumentList) {
+		this.qtReportDocumentList = qtReportDocumentList;
+	}
+	//#25651 - End
 }

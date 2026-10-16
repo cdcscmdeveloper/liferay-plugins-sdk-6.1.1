@@ -13,11 +13,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -2504,7 +2502,7 @@ public class CentralContractBackingBean extends CircularBaseBackingBean<CentralC
 		try {
 			CtActor ctActor = retrieveContractActor(ctCircularVer.getCircularVerId(), ctCircularVer.getDocType(), userRole);
 			if (ctActor != null) {
-	            List<PmUser> users = new ArrayList<PmUser>();
+	            List<PmUser> users = new ArrayList<>();
 	            users.add(ctActor.getUser());
 
 	            return getLoginStatusFromSP(circular, 
@@ -2513,14 +2511,13 @@ public class CentralContractBackingBean extends CircularBaseBackingBean<CentralC
 	            		RoleCode.BPK_CCA.value());
 	        }
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		} 
-		return new ArrayList<UserStatusCheckDTO>();
+		return new ArrayList<>();
 	}
 	
 	public void validateUserToCheckStatus(String outcome) {
-		List<UserStatusCheckDTO> userListStatus = new ArrayList<UserStatusCheckDTO>();
 
 		CtCircularVer ctCircularVer = getManagedBean().getCircularVer();
 		CtCircular circular = getManagedBean().getCircular();
@@ -2528,7 +2525,7 @@ public class CentralContractBackingBean extends CircularBaseBackingBean<CentralC
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
 			log.info("validateCircular action : " + outcome);
 			String userRole = RoleCode.BPK_CQ_APPROVER.value();
-			userListStatus = getLoginStatusFromSP(
+			List<UserStatusCheckDTO> userListStatus = getLoginStatusFromSP(
 					circular, ctCircularVer,
 					getManagedBean().getApproverModel().getTarget(), userRole);
 			handleInactiveUserValidation(outcome, circular.getCircularNo(), userListStatus);
@@ -2537,23 +2534,24 @@ public class CentralContractBackingBean extends CircularBaseBackingBean<CentralC
 		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
 			log.info("validateCircular action : " + outcome);
 
-			userListStatus = validateInactiveUserForRevise(
+			List<UserStatusCheckDTO> userListStatus = validateInactiveUserForRevise(
 					ctCircularVer.getCtCircular(), ctCircularVer,
 					RoleCode.BPK_CCA.value());
 
 			if (!userListStatus.isEmpty()) {
-				Long userStatus = null;
 
 				for (UserStatusCheckDTO userStatusResult : userListStatus) {
-					userStatus = userStatusResult.getStatus();
+					Long userStatus = userStatusResult.getStatus();
 					this.getManagedBean().setUserStatusCheckResult(
 							userStatusResult.getStatus());
-					break;
-				}
-
-				if (InactiveUserConst.INACTIVE_USER_5.equals(userStatus)) {
-					log.info("xoxoxoxoxooxoxo REVISE + return 5");
-					handleInactiveUserValidation(outcome, circular.getCircularNo(), userListStatus);
+					
+					if (InactiveUserConst.INACTIVE_USER_5.equals(userStatus)) {
+						log.info("xoxoxoxoxooxoxo REVISE + return 5");
+						handleInactiveUserValidation(outcome, circular.getCircularNo(), userListStatus);
+						
+						break;
+					}
+					
 				}
 			}
 		}

@@ -14,11 +14,8 @@ import javax.faces.bean.SessionScoped;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 
-import my.ep.constant.EpPropertiesConst;
-import my.ep.constant.pm.ParameterConst;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.ct.CtAttachment;
-import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.circular.CtCancelCircularReq;
 import my.ep.persistence.entity.ct.circular.CtCircular;
@@ -39,7 +36,6 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
-import my.ep.util.EpPropertiesUtils;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 

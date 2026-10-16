@@ -1018,18 +1018,14 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 					ctBB.getManagedBean().getDocIdFromAgreementTaskList(),
 					ctBB.getManagedBean().getDocTypeFromAgreementTaskList());
 			
-			 if (!userStatusResults.isEmpty()) {
-				 Long userStatus = null;
+	        if (!userStatusResults.isEmpty()) {
 				 
-				 for(UserStatusCheckDTO userStatusCheck : userStatusResults){
-					 userStatus = userStatusCheck.getStatus();
-					 this.getManagedBean().setUserStatusCheckResult(userStatusCheck.getStatus());
-					 break;
-					}
-				 
-				 if(InactiveUserConst.INACTIVE_USER_5.equals(userStatus)){
-	                handleInactiveUserValidation(userStatusResults);
-				 }
+	        	Long userStatus = userStatusResults.get(0).getStatus();
+		        this.getManagedBean().setUserStatusCheckResult(userStatus);
+
+		        if (InactiveUserConst.INACTIVE_USER_5.equals(userStatus)) {
+		            handleInactiveUserValidation(userStatusResults);
+		        }
             }
 	    }
 		//#30737 - End
