@@ -312,6 +312,9 @@
 			</tr>
 		</table>
 	</p:panel>
+	<ui:remove>#26059 - Start</ui:remove>
+	<ui:include src="/xhtml/common/itemDetailsPopup.xhtml" />
+	<ui:remove>#26059 - End</ui:remove>
 
 	<p:panel toggleable="true" header="#{lbl['lbl.sc.companyinfo']}"
 		rendered="#{!purchaseInDefaultBackingBean.managedBean.checkContractItem}">
