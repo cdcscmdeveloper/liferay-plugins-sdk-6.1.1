@@ -10752,31 +10752,30 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 		EvaluationReqDTO req4SerDTO = new EvaluationReqDTO();
 		req4SerDTO.setQtId(qtId);
 		int wipstatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
-		boolean checkStatusWip = isWipScoreFlagSaved(qt.getQtId()); //#38151 true = OVERALL_OTHER_FLAG saved (non-WIP)
 		
 		String reportName = StringUtils.EMPTY;
 		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this.getManagedBean().getCommitteeType())) {
-			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE && !checkStatusWip) { //#38151
+			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) { //#38151
 				reportName = ReportConst.SC_EC_RPT_WIP_JSP;
 			} else {
 				reportName = ReportConst.SC_EC_RPT_JSP;
 			}
 		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equals(this.getManagedBean().getCommitteeType())) {
-			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE && !checkStatusWip) {
+			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
 				reportName = ReportConst.SC_OC_RPT_WIP_JSP;
 			} else {
 				reportName = ReportConst.SC_OC_RPT_JSP;
 			}
 		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equals(this.getManagedBean()
 				.getCommitteeType())) {
-			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE && !checkStatusWip) {
+			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
 				reportName = ReportConst.SC_TEC_RPT_WIP_JSP;
 			} else {
 				reportName = ReportConst.SC_TEC_RPT_JSP;
 			}
 		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equals(this.getManagedBean()
 				.getCommitteeType())) {
-			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE && !checkStatusWip) {
+			if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
 				reportName = ReportConst.SC_FEC_RPT_WIP_JSP;
 			} else {
 				reportName = ReportConst.SC_FEC_RPT_JSP;

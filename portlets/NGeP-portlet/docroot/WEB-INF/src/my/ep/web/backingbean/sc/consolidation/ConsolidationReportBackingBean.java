@@ -1867,9 +1867,8 @@ public class ConsolidationReportBackingBean extends
 		EvaluationReqDTO req4SerDTO = new EvaluationReqDTO();
 		req4SerDTO.setQtId(qtId);
 		int wipstatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
-		boolean checkStatusWip = isWipScoreFlagSaved(qt.getQtId()); //#38151 true = OVERALL_OTHER_FLAG saved (non-WIP)
 		String reportName = "";
-		if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE && !checkStatusWip) { //#38151
+		if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) { //#38151
 			reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_WIP_JSP;
 		} else {
 			reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_JSP;
@@ -1929,9 +1928,8 @@ public class ConsolidationReportBackingBean extends
 		EvaluationReqDTO req4SerDTO = new EvaluationReqDTO();
 		req4SerDTO.setQtId(qtId);
 		int wipstatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
-		boolean checkStatusWip = isWipScoreFlagSaved(qt.getQtId()); //#38151 true = OVERALL_OTHER_FLAG saved (non-WIP)
 		String reportName = "";
-		if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE && !checkStatusWip) { //#38151
+		if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) { //#38151
 			reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_WIP_JSP;
 		} else {
 			reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_JSP;
@@ -3168,12 +3166,9 @@ public class ConsolidationReportBackingBean extends
 			if (null == totalScoreTecEval && SourcingConstants.EVAL_STAGE_TECHNICAL_ITEM.equals(evalstageT)) {
 				IQTEvaluationSO evalSOTecPkg = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-				IQTSpecSO specSOTecPkg = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 				EvaluationReqDTO reqTecPkg = new EvaluationReqDTO();
 				reqTecPkg.setQtId(qtId);
-				if (evalSOTecPkg.checkWipScoreSetting(reqTecPkg) < SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM
-						&& specSOTecPkg.checkWipScoreFlag(qtId)) {
+				if (evalSOTecPkg.checkWipScoreSetting(reqTecPkg) < SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
 					List<Object[]> findListTecPkg = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(
 							SourcingConstants.EVAL_STAGE_TECHNICAL, qtId, null, null);
 					for (Object[] rowTecPkg : findListTecPkg) {
