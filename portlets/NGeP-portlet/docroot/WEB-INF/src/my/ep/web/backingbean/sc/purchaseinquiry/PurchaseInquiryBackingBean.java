@@ -1148,6 +1148,11 @@ public class PurchaseInquiryBackingBean extends
 
 			if (pmPK7Mapping != null) {
 				defaultToPK7W(pmPK7Mapping);
+				if (pmPK7Mapping.getNewParameterCode() != null
+						&& pmPK7Mapping.getNewParameterCode()
+								.equalsIgnoreCase(ReasonCategory.JUSTIFICATION_SIT.value())) {
+					defaultToSpecialtem();
+				}
 			} else {
 				defaultToSpecialtem();
 			}
@@ -2683,14 +2688,11 @@ public class PurchaseInquiryBackingBean extends
 			appendedCount = suppAccTypeSb.split(",").length;
 		}
 
-		if (rnDtl.getJustificationType().getReasonCategoryCode().getParameterCode()
-				.equalsIgnoreCase(ReasonCategory.JUSTIFICATION_PK7W.value())
-				|| rnDtl.getJustificationType().getReasonCategoryCode().getParameterCode()
-						.equalsIgnoreCase(ReasonCategory.JUSTIFICATION_SIT.value())) {
-			throwJustificationTypeError(rnDtl, suppAccTypeSb, appendedCount);
-		} else if (rnDtl.getJustificationType().getReasonCategoryCode().getParameterCode()
-				.equalsIgnoreCase(ReasonCategory.JUSTIFICATION_PK7.value())) {
+		Date createdDate = rnDtl.getCreatedDate() != null ? rnDtl.getCreatedDate() : new Date();
+		if (validateProcurementTypeisRPT(createdDate).equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE)) {
 			throwSupplierAccountTypeError(rnDtl, suppAccTypeSb, appendedCount);
+		} else {
+			throwJustificationTypeError(rnDtl, suppAccTypeSb, appendedCount);
 		}
 	}
 
