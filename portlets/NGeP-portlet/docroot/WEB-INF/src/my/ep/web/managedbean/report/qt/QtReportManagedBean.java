@@ -38,6 +38,7 @@ public abstract class QtReportManagedBean extends ReportBaseManagedBean {
 	private PmParameter decisionType;//#21692
 	private String quotationTitle;//#29580
 	//#25651 - Start
+	private String reportStage;
 	private boolean isAllReportExisting = false;  
 	private List<ScQtFinalizationReport> qtReportDocumentList;
 	//#25651 - End
@@ -146,6 +147,13 @@ public abstract class QtReportManagedBean extends ReportBaseManagedBean {
 	//#29580 - End
 	
 	//#25651 - Start
+	public String getReportStage() {
+		return reportStage;
+	}
+	public void setReportStage(String reportStage) {
+		this.reportStage = reportStage;
+	}
+	
 	public boolean isAllReportExisting() {
 		return isAllReportExisting;
 	}
