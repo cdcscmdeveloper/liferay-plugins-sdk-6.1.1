@@ -102,7 +102,6 @@ QtReportBackingBean<EvaluationCommitteeReportManagedBean> implements Serializabl
 		boolean isAllReportExisting = false;
 		List<ScQtFinalizationReport> scQtFinalizationReports;
 		if (StringUtils.isNotEmpty(qtNumber) && qtNumber.startsWith(ReportConst.QT_VALUE)) {
-			quotationNumberValidation();
 
 			List<ScQtFinalizationReport> reports = getSourcingIntegrationSO().retriveFinalizationScReport(qtNumber,
 					SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT);

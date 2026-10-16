@@ -4160,8 +4160,6 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 	 *             if inactive user conditions are met during validation
 	 */
 	public void checkingInactiveUserViaProcess(String action) {
-		List<UserStatusCheckDTO> userListStatus = new ArrayList<UserStatusCheckDTO>();
-
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
 			log.info("saveCancelCircularReq inactive action : " + action);
 			String userRole = null;
@@ -4172,7 +4170,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 					ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
 				userRole = RoleCode.BPK_PQ_APPROVER.value();
 			}
-			userListStatus = getLoginStatusForCancelCircularFromSP(
+			List<UserStatusCheckDTO> userListStatus = getLoginStatusForCancelCircularFromSP(
 					getManagedBean().getCircularDocType(), getManagedBean()
 							.getCancelCircularReq().getCancelCircularReqNo(),
 					getManagedBean().getApproverModel().getTarget(), userRole);
@@ -4184,7 +4182,7 @@ public class PanelBackingBean extends CircularBaseBackingBean<PanelManagedBean>{
 		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
 			log.info("saveCancelCircularReq inactive action : " + action);
 
-			userListStatus = validateInactiveUserForReviseFromCancelCircular(
+			List<UserStatusCheckDTO> userListStatus = validateInactiveUserForReviseFromCancelCircular(
 					getManagedBean().getCircularDocType(), getManagedBean()
 							.getCancelCircularReq().getCancelCircularReqNo(),
 					RoleCode.BPK_PCA.value());
