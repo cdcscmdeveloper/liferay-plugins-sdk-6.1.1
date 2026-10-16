@@ -3344,11 +3344,13 @@ public class QTDocumentsBackingBean extends
 		boolean isLocationContainsDivision = false;
 		if (!CollectionUtils.isEmpty(specZoneDtls)) {
 			for (TplSpecZoneDtl tplSpecZoneDtl : specZoneDtls) {
-				if (!CollectionUtils.isEmpty(tplSpecZoneDtl.getTplSpecZoneLocs())) {//#3657
+				//#3657 - Start
+				if (!CollectionUtils.isEmpty(tplSpecZoneDtl.getTplSpecZoneLocs())) {
 					tplSpecZoneDtl.setTplSpecZoneLocs(removeDuplicatebyDivisionIDbyTplSpecZoneLoc(tplSpecZoneDtl
 							.getTplSpecZoneLocs()));
-					isLocationContainsDivision |= loopFindisLocationContainsPmDivision(tplSpecZoneDtl);//#3657
+					isLocationContainsDivision = updateDivisionFlag(tplSpecZoneDtl, isLocationContainsDivision);
 				}
+				//#3657 - End
 			}
 		}
 
@@ -3365,6 +3367,15 @@ public class QTDocumentsBackingBean extends
 
 		return isLocationContainsDivision;
 	}
+
+	//#3657 - Start
+	private boolean updateDivisionFlag(TplSpecZoneDtl tplSpecZoneDtl, boolean isLocationContainsDivision) {
+		if (loopFindisLocationContainsPmDivision(tplSpecZoneDtl)) {
+			return true;
+		}
+		return isLocationContainsDivision;
+	}
+	//#3657 - End
 
 	private boolean loopFindisLocationContainsPmDivision(TplSpecZoneDtl tplSpecZoneDtl) {
 		for (TplSpecZoneLoc tplSpecZoneLoc : tplSpecZoneDtl.getTplSpecZoneLocs()) {
