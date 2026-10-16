@@ -33,7 +33,7 @@
 				</c:if>
 				<c:if test="#{specificationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
 					<p:selectOneRadio id="finScoreWeight"
-						disabled="#{true}"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						label="#{lbl['lbl.sc.spec.weightage']}" required="true"
 						value="#{specificationBackingBean.managedBean.financialScoreSetting.weightageReq}">
 						<f:selectItems
