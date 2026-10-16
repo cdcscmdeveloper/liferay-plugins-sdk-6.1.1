@@ -10,6 +10,7 @@
 	<ui:param name="uomCode"
 		value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.uom.uomCode}" />
 		<ui:param name="isStockAvailable" value="#{purchaseInquiryBackingBean.managedBean.stockAvailabilityFlag}" />
+		<ui:param name="isReasonInActive" value="#{purchaseInquiryBackingBean.managedBean.reasonCodeInActive}" /><ui:remove>#27868</ui:remove>
 
 	<p:panel header="#{lbl['lbl.sc.price.inquiry.header.inquiry.detail']}"
 		toggleable="true" id="addToCartId">
