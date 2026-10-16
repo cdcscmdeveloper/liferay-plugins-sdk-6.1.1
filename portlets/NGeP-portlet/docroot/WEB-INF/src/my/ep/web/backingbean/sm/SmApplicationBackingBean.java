@@ -20482,7 +20482,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 //			reqDTO.setMofAccountId(getManagedBean().getSmSupplier().getSmMofAccounts().get(0).getMofAccountId());
 //		}
 //
-//		SmRuuFeeResDTO result = getSmRuuSO().calculateRuuFees(getManagedBean().getSmAppl().getApplId(), reqDTO);
+//		SmRuuFeeResDTO result = getSmRuuSO().calculateRuuFee(getManagedBean().getSmAppl().getApplId(), reqDTO);
 //
 //		List<SmPaymentDetailsVO> paymentRows = new ArrayList<SmPaymentDetailsVO>();
 //
@@ -20499,7 +20499,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 //		getManagedBean().setPaymentDetailsVOList(paymentRows);
 //		getManagedBean().setTotalPaymentAmount(result.getTotalAmount());
 //
-//		// Retain the existing GST display metadata.
 //		getManagedBean().setGstAmount(SmCommonUtil.getGstCurrentRate());
 //		getManagedBean().setGstPercentageLabels(
 //				SmCommonUtil.getMessage("lbl.sm.gst.percent", new String[] { getManagedBean().getGstAmount().toString() }));
