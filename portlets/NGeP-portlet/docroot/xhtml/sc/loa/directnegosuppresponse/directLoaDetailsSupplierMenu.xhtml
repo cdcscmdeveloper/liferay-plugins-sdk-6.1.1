@@ -197,10 +197,12 @@
 
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
+							<!-- #30447 - start -->
 							<f:selectItems
 								value="#{directLOABackingBean.managedBean.supplierContractSignerList}"
-								var="pmuser" itemLabel="#{pmuser.userName}"
+								var="pmuser" itemLabel="#{directLOABackingBean.getFormattedSalutationName(pmuser.salutationCode.salutationName, pmuser.userName)}"
 								itemValue="#{pmuser.userId}" />
+								<!-- #30447 - end -->
 							<p:ajax event="change"
 								listener="#{directLOABackingBean.supplierContractSignerEvent()}"
 								partialSubmit="true" process="@this" update="@this supplierContractSignerPanel " />
@@ -208,9 +210,11 @@
 						<p:message id="supplierContractSignerMsg" for="supplierContractSigner"
 							display="icon" />
 					</c:if> <c:if test="#{!isSupplierAckStatus}">
+						<!-- #30447 start -->
 						<p:inputText
-							value="#{ldirectLOABackingBean.managedBean.scLoa.ackBy.userName}"
+							value="#{directLOABackingBean.formattedSupplierContractSigner}"
 							disabled="true" size="35" />
+						<!-- #30447 end -->
 					</c:if></td>
 			</tr>
 			<tr>

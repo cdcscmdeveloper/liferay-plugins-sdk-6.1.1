@@ -15,6 +15,7 @@ import javax.faces.context.FacesContext; //#30737 add import
 import my.ep.biz.service.ct.actor.ICtActorSO; //#30737 add import
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.constant.InactiveUserConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constants.CTProcessNameConst;
@@ -241,7 +242,7 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 
 		log.info("validateUserStatusOnAction....");
 
-		List<UserStatusCheckDTO> inactiveUsers = new ArrayList<UserStatusCheckDTO>();
+		List<UserStatusCheckDTO> inactiveUsers = new ArrayList<>();
 
 		int activeUserCount = 0;
 
@@ -249,13 +250,13 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 
 			Long status = user.getStatus();
 
-			if (Long.valueOf(1L).equals(status)) {
+			if (InactiveUserConst.INACTIVE_USER_1.equals(status)) {
 				activeUserCount++;
 			}
 
-			if (Long.valueOf(2L).equals(status)
-					|| Long.valueOf(3L).equals(status)
-					|| Long.valueOf(4L).equals(status)) {
+			if (InactiveUserConst.INACTIVE_USER_2.equals(status)
+					|| InactiveUserConst.INACTIVE_USER_3.equals(status)
+					|| InactiveUserConst.INACTIVE_USER_4.equals(status)) {
 
 				inactiveUsers.add(user);
 			}
@@ -282,14 +283,13 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 		}
 
 		// All status = 5
-		if (Long.valueOf(5L).equals(userStatusResults.get(0).getStatus())) {
+		if (InactiveUserConst.INACTIVE_USER_5.equals(userStatusResults.get(0).getStatus())) {
 			log.info("All status = 5");
 			throw new EpException(MessageConst.ERROR_750100);
 		}
 
 		// Single active or all active
 		log.info("PASSED!");
-		return;
 	}
 	
 	/**
@@ -377,7 +377,7 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 
 		if (MessageConst.ERROR_750097.equals(errorCode)) {
 			if (parameters != null) {
-				List<String> result = new ArrayList<String>();
+				List<String> result = new ArrayList<>();
 				result.add(circularNo);
 				Collections.addAll(result, parameters);
 				return result.toArray(new String[result.size()]);
@@ -385,11 +385,10 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 			return new String[] { circularNo, selectedUserNames };
 		}
 
-		if (MessageConst.ERROR_750099.equals(errorCode)
-				|| MessageConst.ERROR_750100.equals(errorCode)) {
-			if (parameters != null) {
-				return parameters;
-			}
+		if ((MessageConst.ERROR_750099.equals(errorCode)
+				|| MessageConst.ERROR_750100.equals(errorCode))
+				&& parameters != null) {
+			return parameters;
 		}
 
 		return new String[0];
@@ -406,7 +405,7 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 	 */
 	private String getSelectedUserNames(
 			List<UserStatusCheckDTO> userStatusResults) {
-		List<String> userNames = new ArrayList<String>();
+		List<String> userNames = new ArrayList<>();
 		for (UserStatusCheckDTO user : userStatusResults) {
 			userNames.add(user.getUserName());
 		}
@@ -575,7 +574,7 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 	private List<UserStatusCheckDTO> buildUserStatusCheckResults(
 			List<PmUser> users, InactiveUserResDTO resDto) {
 
-		List<UserStatusCheckDTO> selectedUsers = new ArrayList<UserStatusCheckDTO>();
+		List<UserStatusCheckDTO> selectedUsers = new ArrayList<>();
 		if (!users.isEmpty()) {
 			String[] statuses = resDto.getStatus().split(",");
 			for (int i = 0; i < statuses.length; i++) {
@@ -604,7 +603,7 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 	 * @return the joined user names, e.g. "Alice, Bob and Ali"
 	 */
 	private String getInactiveUserNames(List<UserStatusCheckDTO> inactiveUsers) {
-		List<String> userNames = new ArrayList<String>();
+		List<String> userNames = new ArrayList<>();
 		for (UserStatusCheckDTO user : inactiveUsers) {
 			userNames.add(user.getUserName());
 		}
@@ -658,7 +657,7 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 			ctActorResDTO = ctActorSO
 					.retrieveCtActorByDocIdAndTypeAndRole(ctActorReqDTO);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),

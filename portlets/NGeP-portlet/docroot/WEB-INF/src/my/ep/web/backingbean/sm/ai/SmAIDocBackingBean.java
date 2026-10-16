@@ -879,12 +879,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			AIApiResponse response = SmServiceLookup.getAIApiProcessSO()
 					.getById(docFile.getAiApiResponseId());
 			if (response != null){
-				AiBankDocDTO dto = AiDocParser.toBankDoc(response.getApiResponseId(),
-						AiDocParser.parseFields(response.getJsonResponse()));
-				if (AiDocParser.isUnavailable(response)){
-					dto.setUnavailable(true);
-				}
-				entities.add(dto);
+				entities.add(AiDocParser.toBankDoc(response));
 			}
 		}
 		return entities;
@@ -911,19 +906,12 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	// read the supplier side off the same facility setTenancyAiFields() writes the verdict onto
 	private static void validateTenancyFiles(SmAppl appl, List<AIApiResponse> responses, SmFacility hqFacility){
 		for (AIApiResponse response : responses){
-			if (AiDocParser.isUnavailable(response)){
-				markProjectedFile(appl, response, AiDocParser.unavailableLabel(), 3);
+			AiTenancyDTO te = validatedTenancy(appl, hqFacility, response);
+			markProjectedFile(appl, response, te.getLabel(), te.getVerdict());
+			// nothing read from this file: it must not blank the AI fields an earlier file set
+			if (te.isUnavailable() || te.isError()){
 				continue;
 			}
-			JSONArray fields = AiDocParser.parseFields(response.getJsonResponse());
-			if (fields == null){
-				// nothing mappable in the file: cross the row rather than leave it blank
-				markProjectedFile(appl, response, AiDocParser.label(LBL_DOC_INVALID), 2);
-				continue;
-			}
-			AiTenancyDTO te = validatedTenancy(appl, hqFacility, response.getApiResponseId(), fields);
-
-			markProjectedFile(appl, response, te.getLabel(), te.hasError() ? 2 : 1); //1-ok, 2-err
 			Map<String, Set<String>> edits = AiUserEdit.parse(response.getUserEdit());
 			Set<String> accepted = new HashSet<>(AiUserEdit.accepted(edits, AiUserEdit.KEY_TENANCY));
 			accepted.removeAll(AiUserEdit.fields(edits, AiUserEdit.KEY_TENANCY));
@@ -932,7 +920,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	// one tenancy file scored against the supplier's own premises values
-	private static AiTenancyDTO validatedTenancy(SmAppl appl, SmFacility hqFacility, Long apiId, JSONArray fields){
+	private static AiTenancyDTO validatedTenancy(SmAppl appl, SmFacility hqFacility, AIApiResponse response){
 		String landlordsNameSupp = "";
 		BigDecimal rentalRate = null;
 		SmAddress addr = null;
@@ -943,7 +931,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			}
 			addr = hqFacility.getSmAddress();
 		}
-		AiTenancyDTO te = AiDocParser.toTenancy(apiId, fields);
+		AiTenancyDTO te = AiDocParser.toTenancy(response);
 		AiDocValidator.validateTenancy(te, landlordsNameSupp, appl.getSmSupplier().getCompanyName(),
 				rentalRate, addr);
 		return te;
@@ -1313,20 +1301,14 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if (response == null){
 			return;
 		}
-		if (AiDocParser.isUnavailable(response)){
-			docFile.setMappedFieldAI(AiDocParser.unavailableLabel());
-			docFile.setValidatedAI(3);
-			return;
-		}
-		AiEpfResultDTO ee = validatedEpf(appl, response.getApiResponseId(),
-				AiDocParser.parseFields(response.getJsonResponse()));
+		AiEpfResultDTO ee = validatedEpf(appl, response);
 		docFile.setMappedFieldAI(ee.getLabel());
-		docFile.setValidatedAI(ee.isValidEmployerName() ? 1 : 2); //1-ok, 2-err
+		docFile.setValidatedAI(ee.getVerdict());
 	}
 
 	// one EPF file scored against the registered company name
-	private static AiEpfResultDTO validatedEpf(SmAppl appl, Long apiId, JSONArray fields){
-		AiEpfResultDTO ee = AiDocParser.toEpf(apiId, fields);
+	private static AiEpfResultDTO validatedEpf(SmAppl appl, AIApiResponse response){
+		AiEpfResultDTO ee = AiDocParser.toEpf(response);
 		AiDocValidator.validateEpf(ee, appl.getSmSupplier().getCompanyName());
 		return ee;
 	}
@@ -1357,42 +1339,21 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		if (response == null){
 			return file.getMappedFieldAI();
 		}
-		if (AiDocParser.isUnavailable(response)){
-			return AiDocParser.unavailableLabel();
-		}
-		JSONArray fields = AiDocParser.parseFields(response.getJsonResponse());
 		PmDocument pmDoc = suppDoc.getPmDocument();
 		if (isBankDoc(pmDoc)){
 			// validateBank scores the whole list, so this file goes in on its own
 			List<AiBankDocDTO> docEntities = new ArrayList<>();
-			docEntities.add(AiDocParser.toBankDoc(response.getApiResponseId(), fields));
+			docEntities.add(AiDocParser.toBankDoc(response));
 			AiDocValidator.validateBank(appl, docEntities);
 			return docEntities.get(0).getLabel();
 		}
-		if (fields == null){
-			// same verdict the markers wrote: nothing mappable in the file
-			return isTenancyDoc(pmDoc) ? AiDocParser.label(LBL_DOC_INVALID) : file.getMappedFieldAI();
-		}
 		if (isTenancyDoc(pmDoc)){
-			return validatedTenancy(appl, AiDocValidator.getHeadquartersFacility(appl), response.getApiResponseId(),
-					fields).getLabel();
+			return validatedTenancy(appl, AiDocValidator.getHeadquartersFacility(appl), response).getLabel();
 		}
 		if (isEpfDoc(pmDoc)){
-			return validatedEpf(appl, response.getApiResponseId(), fields).getLabel();
+			return validatedEpf(appl, response).getLabel();
 		}
 		return file.getMappedFieldAI();
-	}
-
-	// 1-ok, 2-err, 3-read only partly; a mismatch outranks a field the AI never read, per the BA
-	private static int bankVerdict(AiBankDocDTO entity){
-		// the AI never read the file: warn, but only a mismatch or a wrong document blocks Declare
-		if (entity.isUnavailable()){
-			return 3;
-		}
-		if (entity.hasError()){
-			return 2;
-		}
-		return entity.hasWarning() ? 3 : 1;
 	}
 
 	private static void validateBankEntity(SmAppl appl, SmApplSupportDoc suppDoc, List<AiBankDocDTO> docEntities){
@@ -1404,7 +1365,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			for (AiBankDocDTO entity : docEntities){
 				if (entity.getApiId() != null && entity.getApiId().equals(file.getAiApiResponseId())){
 					file.setMappedFieldAI(entity.getLabel());
-					file.setValidatedAI(bankVerdict(entity));
+					file.setValidatedAI(entity.getVerdict());
 				}
 			}
 		}
@@ -1519,6 +1480,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			return false;
 		}
 		String err = null;
+		boolean unavailable = false;
 		for (JsonWrapper json : jsonWrappers){
 			int statusCode = json.statusCode;
 			if (statusCode == 415 || statusCode == 422){
@@ -1534,16 +1496,17 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 					err = "lbl.sm.ai.bank.invalid";
 					break;
 				}
-			} else if (statusCode >= 400){
-				err = LBL_AI_UNAVAILABLE;
-				addMessageOnce(FacesMessage.SEVERITY_WARN, err);
-				return true;
+			} else if (AiDocParser.isUnavailable(json.apiId, statusCode, json.rawContent)){
+				unavailable = true;
 			}
+		}
+		// a warning only: the other files in the batch are still checked
+		if (unavailable){
+			addMessageOnce(FacesMessage.SEVERITY_WARN, LBL_AI_UNAVAILABLE);
 		}
 		if (err != null){
 			addMessageOnce(FacesMessage.SEVERITY_ERROR, err);
 			return true;
-
 		}
 		return false;
 	}
@@ -1555,11 +1518,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		List<AiBankDocDTO> docEnts = new ArrayList<>();
 		for (JsonWrapper json : jsonWrappers){
 			// null entities yields an error DTO, so a wrong document is crossed rather than skipped
-			AiBankDocDTO dto = AiDocParser.toBankDoc(json.apiId, json.entities);
-			if (AiDocParser.isUnavailable(json.apiId, json.statusCode, json.rawContent)){
-				dto.setUnavailable(true);
-			}
-			docEnts.add(dto);
+			docEnts.add(AiDocParser.toBankDoc(json.apiId, json.statusCode, json.rawContent));
 		}
 		return docEnts;
 	}
@@ -1604,16 +1563,15 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		boolean hasWrongCompanyName = false;
 		
 		for (JsonWrapper entityWrapper : entities){
-			if (entityWrapper.entities == null){
-				continue;
-			}
-			AiEpfResultDTO ee = AiDocParser.toEpf(entityWrapper.apiId, entityWrapper.entities);
-			ee.setApiId(entityWrapper.apiId);
+			// every file gets a result, so its icon and tooltip come from the DTO alone
+			AiEpfResultDTO ee = AiDocParser.toEpf(entityWrapper.apiId, entityWrapper.statusCode,
+					entityWrapper.rawContent);
 			// employer name matches exactly, case-insensitive; no employer name extracted counts as wrong
 			AiDocValidator.validateEpf(ee, companyName);
 			epfs.add(ee);
 
-			if (!ee.isValidEmployerName()){
+			// a file the AI never read, or read nothing from, is reported by showErrorMessage, not as a mismatch
+			if (entityWrapper.entities != null && !ee.isUnavailable() && !ee.isValidEmployerName()){
 				hasWrongCompanyName = true;
 			}
 		}
@@ -1629,22 +1587,18 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 
 	/**
 	 * Company-name verdict for one uploaded EPF file, mirroring the Supporting Documents icons.
-	 * 1 = matches the registered name, 2 = wrong or never extracted, 0 = nothing to show.
+	 * 1 = matches the registered name, 2 = wrong or never extracted, 3 = the AI never read it.
 	 * @param doc
 	 * @return
 	 */
 	public int getEpfDocVerdict(AIApiResponse doc){
 		AiEpfResultDTO ee = findEpfResult(doc);
-		if (ee == null){
-			// the file went through OCR but nothing came back to map: that is a cross, not a blank cell
-			return 2;
-		}
-		return ee.isValidEmployerName() ? 1 : 2;
+		return ee == null ? 2 : ee.getVerdict();
 	}
 
 	/**
 	 * Verdict icon for one uploaded file, scored the same way as its Supporting Documents row.
-	 * 1 = mapped, 2 = mismatch or nothing mappable, 0 = nothing to show.
+	 * 1 = mapped, 2 = mismatch or nothing mappable, 3 = read only partly or never read, 0 = nothing to show.
 	 * @param doc
 	 * @return
 	 */
@@ -1654,7 +1608,7 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 		}
 		if (TYPE_TENANCY.equals(docType)){
 			AiTenancyDTO te = findTenancyResult(doc);
-			return te == null || te.hasError() ? 2 : 1;
+			return te == null ? 2 : te.getVerdict();
 		}
 		return 0;
 	}
@@ -1669,9 +1623,6 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			return getEpfDocLabel(doc);
 		}
 		if (TYPE_TENANCY.equals(docType)){
-			if (doc != null && AiDocParser.isUnavailable(doc)){
-				return AiDocParser.unavailableLabel();
-			}
 			AiTenancyDTO te = findTenancyResult(doc);
 			return te == null ? AiDocParser.label(LBL_DOC_INVALID) : te.getLabel();
 		}
@@ -1684,11 +1635,20 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	 * @return
 	 */
 	public String getEpfDocLabel(AIApiResponse doc){
-		if (doc != null && AiDocParser.isUnavailable(doc)){
-			return AiDocParser.unavailableLabel();
-		}
 		AiEpfResultDTO ee = findEpfResult(doc);
 		return ee == null ? AiDocParser.label(LBL_DOC_INVALID) : ee.getLabel();
+	}
+
+	private boolean isDocUnavailable(AIApiResponse doc){
+		if (TYPE_EPF.equals(docType)){
+			AiEpfResultDTO ee = findEpfResult(doc);
+			return ee != null && ee.isUnavailable();
+		}
+		if (TYPE_TENANCY.equals(docType)){
+			AiTenancyDTO te = findTenancyResult(doc);
+			return te != null && te.isUnavailable();
+		}
+		return false;
 	}
 
 	// scored once per file: the area lookups are EJB calls and EL asks for each row several times
@@ -1697,10 +1657,8 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 			return null;
 		}
 		if (!tenancies.containsKey(doc.getApiResponseId())){
-			JSONArray fields = AiDocParser.parseFields(doc.getJsonResponse());
-			tenancies.put(doc.getApiResponseId(), fields == null ? null
-					: validatedTenancy(smAppl, AiDocValidator.getHeadquartersFacility(smAppl), doc.getApiResponseId(),
-							fields));
+			tenancies.put(doc.getApiResponseId(),
+					validatedTenancy(smAppl, AiDocValidator.getHeadquartersFacility(smAppl), doc));
 		}
 		return tenancies.get(doc.getApiResponseId());
 	}
@@ -1724,12 +1682,13 @@ public class SmAIDocBackingBean extends BaseBackingBean<BaseManagedBean> {
 	}
 
 	/**
-	 * Delete every crossed file when the dialog closes, whether by Submit, Cancel or the X.
+	 * Delete every crossed file, and every file the AI never read, when the dialog closes, whether by
+	 * Submit, Cancel or the X.
 	 */
 	public void deleteInvalidDocs() {
 		boolean deleted = false;
 		for (AIApiResponse doc : new ArrayList<>(docs)){
-			if (getDocVerdict(doc) == 2){
+			if (getDocVerdict(doc) == 2 || isDocUnavailable(doc)){
 				log.info("Deleting invalid " + docType + " doc on dialog close: " + doc.getFileName());
 				deleteResponse(doc);
 				docs.remove(doc);

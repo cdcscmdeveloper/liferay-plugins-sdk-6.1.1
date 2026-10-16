@@ -4155,6 +4155,7 @@ return	remarksNotFound;
 		if (epException != null) {
 			saveAndReloadFinalizationDetails(
 						qtSuppFinalizationSO, reqDTO);
+			prepareUpdateCommitteeMember(); //#41497
 			
 			navigateToPreparationTab();
 			qtSuppFinalizationSO = null;
@@ -12094,6 +12095,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			if (epException != null) {
 				saveAndReloadFinalizationDetails(
 							qtSuppFinalizationSO, reqDTO);
+				prepareUpdateCommitteeMember(); //#41497
 				
 				navigateToPreparationTab();
 				qtSuppFinalizationSO = null;

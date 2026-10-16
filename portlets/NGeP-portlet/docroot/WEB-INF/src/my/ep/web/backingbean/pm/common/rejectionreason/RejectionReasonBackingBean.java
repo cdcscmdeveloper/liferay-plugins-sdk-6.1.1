@@ -1075,6 +1075,9 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	if(getManagedBean().getSelectedReason().getSourceMethod() != null && getManagedBean().getSelectedReason().getSourceMethod().getParameterId() != null && 
 			!getManagedBean().getSelectedReason().getSourceMethod().getParameterId().equals(contractRequestParam.getParameterId())){
 		parameterCodes.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+		//#34367, #36613 - Start
+		parameterCodes.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY);
+		//#34367, #36613 - End
 	}
 	parameterCodes.add(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
 	reasonApplicablitySearchBean.getDataFilterBeans().add(
@@ -1335,10 +1338,13 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		if(CollectionUtils.isNotEmpty(this.getManagedBean().getSelectedReason().getPmPIDReasonList())){
 			for(int i =0; i<this.getManagedBean().getSelectedReason().getPmPIDReasonList().size(); i++){
 				PmPIDReason pIDReason = this.getManagedBean().getSelectedReason().getPmPIDReasonList().get(i);
-				if((ParameterConst.DOCTYPE_PANEL_CIRCULAR).equals(pIDReason.getDocType())){
+				//#34367, #36613 - Start
+				if((ParameterConst.DOCTYPE_PANEL_CIRCULAR).equals(pIDReason.getDocType()) 
+						|| ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY.equals(pIDReason.getDocType())){
 					isPanelCircular = true;
 					rowIndex = i;
 					}
+				//#34367, #36613 - End
 				}
 			}
 		if(isPanelCircular){
@@ -1407,12 +1413,9 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			PmParameter contractRequestParam = getParameterByTypeAndCode(ParameterTypeConst.SOURCING_METHOD, ParameterConst.PID_SOURCE_METHOD_CR);
 			if(getManagedBean().getSelectedSourceMethodId() != null && getManagedBean().getSelectedSourceMethodId().equals(contractRequestParam.getParameterId()) 
 					&& getManagedBean().getSelectedReason().getPmPIDReasonList() != null){
-				for(PmPIDReason reason : getManagedBean().getSelectedReason().getPmPIDReasonList()){
-					if(reason.getDocType() != null && reason.getDocType().equals(ParameterConst.DOCTYPE_PANEL_CIRCULAR)){
-						invalid = true;
-						break;
-					}
-				}
+				//#34367, #36613 - Start
+                invalid = hasPanelCircular(getManagedBean().getSelectedReason().getPmPIDReasonList());
+                //#34367, #36613 - End
 			}
 		}
 		
@@ -2612,5 +2615,23 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		
 	}
 	//#39618 - End
+	
+	//#34367, #36613 - Start
+	 /**
+     * Check whether the reason applicability list contains a panel circular (PQ or MQ).
+     *
+     * @param pidReasonList the reason applicability list
+     * @return true if a panel circular is found
+     */
+    private boolean hasPanelCircular(List<PmPIDReason> pidReasonList){
+            for(PmPIDReason reason : pidReasonList){
+                    if((reason.getDocType() != null && reason.getDocType().equals(ParameterConst.DOCTYPE_PANEL_CIRCULAR))
+                                    || ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY.equals(reason.getDocType())){
+                            return true;
+                    }
+            }
+            return false;
+    }
+    //#34367, #36613 - End
 	
 }
