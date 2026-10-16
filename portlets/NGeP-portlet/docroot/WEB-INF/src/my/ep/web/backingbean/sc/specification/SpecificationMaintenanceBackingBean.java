@@ -910,37 +910,10 @@ private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
 
 	//#38151 Start
 	private void checkWeightage35384WIP() {
-		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-				IQTDetailSO.class);
-		ScQt qt = this.getManagedBean().getQt();
-		Date createdDate = qt.getCreatedDate();
-
-		QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
-		qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
-		qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
-
-		IQTSpecSO	specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-				IQTSpecSO.class);
-		SpecificationReqDTO specReqDto=new SpecificationReqDTO();
-		specReqDto.setScQt(this.getManagedBean().getQt());
-		this.getManagedBean().setWipStatusMax(specSo.checkWipScoreSettingMax(specReqDto));
-		
-		PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
-
-		Date effDate = appVerDtls.getEffDate();
-		Timestamp effTimestamp = new Timestamp(effDate.getTime());
-		boolean checkStatusWip =(checkWipScoreSettingFlag(qt.getQtId()));
-
-		if ((createdDate.before(effTimestamp) && !checkStatusWip && this.getManagedBean().getWipStatusMax() <= SourcingConstants.SCORE_SETTING_TYPE_FINANCIAL_BY_ITEM)) {
-			//null != publishDate && publishDate.before(effDate)
+		if (isWeightage35384WIP(this.getManagedBean().getQt())) { //#38151 shared in SourcingBaseBackingBean (max score setting <= 6 = WIP)
 			this.getManagedBean().setWeightage35384WIP(true);
 		}
 	}
 
-	private boolean checkWipScoreSettingFlag(Long qtId) {
-	    IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-	            IQTSpecSO.class);
-	    return specSo.checkWipScoreFlag(qtId);
-	}
 	//#38151 End
 }
