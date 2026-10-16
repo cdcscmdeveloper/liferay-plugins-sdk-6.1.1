@@ -104,6 +104,7 @@ QtReportBackingBean<FinancialEvaluationCommitteeReportManagedBean> implements Se
 
 			if (CollectionUtils.isNotEmpty(retrievedReports)) {
 				reports = retrievedReports;
+				this.getManagedBean().setReportStage(SourcingConstants.LAPORAN_JAWATANKUASA_KEWANGAN);
 			}
 		}
 
@@ -117,7 +118,10 @@ QtReportBackingBean<FinancialEvaluationCommitteeReportManagedBean> implements Se
 		log.info("FinancialEvaluationCommitteeReportBackingBean resetSearch executed");
 		this.getManagedBean().setQuotationNumber(null);
 		this.getManagedBean().setQuotationId(null);
-		this.getManagedBean().setQtReportDocumentList(new ArrayList<ScQtFinalizationReport>()); //#25651
+		//#25651 - Start
+		this.getManagedBean().setReportStage(StringUtils.EMPTY);
+		this.getManagedBean().setQtReportDocumentList(new ArrayList<ScQtFinalizationReport>()); 
+		//#25651 - End
 	}
 
 	@Override

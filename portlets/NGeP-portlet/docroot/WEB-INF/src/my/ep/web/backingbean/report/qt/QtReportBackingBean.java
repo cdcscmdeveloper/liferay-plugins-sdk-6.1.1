@@ -810,7 +810,10 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	protected void resetSearchBB() {
 		this.getManagedBean().setQuotationNumber(null);
 		this.getManagedBean().setQuotationId(null);
-		this.getManagedBean().setQtReportDocumentList(new ArrayList<ScQtFinalizationReport>()); //#25651
+		//#25651 - Start
+		this.getManagedBean().setReportStage(StringUtils.EMPTY);
+		this.getManagedBean().setQtReportDocumentList(new ArrayList<ScQtFinalizationReport>()); 
+		//#25651 - End
 		ScReportFieldsSearchBean reportFileSearchBean = this.getManagedBean().getScReportSearchBean();
 		String reportCode = this.getManagedBean().getReportCode();
 		if ((QtReportConst.SC_PROP_VALID_PERIOD_EXT_RPT_VAL.equals(reportCode) 
@@ -1348,6 +1351,38 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 					.setScQtFinalizationReportAttachment(reportAttachment);
 		}
 		supplierFinalization.downloadFile(reportAttachment);
+	}
+	//#25651 - End
+	
+	//#25651 - Start
+	/**
+	 * To download all reports attachment.
+	 * 
+	 * @throws Exception
+	 *             the exception that would be thrown in case of any error while
+	 *             downloading the report(s)
+	 */
+	public void downloadAllReports() throws Exception {
+
+		SupplierFinalizationBackingBean supplierFinalization = new SupplierFinalizationBackingBean();
+		List<ScQtFinalizationReport> scQtFinalizationReports = this.getManagedBean().getQtReportDocumentList();
+	
+		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<>();
+		for (ScQtFinalizationReport report : scQtFinalizationReports) {
+			ScQtFinalizationReportAttachment attachment = report.getScQtFinalizationReportAttachment();
+			if (attachment == null) {
+				attachment = supplierFinalization.generateDocumentAttachment(report, false);
+				report.setScQtFinalizationReportAttachment(attachment);
+			}
+			if (attachment != null) {
+				attachment.setTempFileName(report.getTitle());
+			}
+			scAttachments.add(attachment);
+		}
+
+		// Generate all the reports
+		supplierFinalization.downloadSFAndRecommendationFiles(this.getManagedBean().getReportStage(), scAttachments); 
+
 	}
 	//#25651 - End
 	

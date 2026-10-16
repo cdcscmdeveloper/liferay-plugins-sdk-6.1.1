@@ -108,6 +108,7 @@ QtReportBackingBean<EvaluationCommitteeReportManagedBean> implements Serializabl
 
 			if (CollectionUtils.isNotEmpty(retrievedReports)) {
 				reports = retrievedReports;
+				this.getManagedBean().setReportStage(SourcingConstants.LAPORAN_JAWATANKUASA_PENILAIAN);
 			}
 		}
 
@@ -121,7 +122,10 @@ QtReportBackingBean<EvaluationCommitteeReportManagedBean> implements Serializabl
 		log.info("EvaluationCommitteeReportBackingBean resetSearch executed");
 		this.getManagedBean().setQuotationNumber(null);
 		this.getManagedBean().setQuotationId(null);
-		this.getManagedBean().setQtReportDocumentList(new ArrayList<ScQtFinalizationReport>()); //#25651
+		//#25651 - Start
+		this.getManagedBean().setReportStage(StringUtils.EMPTY);
+		this.getManagedBean().setQtReportDocumentList(new ArrayList<ScQtFinalizationReport>()); 
+		//#25651 - End
 	}
 
 	@Override
