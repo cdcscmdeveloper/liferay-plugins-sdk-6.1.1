@@ -254,10 +254,6 @@ import org.primefaces.model.StreamedContent;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.util.PortalUtil;
 // #RUU Start
-import my.ep.biz.service.sm.ruu.ISmRuuSO;
-import my.ep.dto.ruu.sm.SmRuuFeeReqDTO;
-import my.ep.dto.ruu.sm.SmRuuFeeResDTO;
-import my.ep.dto.ruu.sm.SmRuuPaymentRowDTO;
 import my.ep.persistence.entity.py.PyBillDtl;
 import my.ep.web.vo.SmOverlapCategoryVO;
 //#RUU End
@@ -6833,7 +6829,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							validCat = true;
 						} else {
 							// #RUU
-							// Removed code
+							// Enable add removed cat code
 //							throw new EpException(MessageConst.ERROR_722563);
 							validCat = true;
 						}
@@ -20459,70 +20455,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 	
 	// Payment list for Payment Summary
-
-	public static ISmRuuSO getSmRuuSO() {
-		return (ISmRuuSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmRuuSO.class);
-	}
-	
 	private void calculatePayment() {
-//		SmRuuFeeReqDTO reqDTO = new SmRuuFeeReqDTO();
-//
-//		reqDTO.setCurrentStatus(getManagedBean().getCurrentStatus());
-//
-//		reqDTO.setLanguage(getManagedBean().getSmAppl().getOverlapLanguage() != null ? "ms" : new FacesScopes().getUserLocale().getLanguage());
-//
-//		reqDTO.setAsOf(new Timestamp(System.currentTimeMillis()));
-//
-//		// false preserves the existing omission of overlap from bill details.
-//		reqDTO.setIncludeOverlapBill(false);
-//
-//		if (ParameterConst.NEW_SM_APPLN_FOR_RENEW.equals(getManagedBean().getSmAppl().getApplType()) && getManagedBean().getSmSupplier() != null
-//				&& getManagedBean().getSmSupplier().getSmMofAccounts() != null && !getManagedBean().getSmSupplier().getSmMofAccounts().isEmpty()) {
-//
-//			reqDTO.setMofAccountId(getManagedBean().getSmSupplier().getSmMofAccounts().get(0).getMofAccountId());
-//		}
-//
-//		SmRuuFeeResDTO result = getSmRuuSO().calculateRuuFee(getManagedBean().getSmAppl().getApplId(), reqDTO);
-//
-//		List<SmPaymentDetailsVO> paymentRows = new ArrayList<SmPaymentDetailsVO>();
-//
-//		for (SmRuuPaymentRowDTO fee : result.getPaymentRows()) {
-//			SmPaymentDetailsVO row = new SmPaymentDetailsVO();
-//			row.setDetails(fee.getDetails());
-//			row.setPrice(fee.getPrice());
-//			row.setQuantity(fee.getQuantity());
-//			row.setHasQuantity(fee.isHasQuantity());
-//			row.setTotalAmount(fee.getTotalAmount());
-//			paymentRows.add(row);
-//		}
-//
-//		getManagedBean().setPaymentDetailsVOList(paymentRows);
-//		getManagedBean().setTotalPaymentAmount(result.getTotalAmount());
-//
-//		getManagedBean().setGstAmount(SmCommonUtil.getGstCurrentRate());
-//		getManagedBean().setGstPercentageLabels(
-//				SmCommonUtil.getMessage("lbl.sm.gst.percent", new String[] { getManagedBean().getGstAmount().toString() }));
-		String regDetails = "";
-		String proDetails = "";
-		String lateDetails = "";
-		String bumiDetails = "";
-		if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
-			regDetails = getParameterDesc(ParameterTypeConst.SUPP_PAYMENT_ITEM, SupplierManagementConst.MOF_PAYMENT);
-			proDetails = getParameterDesc(ParameterTypeConst.SUPP_PAYMENT_ITEM, SupplierManagementConst.PROCESSING_PAYMENT);
-		} else if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)){
-			regDetails = "MOF Registration Fee (Add Category)";
-			proDetails = "MOF Processing Fee (Add Category)";
-		} else if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)){
-			bumiDetails = "Bumiputra Certification Fee";
-			proDetails = "MOF Processing Fee (Bumiputera Status Application Application)";
-		} else if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
-			proDetails = "MOF Processing Fee (Update MOF Profile)";
-		} else if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
-			regDetails = "MOF Registration Fee (Renewal)";
-			proDetails = "MOF Processing Fee (Renewal)";
-			lateDetails = "MOF Late Fee (Renewal)";
-		}
-
 		getManagedBean().setPaymentDetailsVOList(new ArrayList<SmPaymentDetailsVO>());
 		getManagedBean().setTotalPaymentAmount(BigDecimal.ZERO);
 		getManagedBean().setTotalPaymentAmount(getManagedBean().getTotalPaymentAmount().setScale(2, BigDecimal.ROUND_UP));
@@ -20533,7 +20466,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
 				|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
 			SmPaymentDetailsVO regPaymentVO = new SmPaymentDetailsVO();
-			regPaymentVO.setDetails(regDetails);
+			regPaymentVO.setDetails("MOF Registration Fee");
 			regPaymentVO.setPrice(new BigDecimal(600));
 			regPaymentVO.setTotalAmount(regPaymentVO.getPrice());
 			getManagedBean().getPaymentDetailsVOList().add(regPaymentVO);
@@ -20541,7 +20474,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 		if (!getManagedBean().getSmAppl().isResubmit()) {	
 			SmPaymentDetailsVO proPaymentVO = new SmPaymentDetailsVO();
-			proPaymentVO.setDetails(proDetails);
+			proPaymentVO.setDetails("MOF Processing Fee");
 			proPaymentVO.setPrice(SmRuleHelper.getInstance().getProcessingFee());
 			proPaymentVO.setTotalAmount(proPaymentVO.getPrice());
 			getManagedBean().getPaymentDetailsVOList().add(proPaymentVO);
@@ -20549,7 +20482,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		
 		if(getManagedBean().isLateRenewFee()){
 			SmPaymentDetailsVO latePaymentVO = new SmPaymentDetailsVO();
-			latePaymentVO.setDetails(lateDetails);
+			latePaymentVO.setDetails("MOF Late Fee");
 			latePaymentVO.setPrice(new BigDecimal(300));
 			latePaymentVO.setTotalAmount(latePaymentVO.getPrice());
 			getManagedBean().getPaymentDetailsVOList().add(latePaymentVO);
@@ -20595,7 +20528,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		
 		if (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)){
 			SmPaymentDetailsVO bumiPaymentVO = new SmPaymentDetailsVO();
-			bumiPaymentVO.setDetails(bumiDetails);
+			bumiPaymentVO.setDetails("Bumiputra Certification Fee");
 			bumiPaymentVO.setPrice(new BigDecimal(600));
 			bumiPaymentVO.setTotalAmount(bumiPaymentVO.getPrice());
 			getManagedBean().getPaymentDetailsVOList().add(bumiPaymentVO);
