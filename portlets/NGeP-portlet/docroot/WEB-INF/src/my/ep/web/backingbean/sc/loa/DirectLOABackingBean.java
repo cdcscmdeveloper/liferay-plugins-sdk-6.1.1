@@ -5461,6 +5461,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			reqDTO.setToBeDeltedZoneCriteria(this.getManagedBean()
 					.getToBedeletedSupplierZone());
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			reqDTO.setSaveTemplate(this.getManagedBean().isSaveTemplate());	// Bug #40798@Syazani 21/09/2026
 			resDTO = getQtDirectAwardSO().updateBpmTask(reqDTO);
 			if (resDTO.isSuccessful()) {
 				scLoa = resDTO.getLoa();
@@ -11755,9 +11756,16 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			if (isPendingAcknowledgement) {
 				DirectAwardReqDTO awardReqDTOnew = new DirectAwardReqDTO();
 				awardReqDTOnew.setScLoa(scLoa);
+				// Bug #40798@Syazani 21/09/2026 -- Start
+				validateDuplicateItems(this.getManagedBean().getProdscQtDoc(), this.getManagedBean()
+						.getServicescQtDoc());
+				awardReqDTOnew.setScQtDoc(this.getManagedBean().getProdscQtDoc());
+				awardReqDTOnew.setServiceQtDoc(this.getManagedBean().getServicescQtDoc());
 				DirectAwardResDTO awardResDTOnew = getQtDirectAwardSO()
-						.saveScloiloaitemforDirectLOA(awardReqDTOnew);
+						.saveScloiloaitemforDirectLOAConfirmSupplierAcceptBeforeBPM(awardReqDTOnew);
+				// Bug #40798@Syazani 21/09/2026 -- End
 				if (awardResDTOnew.isSuccessful()) {
+					this.getManagedBean().setSaveTemplate(false);	// Bug #40798@Syazani 21/09/2026
 					scLoa.setScLoiLoaItems(awardResDTOnew.getLoa()
 							.getScLoiLoaItems());
 				}
