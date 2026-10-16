@@ -8094,7 +8094,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					.equals(scLoa.getScLoiLoa().getDocType());
 			boolean supplierView =isSupplier();
 			if (directNego) {
-				return openDirectLoaForAgency(scLoa, previousPageUrl);
+				return supplierView ? openDirectLoaForSupplier(scLoa,
+						previousPageUrl) : openDirectLoaForAgency(scLoa,
+						previousPageUrl);
 			} else {
 				return supplierView ? openQtLoaForSupplier(scLoa, previousPageUrl)
 						: openQtLoaForAgency(scLoa, previousPageUrl);
@@ -8120,6 +8122,23 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	
 	// 29661 && 41511 -start-
 	/**
+	 * supplier view of a direct nego loa.
+	 * 
+	 * @param scLoa
+	 * @param previousPageUrl
+	 * @return null, navigation is handled downstream.
+	 */
+	private String openDirectLoaForSupplier(ScLoa scLoa, String previousPageUrl) {
+		new DirectLOABackingBean().viewSupplierLoaDetails(scLoa.getScLoiLoa()
+				.getDocId(), scLoa.getLoaId(), previousPageUrl);
+
+		return null;
+	}
+
+	// 29661 && 41511 -end-
+	
+	// 29661 && 41511 -start-
+	/**
 	 * supplier acknowledgement view of a quotation loa.
 	 * 
 	 * @param scLoa
@@ -8134,6 +8153,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		loaDetailBbean.getManagedBean().setSelectedTabIndex(
 				QTConstants.TAB_LOA_INDEX);
+		loaDetailBbean.getManagedBean().setDownloadLOADisabled(false);
+		loaDetailBbean.getManagedBean().setReadOnlyLOADownload(false);
 
 		return page;
 	}

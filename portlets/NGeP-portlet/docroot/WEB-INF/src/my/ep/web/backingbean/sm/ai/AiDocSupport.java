@@ -1497,7 +1497,10 @@ public final class AiDocSupport {
 			if (unavailable) {
 				return 3;
 			}
-			return hasError() ? 2 : hasWarning() ? 3 : 1;
+			if (hasError()) {
+				return 2;
+			}
+			return hasWarning() ? 3 : 1;
 		}
 
 		public String getLandlordsName() {
@@ -1755,7 +1758,10 @@ public final class AiDocSupport {
 			if (unavailable) {
 				return 3;
 			}
-			return hasError() ? 2 : hasWarning() ? 3 : 1;
+			if (hasError()) {
+				return 2;
+			}
+			return hasWarning() ? 3 : 1;
 		}
 
 		/**

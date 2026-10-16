@@ -22,7 +22,12 @@
 	
 		<ui:param name="isFulfilmentTypeScheduled"
 			value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeScheduled}" />
-		
+
+		<ui:remove>#29661 #41511 -start-</ui:remove>
+		<ui:param name="isProposalRender"
+			value="#{lOADetailBackingBean.isCheckProposalPortlet() or lOADetailBackingBean.isCheckEvaluationPortlet()}" />
+		<ui:remove>#29661 #41511 -end-</ui:remove>
+
 		<ui:include src="loaSupplierButtons.xhtml" />
 		
 		<ui:include src="loaSupplierHeader.xhtml" />
