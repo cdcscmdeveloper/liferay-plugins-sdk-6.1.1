@@ -3921,6 +3921,7 @@ public class SupplierFinalizationBackingBean extends
 		if (epException != null) {
 			saveAndReloadFinalizationDetails(
 						qtSuppFinalizationSO, reqDTO);
+			prepareUpdateCommitteeMember(); //#41497
 			
 			navigateToPreparationTab();
 			qtSuppFinalizationSO = null;
@@ -11534,6 +11535,7 @@ public class SupplierFinalizationBackingBean extends
 			if (epException != null) {
 				saveAndReloadFinalizationDetails(
 							qtSuppFinalizationSO, reqDTO);
+				prepareUpdateCommitteeMember(); //#41497
 				
 				navigateToPreparationTab();
 				qtSuppFinalizationSO = null;
