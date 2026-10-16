@@ -3344,12 +3344,10 @@ public class QTDocumentsBackingBean extends
 		boolean isLocationContainsDivision = false;
 		if (!CollectionUtils.isEmpty(specZoneDtls)) {
 			for (TplSpecZoneDtl tplSpecZoneDtl : specZoneDtls) {
-				if (!CollectionUtils.isEmpty(tplSpecZoneDtl.getTplSpecZoneLocs()) && !isLocationContainsDivision) {
+				if (!CollectionUtils.isEmpty(tplSpecZoneDtl.getTplSpecZoneLocs())) {//#3657
 					tplSpecZoneDtl.setTplSpecZoneLocs(removeDuplicatebyDivisionIDbyTplSpecZoneLoc(tplSpecZoneDtl
 							.getTplSpecZoneLocs()));
-					isLocationContainsDivision = loopFindisLocationContainsPmDivision(tplSpecZoneDtl);
-				} else if (isLocationContainsDivision) {
-					break;
+					isLocationContainsDivision |= loopFindisLocationContainsPmDivision(tplSpecZoneDtl);//#3657
 				}
 			}
 		}
