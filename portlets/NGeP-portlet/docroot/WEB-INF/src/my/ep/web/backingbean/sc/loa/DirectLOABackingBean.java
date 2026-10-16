@@ -14309,7 +14309,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 		String newReasonCode = getNewPK7ReasonCodeByDesc(oldReasonDesc);
 		if (newReasonCode != null) {
-			reasonChanged(newReasonCode);
+			scLoa.setJustificationType(getReasonByCategoryAndCode(ReasonCategory.JUSTIFICATION_PK7W.value(),
+					newReasonCode));
 		}
 	}
 
