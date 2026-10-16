@@ -396,8 +396,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 							scQtFinalization.getOnlineBiddingEndorse())) {
 				retrieveOnlineEndorsement();
 			} else {
-				if (QTStatusConst.SF_PENDING_BIDDING_ESCALATION.equals(getManagedBean().getCurrentStatusId())
-						|| QTStatusConst.SF_MOF_COMMITTEE_BIDDING.equals(getManagedBean().getCurrentStatusId())) {//#27502 - New DO MOF Role and Process
+				if (QTStatusConst.SF_PENDING_BIDDING_ESCALATION.equals(getManagedBean().getCurrentStatusId())) {
 
 					getManagedBean().setBpkUser(true);
 				}
@@ -2100,7 +2099,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 */
 	private void signOff() {
 		if (StringUtils.isNotBlank(
-				getManagedBean().getCommitteeType())) {
+				getManagedBean().getCommitteeType()) && getManagedBean().getCommitteeEndorsementList() != null  ) {// #27502 
 			for (ScQtCommitteeActivity scQtCommitteeActivity 
 								: getManagedBean().getCommitteeEndorsementList()) {
 				if (scQtCommitteeActivity.getScCommitteeMember().getPmUser().getUserId()
@@ -2582,7 +2581,9 @@ public class SupplierFinalizationBiddingBackingBean extends
 		String committeeType = getManagedBean().getCommitteeType();
 		CommitteResDTO committeeResDTO = getCommitteMemberByUserId();
 		ScCommitteeMember committeeMember = committeeResDTO.getCommMember();
-		if (StringUtils.isNotBlank(committeeType) && 
+		// #27502 - Start
+		if (StringUtils.isNotBlank(committeeType) && !mofFinal && 
+		// #27502 - End
 				ParameterConst.ONLINE_BIDDING_MEETING.equals(getManagedBean().getScQtFinalization().getOnlineBiddingEndorse()) &&
 				ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equalsIgnoreCase(committeeMember.getMemberRole().getParameterCode()) &&
 				isDigiSigningRequired(committeeResDTO.getRoleCode(), 
@@ -2679,7 +2680,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 				}
 			}
 			
-			if (isAllMembersEndorsed || mofFinal) { // #27502
+			if (isAllMembersEndorsed ) {
 			  suppFinalizationReqDTO.setNextStatusId(QTStatusConst.SF_PENDING_SIGN_OFF);
 			} 
             suppFinalizationReqDTO.setScQt(getManagedBean().getScQt());
@@ -3130,7 +3131,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 */
 	public int getOnlineBiddingFinalizationMeetingActiveIndex() {
 		// #27502 - Start
-		if (getManagedBean().isOnlineBiddingEscalation() || mofFinal) {
+		if (getManagedBean().isOnlineBiddingEscalation()) {
 		// #27502 - End
 			return -1;
 		} else {
@@ -3566,7 +3567,13 @@ public class SupplierFinalizationBiddingBackingBean extends
 			setFlagForSupplierBranchDeleted(); //#28777#29729
 			
 			validateBiddingSubmission();// 26247, 38591
-			RequestContext.getCurrentInstance().execute("submissionPopup.show()");
+			//27502 - Start
+			if (mofFinal) {
+				this.submitBiddingEndorsement(action);
+			} else {
+				RequestContext.getCurrentInstance().execute("submissionPopup.show()");
+			}
+			// 27502 - End
 		} else {
 			this.submitBiddingEndorsement(action);
 		}
