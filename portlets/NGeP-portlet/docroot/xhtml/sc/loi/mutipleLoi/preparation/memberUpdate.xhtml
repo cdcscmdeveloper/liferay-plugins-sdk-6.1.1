@@ -89,13 +89,13 @@
 				<p:graphicImage
 					value="#{CommonUIConstant.imagePath}/ajax-loader.gif"></p:graphicImage>
 			</p:blockUI>
-			<ui:remove>#37809 Start Vinod 21092026</ui:remove>
+			<ui:remove>#37809 Start Vinod </ui:remove>
 			<p:dataTable id="memberListTbl" var="committeeMember"
 				widgetVar="committeeMemberWidVar" value="#{lOIDetailBackingBean.sortScCommitteeMembers(committeeMembers)}"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rowKey="#{committeeMember}" update="@this" selectionMode="single"
 				rowIndexVar="index">
-			<ui:remove>#37809 End Vinod 21092026</ui:remove>
+			<ui:remove>#37809 End Vinod </ui:remove>
 				<ac:paginator for="memberListTbl" />
 				<p:column styleClass="td-check-box-spacing"
 					rendered="#{isCommitteeUpdatable}">
@@ -117,11 +117,9 @@
 					</p:selectBooleanCheckbox>
 				</p:column>
 				<ui:remove>#37809 Start Vinod</ui:remove>
-				<ui:remove>#37809 Start Vinod 21092026</ui:remove>
 				<p:column style="width:2%" headerText="#{lbl['lbl.sc.no']}">
 					<h:outputText value="#{index+1}" />
 				</p:column>
-				<ui:remove>#37809 End Vinod 21092026</ui:remove>
 				<ui:remove>#37809 End Vinod</ui:remove>
 
 				<p:column headerText="#{lbl['lbl.sc.name']}"

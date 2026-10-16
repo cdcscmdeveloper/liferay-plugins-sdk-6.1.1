@@ -2987,7 +2987,6 @@ public class QTCommitteBackingBean extends
 	// 36695 - end
 
 	// #37809 Start Vinod
-	// #37809 Start Vinod 21092026
 	public void addFinalizationSecretaryAction(){
 		ScQt scQt = getManagedBean().getQt();
 		UserCommitteeSearchBean userCommitteeSearchBean = this.getManagedBean().getUserCommitteeSearchBean();
@@ -3023,11 +3022,9 @@ public class QTCommitteBackingBean extends
 		removeSelectAllFromDD();
 
 	}
-	// #37809 End Vinod 21092026
 	// #37809 End Vinod
 
 	// #37809 Start Vinod
-	// #37809 Start Vinod 21092026
 	private void updateFcSecretaryDataModel(UserCommitteeSearchBean userCommitteeSearchBean){
 		IPagingDataModel<PmUser> fcSecretaryDataModel = getManagedBean().getUserSearchFcSecretaryDataModel();
 		
@@ -3037,7 +3034,6 @@ public class QTCommitteBackingBean extends
 							userCommitteeSearchBean));
 		}
 	}
-	// #37809 End Vinod 21092026
 	// #37809 End Vinod
 
 	// #37809 Start Vinod
@@ -3045,7 +3041,6 @@ public class QTCommitteBackingBean extends
 		ScQt scQt = getManagedBean().getQt();
 		boolean isDoSBHorSWK = checkDeskOfficerSabhaOrSarawakWithCommitteeTypes(fcCommitteeTypes);
 
-		// #37809 Start Vinod 21092026
 		for (SelectItem item : fcCommitteeTypes == null ? new SelectItem[0] : fcCommitteeTypes) {
 			Long commTypeId = item.getValue() instanceof Long ? (Long) item.getValue() : null;
 
@@ -3057,7 +3052,6 @@ public class QTCommitteBackingBean extends
 				break;
 			}
 		}
-		// #37809 End Vinod 21092026
 
 		if (finalizationCommitteeTypeId == null) {
 			getManagedBean().setFinalizationSecratary(fcCommitteeTypes);
@@ -3073,9 +3067,7 @@ public class QTCommitteBackingBean extends
 	private boolean checkDeskOfficerSabhaOrSarawakWithCommitteeTypes(SelectItem[] fcCommitteeTypes){
 		if (fcCommitteeTypes != null && fcCommitteeTypes.length > 1) {
 			for (SelectItem item : fcCommitteeTypes) {
-				// #37809 Start Vinod 21092026
 				Long commTypeId = item.getValue() instanceof Long ? (Long) item.getValue() : null;
-				// #37809 End Vinod 21092026
 				PmParameter commTypeCode = commTypeId != null ? ParameterHelper.getInstance().getPmParameterById(
 						commTypeId) : null;
 
@@ -3110,14 +3102,12 @@ public class QTCommitteBackingBean extends
 		getManagedBean().setPtjGroupDDList(ptjGroupDD);
 		getManagedBean().setPtjDDList(ptjDD);
 		
-		// #37809 Start Vinod 12102026
 		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgProfileId(getManagedBean().getQt().getOrgProfileId());
 		PmOrgProfile ministry = orgProfileSO.retrieveMinistryByOrgProfileId(reqDTO).getPmOrgProfile();
 		getManagedBean().setMinistryNotNegeri(!SourcingConstants.MINISTRY_CODE_NEGERI.equals(ministry.getOrgCode()));
-		// #37809 End Vinod 12102026
 	}
 	// #37809 End Vinod
 
@@ -3341,13 +3331,11 @@ public class QTCommitteBackingBean extends
 	// #37809 End Vinod
 
 	// #37809 Start Vinod
-	// #37809 Start Vinod 21092026
 	public void cancelFCSecretaryAction() {
 		ScQt scQt = getManagedBean().getQt();
 
 		getManagedBean().setSelectedFcSecretaryUser(null);
 		scQt.setFinalizationSecratery(new PmUser());
 	}
-	// #37809 End Vinod 21092026
 	// #37809 End Vinod
 }

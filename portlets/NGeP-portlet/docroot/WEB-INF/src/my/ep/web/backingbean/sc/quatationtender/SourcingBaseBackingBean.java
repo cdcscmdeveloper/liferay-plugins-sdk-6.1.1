@@ -8751,7 +8751,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param scCommitteeMembers
 	 * @return the same list, sorted
 	 */
-	// #37809 Start Vinod 21092026
 	public List<ScCommitteeMember> sortScCommitteeMembers(List<ScCommitteeMember> scCommitteeMembers) {
 		if (CollectionUtils.isEmpty(scCommitteeMembers)) {
 			return scCommitteeMembers;
@@ -8784,7 +8783,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return scCommitteeMembers;
 	}
-	// #37809 End Vinod 21092026
 	// #37809 End Vinod
 	
 	// #25651 - Start

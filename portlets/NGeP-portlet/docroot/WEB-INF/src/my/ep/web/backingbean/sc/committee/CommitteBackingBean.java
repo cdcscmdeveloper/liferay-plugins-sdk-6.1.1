@@ -146,9 +146,9 @@ public class CommitteBackingBean extends
 	/** The Constant NAV_TO_FINALIZATION_COMMITTEE_MAINTENANCE. */
 	private static final String NAV_TO_COMMITTEE_MAINTENANCE = "/xhtml/sc/committe/finalCommitteeMaintenance.xhtml";
 	private static final String NAV_TO_COMMITTEE_ADD_SCREEN = "xhtml/sc/committe/committeeMaintenanceAddScreen.xhtml";
-	// #37809 Start Vinod 12102026
+	// #37809 Start Vinod 
 	private static final String NAV_TO_UPDATE_FC_CHAIRPERSON = "/xhtml/sc/committe/updateFinalizationChairperson.xhtml";
-	// #37809 End Vinod 12102026
+	// #37809 End Vinod 
 	//35320 - END
 
 	/** The Constant logger. */
@@ -933,9 +933,9 @@ public class CommitteBackingBean extends
 	 */
 	public String editAction(ScQtCommittee scQtCommittee) {
 		debugLogger("editAction");
-		// #37809 Start Vinod 12102026
+		// #37809 Start Vinod 
 		this.getManagedBean().setUpdateFCChairperson(false);
-		// #37809 End Vinod 12102026
+		// #37809 End Vinod 
 		this.getManagedBean().setHeaderTitle(
 				ParameterHelper.getInstance().getParameterDesc(
 						ParameterTypeConst.SC_COMMITTEE_TYPE,
@@ -1086,11 +1086,9 @@ public class CommitteBackingBean extends
 			// #37809 Start Vinod
 			ScWorkFlowStatus scWorkFlowStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION,
 					scQtCommittee.getScQt().getQtId());
-			// #37809 Start Vinod 12102026
 			this.getManagedBean().setUpdateFCChairperson(scWorkFlowStatus != null
 					&& QTStatusConst.SF_PENDING_SIGN_OFF.equals(scWorkFlowStatus.getPmStatus().getStatusId())
 					&& isLoggedInUserSecretary(qtCommitte.getScCommittee()));
-			// #37809 End Vinod 12102026
 			// #37809 End Vinod
 			
 			showQtDetailAction(scQtCommittee.getScQt().getQtId());
@@ -1567,12 +1565,8 @@ public class CommitteBackingBean extends
 			userCommitteeSearchBean.setOrgCat(ParameterConst.ORG_CATEGORY_PTJ);
 		}
 		this.getManagedBean().setCommitteeSearchBean(userCommitteeSearchBean);
-		// #37809 Start Vinod 12102026
 		resetDeskOfficerSearchBean();
-		// #37809 End Vinod 12102026
-		// #37809 Start Vinod 21092026
 		this.getManagedBean().setFpbSearchProfile(isFpbSearchProfile());
-		// #37809 End Vinod 21092026
 		// #37809 End Vinod
 	}
 
@@ -1669,9 +1663,7 @@ public class CommitteBackingBean extends
 		this.getManagedBean().getUserQCSearchBean().setIdentificationNo(null);
 		// #37809 Start Vinod
 		if(this.getManagedBean().getCommitteeSearchBean() != null){
-			// #37809 Start Vinod 12102026
 			resetDeskOfficerSearchBean();
-			// #37809 End Vinod 12102026
 		}
 		// #37809 End Vinod
 	}
@@ -3251,13 +3243,9 @@ public class CommitteBackingBean extends
 			// this qt is used to get PTJ dropdown values only in maintanence.
 			this.getManagedBean().setQt(scQt);
 		} else {
-			// #37809 Start Vinod 12102026
 			resetDeskOfficerSearchBean();
-			// #37809 End Vinod 12102026
 		}
-		// #37809 Start Vinod 21092026
 		this.getManagedBean().setFpbSearchProfile(isFpbSearchProfile());
-		// #37809 End Vinod 21092026
 		// #37809 End Vinod
 	}
 	// #35320 - END
@@ -3275,14 +3263,14 @@ public class CommitteBackingBean extends
 	 * @return the role description assigned to the user; defaults to Member if undetermined
 	 */
 	public String getTplRoleDesc(PmUser pmUser) {
-		// #37809 Start Vinod 12102026
+		// #37809 Start Vinod 
 		if (isFcChairpersonUpdateView()) {
 			PmParameter chairPersonRole = ParameterHelper.getInstance().getParameterByTypeAndCode(
 					ParameterTypeConst.COMMITTEE_ROLE, ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
 			pmUser.setMemberRoleId(chairPersonRole.getParameterId());
 			return getParameterDesc(chairPersonRole);
 		}
-		// #37809 End Vinod 12102026
+		// #37809 End Vinod 
 
 		String userRole = null;
 		String committeeType = getManagedBean().getTplCommittee().getCommitteeType().getParameterCode();
@@ -3587,16 +3575,13 @@ public class CommitteBackingBean extends
 	 * @return an array of SelectItem
 	 */
 	public SelectItem[] getRoleListForAdd() {
-		// #37809 Start Vinod 12102026
 		boolean chairpersonUpdate = isFcChairpersonUpdateView();
-		// #37809 End Vinod 12102026
 
 		SelectItem[] items = getDropdownValues(ParameterTypeConst.COMMITTEE_ROLE);
 
 		List<SelectItem> tempList = new ArrayList<>();
 		for (SelectItem item : items) {
 			String role = (String) item.getLabel();
-			// #37809 Start Vinod 12102026
 			boolean chairperson = StringUtils.equalsIgnoreCase(SourcingConstants.MEMBER_CHAIRPERSON, role);
 			if (StringUtils.isNotEmpty(role)
 					&& (chairperson || (!chairpersonUpdate && StringUtils.equalsIgnoreCase(
@@ -3604,7 +3589,6 @@ public class CommitteBackingBean extends
 				tempList.add(item);
 			}
 			if (chairpersonUpdate && chairperson) {
-			// #37809 End Vinod 12102026
 				ScCommittee scCommittee = this.getManagedBean().getQtCommittee().getScCommittee();
 				String committeeType = scCommittee.getCommitteeType().getParameterCode();
 				Long roleId = Long.valueOf(item.getValue().toString());
@@ -3626,11 +3610,8 @@ public class CommitteBackingBean extends
 		if (searchRoleId == null) {
 			return;
 		}
-		// #37809 Start Vinod 21092026
 		String committeeType = resolveSearchCommitteeType();
-		// #37809 End Vinod 21092026
 
-		// #37809 Start Vinod 21092026
 		if (SourcingConstants.MEMBER_ROLE_ID_MEMBER.equals(searchRoleId)) {
 			this.getManagedBean().setRoleCode(
 					getRoleCodeWithCommitteAndRoleForSearch(committeeType, SourcingConstants.MEMBER_ROLE));
@@ -3638,7 +3619,6 @@ public class CommitteBackingBean extends
 			this.getManagedBean().setRoleCode(
 					getRoleCodeWithCommitteAndRoleForSearch(committeeType, SourcingConstants.MEMBER_CHAIRPERSON));
 		}
-		// #37809 End Vinod 21092026
 
 		this.getManagedBean().getCommitteeSearchBean().setSearchRoleId(searchRoleId);
 	}
@@ -3661,7 +3641,7 @@ public class CommitteBackingBean extends
 
 	// #37809 End Vinod
 
-	// #37809 Start Vinod 21092026
+	// #37809 Start Vinod 
 	/**
 	 * @return the committee type the member search runs against
 	 */
@@ -3675,6 +3655,10 @@ public class CommitteBackingBean extends
 				.getParameterCode() : null;
 	}
 
+	// #37809 End Vinod
+
+	// #37809 Start Vinod 
+
 	/**
 	 * @return true for Federal Procurement Board Sabah or Sarawak
 	 */
@@ -3683,15 +3667,19 @@ public class CommitteBackingBean extends
 		return ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equalsIgnoreCase(committeeType)
 				|| ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equalsIgnoreCase(committeeType);
 	}
-	// #37809 End Vinod 21092026
+	// #37809 End Vinod 
 
-	// #37809 Start Vinod 12102026
+	// #37809 Start Vinod 
 	/**
 	 * Resets the member search criteria to the logged-in desk officer's PTJ.
 	 */
 	public void resetDeskOfficerSearchBean() {
 		resetCommitteeSearchBean(deskOfficerProfileQt());
 	}
+
+	// #37809 End Vinod
+
+	// #37809 Start Vinod 
 
 	/**
 	 * @return a search-only QT carrying the logged-in desk officer's PTJ, or
@@ -3707,6 +3695,10 @@ public class CommitteBackingBean extends
 		return scQt;
 	}
 
+	// #37809 End Vinod
+
+	// #37809 Start Vinod 
+
 	/**
 	 * @return true when searching for members, whose ministry may be changed
 	 */
@@ -3714,7 +3706,7 @@ public class CommitteBackingBean extends
 		UserCommitteeSearchBean searchBean = this.getManagedBean().getCommitteeSearchBean();
 		return searchBean != null && SourcingConstants.MEMBER_ROLE_ID_MEMBER.equals(searchBean.getSearchRoleId());
 	}
-	// #37809 End Vinod 12102026
+	// #37809 End Vinod 
 
 	// #37809 Start Vinod
 	public SelectItem[] getOrgCatList() {
@@ -3836,6 +3828,8 @@ public class CommitteBackingBean extends
 	}
 	
 	// #37809 End Vinod
+
+	// #37809 Start Vinod 
 	
 	private ScWorkFlowStatus retrieveStatusByTypeAndId(String docType, Long docId) {
 		IScWorkFlowStatusSO workFlowStatusSO = null;
@@ -3853,7 +3847,10 @@ public class CommitteBackingBean extends
 			workFlowStatusSO = null;
 		}
 	}
-	// #37809 Start Vinod 12102026
+
+	// #37809 End Vinod
+
+	// #37809 Start Vinod 
 	/**
 	 * @return true on the update finalization chairperson screen
 	 */
@@ -3862,6 +3859,10 @@ public class CommitteBackingBean extends
 		return facesContext != null && facesContext.getViewRoot() != null
 				&& NAV_TO_UPDATE_FC_CHAIRPERSON.equals(facesContext.getViewRoot().getViewId());
 	}
+
+	// #37809 End Vinod
+
+	// #37809 Start Vinod 
 
 	/**
 	 * @param scCommittee
@@ -3880,6 +3881,10 @@ public class CommitteBackingBean extends
 		}
 		return false;
 	}
+
+	// #37809 End Vinod
+
+	// #37809 Start Vinod 
 
 	/**
 	 * Opens the update finalization chairperson screen for the viewed QT.
@@ -3905,6 +3910,10 @@ public class CommitteBackingBean extends
 		return NAV_TO_UPDATE_FC_CHAIRPERSON + "?faces-redirect=true";
 	}
 
+	// #37809 End Vinod
+
+	// #37809 Start Vinod 
+
 	/**
 	 * Returns to the finalization committee view of the QT.
 	 *
@@ -3913,6 +3922,10 @@ public class CommitteBackingBean extends
 	public String backFromUpdateFCChairpersonAction() {
 		return editAction(getManagedBean().getQtCommittee());
 	}
+
+	// #37809 End Vinod
+
+	// #37809 Start Vinod 
 
 	/**
 	 * Replaces the finalization chairperson of the QT and reassigns its
@@ -3975,6 +3988,10 @@ public class CommitteBackingBean extends
 		return null;
 	}
 
+	// #37809 End Vinod
+
+	// #37809 Start Vinod 
+
 	/**
 	 * Copies the QT finalization committee into a template committee so the
 	 * maintenance table, add and delete actions can edit it.
@@ -4020,5 +4037,5 @@ public class CommitteBackingBean extends
 		tplCommittee.setTplCommMembers(tplCommMembers);
 		return tplCommittee;
 	}
-	// #37809 End Vinod 12102026
+	// #37809 End Vinod 
 }

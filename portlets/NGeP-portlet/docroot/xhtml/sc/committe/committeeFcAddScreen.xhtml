@@ -27,22 +27,18 @@
 						<ui:remove>#37809 Start Vinod</ui:remove>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sc.role']}" /></td>
-							<ui:remove>#37809 Start Vinod 12102026</ui:remove>
 							<td colspan="3"><p:selectOneRadio id="searchRoleId"
 									disabled="#{committeBackingBean.fcChairpersonUpdateView}"
 									value="#{committeBackingBean.managedBean.committeeSearchBean.searchRoleId}">
 									<p:ajax onstart="blockWidgetPopup.show()"
 										update="userTblid userexistid"
 										listener="#{committeBackingBean.searchRoleChangeListener}" />
-									<ui:remove>#37809 Start Vinod 12102026</ui:remove>
 									<p:ajax oncomplete="blockWidgetPopup.hide()" 
 										update="userTblid userexistid"
 										listener="#{committeBackingBean.resetDeskOfficerSearchBean}" />
-									<ui:remove>#37809 End Vinod 12102026</ui:remove>
 									<f:selectItems
 										value="#{committeBackingBean.getRoleListForAdd()}" />
 								</p:selectOneRadio></td>
-							<ui:remove>#37809 End Vinod 12102026</ui:remove>
 						</tr>
 						<tr>
 							<td><p:outputLabel
@@ -57,14 +53,12 @@
 										value="#{committeBackingBean.getOrgCatList()}" />
 								</p:selectOneRadio></td>
 						</tr>
-						<ui:remove>#37809 Start Vinod 21092026</ui:remove>
 						<c:if
 							test="#{committeBackingBean.managedBean.committeeSearchBean.orgCat eq ParameterConst.orgCategoryPtj
 									and !committeBackingBean.managedBean.fpbSearchProfile}">
 							<tr>
 								<td><p:outputLabel
 										value="#{lbl['lbl.sc.committee.add.member.search.ministry']}" /></td>
-								<ui:remove>#37809 Start Vinod 12102026</ui:remove>
 								<td><p:selectOneMenu id="ministryDD" disabled="#{!committeBackingBean.memberSearch}"
 										value="#{committeBackingBean.managedBean.committeeSearchBean.ministry}">
 										<p:ajax onstart="blockWidgetPopup.show()"
@@ -73,7 +67,6 @@
 										<f:selectItems
 											value="#{committeBackingBean.managedBean.ministryDDList}" />
 									</p:selectOneMenu></td>
-								<ui:remove>#37809 End Vinod 12102026</ui:remove>
 							</tr>
 							<tr>
 								<td><p:outputLabel
@@ -97,7 +90,6 @@
 									</p:selectOneMenu></td>
 							</tr>
 						</c:if>
-						<ui:remove>#37809 End Vinod 21092026</ui:remove>
 						<c:if
 							test="#{committeBackingBean.managedBean.committeeSearchBean.orgCat eq ParameterConst.orgCategoryOthers}">
 							<tr>

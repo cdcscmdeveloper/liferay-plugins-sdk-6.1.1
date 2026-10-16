@@ -49,11 +49,9 @@
 			<ac:paginator for="fcMembersId" />
 			
 			<ui:remove>#37809 Start Vinod</ui:remove>
-			<ui:remove>#37809 Start Vinod 21092026</ui:remove>
 			<p:column style="width:2%" headerText="#{lbl['lbl.sc.no']}">
 				<h:outputText value="#{index+1}" />
 			</p:column>
-			<ui:remove>#37809 End Vinod 21092026</ui:remove>
 			<ui:remove>#37809 End Vinod</ui:remove>
 
 			<p:column headerText="#{lbl['lbl.sc.name']}">
@@ -124,12 +122,12 @@
 			</p:column>
 		</p:dataTable>
 		<div class="ppRightBtn">
-			<ui:remove>#37809 Start Vinod 12102026</ui:remove>
+			<ui:remove>#37809 Start Vinod </ui:remove>
 			<p:commandButton id="fcChairpersonUpdateCommittee" styleClass="BtnSpacing"
 				value="#{lbl['lbl.sc.btn.update.committee']}" process="@this"
 				action="#{committeBackingBean.updateFCChairpersonScreenAction}"
 				rendered="#{committeBackingBean.managedBean.viewCommitteePage and committeBackingBean.managedBean.updateFCChairperson}" />
-			<ui:remove>#37809 End Vinod 12102026</ui:remove>
+			<ui:remove>#37809 End Vinod </ui:remove>
 		
 			<!-- #35320 - start : add condition -->
 			<p:commandButton id="quotationcommitteeadd" styleClass="BtnSpacing"

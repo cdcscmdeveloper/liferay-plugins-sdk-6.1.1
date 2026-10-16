@@ -300,10 +300,8 @@ public class CommitteManagedBean extends BaseManagedBean {
 	/** The role code for search. */
 	private String roleCode;
 	private boolean updateFCChairperson;
-	// #37809 Start Vinod 21092026
 	/** Hides the ministry/PTJ search criteria for a Federal Procurement Board profile. */
 	private boolean fpbSearchProfile;
-	// #37809 End Vinod 21092026
 	// #37809 End Vinod
 	
 	
@@ -1622,7 +1620,6 @@ public class CommitteManagedBean extends BaseManagedBean {
 		this.updateFCChairperson = updateFCChairperson;
 	}
 
-	// #37809 Start Vinod 21092026
 	public boolean isFpbSearchProfile() {
 		return fpbSearchProfile;
 	}
@@ -1630,7 +1627,6 @@ public class CommitteManagedBean extends BaseManagedBean {
 	public void setFpbSearchProfile(boolean fpbSearchProfile) {
 		this.fpbSearchProfile = fpbSearchProfile;
 	}
-	// #37809 End Vinod 21092026
 	
 	// #37809 End Vinod
 }
