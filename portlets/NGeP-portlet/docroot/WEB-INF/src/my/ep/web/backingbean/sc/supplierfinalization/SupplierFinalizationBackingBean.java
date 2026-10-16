@@ -12192,8 +12192,7 @@ public class SupplierFinalizationBackingBean extends
 	        return; // nothing to do
 	    }
 
-	    final String committeeType = getManagedBean().getCommitteeType();
-	    final String committeeName = getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE, committeeType);
+	    final String committeeType = getManagedBean().getCommitteeType();	    
 	    final boolean exceedAmount = checkAllSupplierOfferPriceIsExceedCommitteeAuthority();
 
 	    if (!exceedAmount) {
@@ -12204,9 +12203,9 @@ public class SupplierFinalizationBackingBean extends
 	            ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY.equals(decisionTypeCode);
 
 	    if (isForwardToHigherAuthority) {
-	        validateExceedWithForward(committeeType, committeeName);
+	        validateExceedWithForward(committeeType);
 	    } else {
-	        throwCommitteeException(committeeType, committeeName);
+	        throwCommitteeException(committeeType);
 	    }
 	}
 
@@ -12215,12 +12214,12 @@ public class SupplierFinalizationBackingBean extends
 	 * Handles the case when the amount exceeds committee authority and
 	 * the decision is forwarded to a higher authority.
 	 */
-	private void validateExceedWithForward(final String committeeType, final String committeeName) {
+	private void validateExceedWithForward(final String committeeType) {
 
 	    final PmReason reason = getManagedBean().getScQtFinalization().getReason();
 
 	    if (reason == null) {
-	        throwCommitteeException(committeeType, committeeName);
+	        throwCommitteeException(committeeType);
 	        return;
 	    }
 
@@ -12233,7 +12232,7 @@ public class SupplierFinalizationBackingBean extends
 
 	    if (!ParameterConst.FINALIZATION_REASON_CODE_EXCEED_COMMITTEE_AUTHORITY
 	            .equalsIgnoreCase(reasonType)) {
-	        throwCommitteeException(committeeType, committeeName);
+	        throwCommitteeException(committeeType);
 	    }
 	}
 
@@ -12242,9 +12241,10 @@ public class SupplierFinalizationBackingBean extends
 	 * Throws an {@link EpException} with the appropriate message based on the
 	 * specified committee type.
 	 */
-	private void throwCommitteeException(final String committeeType, final String committeeName) {
+	private void throwCommitteeException(final String committeeType) {
 		final String offeredPrice = getManagedBean().getSelectedSupplierOfferedPrice();
 		String procurementMode = this.getParameterDesc(getManagedBean().getScQt().getProcurementMode());
+		String committeeName = getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE, committeeType);
 
 		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType)
 				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType)
