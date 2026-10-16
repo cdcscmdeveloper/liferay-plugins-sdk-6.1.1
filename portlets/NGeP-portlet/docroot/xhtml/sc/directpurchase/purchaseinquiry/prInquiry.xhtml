@@ -10,14 +10,6 @@
 	<ui:param name="uomCode"
 		value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.uom.uomCode}" />
 		<ui:param name="isStockAvailable" value="#{purchaseInquiryBackingBean.managedBean.stockAvailabilityFlag}" />
-		<!-- #29557 - start -->
-		<ui:param name="isEnableTierNormalDel" value="#{purchaseInquiryBackingBean.managedBean.enableTierNormalDel}" />
-		<ui:param name="isEnableTierPromoDel" value="#{purchaseInquiryBackingBean.managedBean.enableTierPromoDel}" />
-		<ui:param name="isEnableZonalTierNormalDel" value="#{purchaseInquiryBackingBean.managedBean.enableZonalTierNormalDel}" />
-		<ui:param name="isEnableZonalTierPromoDel" value="#{purchaseInquiryBackingBean.managedBean.enableZonalTierPromoDel}" />
-		<ui:param name="isEnableZonalNormalDel" value="#{purchaseInquiryBackingBean.managedBean.enableZonalNormalDel}" />
-		<ui:param name="isEnableZonalPromoDel" value="#{purchaseInquiryBackingBean.managedBean.enableZonalPromoDel}" />
-		<!-- #29557 - end -->
 		<ui:param name="isReasonInActive" value="#{purchaseInquiryBackingBean.managedBean.reasonCodeInActive}" /><ui:remove>#27868</ui:remove>
 
 	<p:panel header="#{lbl['lbl.sc.price.inquiry.header.inquiry.detail']}"
@@ -350,12 +342,6 @@
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sc.price.inquiry.header.response.detail']}"
 		toggleable="true" id="resDetailId">
-		<!--  #29557 start -->
-		<h:outputText rendered="#{isPendingSupplierRespStatus}"
-			styleClass="instruction"
-			value="#{lbl['lbl.sc.price.inquiry.supplier.response.instruction']}"
-			escape="false" />
-		<!--  #29557 end -->
 		<table>
 			<tr>
 				<td style="width: 220px;"><p:outputLabel
@@ -378,17 +364,10 @@
 					</p:selectOneRadio> <p:message id="stockAvailableMsg" for="stockAvailable"
 						display="icon" /></td>
 			</tr>
-			<!-- #29557 - start -->
-			<tr>
-				<td style="width: 220px;"><p:outputLabel
-							value="#{lbl['lbl.sc.price.inquiry.price.type']}" /></td>
-				<td><ac:iconTooltip value="#{lbl['lbl.sc.all.pricetype.tooltip']}" /></td>
-			</tr>
-			<!-- #29557 - end -->
 		</table>
 
-		<!-- #29557 - add rendered attribute to hide datatable-->
-		<p:dataTable id="respDtl" var="supplierItemPrice" rendered="false"
+		<p:dataTable id="respDtl" var="supplierItemPrice"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{purchaseInquiryBackingBean.managedBean.supplierItemPrices}"
 			rowKey="#{supplierItemPrice.pricing.pricingId}" rowIndexVar="index" preserveDataModel="true">
 			<p:column headerText="#{lbl['lbl.sc.price.inquiry.zone']}"
@@ -438,94 +417,6 @@
 			</p:column>
 
 		</p:dataTable>
-		
-		<!-- #29557 start -->
-		<table>
-		<tr>
-		<td style="width: 220px;"></td>
-		<td>
-		<p:tabView id="headerTabId"
-		    activeIndex="#{purchaseInquiryBackingBean.managedBean.pricingTabIndex}">
-		
-		    <p:tab title="#{lbl['lbl.cm.normal']}">
-		        <p:tabView id="normalId"
-		            activeIndex="#{purchaseInquiryBackingBean.managedBean.normalPricingIndex}">
-		
-		            <p:tab title="#{lbl['lbl.cm.standard']}">
-		                <ui:include src="price/pricingTab.xhtml" />
-		            </p:tab>
-		
-		            <p:tab title="#{lbl['lbl.cm.promotion']}">
-		
-		                <ui:fragment rendered="#{not empty purchaseInquiryBackingBean.managedBean.supplierItemPromoPrices}">
-		                    <ui:include src="price/promotionTab.xhtml" />
-		                </ui:fragment>
-		
-		                <ui:fragment rendered="#{empty purchaseInquiryBackingBean.managedBean.supplierItemPromoPrices}">
-		                    <ui:include src="price/disableTab.xhtml" />
-		                </ui:fragment>
-		
-		            </p:tab>
-		
-		        </p:tabView>
-		    </p:tab>
-		
-		
-		    <p:tab title="#{lbl['lbl.cm.tier']}">
-		        <p:tabView id="tierId"
-		            activeIndex="#{purchaseInquiryBackingBean.managedBean.tierPricingIndex}">
-		
-		            <p:tab title="#{lbl['lbl.cm.standard']}">
-		                <ui:include src="price/pricingTierTab.xhtml" />
-		            </p:tab>
-		
-		            <p:tab title="#{lbl['lbl.cm.promotion']}">
-		                <ui:include src="price/pricingPromotionTierTab.xhtml" />		
-		            </p:tab>
-		
-		        </p:tabView>
-		    </p:tab>
-		
-		
-		    <p:tab title="#{lbl['lbl.cm.zonal']}">
-		        <p:tabView id="zonalId"
-		            activeIndex="#{purchaseInquiryBackingBean.managedBean.zonalPricingIndex}">
-		
-		            <p:tab title="#{lbl['lbl.cm.standard']}">
-		            	<ui:include src="price/zonalStandardPricingTab.xhtml" />
-		            </p:tab>
-		
-		
-		            <p:tab title="#{lbl['lbl.cm.promotion']}">
-		            	<ui:include src="price/zonalPromotionPricingTab.xhtml" />
-		            </p:tab>
-		
-		        </p:tabView>
-		    </p:tab>
-		
-		
-		    <p:tab title="#{lbl['lbl.cm.zonal.tier']}">
-		        <p:tabView id="zonalTierId"
-		            activeIndex="#{purchaseInquiryBackingBean.managedBean.zonalTierPricingIndex}">
-		
-		            <p:tab title="#{lbl['lbl.cm.standard']}">
-		            	<ui:include src="price/zonalTierPricingTab.xhtml" />
-		            </p:tab>
-		
-		
-		            <p:tab title="#{lbl['lbl.cm.promotion']}">
-		            	<ui:include src="price/zonalPromotionTierPricingTab.xhtml" />		
-		            </p:tab>
-		
-		        </p:tabView>
-		    </p:tab>
-		
-		</p:tabView>
-		</td>
-		</tr>
-		</table>
-		<!-- #29557 end -->
-		
 	</p:panel>
 
 	<ac:scRemarkAndAttachment
