@@ -254,6 +254,10 @@ import org.primefaces.model.StreamedContent;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.util.PortalUtil;
 // #RUU Start
+import my.ep.biz.service.sm.ruu.ISmRuuSO;
+import my.ep.dto.ruu.sm.SmRuuFeeReqDTO;
+import my.ep.dto.ruu.sm.SmRuuFeeResDTO;
+import my.ep.dto.ruu.sm.SmRuuPaymentRowDTO;
 import my.ep.persistence.entity.py.PyBillDtl;
 import my.ep.web.vo.SmOverlapCategoryVO;
 //#RUU End
@@ -20455,7 +20459,50 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 	
 	// Payment list for Payment Summary
+
+	public static ISmRuuSO getSmRuuSO() {
+		return (ISmRuuSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmRuuSO.class);
+	}
+	
 	private void calculatePayment() {
+//		SmRuuFeeReqDTO reqDTO = new SmRuuFeeReqDTO();
+//
+//		reqDTO.setCurrentStatus(getManagedBean().getCurrentStatus());
+//
+//		reqDTO.setLanguage(getManagedBean().getSmAppl().getOverlapLanguage() != null ? "ms" : new FacesScopes().getUserLocale().getLanguage());
+//
+//		reqDTO.setAsOf(new Timestamp(System.currentTimeMillis()));
+//
+//		// false preserves the existing omission of overlap from bill details.
+//		reqDTO.setIncludeOverlapBill(false);
+//
+//		if (ParameterConst.NEW_SM_APPLN_FOR_RENEW.equals(getManagedBean().getSmAppl().getApplType()) && getManagedBean().getSmSupplier() != null
+//				&& getManagedBean().getSmSupplier().getSmMofAccounts() != null && !getManagedBean().getSmSupplier().getSmMofAccounts().isEmpty()) {
+//
+//			reqDTO.setMofAccountId(getManagedBean().getSmSupplier().getSmMofAccounts().get(0).getMofAccountId());
+//		}
+//
+//		SmRuuFeeResDTO result = getSmRuuSO().calculateRuuFee(getManagedBean().getSmAppl().getApplId(), reqDTO);
+//
+//		List<SmPaymentDetailsVO> paymentRows = new ArrayList<SmPaymentDetailsVO>();
+//
+//		for (SmRuuPaymentRowDTO fee : result.getPaymentRows()) {
+//			SmPaymentDetailsVO row = new SmPaymentDetailsVO();
+//			row.setDetails(fee.getDetails());
+//			row.setPrice(fee.getPrice());
+//			row.setQuantity(fee.getQuantity());
+//			row.setHasQuantity(fee.isHasQuantity());
+//			row.setTotalAmount(fee.getTotalAmount());
+//			paymentRows.add(row);
+//		}
+//
+//		getManagedBean().setPaymentDetailsVOList(paymentRows);
+//		getManagedBean().setTotalPaymentAmount(result.getTotalAmount());
+//
+//		getManagedBean().setGstAmount(SmCommonUtil.getGstCurrentRate());
+//		getManagedBean().setGstPercentageLabels(
+//				SmCommonUtil.getMessage("lbl.sm.gst.percent", new String[] { getManagedBean().getGstAmount().toString() }));
+
 		getManagedBean().setPaymentDetailsVOList(new ArrayList<SmPaymentDetailsVO>());
 		getManagedBean().setTotalPaymentAmount(BigDecimal.ZERO);
 		getManagedBean().setTotalPaymentAmount(getManagedBean().getTotalPaymentAmount().setScale(2, BigDecimal.ROUND_UP));
