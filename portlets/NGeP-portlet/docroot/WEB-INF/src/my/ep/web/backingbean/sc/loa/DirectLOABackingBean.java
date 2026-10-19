@@ -5090,6 +5090,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		// 25791 -end-
 		// #29766 Start Vinod
+		defaultOldPK7ToNewPK7(scLoa, isReadonly);
 		checkQTTypePk7WpItem();
 		// #29766 End Vinod
 
@@ -5628,6 +5629,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			reqDTO.setToBeDeltedZoneCriteria(this.getManagedBean()
 					.getToBedeletedSupplierZone());
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
+			reqDTO.setSaveTemplate(this.getManagedBean().isSaveTemplate());	// Bug #40798@Syazani 21/09/2026
 			resDTO = getQtDirectAwardSO().updateBpmTask(reqDTO);
 			if (resDTO.isSuccessful()) {
 				scLoa = resDTO.getLoa();
@@ -12495,9 +12497,16 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			if (isPendingAcknowledgement) {
 				DirectAwardReqDTO awardReqDTOnew = new DirectAwardReqDTO();
 				awardReqDTOnew.setScLoa(scLoa);
+				// Bug #40798@Syazani 21/09/2026 -- Start
+				validateDuplicateItems(this.getManagedBean().getProdscQtDoc(), this.getManagedBean()
+						.getServicescQtDoc());
+				awardReqDTOnew.setScQtDoc(this.getManagedBean().getProdscQtDoc());
+				awardReqDTOnew.setServiceQtDoc(this.getManagedBean().getServicescQtDoc());
 				DirectAwardResDTO awardResDTOnew = getQtDirectAwardSO()
-						.saveScloiloaitemforDirectLOA(awardReqDTOnew);
+						.saveScloiloaitemforDirectLOAConfirmSupplierAcceptBeforeBPM(awardReqDTOnew);
+				// Bug #40798@Syazani 21/09/2026 -- End
 				if (awardResDTOnew.isSuccessful()) {
+					this.getManagedBean().setSaveTemplate(false);	// Bug #40798@Syazani 21/09/2026
 					scLoa.setScLoiLoaItems(awardResDTOnew.getLoa()
 							.getScLoiLoaItems());
 				}
@@ -13048,6 +13057,75 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		return sortedList;
 	}
 	// 41092 - end
+	// #29766 Start Vinod
+	/**
+	 * Defaults old PK7 to new PK7/WP while the LOA is still editable.
+	 * Keeps the reason only when a new PK7/WP reason has the same description.
+	 * 
+	 * @param scLoa
+	 * @param isReadonly
+	 */
+	private void defaultOldPK7ToNewPK7(ScLoa scLoa, boolean isReadonly) {
+		PmParameter qtType = scLoa.getQtType();
+		boolean isOldPK7 = qtType != null
+				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType())
+				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode());
+
+		List<Long> editableStatus = Arrays.asList(QTStatusConst.LOA_PENDING_SUBMISSION,
+				QTStatusConst.LOA_PENDING_REVISION);
+		boolean isEditable = !isReadonly && scLoa.getPmStatus() != null
+				&& editableStatus.contains(scLoa.getPmStatus().getStatusId());
+
+		if (!isOldPK7 || !isEditable) {
+			return;
+		}
+		PmParameter newPK7 = getParameterByTypeAndCode(ParameterTypeConst.QUOTATION_TENDER_TYPE,
+				ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7_WP);
+		if (newPK7 == null) {
+			return;
+		}
+		String oldReasonDesc = getReasonDesc(scLoa.getJustificationType());
+
+		scLoa.setQtType(newPK7);
+		scLoa.setJustificationType(new PmReason());
+
+		String newReasonCode = getNewPK7ReasonCodeByDesc(oldReasonDesc);
+		if (newReasonCode != null) {
+			scLoa.setJustificationType(getReasonByCategoryAndCode(ReasonCategory.JUSTIFICATION_PK7W.value(),
+					newReasonCode));
+		}
+	}
+
+	// #29766 End Vinod
+	// #29766 Start Vinod
+
+	/**
+	 * Finds the new PK7/WP reason code with the same description.
+	 * 
+	 * @param reasonDesc
+	 * @return the reason code, or null when no reason matches
+	 */
+	private String getNewPK7ReasonCodeByDesc(String reasonDesc) {
+		if (StringUtils.isBlank(reasonDesc)) {
+			return null;
+		}
+		if (getManagedBean().getPk7Reasons() == null) {
+			setPk7DropDownValues();
+		}
+		SelectItem[] reasons = getManagedBean().getPk7Reasons();
+		if (reasons == null) {
+			return null;
+		}
+		for (SelectItem item : reasons) {
+			if (item.getValue() != null
+					&& StringUtils.equalsIgnoreCase(StringUtils.trim(item.getLabel()), StringUtils.trim(reasonDesc))) {
+				return item.getValue().toString();
+			}
+		}
+		return null;
+	}
+
+	// #29766 End Vinod
 	
 	// #29766 Start Vinod
 	/**

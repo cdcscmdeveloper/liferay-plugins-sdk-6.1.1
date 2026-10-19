@@ -14,13 +14,6 @@
 			instruction="#{lbl['lbl.sc.requestnote.remarks.instruction']}" />
 	</c:if>
 	<c:if test="#{!isPendingItemCodificationStatus}">
-		<ac:scRemarkAndAttachment
-			remarkList="#{requestNoteBackingBean.sortedRequestNoteRemarksByDate}"
-			showAttachment="false"
-			readonly="#{requestNoteBackingBean.managedBean.viewOnly}"
-			instruction="#{isPendingApprovalStatus ? lbl['lbl.sc.requestnote.remarks.instruction'] : ''}" />
-	</c:if>
-	<c:if test="#{!isPendingItemCodificationStatus}">
 		<ui:remove>#26059 - start</ui:remove>
 		<c:choose>
 			<c:when
@@ -47,5 +40,5 @@
 		</c:choose>
 		<ui:remove>#26059 - start</ui:remove>
 	</c:if>
-	<ui:remove>41034 - end</ui:remove>
+	<ui:remove>41034 - end</ui:remove>	
 </ui:composition>
