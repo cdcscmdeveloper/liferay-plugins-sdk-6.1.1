@@ -6362,7 +6362,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			// Contract type is not selected while cancel QT
 
 			if (ctType != null && bpkList != null && ctType.equals(SourcingConstants.CENTRAL_CONTRACT) && !isSbhOrSrwk) {
-				System.out.println("isBpkCentralContract" + true);
 				return true;
 			}
 			// 9019 End #note-445
