@@ -11306,7 +11306,7 @@
 		</security-role-ref>
 	</portlet>
 	<!-- #9299 end -->
-	
+
 	<!--#35320-start-->
 	<portlet>
 		<portlet-name>finalizationCommitteeMaintenance</portlet-name>
