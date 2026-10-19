@@ -69,6 +69,7 @@ public class QTFieldMapper {
 						QTFieldConst.FIELD_QT_EVALUATION_TYPE,
 						QTFieldConst.FIELD_QT_CONTRACT_TYPE,
 						QTFieldConst.FIELD_QT_FULFILMENT_TYPE,
+						QTFieldConst.FIELD_QT_CONTRACT_DURATION,//#25726
 						QTFieldConst.FIELD_QT_ZONE_COVERAGE,
 						QTFieldConst.FIELD_QT_EXISTING_CONTRACT,
 						QTFieldConst.FIELD_QT_REQUIRED_MINIS_SPEC_APPROVAL,
@@ -87,7 +88,7 @@ public class QTFieldMapper {
 						QTFieldConst.FIELD_QT_EXISTING_CONTRACT,
 						QTFieldConst.FIELD_QT_ZONE_COVERAGE,
 						QTFieldConst.FIELD_QT_EVALUATION_TYPE,
-						QTFieldConst.FIELD_QT_FULFILMENT_TYPE,
+						//25726 - remove because it will impact calculation for estimation price
 						QTFieldConst.FIELD_QT_REQUIRED_MINIS_SPEC_APPROVAL,
 						QTFieldConst.FIELD_QT_DEDUCTIONPAYMENT,
 						QTFieldConst.FIELD_QT_DOCUMENTS}),
@@ -101,7 +102,7 @@ public class QTFieldMapper {
 				QTFieldConst.FIELD_QT_PROCUREMENT_TYPE_CAT_ID,
 				QTFieldConst.FIELD_QT_EXISTING_CONTRACT,
 				QTFieldConst.FIELD_QT_EVALUATION_TYPE,
-				QTFieldConst.FIELD_QT_FULFILMENT_TYPE,
+				//25726 - remove because it will impact calculation for estimation price
 				QTFieldConst.FIELD_QT_DEDUCTIONPAYMENT,
 				QTFieldConst.FIELD_QT_DOCUMENTS}),
 							      

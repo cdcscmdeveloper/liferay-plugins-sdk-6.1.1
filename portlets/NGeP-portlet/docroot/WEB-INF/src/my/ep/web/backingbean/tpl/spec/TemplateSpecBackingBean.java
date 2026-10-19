@@ -524,6 +524,16 @@ public class TemplateSpecBackingBean extends
 				.equals(tplSpecMaster.getSpecTypeCode().getParameterCode());
 		TemplateSpecHelper specHelper = TemplateSpecHelper.getInstance();
 
+		// #25726 - Start
+		PmParameter fulfilmentType = null;
+		String docType = null;
+		if (null != tplSpecMaster.getFulfilmentType()) {
+			fulfilmentType = tplSpecMaster.getFulfilmentType();
+		}
+		if (null != tplSpecMaster.getDocType()) {
+			docType = tplSpecMaster.getDocType();
+		}
+		// #25726 - End
 		if (questionList == null) {
 			questionList = new ArrayList<TplSpecQuestion>();
 
@@ -538,7 +548,30 @@ public class TemplateSpecBackingBean extends
 					ParameterTypeConst.FULFILMENT_TYPE,
 					ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 			newQuestion.setClFulfilmentTypeCode(pmParameter);
-
+			// #25726 - Start
+			if (null != docType) {
+				if (docType.equals(ParameterConst.DOCTYPE_DIRECT_NEGO)) {
+					if (null != fulfilmentType)
+						newQuestion.setClFulfilmentTypeCode(fulfilmentType);
+				} else if (docType.equals(ParameterConst.DOCTYPE_QUOTATION)) {
+					if (null != fulfilmentType)
+						newQuestion.setClFulfilmentTypeCode(fulfilmentType);
+				} else {
+					newQuestion.setClFulfilmentTypeCode(pmParameter);
+				}
+			} else {
+				if (null != tplSpecMaster.getScQtDoc()) {
+					if (null != tplSpecMaster.getScQtDoc().getScQt()) {
+						if (null != tplSpecMaster.getScQtDoc().getScQt().getFulfilmentType())
+							newQuestion.setClFulfilmentTypeCode(tplSpecMaster.getScQtDoc().getScQt()
+									.getFulfilmentType());
+					}
+				} else {
+					newQuestion.setClFulfilmentTypeCode(pmParameter);
+				}
+			}
+			// #25726 - End
+			
 			if (ParameterConst.ITEM_TYPE_SERVICE.equals(tplSpecMaster
 					.getItemTypeCode().getParameterCode())) {
 				if (tplSpecMaster.getTplSpecZone() != null) {

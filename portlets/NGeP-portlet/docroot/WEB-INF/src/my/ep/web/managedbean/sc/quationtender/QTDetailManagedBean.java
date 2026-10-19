@@ -1604,7 +1604,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	// #15391 - start
 	private boolean isChecklist;
-	private boolean isGenInfo;
+	private boolean isGenInfo = Boolean.FALSE; //#25726
 	private boolean specUpdateInProgress;
 	// #15391 - end
 	

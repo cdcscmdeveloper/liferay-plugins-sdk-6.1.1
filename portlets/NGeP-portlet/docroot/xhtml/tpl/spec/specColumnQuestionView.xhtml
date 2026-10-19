@@ -5,6 +5,12 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+<!-- #25726/25725 - Check and display Italic value -->
+<style>
+.italic-item {
+	font-style: italic !important;
+}
+</style>
 
 	<ui:param name="isRepeated"
 		value="#{prevSpecQuestion != null ? prevSpecQuestion.specQuestionId == question.specQuestionId : false}" />
@@ -77,7 +83,8 @@
 		rendered="#{isItemTypeService and isFulfilmentTypeReq}">
 		<h:outputText
 			value="#{templateSpecBackingBean.getParameterDesc(question.clFulfilmentTypeCode)}"
-			rendered="#{isQuestionTypeItem and !isRepeated}" />
+			rendered="#{isQuestionTypeItem and !isRepeated}" 
+			styleClass="#{templateSpecBackingBean.checkItalicCodeNameForMy(question.clFulfilmentTypeCode.parameterId) ? 'italic-item' : ''}"/><!-- #25726/25725 - Check and display Italic value -->
 	</p:column>
 	 <ui:remove>#29187 Start Vinod</ui:remove>
 	<c:if test="#{!isContentTypeScore or isRenderUOMandQuantity}"> 

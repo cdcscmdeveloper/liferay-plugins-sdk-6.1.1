@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -4160,4 +4161,71 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 
 	// #35238 end
+	
+	// new #25725/25726 - Start
+	/**
+	 * Check for italic if language code = "ms" and parameter code in the list
+	 * 
+	 * @param parameterId
+	 * @return
+	 */
+	public boolean checkItalicCodeNameForMy(Long parameterId) {
+
+		PmParameter newPmParameter = new PmParameter();
+
+		if (parameterId != null) {
+			newPmParameter = ParameterHelper.getInstance().getPmParameterById(parameterId);
+		}
+
+		if (newPmParameter == null) {
+			return false;
+		}
+
+		String paramType = newPmParameter.getParameterType();
+		String paramCode = newPmParameter.getParameterCode();
+
+		Map<String, List<String>> listParameter = new HashMap<>();
+
+		// Store multiple FULFILMENT_TYPE values in a list
+		List<String> fulfilmentTypes = new ArrayList<>();
+		fulfilmentTypes.add(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+
+		listParameter.put(ParameterTypeConst.FULFILMENT_TYPE, fulfilmentTypes);
+
+		FacesScopes face = new FacesScopes();
+		String language = face.getUserLocale().getLanguage();
+
+		if (SourcingConstants.MALAY_LANGUAGE_CODE.equalsIgnoreCase(language) && listParameter.containsKey(paramType)) {
+			List<String> validTypes = listParameter.get(paramType);
+
+			if (validTypes.contains(paramCode)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get list code names is italic
+	 * 
+	 * @param type
+	 * @return
+	 */
+	public List<String> getItalicCodeNames(String type) {
+		List<String> codeNames = new ArrayList<>();
+
+		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(type,
+				null);
+		for (PmParameterDesc p : parameterDescs) {
+			Long id = p.getPmParameter().getParameterId();
+
+			if (checkItalicCodeNameForMy(id)) {
+				codeNames.add(p.getCodeName());
+			}
+		}
+		return codeNames;
+	}
+
+	// new #25725/25726 - End
 }

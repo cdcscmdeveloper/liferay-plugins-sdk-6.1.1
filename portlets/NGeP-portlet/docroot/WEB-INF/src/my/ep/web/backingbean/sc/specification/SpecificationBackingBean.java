@@ -1863,13 +1863,18 @@ public class SpecificationBackingBean extends
 				if(CollectionUtils.isNotEmpty(this.getManagedBean().getScQtCheckSt2techProposal())){
 				checklistSorting(this.getManagedBean().getScQtCheckSt2techProposal());
 				}
-				this.getManagedBean().setScQtCheckSt2financeProposalList(
-						resDTO.getFinancialCheckLists());
-				if(CollectionUtils.isNotEmpty(this.getManagedBean().getScQtCheckSt2financeProposalList())){
-				checklistSorting(this.getManagedBean().getScQtCheckSt2financeProposalList());
+				
+				//#25726 - Start
+				if (null == this.getManagedBean().getScQtCheckSt2financeProposalList()
+						|| this.getManagedBean().getScQtCheckSt2financeProposalList().isEmpty()) {
+					this.getManagedBean().setScQtCheckSt2financeProposalList(resDTO.getFinancialCheckLists());
+					if (CollectionUtils.isNotEmpty(this.getManagedBean().getScQtCheckSt2financeProposalList())) {
+						checklistSorting(this.getManagedBean().getScQtCheckSt2financeProposalList());
+					}
 				}
 				// Collections.sort(this.getManagedBean()
 				// .getScQtCheckSt2financeProposalList());
+				//#25726 - End
 				localcheckList=null;
 			}
 

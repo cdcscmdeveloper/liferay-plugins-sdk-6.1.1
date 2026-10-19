@@ -6,6 +6,36 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<!-- Start #25725/25726 -->
+  <style>
+     .italic-item {
+	font-style: italic !important;
+    }
+  </style>
+	
+ <h:outputScript>
+    // Pass the list of IDs from server to JS
+    var fulfilmentItalicIds = [
+        <ui:repeat value="#{qTDetailBB.getItalicCodeNames(ParameterTypeConst.fulfilmentType)}" var="label" varStatus="st">
+            '#{label}'#{not st.last ? ',' : ''}
+        </ui:repeat>
+    ];
+	
+    function styleFulfilmentDropdown() {
+        $('.fulfil-panel li.ui-selectonemenu-item').each(function () {
+            var label = $(this).attr('data-label');
+            if (fulfilmentItalicIds.indexOf(label) !== -1) {
+                $(this).addClass('italic-item');
+            }
+        });
+    }
+    // Run when the page is ready
+    $(function () {
+        styleFulfilmentDropdown();
+    });
+
+  </h:outputScript>
+ <!-- End #25725/25726 -->
 
 	<ui:param name="scQt" value="#{createQtBB.managedBean.qt}" />
 	<ui:param name="qtStatusAfterChecklistScoring"
@@ -50,6 +80,10 @@
 	<ui:param name="isDemoSpecialCase"  
 		value="#{qTDetailBB.managedBean.demoSpecialCase ? qTDetailBB.managedBean.demoSpecialCase : specMaintenanceBB.managedBean.demoSpecialCase}" />
 	<!-- END #28784 -->
+	<!-- #40237/25726 - Start -->
+	<ui:param name="isGenInfo"
+		value="#{specificationBackingBean.managedBean.genInfo}" />
+	<!-- #40237/25726 - End -->
 	<ac:lovPopup />
 	<!-- START #28784 -->
 	<p:blockUI block=":form" widgetVar="blockWidget">
@@ -727,6 +761,11 @@
 			<tr>
 				<td><p:outputLabel value=" #{lbl['lbl.sc.fullfillent.type']}" />
 					<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
+			<!-- #25726 Start -->	
+			<td>
+			 <table>
+			   <tr>
+			<!-- #25726 End -->
 				<td><c:choose>
 						<!-- 15391 -start- -->
 						<c:when
@@ -737,7 +776,9 @@
 								disabled="#{scQt.contractType ne null and scQt.contractType.parameterCode eq 'CC'}"
 								label="#{lbl['lbl.sc.fullfillent.type']}"
 								value="#{scQt.fulfilmentType.parameterId}"
-								style="width: 205px;margin-bottom: 5px;">
+								style="width: 205px;margin-bottom: 5px;"
+								styleClass="#{qTDetailBB.checkItalicCodeNameForMy(scQt.fulfilmentType.parameterId) ? 'italic-item' : ''}"
+                 				panelStyleClass="fulfil-panel"><!-- #25726/25725 - Check and display Italic value -->
 								<ui:remove>9019 -end</ui:remove>
 								<f:selectItems
 									value="#{createQtBB.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
@@ -750,7 +791,8 @@
 							<!-- 15391 -start- --><!-- 29464 -start- -->
 							<p:inputText id="fulfilTypeTxt" rendered="#{!specificationBackingBean.managedBean.isGenInfo() or isReadOnly}"
 								value="#{createQtBB.getParameterDesc(scQt.fulfilmentType)}"
-								style="width:195px;" disabled="true" />
+								style="width:195px;" disabled="true" 
+								styleClass="#{qTDetailBB.checkItalicCodeNameForMy(scQt.fulfilmentType.parameterId) ? 'italic-item' : ''}"/><!-- #25726/25725 - Check and display Italic value -->
 							<ui:remove>9019 note-289 -start</ui:remove>
 							 <!-- 26012023@syazani - Bug #34428 - Start -->
 							<p:selectOneMenu required="#{not empty param['skipsubmitvalidation']}"
@@ -758,7 +800,9 @@
 								disabled="#{scQt.contractType ne null and scQt.contractType.parameterCode eq 'CC'}"
 								label="#{lbl['lbl.sc.fullfillent.type']}"
 								value="#{scQt.fulfilmentType.parameterId}"
-								style="width: 205px;margin-bottom: 5px;">
+								style="width: 205px;margin-bottom: 5px;"
+								styleClass="#{createQtBB.checkItalicCodeNameForMy(scQt.fulfilmentType.parameterId) ? 'italic-item' : ''}"
+								panelStyleClass="fulfil-panel"><!-- #25726/25725 - Check and display Italic value -->
 							<!-- 26012023@syazani - Bug #34428 - End -->
 							<ui:remove>9019 note-289 -end</ui:remove>
 							<!-- 29464 -end- -->
@@ -771,6 +815,14 @@
 							<!-- 15391 -end- -->
 						</c:otherwise>
 					</c:choose></td>
+			<!-- #25726 start -->
+					 <td style="margin-top: -3px">
+						<ac:iconTooltip rendered ="#{!isContractTypeAsCentral}" value="#{lbl['lbl.sc.fulfilment.type.qt.tooltip']}" />
+					 </td>
+			   </tr>
+			 </table>
+			</td>
+			<!-- #25726 end -->			
 				<td style="white-space: nowrap;"><p:outputLabel
 						value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" /> <p:outputLabel
 						value="*" styleClass="mandatory"

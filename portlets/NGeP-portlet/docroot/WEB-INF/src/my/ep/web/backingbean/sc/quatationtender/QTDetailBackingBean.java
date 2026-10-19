@@ -1277,6 +1277,26 @@ public class QTDetailBackingBean extends
 				}
 				
 			}
+			
+			// #25726 - start
+			if (null == this.getManagedBean().getQt().getFulfilmentType()) {
+
+				this.getManagedBean().getQt().setFulfilmentType(new PmParameter());
+
+			}
+			if (null != this.getManagedBean().getQt().getFulfilmentType()) {
+				this.getManagedBean().setFulfilmentType(
+						this.getManagedBean().getQt().getFulfilmentType().getParameterCode());
+			}
+			if (null != status && (status.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT))
+					&& this.getManagedBean().isQtSpecMaintanance()) {
+				this.getManagedBean().setGenInfo(editable);
+			} else {
+				this.getManagedBean().setGenInfo(false);
+			}
+
+			// #25726 - end
+
 
 			// 9019 - Start (Harun) WIP Transaction add information message
 			if (!getTaskByDocNoModule()) {
@@ -5348,9 +5368,11 @@ public class QTDetailBackingBean extends
 						if (scQt != null) {
 							demoRequired = scQt.isDemoRequired();
 							evalType = scQt.getEvaluationType();
+						//#25726 - Start
+						}else{
+							scQt = tenderResDTO.getQtDetail();
 						}
-
-						scQt = tenderResDTO.getQtDetail();
+						//#25726 - End
 						getManagedBean().setQt(scQt);
 
 						// #28784 - Demo WIP -start-
@@ -5362,9 +5384,13 @@ public class QTDetailBackingBean extends
 						}
 						// #28784 -end-
 						this.getManagedBean().setPanel(scQt.isPanel());
-						Long currentStatus = this.getManagedBean().getQt()
-								.getQtStatus().getStatusId();
-						this.getManagedBean().setCurrentStatusId(currentStatus);
+						//#25726 - Start
+						if (!this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE) && this.getManagedBean().getQt().getQtStatus() != null){
+							Long currentStatus = this.getManagedBean().getQt()
+									.getQtStatus().getStatusId();
+							this.getManagedBean().setCurrentStatusId(currentStatus);
+						}
+						//#25726 - End
 						getManagedBean().getCtContract().setContractNo(
 								this.getManagedBean().getQt()
 										.getExistingContractNo());
