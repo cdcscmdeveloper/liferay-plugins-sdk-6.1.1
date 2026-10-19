@@ -50,8 +50,18 @@
 						label="#{lbl['lbl.sm.person.name']}" required="true"
 						value="#{backingBean.managedBean.selectedShareHolder.name}"
 						disabled="#{backingBean.managedBean.selectedShareHolder.ssmData}"
-						size="35" /> 
-						<ac:smFieldChangeAlert 
+						size="35">
+						<!-- #40112 - start -->
+							<p:ajax event="change" partialSubmit="true" process="@this"
+								listener="#{backingBean.managedBean.selectedShareHolder.clearNameAI()}" update="shareHolderNameAiIcon" />
+						</p:inputText>
+						<p:outputPanel id="shareHolderNameAiIcon">
+							<p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" 
+							rendered="#{backingBean.managedBean.selectedShareHolder.nameFromAI
+								and backingBean.managedBean.currentPageType ne SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}" />
+						</p:outputPanel>
+						<!-- #40112 - end -->
+						<ac:smFieldChangeAlert
 							isShow="#{backingBean.managedBean.showFieldChanges 
 								and not empty backingBean.managedBean.latestPersonnel}"
 							oriValue="#{backingBean.managedBean.latestPersonnel.name}" 
@@ -194,6 +204,9 @@
 							size="35" maxlength="12"
 							validatorMessage="#{lbl['lbl.sm.person.icNum']} - #{lbl['lbl.sm.invalidNo']}">
 							<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+							<!-- #40112 -->
+							<p:ajax event="change" partialSubmit="true" process="@this"
+								listener="#{backingBean.managedBean.selectedShareHolder.clearIcAI()}" update="shareHolderIcAiIcon" />
 						</p:inputText>
 						<p:inputText label="#{lbl['lbl.sm.shrHldrInfo.idNo']}"
 							required="true" id="equiPerPasptNum"
@@ -203,7 +216,16 @@
 							size="35" maxlength="12">
 							<p:ajax process="@this" partialSubmit="true" update="@this"
 								listener="#{backingBean.trimPersonnelPassportValue}" />
+							<!-- #40112 -->
+							<p:ajax partialSubmit="true" process="@this"
+								listener="#{backingBean.managedBean.selectedShareHolder.clearIcAI()}" update="shareHolderIcAiIcon" />
 						</p:inputText>
+						<!-- #40112 -->
+						<p:outputPanel id="shareHolderIcAiIcon">
+							<p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" 
+							rendered="#{backingBean.managedBean.selectedShareHolder.icFromAI
+								and backingBean.managedBean.currentPageType ne SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}"/>
+						</p:outputPanel>
 						   &#160; <p:graphicImage id="tooltip1"
 							value="/css/images/design/tooltips.png" />
 						<p:tooltip id="toolinfo1" for="tooltip1">
@@ -286,7 +308,16 @@
 						value="#{backingBean.managedBean.selectedShareHolder.epfNo}"
 						id="equiEpfNo" size="35">
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-					</p:inputText> 
+						<!-- #40112 - start -->
+						<p:ajax event="change" partialSubmit="true" process="@this"
+							listener="#{backingBean.managedBean.selectedShareHolder.clearEpfNoAI()}" update="shareHolderEpfNoAiIcon" />
+					</p:inputText>
+					<p:outputPanel id="shareHolderEpfNoAiIcon">
+						<p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" 
+						rendered="#{backingBean.managedBean.selectedShareHolder.epfNoFromAI
+							and backingBean.managedBean.currentPageType ne SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}" />
+					</p:outputPanel>
+					<!-- #40112 - end -->
 					<ac:smFieldChangeAlert 
 						isShow="#{backingBean.managedBean.showFieldChanges 
 							and not empty backingBean.managedBean.latestPersonnel}"

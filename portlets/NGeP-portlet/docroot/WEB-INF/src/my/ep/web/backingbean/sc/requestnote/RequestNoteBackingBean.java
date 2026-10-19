@@ -73,6 +73,7 @@ import my.ep.constant.sc.AuditDPRequestNoteConst;
 import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.ContinuityDPConst; //#25790
 import my.ep.constant.sc.HtmlTemplateConstants; //#26059
+import my.ep.constant.tpl.TemplateSpecConst; //#26059
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
@@ -8925,4 +8926,20 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return sortedList;
 	}
 	//41034 - end
+	
+	// 36950,26059 - start @zaim 
+	/**
+	 * @param itemName
+	 * @return
+	 */
+	public String handleSpecialCharacterForView(String itemName) {
+		String formattedItemName = itemName.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL,
+				TemplateSpecConst.LESS_THEN_HTML_ENTITY);
+		formattedItemName = formattedItemName.replaceAll(TemplateSpecConst.GREATER_THEN_SYMBOL,
+				TemplateSpecConst.GREATER_THEN_HTML_ENTITY);
+		formattedItemName = formattedItemName.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,
+				TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		return formattedItemName;
+	}
+	// 36950,26059 - end @zaim
 }							   
