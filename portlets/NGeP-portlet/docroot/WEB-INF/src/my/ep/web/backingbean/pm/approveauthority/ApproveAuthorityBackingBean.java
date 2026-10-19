@@ -190,7 +190,7 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 		}
 		return NAV_TO_MAIN;
 	}
-
+	
 	/**
 	 * Validates and saves newly added authority committees.
 	 *
