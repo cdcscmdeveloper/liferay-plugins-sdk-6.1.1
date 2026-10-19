@@ -58,7 +58,7 @@ public class ItemExceedThresholdRptBackingBean extends DpReportBackingBean<ItemE
 	private boolean isValidationError = false;
 
 	// Use Set for faster lookup
-	private static final Set<RoleCode> ENABLE_FIELD_ROLE = EnumSet.of(RoleCode.SYS_ADMIN, RoleCode.AUDITOR_INTERNAL,
+	private static final Set<RoleCode> ENABLE_FIELD_ROLE = EnumSet.of(RoleCode.EP_ADMIN , RoleCode.AUDITOR_INTERNAL,
 			RoleCode.AUDITOR_GENERAL, RoleCode.BPK_AUDITOR, RoleCode.BPK_APPROVER);
 
 	private static final Set<RoleCode> DISABLE_FIELD_ROLE = EnumSet.of(RoleCode.REQUISITIONER, RoleCode.RN_APPROVER);
