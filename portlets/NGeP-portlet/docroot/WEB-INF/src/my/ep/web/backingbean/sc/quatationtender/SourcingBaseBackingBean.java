@@ -8591,8 +8591,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param scAttachments
 	 * @throws IOException
 	 */
-	protected <ATTACHMENT extends ScAttachment> void downloadSFAndRecommendationFiles(String zipFileName,
-			List<ATTACHMENT> scAttachments) throws IOException {
+	public <ATTACHMENT extends ScAttachment> void downloadSFAndRecommendationFiles(String zipFileName,
+			List<ATTACHMENT> scAttachments) throws IOException {//#25651
 		HttpServletResponse response = null;
 		ZipOutputStream zos = null;
 		try {

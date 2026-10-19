@@ -4762,9 +4762,10 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 								.size() > 0) {
 					// no need to add the message again
 				} else {
+					EpException closed = getQtClosedException(getManagedBean().getQt()); //#41606
 					Locale userLocale = new FacesScopes().getUserLocale();
-					message = MessageUtils.getMessage(e.getMessage(),
-							e.getParameters(),
+					message = MessageUtils.getMessage(closed.getMessage(), //#41606
+							closed.getParameters(), //#41606
 							MessageUtils.BUNDLE_COMMON_MESSAGES, userLocale);
 					getManagedBean().setMessage(message);
 
@@ -5913,6 +5914,27 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 					closeDateFormat.format(qt.getClosingDate()).toString() });
 		}
 	}
+
+	//#41606 - Start
+	/**
+	 * Builds the closed-on message for the qt.
+	 * @param qt
+	 * @return
+	 */
+	private EpException getQtClosedException(ScQt qt) {
+		StringBuilder qtSB = new StringBuilder();
+		qtSB.append(getParameterDesc(qt.getProcurementMode()
+				.getParameterType(), qt.getProcurementMode()
+				.getParameterCode()));
+		qtSB.append(" - ");
+		qtSB.append(qt.getQtNo());
+		SimpleDateFormat closeDateFormat = new SimpleDateFormat(
+				CommonConstants.DEFAULT_DATETIME_FORMAT);
+		return new EpException(MessageConst.ERROR_760461, new String[] {
+				qtSB.toString(),
+				closeDateFormat.format(qt.getClosingDate()).toString() });
+	}
+	//#41606 - End
 
 	/**
 	 * Method to update scQTProposal to allow resubmit.
