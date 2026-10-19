@@ -175,6 +175,12 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 			if(authCommitteeList != null && !authCommitteeList.isEmpty()){
 				saveAuthCommittee(authCommitteeList);
 			}
+		} catch(EpException epx) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+							epx.getMessage(), epx.getParameters(), MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
 		} catch (Exception ex){
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT,
 				ParameterConst.MOF_APPROVING_AUTHORITY, APPROVE_AUTHORITY_BACKING_BEAN,
