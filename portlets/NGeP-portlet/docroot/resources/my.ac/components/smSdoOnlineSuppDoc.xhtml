@@ -5,12 +5,14 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<cc:interface>
 		<cc:attribute name="tableId" required="true" />
 		<cc:attribute name="smApplSupportDocs" required="true" />
 		<cc:attribute name="mandatory" default="false"/>
+		<cc:attribute name="hasAI" default="false"/> <!-- #40112 -->
 	</cc:interface>
 
 	<cc:implementation>
@@ -20,7 +22,7 @@
 					
 			<p:columnGroup type="header">
 				<p:row>
-					<p:column headerText="#{lbl['lbl.sm.mandatory.suppdoc']}" colspan="5" rendered="#{cc.attrs.mandatory}"
+					<p:column headerText="#{lbl['lbl.sm.mandatory.suppdoc']}" colspan="#{cc.attrs.hasAI ? 6 : 5}" rendered="#{cc.attrs.mandatory}"
 						style="background-color:PeachPuff !important;text-align: center !important;color:black !important"/>
 					<p:column headerText="#{lbl['lbl.sm.nonmandatory.suppdoc']}" colspan="5" rendered="#{!cc.attrs.mandatory}"
 						style="background-color:PaleGreen !important;text-align: center !important;color:black !important"/>
@@ -30,6 +32,7 @@
 					<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" />
 					<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}"
 						rendered="#{sdoReviewBackingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}" />
+					<p:column headerText="#{lbl['lbl.sm.ai.btn']}" rendered="#{cc.attrs.hasAI}"/> <!-- #40112 -->
 					<p:column headerText="#{lbl['lbl.sm.supportingdoc.isreceive']}" />
 					<p:column headerText="#{lbl['lbl.sm.remark']}"/>
                 </p:row>
@@ -68,6 +71,33 @@
 				</ui:repeat>
 				<!-- #28807 - End -->		        
 	        </p:column>
+	        
+	        <!-- #40112 - start -->
+	        <p:column style="width:3% !important; white-space:normal;overflow: hidden !important; text-align:center;"
+	        	rendered="#{cc.attrs.hasAI}">
+	        	<ui:repeat var="applDocs" value="#{suppDoc.smApplDocFiles}">
+					<p:outputPanel rendered="#{applDocs.validatedAI eq 1}">
+						<p:graphicImage id="imgHasAI1" value="/css/images/ai/yes.png" />
+						<p:tooltip for="imgHasAI1" rendered="#{not empty applDocs.mappedFieldAI}">
+							<p:outputLabel escape="false" value="#{applDocs.mappedFieldAI}"/>
+						</p:tooltip>
+					</p:outputPanel>
+					<p:outputPanel rendered="#{applDocs.validatedAI eq 2}">
+						<p:graphicImage id="imgHasAI2" value="/css/images/ai/no.png" />
+						<p:tooltip for="imgHasAI2" rendered="#{not empty applDocs.mappedFieldAI}">
+							<p:outputLabel escape="false" value="#{applDocs.mappedFieldAI}"/>
+						</p:tooltip>
+					</p:outputPanel>
+					<p:outputPanel rendered="#{applDocs.validatedAI eq 3}">
+						<p:graphicImage id="imgHasAI3" value="/css/images/ai/warning.png" />
+						<p:tooltip for="imgHasAI3" rendered="#{not empty applDocs.mappedFieldAI}">
+							<p:outputLabel escape="false" value="#{applDocs.mappedFieldAI}"/>
+						</p:tooltip>
+					</p:outputPanel>
+					<br/>
+				</ui:repeat>
+	        </p:column>
+	        <!-- #40112 - end -->
 			
 			<p:column style="width:3% !important; white-space:normal;overflow: hidden !important;" >
 				<div align="center">

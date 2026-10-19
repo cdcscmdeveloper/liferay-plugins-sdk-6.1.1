@@ -224,6 +224,9 @@ public class CodificationManagedBean extends BaseManagedBean {
 		this.extensionSearchItemDataModel = extensionSearchItemDataModel;
 	}
 
+	// #26059 - Start
+	private String cmItemCode;
+	// #26059 - End
 	
 	public void initRefreshPageNoFlag(){
 		
@@ -1648,4 +1651,21 @@ public class CodificationManagedBean extends BaseManagedBean {
 		this.isHideExtension = isHideExtension;
 	}
 	// #31503 -end-
+	
+	// #26059 - Start
+	/**
+	 * @return the cmItemCode
+	 */
+	public String getCmItemCode() {
+		return cmItemCode;
+	}
+
+	/**
+	 * @param cmItemCode
+	 *            the cmItemCode to set
+	 */
+	public void setCmItemCode(String cmItemCode) {
+		this.cmItemCode = cmItemCode;
+	}
+	// #26059 - End
 }

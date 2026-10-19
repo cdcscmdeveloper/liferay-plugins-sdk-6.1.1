@@ -64,7 +64,11 @@
 			process="@this"
 			update="@([id$=itemDescDialogId], [id$=itemDetailPanel])"
 			rendered="#{!isRepeated}" />
-		<!-- #31503 End -->			
+		<!-- #31503 End -->
+		
+		<ui:remove>#26059 - Start</ui:remove>
+		<ui:include src="/xhtml/common/itemDetailsPopup.xhtml" />
+		<ui:remove>#26059 - End</ui:remove>			
 		
 		<ui:fragment rendered="#{isSpecTypeTechnical or isSqSpec or (isSpecTypeFinancial and !isSpecificationReq)}">
 		<c:if test="#{isContentTypeUpdateSpec}">

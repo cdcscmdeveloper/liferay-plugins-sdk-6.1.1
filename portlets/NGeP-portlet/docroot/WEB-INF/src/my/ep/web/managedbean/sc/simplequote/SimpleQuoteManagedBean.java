@@ -451,6 +451,23 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 	private boolean qtyNonEditable = Boolean.FALSE;
 	// #28865 - start
 	
+	// 27868 & 35321 - start
+	private String parameterTypeRPT;
+	private Date createdDate;
+	private boolean dropDownRPTvalue = Boolean.FALSE;
+	private boolean reasonCodeInActive = Boolean.FALSE;
+	private String inActiveReasonDesc = "";
+	private boolean includeBasicSupplier = Boolean.FALSE;
+	private boolean includeMofSupplier = Boolean.FALSE;
+	private boolean includeG2gSupplier = Boolean.FALSE;
+	private boolean newPK7Code = Boolean.FALSE;
+	private ScQuoteSupplier tempScQuoteSupplier = null;
+	private String wipReasonCategory;
+	private Long currentReasonId;
+	private String inactiveJustificationRemark;
+	private SelectItem[] inactiveJustDropdown = null;
+	// 27868 & 35321 - end
+	
 	/**
 	 * Gets the spki backing bean.
 	 * 
@@ -2820,5 +2837,133 @@ public class SimpleQuoteManagedBean extends BaseManagedBean {
 		this.qtyNonEditable = qtyNonEditable;
 	}
 	// #28865 - end
+	
+	// 27868 & 35321 - start
+	/**
+	 * @return the parameterTypeRPT
+	 */
+	public String getParameterTypeRPT() {
+		return parameterTypeRPT;
+	}
+
+	/**
+	 * @param parameterTypeRPT
+	 *            the parameterTypeRPT to set
+	 */
+	public void setParameterTypeRPT(String parameterTypeRPT) {
+		this.parameterTypeRPT = parameterTypeRPT;
+	}
+
+	/**
+	 * @return the createdDate
+	 */
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	/**
+	 * @param createdDate
+	 *            the createdDate to set
+	 */
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public boolean isDropDownRPTvalue() {
+		return dropDownRPTvalue;
+	}
+
+	public void setDropDownRPTvalue(boolean dropDownRPTvalue) {
+		this.dropDownRPTvalue = dropDownRPTvalue;
+	}
+
+	public boolean isReasonCodeInActive() {
+		return reasonCodeInActive;
+	}
+
+	public void setReasonCodeInActive(boolean reasonCodeInActive) {
+		this.reasonCodeInActive = reasonCodeInActive;
+	}
+
+	public String getInActiveReasonDesc() {
+		return inActiveReasonDesc;
+	}
+
+	public void setInActiveReasonDesc(String inActiveReasonDesc) {
+		this.inActiveReasonDesc = inActiveReasonDesc;
+	}
+
+	public boolean isIncludeBasicSupplier() {
+		return includeBasicSupplier;
+	}
+
+	public void setIncludeBasicSupplier(boolean includeBasicSupplier) {
+		this.includeBasicSupplier = includeBasicSupplier;
+	}
+
+	public boolean isIncludeMofSupplier() {
+		return includeMofSupplier;
+	}
+
+	public void setIncludeMofSupplier(boolean includeMofSupplier) {
+		this.includeMofSupplier = includeMofSupplier;
+	}
+
+	public boolean isIncludeG2gSupplier() {
+		return includeG2gSupplier;
+	}
+
+	public void setIncludeG2gSupplier(boolean includeG2gSupplier) {
+		this.includeG2gSupplier = includeG2gSupplier;
+	}
+
+	public boolean isNewPK7Code() {
+		return newPK7Code;
+	}
+
+	public void setNewPK7Code(boolean newPK7Code) {
+		this.newPK7Code = newPK7Code;
+	}
+
+	public ScQuoteSupplier getTempScQuoteSupplier() {
+		return tempScQuoteSupplier;
+	}
+
+	public void setTempScQuoteSupplier(ScQuoteSupplier tempScQuoteSupplier) {
+		this.tempScQuoteSupplier = tempScQuoteSupplier;
+	}
+
+	public String getWipReasonCategory() {
+		return wipReasonCategory;
+	}
+
+	public void setWipReasonCategory(String wipReasonCategory) {
+		this.wipReasonCategory = wipReasonCategory;
+	}
+
+	public Long getCurrentReasonId() {
+		return currentReasonId;
+	}
+
+	public void setCurrentReasonId(Long currentReasonId) {
+		this.currentReasonId = currentReasonId;
+	}
+
+	public String getInactiveJustificationRemark() {
+		return inactiveJustificationRemark;
+	}
+
+	public void setInactiveJustificationRemark(String inactiveJustificationRemark) {
+		this.inactiveJustificationRemark = inactiveJustificationRemark;
+	}
+
+	public SelectItem[] getInactiveJustDropdown() {
+		return inactiveJustDropdown;
+	}
+
+	public void setInactiveJustDropdown(SelectItem[] inactiveJustDropdown) {
+		this.inactiveJustDropdown = inactiveJustDropdown;
+	}
+	// 27868 & 35321 - end
 
 }

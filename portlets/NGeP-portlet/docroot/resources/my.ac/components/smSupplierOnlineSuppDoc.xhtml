@@ -13,9 +13,48 @@
 		<cc:attribute name="smApplSupportDocs" required="true" />
 		<cc:attribute name="mandatory" default="false"/>
 		<cc:attribute name="uploadDialogId" default="false"/>
+		<cc:attribute name="hasAI" default="false"/> <!-- #40112 -->
 	</cc:interface>
 
 	<cc:implementation>
+		<!-- #40112 - start -->
+		<script type="application/javascript">
+			// processAI must wait for every file in the batch: PF 3.5 oncomplete fires per file
+			var aiUpload = {uploaded: false, uploading: false, closeDeferred: false};
+
+			function aiDialogShown(dlg) {
+				aiUpload = {uploaded: false, uploading: false, closeDeferred: false};
+				uploadWV_AI.form.unbind('fileuploadstop.ai').bind('fileuploadstop.ai', function() {
+					aiUpload.uploading = false;
+					if (!aiUpload.closeDeferred) {
+						return;
+					}
+					aiUpload.closeDeferred = false;
+					if (aiUpload.uploaded) {
+						dlg.cfg.behaviors.close.call(dlg);
+					} else {
+						blockAI.hide();
+					}
+				});
+			}
+
+			// false holds the close; the stop handler above fires it again once the batch is in
+			function aiDialogClosing() {
+				if (!aiUpload.uploaded) {
+					if (!aiUpload.uploading) {
+						return false;
+					}
+				}
+				blockAI.show();
+				if (aiUpload.uploading) {
+					aiUpload.closeDeferred = true;
+					return false;
+				}
+				return true;
+			}
+		</script>
+		<!-- #40112 - end -->
+
 		<p:dataTable var="table" id="#{cc.attrs.tableId}" 
 			value="#{cc.attrs.smApplSupportDocs}" rowIndexVar="index" 
 			style="width:100% !important; table-layout: fixed !important;" 
@@ -23,7 +62,7 @@
 			
 			<p:columnGroup type="header">
 				<p:row>
-					<p:column headerText="#{lbl['lbl.sm.mandatory.suppdoc']}" colspan="5" rendered="#{cc.attrs.mandatory}"
+					<p:column headerText="#{lbl['lbl.sm.mandatory.suppdoc']}" colspan="#{cc.attrs.hasAI ? 6 : 5}" rendered="#{cc.attrs.mandatory}"
 						style="background-color:PeachPuff !important;text-align: center !important;color:black !important"/>
 					<p:column headerText="#{lbl['lbl.sm.nonmandatory.suppdoc']}" colspan="5" rendered="#{!cc.attrs.mandatory}"
 						style="background-color:PaleGreen !important;text-align: center !important;color:black !important"/>
@@ -40,6 +79,8 @@
 						style="width : 10%;text-align: center  !important;" />
 					<p:column headerText="#{lbl['lbl.pm.document.name']}"
 						style="width : 20%;overflow: hidden !important;" />
+					<p:column headerText="#{lbl['lbl.sm.ai.btn']}" rendered="#{cc.attrs.hasAI}"
+						style="width : 5%;overflow: hidden !important;" /> <!-- #40112 -->
                 </p:row>
 			</p:columnGroup>
 
@@ -124,14 +165,25 @@
 			</p:column>
 
 			<p:column style="width : 10%;text-align: center  !important;">
+				<!-- #40112 - start -->
 				<p:commandLink oncomplete="#{cc.attrs.uploadDialogId}.show();return false;"
 					process="@this" partialSubmit="true"
-					rendered="#{!table.pmDocument.hardCopyReq}"
+					rendered="#{!table.pmDocument.hardCopyReq
+						and not(cc.attrs.hasAI and backingBean.isAiUploadDocRow(table.pmDocument))}"
 					update="@([id$=#{cc.attrs.uploadDialogId}])"
 					action="#{backingBean.assignSelectedSupportDocIndex(table,index)}">
 					<p:graphicImage value="/css/images/design/upload.png"
 						style="margin-right:2px;" />
 				</p:commandLink>
+				<p:commandLink oncomplete="#{cc.attrs.uploadDialogId}AI.show();return false;"
+					process="@this" partialSubmit="true"
+					rendered="#{cc.attrs.hasAI and backingBean.isAiUploadDocRow(table.pmDocument)}"
+					update="@([id$=#{cc.attrs.uploadDialogId}AI])"
+					action="#{backingBean.assignSelectedSupportDocIndex(table,index)}">
+					<p:graphicImage value="/css/images/ai/upload.png"
+						style="margin-right:2px;" />
+				</p:commandLink>
+				<!-- #40112 - end -->
 			</p:column>
 			
 			<p:column style="width : 20%;overflow: hidden !important;">
@@ -145,8 +197,9 @@
         			</h:commandLink>
 			    	<p:tooltip for="file" value="#{applDocs.fileName}" position="top"/>
 					<p:spacer width="10" />
-					<p:commandLink 
-						rendered="#{fn:length(applDocs.fileName) > 1}"				
+					<!-- #40112 -->
+					<p:commandLink
+						rendered="#{fn:length(applDocs.fileName) > 1 and not backingBean.isAiSuppDocDeleteLocked(table,applDocs)}"
 						action="#{backingBean.onDeleteSupDocFileAttachment(table,index,applDocs)}" update="@form">
 						<p:graphicImage value="/css/images/design/trash.png" />
 					</p:commandLink>
@@ -154,6 +207,31 @@
 				</ui:repeat>
 				<!-- #28807 - End -->
 			</p:column>
+			<!-- #40112 - start -->
+			<p:column style="width : 10%; text-align:center;" rendered="#{cc.attrs.hasAI}">
+				<ui:repeat var="applDocs" value="#{table.smApplDocFiles}">
+					<p:outputPanel rendered="#{applDocs.validatedAI eq 1}">
+						<p:graphicImage id="imgHasAI1" value="/css/images/ai/yes.png" />
+						<p:tooltip for="imgHasAI1" rendered="#{not empty applDocs.mappedFieldAI}">
+							<p:outputLabel escape="false" value="#{smAIDocBackingBean.getSuppDocLabel(applDocs)}"/>
+						</p:tooltip>
+					</p:outputPanel>
+					<p:outputPanel rendered="#{applDocs.validatedAI eq 2}">
+						<p:graphicImage id="imgHasAI2" value="/css/images/ai/no.png" />
+						<p:tooltip for="imgHasAI2" rendered="#{not empty applDocs.mappedFieldAI}">
+							<p:outputLabel escape="false" value="#{smAIDocBackingBean.getSuppDocLabel(applDocs)}"/>
+						</p:tooltip>
+					</p:outputPanel>
+					<p:outputPanel rendered="#{applDocs.validatedAI eq 3}">
+						<p:graphicImage id="imgHasAI3" value="/css/images/ai/warning.png" />
+						<p:tooltip for="imgHasAI3" rendered="#{not empty applDocs.mappedFieldAI}">
+							<p:outputLabel escape="false" value="#{smAIDocBackingBean.getSuppDocLabel(applDocs)}"/>
+						</p:tooltip>
+					</p:outputPanel>
+					<br/>
+				</ui:repeat>
+			</p:column>
+			<!-- #40112 - end -->
 		</p:dataTable>
 		
 		<p:dialog id="#{cc.attrs.uploadDialogId}" widgetVar="#{cc.attrs.uploadDialogId}" modal="true"
@@ -176,6 +254,43 @@
 				showButtons="false"/>
 			<!-- #28807 - End -->
 		</p:dialog>
+		
+		<!-- #40112 - start -->
+		<p:dialog id="#{cc.attrs.uploadDialogId}AI" widgetVar="#{cc.attrs.uploadDialogId}AI" modal="true"
+			rendered="#{cc.attrs.hasAI}"
+			dynamic="true" resizable="true" width="700px" height="300"
+			styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}"
+			onShow="singleUploadListener(uploadWV_AI);aiDialogShown(#{cc.attrs.uploadDialogId}AI);"
+			onHide="uploadWV_AI.buttonBar.find('input[type=file]').get(0).disabled=false;">
+			
+			<h:outputText value="#{lbl['lbl.sm.ai.upload.guideline']}" styleClass="instruction" escape="false"/>
+			<p:spacer width="10" />
+			<p:fileUpload widgetVar="uploadWV_AI" 
+				allowTypes="/(\.|\/)(pdf|json)$/"
+				sizeLimit="#{SupplierManagementConst.SM_SUPPORTDOCS_FILE_SIZE_LIMIT}"
+				invalidFileMessage="#{lbl['lbl.txt.upload.pdf.file']}"
+				invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed20Mb']}"
+				fileUploadListener="#{backingBean.handleSupDocFileAttachment}"
+				update="#{cc.attrs.tableId}"
+				uploadLabel="#{lbl['lbl.btn.upload']}"  
+				label="#{lbl['lbl.btn.addfile']}" 
+				cancelLabel="#{lbl['lbl.btn.cancel']}"
+				multiple="true"
+				onstart="aiUpload.uploading=true;" oncomplete="aiUpload.uploaded=true;"
+				showButtons="false"/>
+			<p:spacer width="10" />
+			<p:graphicImage value="/css/images/ai/icon.png"/> #{lbl['lbl.sm.ai.reminder']}
+			<p:ajax event="close" listener="#{backingBean.processAI()}" update="#{cc.attrs.tableId}" 
+				onstart="return aiDialogClosing();" oncomplete="blockAI.hide()"/>
+		</p:dialog>
+		<p:blockUI block=":form" widgetVar="blockAI" rendered="#{cc.attrs.hasAI}">
+			<p:outputPanel style="display: flex; flex-direction: column;align-items: center;">
+				<p:outputLabel value="#{lbl['lbl.sm.ai.load']}..."/>
+				<p:spacer width="10" />
+				<p:graphicImage value="/css/images/ai/load.gif"/>
+			</p:outputPanel>
+		</p:blockUI>
+		<!-- #40112 - end -->
 
 		<!-- harris -->
 		<p:confirmDialog id="confirmDeleteSupDocDialog" closable="true"

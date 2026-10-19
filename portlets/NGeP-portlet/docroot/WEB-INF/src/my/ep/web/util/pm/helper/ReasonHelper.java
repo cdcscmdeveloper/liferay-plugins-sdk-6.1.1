@@ -127,6 +127,65 @@ public class ReasonHelper implements Serializable {
 		return list;
 	}
 
+	// 27868 - start
+	/**
+	 * Retrieves reason descriptions by category, language, and organization profile.
+	 *
+	 * @param orgProfileId the organization profile ID
+	 * @param categoryCode the reason category code
+	 * @return a list of reason descriptions
+	 * @throws EpException if an error occurs while retrieving the reason descriptions
+	 */
+	public List<PmReasonDesc> getReasonDescList(Long orgProfileId, String categoryCode) {
+		debugLogger("getReasonDescList.categoryCode: " + categoryCode);
+
+		String languageCode = new FacesScopes().getUserLocale().getLanguage();
+		String key = new StringBuilder().append(categoryCode).append(KEY_SEPARATOR).append(languageCode).toString();
+
+		debugLogger("key: " + key);
+
+		List<PmReasonDesc> list = null;
+
+		debugLogger("list: " + list);
+		IReasonSO reasonSO;
+
+		try {
+			reasonSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IReasonSO.class);
+
+			ReasonReqDTO reqDTO = new ReasonReqDTO();
+			reqDTO.setReasonCategory(categoryCode);
+			reqDTO.setLanguage(languageCode);
+			reqDTO.setOrgProfileId(orgProfileId);
+
+			// Get reason description list from db.
+			ReasonResDTO resDTO = reasonSO.retrieveReasonDescriptionListByCategory(reqDTO);
+
+			list = resDTO.getReasonDescList();
+
+			String reasonKey;
+			Long categoryId = null;
+			for (PmReasonDesc pmReasonDesc : list) {
+				if (categoryId == null) {
+					categoryId = pmReasonDesc.getPmReason().getReasonCategoryCode().getParameterId();
+				}
+				PmReason reason = pmReasonDesc.getPmReason();
+
+				reasonKey = getReasonDescKey(categoryId, reason.getReasonCode(), languageCode);
+			}
+			debugLogger("put into list: " + list);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		} finally {
+			reasonSO = null;
+		}
+
+		return list;
+	}
+
+	// 27868 - end
+	
 	/**
 	 * Get reason description by reason category and code.
 	 * 

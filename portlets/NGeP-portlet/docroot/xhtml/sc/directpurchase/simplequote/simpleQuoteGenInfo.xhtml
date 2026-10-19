@@ -129,9 +129,11 @@
 										process="@this" />
 								</p:selectOneRadio></td>
 
+							<ui:remove> 27868 - start</ui:remove>
 							<td style="padding-bottom: 10px; padding-left: 0px;"><p:message
 									id="procTypeMsg" for="procurementType" display="icon" /> <ac:iconTooltip
-									value="#{simpleQuoteBackingBean.procurementTypeToolTip}" /></td>
+									value="#{simpleQuoteBackingBean.getProcurementTypeToolTip(simpleQuoteBackingBean.managedBean.createdDate)}" /></td>
+							<ui:remove> 27868 - end</ui:remove>
 						</tr>
 					</table>
 				</td>
@@ -140,13 +142,36 @@
 				<td colspan="4"><p:outputPanel id="justId">
 						<table style="width: 100%">
 							<tr>
+							<ui:remove> 27868 - start</ui:remove>	
 								<ui:fragment
-									rendered="#{simpleQuoteBackingBean.managedBean.procTypeOption}">
+									rendered="#{simpleQuoteBackingBean.managedBean.procTypeOption and simpleQuoteBackingBean.managedBean.parameterTypeRPT == 'RPT'}">
+									<td style="width: 23%"><p:outputLabel
+											value="#{lbl['lbl.sc.reason']}" /> <p:outputLabel value="*"
+											styleClass="mandatory" /></td>
+									<td style="width: 85%">
+									<p:selectOneMenu
+											style="width: 240px;margin-bottom: 5px;" id="justificationIdRPT"
+											panelStyle="overflow-y: scroll; width:400px; height:200px;"
+											label="#{lbl['lbl.sc.reason']}"
+											required="#{(simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A' or simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'P' or simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'S') and param['submitBtnPressed']=='1'}"
+											disabled="#{!isEditable}"
+											value="#{simpleQuoteBackingBean.managedBean.scQuote.justificationType.reasonCode}"
+											requiredMessage="#{simpleQuoteBackingBean.getReasonRequiredMessage()}">
+											<f:selectItems
+												value="#{simpleQuoteBackingBean.managedBean.justDropdown}" />
+											<p:ajax event="change" listener="#{simpleQuoteBackingBean.onJustificationChange}" update="justId" process="@this" />
+										</p:selectOneMenu> 
+										
+										<p:message id="justTypeMsgRPT" for="justificationIdRPT"
+											display="icon" /></td>
+								</ui:fragment>
+								<ui:fragment
+									rendered="#{simpleQuoteBackingBean.managedBean.procTypeOption and simpleQuoteBackingBean.managedBean.parameterTypeRPT == 'PRT'}">
 									<td style="width: 23%"><p:outputLabel
 											value="#{lbl['lbl.sc.reason']}" /> <p:outputLabel value="*"
 											styleClass="mandatory" /></td>
 									<td style="width: 85%"><p:selectOneMenu
-											style="width: 240px;margin-bottom: 5px;" id="justificationId"
+											style="width: 240px;margin-bottom: 5px;" id="justificationIdPRT"
 											panelStyle="overflow-y: scroll; width:400px; height:200px;"
 											label="#{lbl['lbl.sc.reason']}"
 											required="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A' and param['submitBtnPressed']=='1'}"
@@ -154,31 +179,52 @@
 											value="#{simpleQuoteBackingBean.managedBean.scQuote.justificationType.reasonCode}">
 											<f:selectItems
 												value="#{simpleQuoteBackingBean.managedBean.justDropdown}" />
-											<p:ajax event="change" update="justId" process="@this" />
-										</p:selectOneMenu> <p:message id="justTypeMsg" for="justificationId"
+											<p:ajax event="change" listener="#{simpleQuoteBackingBean.onJustificationChange}"  update="justId" process="@this" />
+										</p:selectOneMenu> <p:message id="justTypeMsgPRT" for="justificationIdPRT"
 											display="icon" /></td>
 								</ui:fragment>
+							<ui:remove>27868 - end</ui:remove>		
 							</tr>
 							<tr>
+							<ui:remove> 27868 - start</ui:remove> 
 								<ui:fragment
-									rendered="#{simpleQuoteBackingBean.managedBean.procTypeOption}">
+									rendered="#{simpleQuoteBackingBean.managedBean.procTypeOption and simpleQuoteBackingBean.managedBean.parameterTypeRPT == 'RPT'}">
+									<td style="vertical-align: top; text-align: left;"><p:outputLabel
+											value="#{lbl['lbl.sc.justification']}" /> <p:outputLabel
+											value="*" styleClass="mandatory" /></td>
+									<td colspan="4">
+										<p:inputTextarea
+												value="#{simpleQuoteBackingBean.managedBean.scQuote.justificationRemark}"
+												id="justificationRmkRPT" label="#{lbl['lbl.sc.justification']}"
+												maxlength="100" disabled="#{!isEditable}"
+												required="#{(simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A' or simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'P' or simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'S') and param['submitBtnPressed']=='1'}"
+												rows="3" cols="58" style="margin-bottom: 5px; width: 230px;"
+												requiredMessage="#{simpleQuoteBackingBean.getJustificationRequiredMessage()}">
+												<f:ajax></f:ajax>
+	
+										</p:inputTextarea> 
+									<p:message id="justRmksMsgRPT" for="justificationRmkRPT"
+											display="icon" /></td>
+								</ui:fragment>
+								<ui:fragment
+									rendered="#{simpleQuoteBackingBean.managedBean.procTypeOption and simpleQuoteBackingBean.managedBean.parameterTypeRPT == 'PRT'}">
 									<td style="vertical-align: top; text-align: left;"><p:outputLabel
 											value="#{lbl['lbl.sc.justification']}" /> <p:outputLabel
 											value="*" styleClass="mandatory" /></td>
 									<td colspan="4"><p:inputTextarea
 											value="#{simpleQuoteBackingBean.managedBean.scQuote.justificationRemark}"
-											id="justificationRmk" label="#{lbl['lbl.sc.justification']}"
+											id="justificationRmkPRT" label="#{lbl['lbl.sc.justification']}"
 											maxlength="100" disabled="#{!isEditable}"
 											required="#{(simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A' or simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'P') and param['submitBtnPressed']=='1'}"
-											rows="3" cols="58" style="margin-bottom: 5px; width: 230px;" 
+											rows="3" cols="58" style="margin-bottom: 5px; width: 230px;"
 											onkeyup="limitTextArea(this,100);" 
 											onkeydown="limitTextArea(this,100);" 
-											onmouseout="limitTextArea(this,100);"> <ui:remove>38910</ui:remove>
+											onmouseout="limitTextArea(this,100);"> <ui:remove>38910</ui:remove> 
 											<f:ajax></f:ajax>
-											</p:inputTextarea>
-										<p:message id="justRmksMsg" for="justificationRmk"
+										</p:inputTextarea> <p:message id="justRmksMsgPRT" for="justificationRmkPRT"
 											display="icon" /></td>
 								</ui:fragment>
+								<ui:remove> 27868 - end</ui:remove>
 							</tr>
 						</table>
 					</p:outputPanel></td>

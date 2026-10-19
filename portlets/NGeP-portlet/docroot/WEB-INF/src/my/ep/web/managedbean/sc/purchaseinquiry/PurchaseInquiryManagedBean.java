@@ -4,6 +4,7 @@
 package my.ep.web.managedbean.sc.purchaseinquiry;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -146,10 +147,23 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
  	
  	/** The disabled remark. */
 	 private boolean disabledRemark;
+	 
+	// 27868 & 35321 - start
+	private Date createdDate;
+	// 27868 & 35321 - end
     
     /** The spki backing bean. */
     @ManagedProperty(value="#{spkiBackingBean}")
     private SpkiBackingBean spkiBackingBean;
+    
+    //27868 - start
+    private String parameterTypeRPT;
+    private String supplierAccountTypeErrorMessage;
+    private boolean dropDownRPTvalue = Boolean.FALSE;
+    private boolean reasonCodeInActive= Boolean.FALSE;
+    private String inActiveReasonDesc = "";
+    private boolean newPK7Code = Boolean.FALSE;
+    //27868 - end
     
     /**
      * Gets the spki backing bean.
@@ -767,4 +781,80 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	public void setDisProcTyp(boolean disProcTyp) {
 		this.disProcTyp = disProcTyp;
 	}
+	// 27868 & 35321 - start
+	/**
+	 * @return the parameterTypeRPT
+	 */
+	public String getParameterTypeRPT() {
+		return parameterTypeRPT;
+	}
+
+	/**
+	 * @param parameterTypeRPT the parameterTypeRPT to set
+	 */
+	public void setParameterTypeRPT(String parameterTypeRPT) {
+		this.parameterTypeRPT = parameterTypeRPT;
+	}
+
+	/**
+	 * @return the createdDate
+	 */
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	/**
+	 * @param createdDate
+	 *            the createdDate to set
+	 */
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public boolean isDropDownRPTvalue() {
+		return dropDownRPTvalue;
+	}
+
+	public void setDropDownRPTvalue(boolean dropDownRPTvalue) {
+		this.dropDownRPTvalue = dropDownRPTvalue;
+	}
+	
+	public boolean isReasonCodeInActive() {
+		return reasonCodeInActive;
+	}
+
+	public void setReasonCodeInActive(boolean reasonCodeInActive) {
+		this.reasonCodeInActive = reasonCodeInActive;
+	}
+	
+	public String getInActiveReasonDesc() {
+		return inActiveReasonDesc;
+	}
+
+	public void setInActiveReasonDesc(String inActiveReasonDesc) {
+		this.inActiveReasonDesc = inActiveReasonDesc;
+	}
+	
+	public boolean isNewPK7Code() {
+		return newPK7Code;
+	}
+
+	public void setNewPK7Code(boolean newPK7Code) {
+		this.newPK7Code = newPK7Code;
+	}
+	
+	/**
+	 * @return the supplierAccountTypeErrorMessage
+	 */
+	public String getSupplierAccountTypeErrorMessage() {
+		return supplierAccountTypeErrorMessage;
+	}
+
+	/**
+	 * @param supplierAccountTypeErrorMessage the supplierAccountTypeErrorMessage to set
+	 */
+	public void setSupplierAccountTypeErrorMessage(String supplierAccountTypeErrorMessage) {
+		this.supplierAccountTypeErrorMessage = supplierAccountTypeErrorMessage;
+	}
+	// 27868 & 35321 - end
 }

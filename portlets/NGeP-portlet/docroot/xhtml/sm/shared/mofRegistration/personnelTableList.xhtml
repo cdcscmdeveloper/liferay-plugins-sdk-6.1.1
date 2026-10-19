@@ -38,6 +38,10 @@
 				or person.softcertFlg eq 3 or backingBean.managedBean.disAllowOwnerEdit or person.ssmData or backingBean.managedBean.upsCannotEdit }"
 				>
 				<h:outputText value="#{person.name}" />
+				<!-- #40112 -->
+				<p:outputPanel layout="inline" rendered="#{person.nameFromAI or person.icFromAI or person.epfNoFromAI}">
+					<p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" />
+				</p:outputPanel>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.person.composition.idenNum']}"

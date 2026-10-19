@@ -334,6 +334,7 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	/*#29007 End Vinod*/
 	
 	private SmSupplier tempSmSupplier;	// Bug #40022@Syazani -- 16/02/2026
+	private boolean isSaveTemplate = true;	// Bug #40798@Syazani 21/09/2026
 
 	// #25726 START 
 	private BigDecimal limit = new BigDecimal(500000);
@@ -347,6 +348,9 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	//#11134/#41092 -start-
 	private List<ScLoaRemark> supplierRemarks;
 	//#11134/#41092 -end-	
+	// #29766 Start Vinod
+	private String alertForInactivePK7;
+	// #29766 End Vinod
 
 	/**
 	 * Gets the spki backing bean.
@@ -2095,4 +2099,25 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 	// #11134/#41092 -end-
 
+	// #29766 Start Vinod
+	public String getAlertForInactivePK7() {
+		return alertForInactivePK7;
+	}
+
+	public void setAlertForInactivePK7(String alertForInactivePK7) {
+		this.alertForInactivePK7 = alertForInactivePK7;
+	}
+	
+	// #29766 End Vinod
+
+	
+	// Bug #40798@Syazani 21/09/2026 -- Start
+	public boolean isSaveTemplate() {
+		return isSaveTemplate;
+	}
+
+	public void setSaveTemplate(boolean isSaveTemplate) {
+		this.isSaveTemplate = isSaveTemplate;
+	}
+	// Bug #40798@Syazani 21/09/2026 -- End
 }

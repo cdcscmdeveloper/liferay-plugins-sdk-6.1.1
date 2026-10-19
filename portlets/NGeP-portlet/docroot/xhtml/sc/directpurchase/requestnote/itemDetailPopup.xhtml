@@ -26,9 +26,19 @@
 				value="#{requestNoteDtl.requestItem.uom.uomCode}" />
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
 				<tr>
+					<ui:remove>#26059 - Start</ui:remove>
 					<td><p:outputLabel value="#{lbl['lbl.sc.product.code']}" /></td>
-					<td><p:inputText disabled="true" size="54"
-							value="#{requestNoteDtl.requestItem.cmItem.extensionCode}" /></td>
+					<td><p:inputText disabled="true" size="54" rendered="#{requestNoteDtl.requestItem.cmItem.extensionCode eq null}"
+							value="#{requestNoteDtl.requestItem.cmItem.extensionCode}" /> 
+							<p:outputPanel
+							id="commandLinkOutPanel" rendered="#{requestNoteDtl.requestItem.cmItem.extensionCode ne null}">
+							<p:commandLink oncomplete="itemDescDialogId.show();"
+								value="#{requestNoteDtl.requestItem.cmItem.extensionCode}"
+								style="color: #009ae5; font-size:12px; font-style:italic"
+								action="#{lOADetailBackingBean.showItemDescPopup(requestNoteDtl.requestItem)}"
+								process="@this" update="@([id$=itemDescDialogId])" />
+						</p:outputPanel></td>
+					<ui:remove>#26059 - End</ui:remove>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.item.name']}" /></td>
@@ -160,6 +170,10 @@
 					<!-- #25725 - End -->
 				</tr>
 			</table>
+			
+			<ui:remove>#26059 - Start</ui:remove>
+			<ui:include src="/xhtml/common/itemDetailsPopup.xhtml" />
+			<ui:remove>#26059 - End</ui:remove>
 
 			<div class="ppRightBtn BtnSpacing">
 				<p:commandButton id="okBtn"

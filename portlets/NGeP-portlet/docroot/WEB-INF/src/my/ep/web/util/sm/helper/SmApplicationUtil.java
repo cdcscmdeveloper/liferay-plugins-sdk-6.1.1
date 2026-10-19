@@ -147,6 +147,7 @@ import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.common.PmZone;
+import my.ep.persistence.entity.pm.common.PmAppVersion;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplDocFile;
@@ -5218,7 +5219,14 @@ public class SmApplicationUtil {
 								.getSmAppl().getSmPersonnels(), "pmUser");
 			}
 			//#26238
-			validateBeforeProceedDA(suppAdmin, applicationType);
+			List<SmDisciplinaryAction> smDA = null;
+			if (smSupplier != null
+			        && smSupplier.getSmAppl() != null
+			        && smSupplier.getSmAppl().getSmSupplier() != null) {
+			    smDA = smSupplier.getSmAppl().getSmSupplier().getSmDisciplinaryActions();
+			}
+
+			validateBeforeProceedDA(smDA, suppAdmin, applicationType);
 			validateBumiDA(smSupplier, applicationType);
 			
 			if (smSupplier.getSmAppl() != null
@@ -5339,15 +5347,16 @@ public class SmApplicationUtil {
 	}
 	
 	//#26238 - start
-	private static void validateBeforeProceedDA(SmPersonnel suppAdmin, String applType){
+	private static void validateBeforeProceedDA(List<SmDisciplinaryAction> smDA, SmPersonnel suppAdmin, String applType){
 		if(suppAdmin == null){
 			return;
 		}
 		boolean types = applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
 				|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
 				|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW);
-		boolean cancelAdmin = suppAdmin.isSuspendRegistration() 
-				|| suppAdmin.isCancelRegistration() || suppAdmin.isBlacklisted();
+		boolean cancelAdmin = (suppAdmin.isSuspendRegistration() 
+				|| suppAdmin.isCancelRegistration()
+				|| suppAdmin.isBlacklisted()) && hasCannotLoginDA(smDA);
 		if(types && cancelAdmin){
 			throw new EpException(SmCommonUtil.getMessage(
 					"lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action", null));
@@ -15708,7 +15717,10 @@ public class SmApplicationUtil {
 			return false;
 		}
 		for(SmDisciplinaryAction da : daList){
-			if(da.isSuspendRegistration() || da.isBlacklistOwner() || da.isCancelRegistration()){
+			if ((da.isSuspendRegistration() || da.isBlacklistOwner() || da
+					.isCancelRegistration())
+					&& da.getRecordStatusFlg().equals(
+							DbValueConst.RECORD_STATUS_ACTIVE)) {
 				return true;
 			}
 		}
@@ -16323,4 +16335,16 @@ public class SmApplicationUtil {
 		return null;
 	}
 	// 36504 - END
+
+	// #9299 - Start
+	public static boolean getAppVersionDetailsWithRedmineNo(SmAppl smAppl, Long redmineNo, int phase) {
+		PmAppVersion appVerDtls = SmServiceLookup.getMofRegistrationSO().getAppVersionDetails(redmineNo, ParameterConst.DOCTYPE_SUPPLIER_MANAGEMENT,
+				phase);
+		if (smAppl.getCreatedDate().before(appVerDtls.getEffDate())) {
+			return true;
+		}
+
+		return false;
+	}
+	// #9299 - End
 }

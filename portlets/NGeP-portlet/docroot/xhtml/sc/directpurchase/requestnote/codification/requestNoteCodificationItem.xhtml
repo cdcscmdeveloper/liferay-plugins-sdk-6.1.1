@@ -21,11 +21,19 @@
 		<c:if test="#{requestNoteBackingBean.managedBean.selectedPrDtls == null}">
 			<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sc.rn.supplier.instruction']}" /><br></br>
+			<ui:remove>#26059 - Start</ui:remove>
 			<h:outputText styleClass="instruction"
-				value="#{lbl['lbl.sc.item.codification.instruction']}" />
+				value="#{lbl['lbl.sc.qt.assign.item.code.instruction']}" /><br></br>
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.rn.supplier.instruction.pending.assign.item.code']}" />
+			<ui:remove>#26059 - Start</ui:remove>
 		</c:if>
 			
 		<ac:lovPopup />
+		
+		<ui:remove>#26059 - Start</ui:remove>
+		<ui:include src="/xhtml/common/itemDetailsPopup.xhtml" />
+		<ui:remove>#26059 - End</ui:remove>
 
 		<h:panelGrid width="100%" id="itemDtlId">
 			<p:dataTable id="requestListDataTable" var="requestNoteDtl"
@@ -41,12 +49,22 @@
 					<p:spacer width="2px;" />
 				</p:column>
 
+				<ui:remove>#26059 - Start</ui:remove>
 				<p:column headerText="#{lbl['lbl.sc.product.code']}"
 					style="white-space: normal;">
-					<h:outputText
+					
+					<p:commandLink rendered="#{requestNoteBackingBean.checkExtensionCode(requestNoteDtl)}"
+					oncomplete="itemDescDialogId.show();"
+					value="#{requestNoteDtl.requestItem.cmItem.extensionCode}"
+					style="color: #009ae5; font-size:12px;font-style:italic"
+					action="#{lOADetailBackingBean.showItemDescPopup(requestNoteDtl.requestItem)}"
+					process="@this" update="@([id$=itemDescDialogId], [id$=itemDetailPanel])" />
+					
+					<h:outputText rendered="#{!requestNoteBackingBean.checkExtensionCode(requestNoteDtl)}"
 							value="#{requestNoteDtl.requestItem.cmItem.extensionCode}" />
 					<p:spacer width="2px;" />
 				</p:column>
+				<ui:remove>#26059 - End</ui:remove>
 				
 				<p:column headerText="#{lbl['lbl.sc.uom']}"
 					style="white-space: normal;">
@@ -83,11 +101,14 @@
 					<p:spacer width="2px;" />
 				</p:column>
 				
+				<ui:remove>#26059 - Start</ui:remove>
 				<p:column headerText="#{lbl['lbl.sc.action']}"
 					style="white-space: normal;">
-					<p:commandButton value="#{lbl['lbl.btn.assign']}" disabled="#{readOnlyTask}"
+					<p:commandButton value="#{lbl['lbl.btn.assign']}" 
+					disabled="#{requestNoteBackingBean.validateAssignButton(readOnlyTask,requestNoteDtl)}"
 					action="#{requestNoteBackingBean.assignProductCode(requestNoteDtl)}"/>
 				</p:column>
+				<ui:remove>#26059 - End</ui:remove>
 			</p:dataTable>
 		</h:panelGrid>
 	</p:panel>

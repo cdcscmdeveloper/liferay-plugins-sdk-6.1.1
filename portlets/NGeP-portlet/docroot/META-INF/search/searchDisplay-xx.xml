@@ -2052,6 +2052,31 @@
 			</list>
 		</property>
 	</bean>
+	<!--#26059 -start  -->
+	<bean id="DP_ORG_PROFILE_PTJ_GROUP" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="orgProfileId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.authorization.orgprofile.OrgProfileDAO" />
+		<property name="searchMethod" value="retrieveOrgProfilePTJGroup" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.orgCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.org.ptj.kumpulan.code" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmOrgValidity.orgName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.org.ptj.kumpulan.name" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<!--#26059 -end  -->
 	<bean id="V_PM_LOCATION" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="rowNum" />
 		<property name="daoClass"

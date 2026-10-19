@@ -19,6 +19,7 @@
 	
 	<ui:decorate template="/WEB-INF/facelets/templates/claim_template.xhtml">
 		<ui:define name="outComeSection">
+			<ui:remove>#26059 - Start</ui:remove>
 			<h:panelGroup rendered="#{!isViewOnly}">
 				<div>
 					<div class="ppRightBtn">
@@ -34,14 +35,38 @@
 							<ui:param name="isCancel" value="${bpmAction == 'CANCEL'}" />
 
 							<p:commandButton value="#{lbl[buttonLabel]}" partialSubmit="true"
-								onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
-								process="#{isCancel ? '@this,  @([id$= remark])' : '@form'}"
-								update="#{isCancel ? '@this,  @([id$= remark])' : '@form'}"
-								actionListener="#{requestNoteBackingBean.submitCodificationAction(bpmAction)}" />
+								process="#{isCancel ? '@this, @([id$= remark])' : '@form'}"
+								update="@([id$=assignCodeDialogConfirm])"
+								onstart="blockWidget.show();"
+								oncomplete="blockWidget.hide(); assignCodeDialogConfirm.show();">
+
+								<f:setPropertyActionListener value="#{bpmAction}"
+									target="#{requestNoteBackingBean.managedBean.selectedBpmAction}" />
+							</p:commandButton>
 						</ui:repeat>
 					</div>
 				</div>
 			</h:panelGroup>
+			<p:dialog id="assignCodeDialogConfirm"
+				widgetVar="assignCodeDialogConfirm"
+				header="#{lbl['lbl.sc.confirmation']}" modal="true" closable="true">
+
+				<h:panelGroup style="display:block; margin-bottom:15px;">
+					<h:outputText value="#{lbl['lbl.sc.assign.code.confirmation.box']}" />
+				</h:panelGroup>
+
+				<div align="right">
+					<p:commandButton value="#{lbl['lbl.btn.yes']}"
+						onclick="assignCodeDialogConfirm.hide();"
+						action="#{requestNoteBackingBean.submitCodificationAction(requestNoteBackingBean.managedBean.selectedBpmAction)}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						update="#{requestNoteBackingBean.managedBean.selectedBpmAction == 'CANCEL' ? '@this,  @([id$= remark])' : '@form'}" 
+						process="#{requestNoteBackingBean.managedBean.selectedBpmAction == 'CANCEL' ? '@this, @([id$= remark])' : '@form'}" />
+					<p:commandButton value="#{lbl['lbl.btn.no']}"
+						onclick="assignCodeDialogConfirm.hide();" update="@form" />
+				</div>
+			</p:dialog>
+			<ui:remove>#26059 - End</ui:remove>
 		</ui:define>
 	</ui:decorate>
 </ui:composition>

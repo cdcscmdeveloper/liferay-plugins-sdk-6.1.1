@@ -61,6 +61,9 @@ a:hover.blue_font {
 	<ui:param name="StatusLOARevisionApproval"
 		value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_REVISION_APPROVAL}"></ui:param>
 	<!-- #25725/25726 end -->
+	<ui:remove>27868 - start</ui:remove>
+	<ui:param name="isProcurementTypeSpecialItem" value="#{lOADetailBackingBean.managedBean.scLoa.procurementType.parameterCode eq ParameterConst.procTypeSpecialItem}"></ui:param>
+	<ui:remove>27868 - end</ui:remove>
 
 
 	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}" toggleable="true">
@@ -284,25 +287,49 @@ a:hover.blue_font {
 						value="#{lOADetailBackingBean.getParameterDesc(lOADetailBackingBean.managedBean.scLoa.procurementMode)}"
 						size="35" disabled="true" />
 				</td>
-				<td>
-					<p:outputLabel value="#{lbl['lbl.sc.qttentype']}" rendered="#{isDocTypeQuotation}" />
+				<ui:remove> #27868 start </ui:remove>
+				<ui:fragment rendered="#{isDocTypeQuotation}">
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sc.qttentype']}" rendered="#{isDocTypeQuotation}" />
+					</td>
+					<td>
+						<p:inputText id="qtTypeTxt"
+							value="#{lOADetailBackingBean.getParameterDesc(lOADetailBackingBean.managedBean.scLoa.qtType)}"
+							size="28" disabled="true"
+							rendered="#{isDocTypeQuotation}" />
+					</td>
+				</ui:fragment>
+				<td style="width: 155px;">
+					<p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" rendered="#{isDocTypePurchaseRequest}" />
 				</td>
 				<td>
-					<p:inputText id="qtTypeTxt"
-						value="#{lOADetailBackingBean.getParameterDesc(lOADetailBackingBean.managedBean.scLoa.qtType)}"
-						size="28" disabled="true"
-						rendered="#{isDocTypeQuotation}" />
+					<p:inputText id="procTypeTxt"
+						value="#{lOADetailBackingBean.getParameterDesc(lOADetailBackingBean.managedBean.scLoa.procurementType)}"
+						size="35" disabled="true"
+						rendered="#{isDocTypePurchaseRequest}" />
 				</td>
+				<ui:remove> #27868 end </ui:remove>
 			</tr>
 
 			<tr>
 				<td width="21%">
 					<p:outputLabel value="#{lbl['lbl.sc.procurment.type.category']}" />
 				</td>
-				<td colspan="3"><p:inputText id="procurmentTypeCatId"
+				<ui:remove> #27868 start </ui:remove>
+				<td><p:inputText id="procurmentTypeCatId"
 						value="#{lOADetailBackingBean.getParameterDesc(lOADetailBackingBean.managedBean.scLoa.procurementTypeCatId)}"
 						size="35" label="#{lbl['lbl.sc.procurment.type.category']}"
 						disabled="true" /></td>
+				<td style="width: 155px;">
+					<p:outputLabel value="#{lbl['lbl.sc.reason']}" rendered="#{isDocTypePurchaseRequest and not empty lOADetailBackingBean.getReasonDescPurchaseRequest()}" />
+				</td>
+				<td>
+					<p:inputText id="reasonTxt"
+						value="#{lOADetailBackingBean.getReasonDescPurchaseRequest()}"
+						size="35" disabled="true"
+						rendered="#{isDocTypePurchaseRequest and not empty lOADetailBackingBean.getReasonDescPurchaseRequest()}" />
+				</td>
+				<ui:remove> #27868 end </ui:remove>
 			</tr>
 			<tr>
 			 <td>
@@ -583,13 +610,28 @@ a:hover.blue_font {
 							/>
 							<ui:remove> #19336 - end </ui:remove>
 						&#160;
-						<p:commandLink id="ptjSearchCL" partialSubmit="true"
-							disabled="#{lOADetailBackingBean.managedBean.selectedOrgType.parameterId==null}"
-							process="@this" update=":form:orgProfileCcId:ptjPopup"
-							action="#{organisationSearchBackingBean.initPtjPopupDefaultMinistry(lOADetailBackingBean.managedBean.ministryOrgProfile.orgProfileId)}"
-							oncomplete="ptjPopup.show();" >
-							<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
-						</p:commandLink>
+						<ui:remove>27868 - start</ui:remove>
+							<c:choose>
+								<c:when test="#{isProcurementTypeSpecialItem}">
+									<p:commandLink id="ptjSearchCL" partialSubmit="true"
+										disabled="#{lOADetailBackingBean.managedBean.selectedOrgType.parameterId==null}"
+										process="@this" update=":form:orgProfileCcId:ptjPopup"
+										action="#{organisationSearchBackingBean.initPtjPopupDefaultSpecialItem(lOADetailBackingBean.managedBean.ministryOrgProfile.orgProfileId, lOADetailBackingBean.managedBean.ptjIds)}"
+										oncomplete="ptjPopup.show();">
+										<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
+									</p:commandLink>
+								</c:when>
+								<c:otherwise>
+									<p:commandLink id="ptjSearchCL" partialSubmit="true"
+										disabled="#{lOADetailBackingBean.managedBean.selectedOrgType.parameterId==null}"
+										process="@this" update=":form:orgProfileCcId:ptjPopup"
+										action="#{organisationSearchBackingBean.initPtjPopupDefaultMinistry(lOADetailBackingBean.managedBean.ministryOrgProfile.orgProfileId)}"
+										oncomplete="ptjPopup.show();">
+										<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
+									</p:commandLink>
+								</c:otherwise>
+							</c:choose>
+						<ui:remove>27868 - end</ui:remove>
 					</p:outputPanel>
 
 					<h:panelGroup rendered="#{lOADetailBackingBean.managedBean.selectedOrgType.parameterCode eq ParameterConst.orgTypePtj
@@ -597,7 +639,7 @@ a:hover.blue_font {
 						<ac:ptjPopup 
 							id="orgProfileCcId"
 							orgTypeParamCode="#{lOADetailBackingBean.managedBean.selectedOrgType.parameterCode}"
-							okAction="lOADetailBackingBean.userListener" update=":form:opPtjOrgCode,:form:itSelectedPtj"/><!-- #26475 -->
+							okAction="lOADetailBackingBean.userListener" isProcurementTypeSpecialItem="#{isProcurementTypeSpecialItem}" update=":form:opPtjOrgCode,:form:itSelectedPtj"/><!-- :form:contAdminId --> <!-- #26475 --><ui:remove>27868</ui:remove>
 					</h:panelGroup>
 				</c:if>
 				<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.agency.tooltip']}" />

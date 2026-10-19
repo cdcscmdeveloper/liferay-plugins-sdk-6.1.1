@@ -12,6 +12,11 @@
     <meta http-equiv='expires' content='0'/>
     <meta http-equiv='pragma' content='no-cache'/>
     <!-- End Fix #34110 -->
+    <!-- Start Fix - #31341-->
+    <p:blockUI block=":form" widgetVar="itemLoadBlock">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+	<!-- End Fix - #31341-->
 	<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.items.spec.guideline']}" escape="false"  /> 
 	<p:commandLink value="#{lbl['lbl.ct.instruction.items.spec.click.here']}" ajax="false" 
 		style="font-style:italic" process="@this"
@@ -127,7 +132,16 @@
        		 		<p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.specification']}"/>
 			 	</p:commandLink>
 				<br />
-			    <h:outputText id="extensionCodeID" value="#{ctItemVar.scRequestItem.cmItem.extensionCode}" size="50" escape="false"  style="float:left; text-align:left; display:block;width:200px"/>
+			    <!-- Start Fix - #31341-->
+			    <p:commandLink id="extensionCodeID"
+			    			value="#{ctItemVar.scRequestItem.cmItem.extensionCode}" styleClass="blue_font"
+							style="color:#009ae5 !important;"
+							action="#{amendmentBackingBean.viewItemUnspscDetails(ctItemVar.scRequestItem)}"
+							update=":form:itemDescDialogId"
+							onstart="itemLoadBlock.show()"
+							oncomplete="itemLoadBlock.hide(); itemDescDialogId.show();">
+				</p:commandLink>
+				<!-- End Fix - #31341-->
 			    <br /> 	
 			  	<h:outputText id="skuID" value="#{ctItemVar.sku == null ? lbl['lbl.txt.na'] : ctItemVar.sku }" size="50" escape="false"  style="float:left; text-align:left; display:block;width:200px"/> 				
 	      	</p:column>	
@@ -493,7 +507,16 @@
        		 		<p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.specification']}"/>
 			 	</p:commandLink>
 				<br/>
-			  	<h:outputText id="extensionCodeID" value="#{serviceItemVar.scRequestItem.cmItem.extensionCode}" size="50" escape="false"  style="float:left; text-align:left; display:block;width:200px"/>       		 				                        
+			  	<!-- Start Fix - #31341-->
+			    <p:commandLink id="extensionCodeID"
+			    			value="#{serviceItemVar.scRequestItem.cmItem.extensionCode}" styleClass="blue_font"
+							style="color:#009ae5 !important;"
+							action="#{amendmentBackingBean.viewItemUnspscDetails(serviceItemVar.scRequestItem)}"
+							update=":form:itemDescDialogId"
+							onstart="itemLoadBlock.show()"
+							oncomplete="itemLoadBlock.hide(); itemDescDialogId.show();">
+				</p:commandLink>
+				<!-- End Fix - #31341-->       		 				                        
 	      	</p:column>	      	
 	      	<!-- #31558 end -->
 				
@@ -935,4 +958,5 @@
 		                 </div>
                    </p:confirmDialog>
 	</p:panel>		  	
+	<ui:include src="/xhtml/common/itemDetailsPopup.xhtml" /><!-- Fix - #31341-->		  	
  </ui:composition>

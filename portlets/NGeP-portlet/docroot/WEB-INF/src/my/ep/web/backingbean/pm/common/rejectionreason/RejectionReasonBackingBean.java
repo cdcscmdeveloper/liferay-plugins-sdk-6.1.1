@@ -203,7 +203,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			} else {
 				getManagedBean().setReasonApplicabilityDuplicate(false); // 39618
 			}
-
 		}
 	}
 	
@@ -255,7 +254,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			this.getManagedBean().setSuppComCheck(Boolean.FALSE);
 			this.getManagedBean().setSuppTypeCheck(Boolean.FALSE);
 			this.getManagedBean().setReasonApplicabilityDuplicate(Boolean.FALSE); //39618 
-			
 	
 			if(id!=null && id>0){
 				loadRejectReason(id);
@@ -331,10 +329,12 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		this.getManagedBean().setKumpPtjCodeName(null);
 		this.getManagedBean().setAgencyCodeName(null);
 		//#28962 - End
-
+		
 		this.resetAuditBean(); // 35509
-		log.info("initialRejectReason - End");
+		
 		this.getManagedBean().setSelectedSourceMethodId(null);  // 39618
+
+		log.info("initialRejectReason - End");
 	}
 	
 	/**
@@ -343,8 +343,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	public void loadRejectReason(Long id){
 		log.info("loadRejectReason - Start");
 		try{
-			
-//			initialRejectReason();
+
 			PmReason pmReason = retrieveReasonObjById(id);
 			if(pmReason.getConditionField() == null){
 			  pmReason.setConditionField(new PmParameter());
@@ -375,46 +374,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					}
 				}
 			}
-            /////////////////////////////////
-//			ReasonReqDTO reqDTO = new ReasonReqDTO();
-//			reqDTO.setReasonCode("3");
-//			reqDTO.setReasonCategoryId(94L);
-//			IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
-//			ReasonResDTO resDTO = reasonSO.retrieveReasonByReasonCode(reqDTO);
-//			
-//			PmReason reason = resDTO.getPmReason();
-//			
-//			System.out.println("reason: " + reason.getReasonCode());
-//			System.out.println("reason_id: " + reason.getReasonId());
-//			System.out.println("reason.getConditionField().getParameterId(): " + reason.getConditionField().getParameterId());
-//			System.out.println("reason.getSourceMethod().getParameterId(): " + reason.getSourceMethod().getParameterId());
-//			>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-//			log.info("./..start test for PID API");
-//			IParameterSO reqSO = (IParameterSO) BusinessDelegate.getInstance()
-//					.getServiceObject("pm", IParameterSO.class);
-//			IReasonSO resReqSO = (IReasonSO) BusinessDelegate.getInstance()
-//					.getServiceObject("pm", IReasonSO.class);
-//
-//			ParameterReqDTO reqDTO = new ParameterReqDTO();
-//			reqDTO.setParameterCode(ParameterConst.PURCHASE_IN_DEFAULT);
-//			reqDTO.setParameterType(ParameterTypeConst.REASON_CATEGORY);
-//			ParameterResDTO resDTO = reqSO.retrieveParameterByTypeAndCode(reqDTO);
-//			if (resDTO != null && resDTO.getPmParameter() != null) {
-//				ReasonReqDTO resReqDTO = new ReasonReqDTO();
-//				resReqDTO.setReasonCategoryId(resDTO.getPmParameter()
-//						.getParameterId());
-//				resReqDTO.setLanguage(new FacesScopes().getUserLocale()
-//						.getLanguage());
-//				resReqDTO.setDocumentType("CQ");
-//				ReasonResDTO resResDTO = resReqSO
-//						.retrieveReasonByDocType(resReqDTO);
-//				log.info("./.......resResDTO.getPmReason()="+resResDTO.getPmReasonList());
-//				for(PmReason r : resResDTO.getPmReasonList()){
-//				 log.info("./.......r.getReasonId="+r.getReasonId());
-//				}
-//			}
-//				>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-			//////////////////////////////////
+
 			this.getManagedBean().getPmPidListOrigin().clear();
 			this.getManagedBean().setSelectedReason(pmReason);
 			this.getManagedBean().getPmPidListOrigin().addAll(pmReason.getPmPIDReasonList());//get backup to validation
@@ -799,7 +759,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 				processRestrSuppAccTypeAgency();
 			}
 			//#28962 - End
-
+			
 			/************ AUDIT #28895-35509 *************/
 			AuditPMBackingBeanTemplate auTemplate = new AuditPMReasonMaintenanceBackingBean();
 			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -808,29 +768,37 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 
 			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_REASON) && selectedPmReason.getReasonId() != null) {
 				PmReason oldPmReason = retrieveReasonObjById(selectedPmReason.getReasonId());
+				// 28962 - audit 
+				if (ParameterConst.WIP_ITEM_PK7.equalsIgnoreCase(getManagedBean().getSelectedReason()
+						.getReasonCategoryCode().getParameterCode()) ||
+						ParameterConst.SPECIAL_ITEM_WITH_APPROVAL.equalsIgnoreCase(getManagedBean().getSelectedReason()
+								.getReasonCategoryCode().getParameterCode())) {
+					loadSuppType(oldPmReason);
+				}
+				// 28962 - audit
 				getManagedBean().setOldPmReason(oldPmReason);
 			}
 			/************ AUDIT #28895-35509 END *************/
-
+			
 			if (this.getManagedBean().getSelectedReason().isBrandNew()) {
 				returnPage = createRejectReason(this.getManagedBean().getSelectedReason());
 			} else {
 				returnPage = updateRejectReason(this.getManagedBean().getSelectedReason());
 			}
 			log.info("saveRejectReason - End");
-			
+
 			/************ AUDIT *************/
 			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_REASON)) {
 
 				auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_REASON);
 			}
 			/************ AUDIT *************/
-			
+
 		} catch (EpException e) {
 			handleException(e);
 			returnPage = NAV_TO_MAINTAIN;
 		}
-		// #34445 End
+		//#34445 End
 		return returnPage;
 	}
 	
@@ -842,26 +810,8 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		IParameterSO parameterSO  = (IParameterSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
 		ParameterReqDTO paramReq = new ParameterReqDTO();
-//		String reasonCode = null;
 		paramReq.setParameterId(getManagedBean().getSelectedReason().getReasonCategoryCode().getParameterId());
-		ParameterResDTO paramRes = parameterSO.retrieveParameterById(paramReq);	
-		
-//		if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_PLAN_CANCELATION)){
-//			reasonCode = ProfileManagementConst.PROCUREMENT_PLAN_CANCELATION;
-//		}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_PLAN_REJECTION)){
-//			reasonCode = ProfileManagementConst.PROCUREMENT_PLAN_REJECTION;
-//		}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.REASON_CATEGORY_SUPPLIER)){
-//			reasonCode = ProfileManagementConst.REASON_CATEGORY_SUPPLIER;
-//		}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.STOP_INSTRUCTION)){
-//			reasonCode = ProfileManagementConst.STOP_INSTRUCTION;
-//		}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TERMINATION)){
-//			reasonCode = ProfileManagementConst.CONTRACT_TERMINATION;
-//		}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.FWD_HIGHER_AUTH)){
-//			reasonCode = ProfileManagementConst.FWD_HIGHER_AUTH;
-//		}else if(paramRes.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.PURCHASE_IN_DEFAULT)){
-//			reasonCode = ProfileManagementConst.PURCHASE_IN_DEFAULT;
-//		}
-//		reqDTO.setReasonCode(reasonCode);
+		ParameterResDTO paramRes = parameterSO.retrieveParameterById(paramReq); 
 		reqDTO.setReasonCode(paramRes.getPmParameter().getParameterCode());
 		
 		ReasonResDTO resDTO = reasonSO.generateReasonCode(reqDTO);
@@ -881,7 +831,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);	
 			ReasonResDTO resDTO = reqSO.createReason(reqDTO);
 			if(resDTO.isSuccessful()){
-//				loadRejectReason(resDTO.getPmReason().getReasonId());
 				log.info("createRejectReason - successful"); //TODO 770015
 				getManagedBean().setNewPmReason(resDTO.getPmReason()); // 35509 Audit PM
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
@@ -1225,7 +1174,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	public void deleteRestrictions(String restrictionType){
 		log.info("deleteRestrictions");
 
-//		List<PmSupplierReason> tempList = new ArrayList<PmSupplierReason>();
 		if(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES.equals(restrictionType)){
 			if(this.getManagedBean().getDeleteAppTypeRestrictions()!=null && !this.getManagedBean().getDeleteAppTypeRestrictions().isEmpty()){
 				if(this.getManagedBean().getAppTypeRestrictions()==null){
@@ -1239,14 +1187,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					this.getManagedBean().getAppTypeRestrictions().remove(suppReason);
 				}
 				this.getManagedBean().getDeleteAppTypeRestrictions().clear();
-	//			for(PmSupplierReason suppReason: this.getManagedBean().getAppTypeRestrictions()){
-	//				if(suppReason.isDeleted()){
-	//					tempList.add(suppReason);	
-	//				}
-	//			}
-	//			for(PmSupplierReason suppReason: tempList){
-	//				this.getManagedBean().getAppTypeRestrictions().remove(suppReason);
-	//			}
 			}else{
 				throw new EpException(MessageConst.ERROR_770014);
 			}
@@ -1264,14 +1204,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					this.getManagedBean().getComTypeRestrictions().remove(suppReason);
 				}
 				this.getManagedBean().getDeleteComTypeRestrictions().clear();
-	//			for(PmSupplierReason suppReason: this.getManagedBean().getComTypeRestrictions()){
-	//				if(suppReason.isDeleted()){
-	//					tempList.add(suppReason);	
-	//				}
-	//			}
-	//			for(PmSupplierReason suppReason: tempList){
-	//				this.getManagedBean().getComTypeRestrictions().remove(suppReason);
-	//			}
 			}else{
 				throw new EpException(MessageConst.ERROR_770014);
 			}
@@ -1288,15 +1220,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					this.getManagedBean().getSuppTypeRestrictions().remove(suppReason);
 				}
 				this.getManagedBean().getDeleteSuppTypeRestrictions().clear();
-	//			for(PmSupplierReason suppReason: this.getManagedBean().getSuppTypeRestrictions()){
-	//				if(suppReason.isDeleted()){
-	//					tempList.add(suppReason);	
-	//					this.getManagedBean().getSuppTypeRestrictions().remove(suppReason);
-	//				}
-	//			}
-	//			for(PmSupplierReason suppReason: tempList){
-	//				this.getManagedBean().getSuppTypeRestrictions().remove(suppReason);
-	//			}
 			}else{
 				throw new EpException(MessageConst.ERROR_770014);
 			}
@@ -1311,7 +1234,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 */
 	private void validateRestriction(List<PmSupplierReason> restrictList, String restrictType){
 		log.info("validateRestriction");
-//		if(restrictList!=null){
+
 			boolean isSelected = true;			
 			boolean isNotEmpty = true;
 			
@@ -1345,7 +1268,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					throw new EpException(MessageConst.ERROR_770074);
 				}
 			}
-//		}		
 	}
 
 	/**
@@ -1389,7 +1311,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			
 			this.getManagedBean().getSelectedReason().setConditionField(new PmParameter());
 		}
-	}	
+	}
 	
 	// 39618 START
 	/**
@@ -1915,7 +1837,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			}
 		}
 	}
-
+	
 	//#8411 - START
 	/**
 	 * @return the justification
@@ -2047,6 +1969,14 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		this.getManagedBean().setAuditDeleteSuppRestrictions(null);
 		
 		this.getManagedBean().setReasonApplicabilityDuplicate(Boolean.FALSE); //39618
+		
+		// 28962-Audit START
+		this.getManagedBean().setAuditAddSupplAcctType(null);
+		this.getManagedBean().setAuditUpdateSupplAcctType(null);
+		this.getManagedBean().setAuditDeleteSupplAcctType(null);
+		this.getManagedBean().setAuditAddAgency(null);
+		this.getManagedBean().setAuditDeleteAgency(null);
+		// 28962-Audit END
 	}
 	//35509 - END
 
@@ -2495,11 +2425,23 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					// maintained: add new supplier item
 					ensureTargetListExists();
 					this.getManagedBean().getSelectedReason().addPmReasonRestr(tempReason);
+					// 28962 - audit start
+					if (this.getManagedBean().getAuditAddSupplAcctType() == null) {
+						this.getManagedBean().setAuditAddSupplAcctType(new ArrayList<PmReasonRestr>());
+					}
+					this.getManagedBean().getAuditAddSupplAcctType().add(tempReason);
+					// 28962 - audit end
 				}
 			} else {
 				if (hasSuppAccTypeKey(tempReason)) {
 					log.info("update supplier account type");
 					List<PmReasonRestr> target = getManagedBean().getSelectedReason().getPmReasonRestr();
+					// 28962 - audit start
+					if (this.getManagedBean().getAuditUpdateSupplAcctType() == null) {
+						this.getManagedBean().setAuditUpdateSupplAcctType(new ArrayList<PmReasonRestr>());
+					}
+					this.getManagedBean().getAuditUpdateSupplAcctType().add(tempReason);
+					// 28962 - audit end
 					updateExtById(target, tempReason);
 				}
 			}
@@ -2513,6 +2455,12 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 				if (hasValidAgencyKey(agency)) {
 					ensureTargetListExists();
 					this.getManagedBean().getSelectedReason().addPmReasonRestr(agency);
+					// 28962 - audit start
+					if (this.getManagedBean().getAuditAddAgency() == null) {
+						this.getManagedBean().setAuditAddAgency(new ArrayList<PmReasonRestr>());
+					}
+					this.getManagedBean().getAuditAddAgency().add(agency);
+					// 28962 - audit end
 				}
 			}
 		}
@@ -2530,6 +2478,13 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					List<PmReasonRestr> target = getManagedBean().getSelectedReason().getPmReasonRestr();
 					updateExtById(target, tempReason);
 				}
+				
+				// 28962 - audit start
+				if (this.getManagedBean().getAuditDeleteSupplAcctType() == null) {
+					this.getManagedBean().setAuditDeleteSupplAcctType(new ArrayList<PmReasonRestr>());
+				}
+				this.getManagedBean().getAuditDeleteSupplAcctType().add(tempReason);
+				// 28962 - audit end
 			}
 		}
 	}
@@ -2546,6 +2501,13 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					List<PmReasonRestr> target = getManagedBean().getSelectedReason().getPmReasonRestr();
 					updateExtById(target, delAgency);
 				}
+				
+				// 28962 - audit start
+				if (this.getManagedBean().getAuditDeleteAgency() == null) {
+					this.getManagedBean().setAuditDeleteAgency(new ArrayList<PmReasonRestr>());
+				}
+				this.getManagedBean().getAuditDeleteAgency().add(delAgency);
+				// 28962 - audit end
 			}
 		}
 	}

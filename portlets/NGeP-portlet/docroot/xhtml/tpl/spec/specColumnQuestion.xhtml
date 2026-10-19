@@ -48,85 +48,201 @@
 	<ui:param name="widthPixes"
 		value="#{(isSpecificationReq and !isItemTypeService)?'170px':'100px'}" />
 		<ui:param name="specificationrequired" value="#{isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq) or isSqSpec }"></ui:param>
-
+	<ui:remove>#26059 - Start</ui:remove>
+	<ui:param name="specificationrequired"
+		value="#{isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq) or isSqSpec }" />
 
 	<p:column>
+		<c:if test="#{isSqSpec}">
+			<c:if test="#{updateSpec}">
 
-		<c:if test="#{updateSpec}">
-			<p:inputTextarea id="itemName" style="width:calc(100% - 30px);"
-				value="#{question.clItem}" rendered="#{isQuestionTypeItem}"
-				required="#{isValidationReq}" rows="5" maxlength="2000"
-				onkeyup="limitTextArea(this,2000);"
-				onkeydown="limitTextArea(this,2000);" onmouseout="limitTextArea(this,2000);" autoResize="false"
-				label="#{lbl['lbl.tpl.spec.content.item']}">
-				<p:ajax partialSubmit="true" process="@this" update="@this" />
-			</p:inputTextarea>
-			<p:message id="itemNameMsg" for="itemName" display="icon" />
-			<ui:fragment rendered="#{specificationrequired }">
-			<ui:remove>#36681 - start</ui:remove>
-			<p:inputTextarea id="specification" style="width:calc(100% - 30px);"
-				value="#{question.clSpecDetail}"
-				rendered="#{!isQuestionTypeItem or !isSpecificationReq}"
-				required="#{isValidationReq}" rows="5" maxlength="1000"
-				validatorMessage="#{lbl['lbl.sc.validate.onethousand.charLimit']}"
-				onkeyup="limitTextAreaWithBreakline(this,1000);"
-				onkeydown="limitTextAreaWithBreakline(this,1000);"
-				onmouseout="limitTextAreaWithBreakline(this,1000);"
-				label="#{lbl['lbl.tpl.spec.content.specification']}"
-				autoResize="false">
-				<p:ajax partialSubmit="true" process="@this" update="@this" />
-				<f:validateLength for="specification" maximum="1000" />
-			</p:inputTextarea>
-			<ui:remove>#36681 - end</ui:remove>
-			<p:message id="specificationMsg" for="specification" display="icon" />
-			<br />
+				<ui:param name="isPanel"
+					value="#{simpleQuoteBackingBean.checkIsPanel()}" />
+				<ui:param name="isColumnItemDisable"
+					value="#{question.disabledColumnItem}" />
 
-				<!-- #31503 Start -->
-				<p:commandLink oncomplete="itemDescDialogId.show();"
-					value="#{question.cmItem.extensionCode}"
-					style="color: #009ae5; font-size:12px;font-style:italic"
-					action="#{codificationBackingBean.showItemDescPopup(question)}"
-					process="@this" update="@([id$=itemDescDialogId])" />
-				<!-- #31503 End -->
-				
-				<p:spacer width="20" />
-			<p:commandLink id="itemSpecificationLink" process="@this"
-				update="@([id$=itemSpecificationDlg])"
-				oncomplete="itemSpecificationDlgVar.show();"
-				rendered="#{!simpleQuoteBackingBean.managedBean.panelItemFlag and !simpleQuoteBackingBean.managedBean.newableFlag and simpleQuoteBackingBean.managedBean.addNewSpecFlag and question.ctPanelItem != null}">
-				<p:graphicImage value="/css/images/design/ico-viewnedit.png" />
-			</p:commandLink>
-			</ui:fragment>
-			<!-- #31503 Start -->
-			<ui:include src="/xhtml/common/itemDetailsPopup.xhtml" />
-			<!-- #31503 End -->
+				<c:if test="#{!isPanel}">
+					<c:if test="#{!isItemTypeService}">
+						<h:panelGroup layout="block" style="display: flex; gap: 20px;">
+							<p:inputTextarea id="titleName" style="width:100%;"
+								readonly="#{isColumnItemDisable}"
+								value="#{question.cmTitleValue}"
+								rendered="#{isQuestionTypeItem}" required="#{isValidationReq}"
+								rows="5" maxlength="2000" onkeyup="limitTextArea(this,2000);"
+								autoResize="false" label="#{lbl['lbl.tpl.spec.content.item']}">
+								<p:ajax partialSubmit="true" process="@this" update="@this" />
+							</p:inputTextarea>
+
+							<p:inputTextarea id="extensionName"
+								style="width: calc(100% - 8px);"
+								value="#{question.cmExtensionValue}"
+								rendered="#{isQuestionTypeItem and question.cmItem.extensionCode ne null}"
+								rows="5" maxlength="2000" onkeyup="limitTextArea(this,2000);"
+								autoResize="false" label="#{lbl['lbl.tpl.spec.content.item']}">
+								<p:ajax partialSubmit="true" process="@this" update="@this" />
+							</p:inputTextarea>
+						</h:panelGroup>
+					</c:if>
+					<c:if test="#{isItemTypeService}">
+						<p:inputTextarea id="itemName" style="width:calc(100% - 30px);"
+							readonly="#{isColumnItemDisable}" value="#{question.clItem}"
+							rendered="#{isQuestionTypeItem}" required="#{isValidationReq}"
+							rows="5" maxlength="2000" onkeyup="limitTextArea(this,2000);"
+							onkeydown="limitTextArea(this,2000);"
+							onmouseout="limitTextArea(this,2000);" autoResize="false"
+							label="#{lbl['lbl.tpl.spec.content.item']}">
+							<p:ajax partialSubmit="true" process="@this" update="@this" />
+						</p:inputTextarea>
+						<p:message id="itemNameMsg" for="itemName" display="icon" />
+					</c:if>
+					<c:if test="#{isCloneColumnQuestion}">
+						<p:inputTextarea id="itemName" style="width:calc(100% - 30px);"
+							readonly="#{isColumnItemDisable}" value="#{question.clItem}"
+							rendered="#{isQuestionTypeItem}" required="#{isValidationReq}"
+							rows="5" maxlength="2000" onkeyup="limitTextArea(this,2000);"
+							onkeydown="limitTextArea(this,2000);"
+							onmouseout="limitTextArea(this,2000);" autoResize="false"
+							label="#{lbl['lbl.tpl.spec.content.item']}">
+							<p:ajax partialSubmit="true" process="@this" update="@this" />
+						</p:inputTextarea>
+						<p:message id="itemNameMsg" for="itemName" display="icon" />
+					</c:if>
+				</c:if>
+
+				<c:if test="#{isPanel}">
+					<p:inputTextarea id="itemName" style="width:calc(100% - 30px);"
+						readonly="#{question.disabledColumnItem}"
+						value="#{question.clItem}" rendered="#{isQuestionTypeItem}"
+						required="#{isValidationReq}" rows="5" maxlength="2000"
+						onkeyup="limitTextArea(this,2000);"
+						onkeydown="limitTextArea(this,2000);"
+						onmouseout="limitTextArea(this,2000);" autoResize="false"
+						label="#{lbl['lbl.tpl.spec.content.item']}">
+						<p:ajax partialSubmit="true" process="@this" update="@this" />
+					</p:inputTextarea>
+					<p:message id="itemNameMsg" for="itemName" display="icon" />
+				</c:if>
+
+
+				<ui:fragment rendered="#{specificationrequired }">
+					<ui:remove>#36681 - start</ui:remove>
+					<p:inputTextarea id="specification"
+						style="width:calc(100% - 30px);" value="#{question.clSpecDetail}"
+						rendered="#{!isQuestionTypeItem or !isSpecificationReq}"
+						required="#{isValidationReq}" rows="5" maxlength="1000"
+						validatorMessage="#{lbl['lbl.sc.validate.onethousand.charLimit']}"
+						onkeyup="limitTextAreaWithBreakline(this,1000);"
+						onkeydown="limitTextAreaWithBreakline(this,1000);"
+						onmouseout="limitTextAreaWithBreakline(this,1000);"
+						label="#{lbl['lbl.tpl.spec.content.specification']}"
+						autoResize="false">
+						<p:ajax partialSubmit="true" process="@this" update="@this" />
+						<f:validateLength for="specification" maximum="1000" />
+					</p:inputTextarea>
+					<ui:remove>#36681 - end</ui:remove>
+					<p:message id="specificationMsg" for="specification" display="icon" />
+					<br />
+
+					<!-- #31503 Start -->
+					<p:commandLink oncomplete="itemDescDialogId.show();"
+						value="#{question.cmItem.extensionCode}"
+						style="color: #009ae5; font-size:12px;font-style:italic"
+						action="#{codificationBackingBean.showItemDescPopup(question)}"
+						process="@this" update="@([id$=itemDescDialogId])" />
+					<!-- #31503 End -->
+
+					<p:spacer width="20" />
+					<p:commandLink id="itemSpecificationLink" process="@this"
+						update="@([id$=itemSpecificationDlg])"
+						oncomplete="itemSpecificationDlgVar.show();"
+						rendered="#{!simpleQuoteBackingBean.managedBean.panelItemFlag and !simpleQuoteBackingBean.managedBean.newableFlag and simpleQuoteBackingBean.managedBean.addNewSpecFlag and question.ctPanelItem != null}">
+						<p:graphicImage value="/css/images/design/ico-viewnedit.png" />
+					</p:commandLink>
+				</ui:fragment>
+				<ui:include src="/xhtml/common/itemDetailsPopup.xhtml" />
+			</c:if>
+			<c:if test="#{!updateSpec}">
+				<h:outputText value="#{fn:replace(question.clItem,',',',  ')}"
+					escape="false" rendered="#{isQuestionTypeItem}" />
+				<ui:fragment rendered="#{specificationrequired }">
+					<ui:param name="clspecDetail"
+						value="#{fn:replace(question.clSpecDetail,',',',  ')}"></ui:param>
+					<h:outputText
+						value="#{templateSpecBackingBean.replaceWithBR(clspecDetail)}"
+						escape="false"
+						rendered="#{!isQuestionTypeItem or !isSpecificationReq}"
+						style="white-space: normal;word-wrap: break-word;" />
+				</ui:fragment>
+			</c:if>
 		</c:if>
-		<c:if test="#{!updateSpec}">
-			<h:outputText value="#{fn:replace(question.clItem,',',',  ')}" escape="false"
-				rendered="#{isQuestionTypeItem}" />
-				
-			<ui:fragment rendered="#{specificationrequired }">
-				<ui:param name="clspecDetail"
-					value="#{fn:replace(question.clSpecDetail,',',',  ')}"></ui:param>
-				<h:outputText
-					value="#{templateSpecBackingBean.replaceWithBR(clspecDetail)}"
-					escape="false"
-					rendered="#{!isQuestionTypeItem or !isSpecificationReq}"
-					style="white-space: normal;word-wrap: break-word;" />
-
+		<c:if test="#{!isSqSpec}">
+			<c:if test="#{updateSpec}">
+				<p:inputTextarea id="itemName" style="width:calc(100% - 30px);"
+					value="#{question.clItem}" rendered="#{isQuestionTypeItem}"
+					required="#{isValidationReq}" rows="5" maxlength="2000"
+					onkeyup="limitTextArea(this,2000);"
+					onkeydown="limitTextArea(this,2000);"
+					onmouseout="limitTextArea(this,2000);" autoResize="false"
+					label="#{lbl['lbl.tpl.spec.content.item']}">
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
+				</p:inputTextarea>
+				<p:message id="itemNameMsg" for="itemName" display="icon" />
+				<ui:fragment rendered="#{specificationrequired }">
+					<ui:remove>#36681 - start</ui:remove>
+					<p:inputTextarea id="specification"
+						style="width:calc(100% - 30px);" value="#{question.clSpecDetail}"
+						rendered="#{!isQuestionTypeItem or !isSpecificationReq}"
+						required="#{isValidationReq}" rows="5" maxlength="1000"
+						validatorMessage="#{lbl['lbl.sc.validate.onethousand.charLimit']}"
+						onkeyup="limitTextAreaWithBreakline(this,1000);"
+						onkeydown="limitTextAreaWithBreakline(this,1000);"
+						onmouseout="limitTextAreaWithBreakline(this,1000);"
+						label="#{lbl['lbl.tpl.spec.content.specification']}"
+						autoResize="false">
+						<p:ajax partialSubmit="true" process="@this" update="@this" />
+						<f:validateLength for="specification" maximum="1000" />
+					</p:inputTextarea>
+					<ui:remove>#36681 - end</ui:remove>
+					<p:message id="specificationMsg" for="specification" display="icon" />
+					<br />
+					
+					<!-- #31503 Start -->
+					<p:commandLink oncomplete="itemDescDialogId.show();"
+						value="#{question.cmItem.extensionCode}"
+						style="color: #009ae5; font-size:12px;font-style:italic"
+						action="#{codificationBackingBean.showItemDescPopup(question)}"
+						process="@this" update="@([id$=itemDescDialogId])" />
+					<!-- #31503 End -->
+					
+					<p:spacer width="20" />
+					<p:commandLink id="itemSpecificationLink" process="@this"
+						update="@([id$=itemSpecificationDlg])"
+						oncomplete="itemSpecificationDlgVar.show();"
+						rendered="#{!simpleQuoteBackingBean.managedBean.panelItemFlag and !simpleQuoteBackingBean.managedBean.newableFlag and simpleQuoteBackingBean.managedBean.addNewSpecFlag and question.ctPanelItem != null}">
+						<p:graphicImage value="/css/images/design/ico-viewnedit.png" />
+					</p:commandLink>
+				</ui:fragment>
 				<!-- #31503 Start -->
-				<p:commandLink oncomplete="itemDescDialogId.show();"
-					value="#{question.cmItem.extensionCode}"
-					style="color: #009ae5; font-size:12px;font-style:italic"
-					action="#{codificationBackingBean.showItemDescPopup(question)}"
-					process="@this" update="@([id$=itemDescDialogId])" />
+				<ui:include src="/xhtml/common/itemDetailsPopup.xhtml" />
 				<!-- #31503 End -->
-			</ui:fragment>
-			<!-- #31503 Start -->
-			<ui:include src="/xhtml/common/itemDetailsPopup.xhtml" />
-			<!-- #31503 End -->
+			</c:if>
+			<c:if test="#{!updateSpec}">
+				<h:outputText value="#{fn:replace(question.clItem,',',',  ')}"
+					escape="false" rendered="#{isQuestionTypeItem}" />
+				<ui:fragment rendered="#{specificationrequired }">
+					<ui:param name="clspecDetail"
+						value="#{fn:replace(question.clSpecDetail,',',',  ')}"></ui:param>
+					<h:outputText
+						value="#{templateSpecBackingBean.replaceWithBR(clspecDetail)}"
+						escape="false"
+						rendered="#{!isQuestionTypeItem or !isSpecificationReq}"
+						style="white-space: normal;word-wrap: break-word;" />
+				</ui:fragment>
+			</c:if>
 		</c:if>
-	</p:column>	
+		
+	</p:column>
+	<ui:remove>#26059 - End</ui:remove>	
 	
 	<p:column style="width:98px;"
 		rendered="#{isItemTypeService and isFulfilmentTypeReq}">

@@ -6,9 +6,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:dialog id="addToCartPopup" widgetVar="addToCartPopup"
-		header="#{lbl['lbl.sc.add.to.cart']}" width="600" resizable="false"
+		header="#{lbl['lbl.sc.add.to.cart']}" width="680" resizable="false"
 		closable="false"
-		 modal="true" dynamic="true">
+		 modal="true" dynamic="true"><ui:remove>27868</ui:remove>
 		<p:panel id="addToCartId">
 			<p:messages id="cartmessages" showDetail="true"
 				autoUpdate="#{!requestNoteBackingBean.managedBean.autoUpdate}"
@@ -62,11 +62,11 @@
 							label="#{lbl['lbl.sc.order.qty']}" maxlength="14" id="oderQtyId"
 							validatorMessage="Order Qty : must be a decimal number between 0.0 and 9999999999.999"
 							value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.quantity}"
-							onchange="if (this.value.endsWith('.')) { this.value = this.value.slice(0, -1); }"> <ui:remove>39230</ui:remove>
+							onchange="if (this.value.endsWith('.')) { this.value = this.value.slice(0, -1); }"> <ui:remove>#39230</ui:remove>
 							<p:ajax event="change"
 								partialSubmit="true" process="@this" 
 								update="@this, addToCartId"
-								listener="#{requestNoteBackingBean.onChangePriceType()}" /> <ui:remove>39230</ui:remove>
+								listener="#{requestNoteBackingBean.onChangePriceType()}" /> <ui:remove>#39230</ui:remove>
 							<ac:validateNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, uomCode)}"
 								maxIntegerDigits="10" />
@@ -130,7 +130,7 @@
 									</p:selectOneRadio></td>
 								<td style="margin-top: -3px"><p:message id="procTypeMsg"
 										for="procType" display="icon" /> 
-									<ac:iconTooltip value="#{requestNoteBackingBean.procurementTypeToolTip}" /></td>
+									<ac:iconTooltip value="#{requestNoteBackingBean.getProcurementTypeToolTip(requestNoteBackingBean.managedBean.createdDate)}" /></td><ui:remove>27868</ui:remove>
 							</tr>
 						</table>
 					</td>
@@ -144,15 +144,18 @@
 								rendered="#{requestNoteBackingBean.managedBean.procTypeOption}" />
 						</h:panelGroup></td>
 					<td><h:panelGroup id="justValue">
+							<ui:remove>27868 - start </ui:remove>
 							<p:selectOneMenu style="margin-bottom: 5px; width: 225px;"
 							    panelStyle="overflow-y: scroll; width:400px; height:100px;"
 								rendered="#{requestNoteBackingBean.managedBean.procTypeOption}"
 								id="justificationId" label="#{lbl['lbl.sc.reason']}"
 								required="#{requestNoteBackingBean.managedBean.justRequired}"
-								value="#{requestNoteBackingBean.managedBean.justificationType}">
+								value="#{requestNoteBackingBean.managedBean.justificationType}"
+								requiredMessage="#{requestNoteBackingBean.getReasonRequiredMessage()}">
 								<f:selectItems
 									value="#{requestNoteBackingBean.managedBean.justDropdown}" />
 							</p:selectOneMenu>
+							<ui:remove>27868 - end </ui:remove>
 							<p:message id="justTypeMsg" for="justificationId" display="icon" />
 						</h:panelGroup></td>
 				</tr>
@@ -166,15 +169,18 @@
 						</h:panelGroup>
 					</td>
 					<td><h:panelGroup id="justRmksValue">
+						<ui:remove>38910,27868 - start </ui:remove>
 							<p:inputTextarea id="justificationRmk"
 								rendered="#{requestNoteBackingBean.managedBean.procTypeOption}"
 								label="#{lbl['lbl.sc.justification']}" maxlength="100"
 								required="#{requestNoteBackingBean.managedBean.justRequired}"
 								value="#{requestNoteBackingBean.managedBean.justification}"
-								rows="2" cols="65" style="margin-bottom: 5px; width: 351px;" 
-								onkeyup="limitTextArea(this,100);" 
-								onkeydown="limitTextArea(this,100);" 
-								onmouseout="limitTextArea(this,100);"/> <ui:remove>38910</ui:remove>
+								rows="2" cols="65" style="margin-bottom: 5px; width: 351px;"
+								onkeyup="limitTextAreaWithBreakline(this,100);"
+								onkeydown="limitTextAreaWithBreakline(this,100);"
+								onmouseout="limitTextAreaWithBreakline(this,100);"
+								requiredMessage="#{requestNoteBackingBean.getJustificationRequiredMessage()}" />
+							<ui:remove>38910,27868 - end </ui:remove>
 							<p:message id="justRmksMsg" for="justificationRmk" display="icon" />
 						</h:panelGroup></td>
 				</tr>
