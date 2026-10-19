@@ -6323,13 +6323,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				&& !QtStatusId.equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)
 				&& !Arrays.asList(QTStatusConst.CMT_APPROVAL_GROUP).contains(QtStatusId)) {// #25037
 
-			boolean isHigherAuthReq = false;
-			if (scQt.getFinalization() != null ){
-				ScQtFinalization scQtFinalization = scQt.getFinalization();
-				isHigherAuthReq = scQtFinalization.isHigherAuthReq();
-			}
-			boolean isCheckSbhSrwk = isHigherAuthReq && QtStatusId.equals(QTStatusConst.QT_SF_MOF_COMMIEEE);
-		
+			boolean isCheckSbhSrwk = QtStatusId.equals(QTStatusConst.QT_SF_MOF_COMMIEEE);
 			if (!isCheckSbhSrwk) {
 
 				IAddressSO addressSO = BusinessDelegate.getInstance().getServiceObject(
@@ -6368,6 +6362,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			// Contract type is not selected while cancel QT
 
 			if (ctType != null && bpkList != null && ctType.equals(SourcingConstants.CENTRAL_CONTRACT) && !isSbhOrSrwk) {
+				System.out.println("isBpkCentralContract" + true);
 				return true;
 			}
 			// 9019 End #note-445
