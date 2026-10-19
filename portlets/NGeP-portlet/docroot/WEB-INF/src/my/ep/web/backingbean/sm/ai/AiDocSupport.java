@@ -319,14 +319,10 @@ public final class AiDocSupport {
 		/**
 		 * The AI never read this file: unreachable, an error status, or a body that does not parse.
 		 * 415/422 is the AI rejecting the document, which is a wrong document, not an outage.
-		 * @param res
-		 * @return
+		 * Icons and tooltips ask the DTO built by toTenancy/toEpf/toBankDoc instead; only the upload
+		 * messages read it directly.
 		 */
-		public static boolean isUnavailable(AIApiResponse res) {
-			return isUnavailable(res.getApiResponseId(), res.getResponseStatus(), res.getJsonResponse());
-		}
-
-		public static boolean isUnavailable(Long apiId, Integer status, String jsonContent) {
+		static boolean isUnavailable(Long apiId, Integer status, String jsonContent) {
 			if (status != null && (status == 415 || status == 422)) {
 				return false;
 			}
@@ -343,8 +339,49 @@ public final class AiDocSupport {
 			}
 		}
 
-		public static String unavailableLabel() {
-			return label(LBL_AI_UNAVAILABLE);
+		// one stored response into its DTO, the outage folded in, so the DTO alone answers label and verdict
+		public static AiTenancyDTO toTenancy(AIApiResponse res) {
+			return toTenancy(res.getApiResponseId(), res.getResponseStatus(), res.getJsonResponse());
+		}
+
+		public static AiTenancyDTO toTenancy(Long apiId, Integer status, String jsonContent) {
+			JSONArray fields = parseFields(jsonContent);
+			AiTenancyDTO dto;
+			if (fields == null) {
+				dto = new AiTenancyDTO();
+				dto.setError(true);
+			} else {
+				dto = toTenancy(apiId, fields);
+			}
+			if (isUnavailable(apiId, status, jsonContent)) {
+				dto.setUnavailable(true);
+			}
+			return dto;
+		}
+
+		public static AiEpfResultDTO toEpf(AIApiResponse res) {
+			return toEpf(res.getApiResponseId(), res.getResponseStatus(), res.getJsonResponse());
+		}
+
+		public static AiEpfResultDTO toEpf(Long apiId, Integer status, String jsonContent) {
+			AiEpfResultDTO dto = toEpf(apiId, parseFields(jsonContent));
+			dto.setApiId(apiId);
+			if (isUnavailable(apiId, status, jsonContent)) {
+				dto.setUnavailable(true);
+			}
+			return dto;
+		}
+
+		public static AiBankDocDTO toBankDoc(AIApiResponse res) {
+			return toBankDoc(res.getApiResponseId(), res.getResponseStatus(), res.getJsonResponse());
+		}
+
+		public static AiBankDocDTO toBankDoc(Long apiId, Integer status, String jsonContent) {
+			AiBankDocDTO dto = toBankDoc(apiId, parseFields(jsonContent));
+			if (isUnavailable(apiId, status, jsonContent)) {
+				dto.setUnavailable(true);
+			}
+			return dto;
 		}
 
 		/**
@@ -390,11 +427,9 @@ public final class AiDocSupport {
 				}
 			} catch (JSONException e) {
 				log.error("Error TenancyEntity " + apiId, e);
-				dto.setError(true);
 				dto.setUnavailable(true);
 			} catch (NullPointerException e) {
 				log.error("Error TenancyEntity-NPE " + apiId);
-				dto.setError(true);
 				dto.setUnavailable(true);
 			}
 			if (dto.getLandlordsName() == null && dto.getTenantsName() == null
@@ -621,11 +656,9 @@ public final class AiDocSupport {
 				dto.setBankStatements(parsed);
 			} catch (JSONException e) {
 				log.error("Error DocEntity " + apiId, e);
-				dto.setError(true);
 				dto.setUnavailable(true);
 			} catch (NullPointerException e) {
 				log.error("Error DocEntity-NPE " + apiId);
-				dto.setError(true);
 				dto.setUnavailable(true);
 			}
 			return dto;
@@ -1279,7 +1312,7 @@ public final class AiDocSupport {
 		 */
 		public String getLabel() {
 			if (unavailable) {
-				return AiDocParser.unavailableLabel();
+				return AiDocParser.label(LBL_AI_UNAVAILABLE);
 			}
 			// nothing mapped out of this file, same verdict as Bank and Tenancy report
 			if (employerName == null && getEmployees().isEmpty()) {
@@ -1295,6 +1328,14 @@ public final class AiDocSupport {
 				}
 			}
 			return sb.toString();
+		}
+
+		// 1-ok, 2-wrong or no employer name, 3-the AI never read the file
+		public int getVerdict() {
+			if (unavailable) {
+				return 3;
+			}
+			return validEmployerName ? 1 : 2;
 		}
 
 		public boolean isValidEmployerName() {
@@ -1409,7 +1450,7 @@ public final class AiDocSupport {
 		// Field labels from the common bundle (locale-sensitive at render time).
 		public String getLabel() {
 			if (this.unavailable) {
-				return AiDocParser.unavailableLabel();
+				return AiDocParser.label(LBL_AI_UNAVAILABLE);
 			}
 			if (this.error) {
 				return AiDocParser.label(LBL_DOC_INVALID);
@@ -1422,12 +1463,17 @@ public final class AiDocSupport {
 			return sb.toString();
 		}
 
-		// One labelled field row: a green tick when valid, red cross wrapped in red when not; skips null values.
+		// One labelled field row: a green tick when valid, red cross wrapped in red when not, and a
+		// darkgoldenrod warning naming the field the OCR read nothing into, same as Bank.
 		private void appendField(StringBuilder sb, String labelKey, Object value, boolean valid) {
+			String label = AiDocParser.label(labelKey);
 			if (value == null) {
+				sb.append("<span style='color: darkgoldenrod;'>").append("&#x26A0; ").append(label)
+						.append(": ").append(AiDocParser.label("lbl.sm.ai.doc.notextracted"))
+						.append(BR).append("</span>");
 				return;
 			}
-			String s = AiDocParser.label(labelKey) + ": " + value + BR;
+			String s = label + ": " + value + BR;
 			if (!valid) {
 				sb.append("<span style='color: red;'>").append("&#x2717; ").append(s).append("</span>");
 			} else {
@@ -1438,6 +1484,23 @@ public final class AiDocSupport {
 		public boolean hasError() {
 			return this.error || !this.validLandlordsName || !this.validMonthlyRental
 					|| !this.validTenantsName || !this.validAddress;
+		}
+
+		// read only partly: a field the OCR missed, nothing contradicting; the caller tests hasError() first
+		public boolean hasWarning() {
+			return !this.error && (landlordsName == null || tenantsName == null || monthlyRental == null
+					|| premisesAddress == null);
+		}
+
+		// 1-ok, 2-mismatch or wrong document, 3-read only partly; the AI never reading it warns, never blocks
+		public int getVerdict() {
+			if (unavailable) {
+				return 3;
+			}
+			if (hasError()) {
+				return 2;
+			}
+			return hasWarning() ? 3 : 1;
 		}
 
 		public String getLandlordsName() {
@@ -1641,7 +1704,7 @@ public final class AiDocSupport {
 		public String getLabel() {
 			StringBuilder sb = new StringBuilder();
 			if (this.unavailable) {
-				return AiDocParser.unavailableLabel();
+				return AiDocParser.label(LBL_AI_UNAVAILABLE);
 			}
 			if (this.error) {
 				return AiDocParser.label(LBL_DOC_INVALID);
@@ -1688,6 +1751,17 @@ public final class AiDocSupport {
 				}
 			}
 			return false;
+		}
+
+		// 1-ok, 2-mismatch or wrong document, 3-read only partly; the AI never reading it warns, never blocks Declare
+		public int getVerdict() {
+			if (unavailable) {
+				return 3;
+			}
+			if (hasError()) {
+				return 2;
+			}
+			return hasWarning() ? 3 : 1;
 		}
 
 		/**

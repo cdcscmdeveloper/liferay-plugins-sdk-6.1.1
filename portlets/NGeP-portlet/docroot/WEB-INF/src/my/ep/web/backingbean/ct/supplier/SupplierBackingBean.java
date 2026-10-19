@@ -27,6 +27,7 @@ import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.InactiveUserConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
@@ -41,6 +42,9 @@ import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.audit.AuditContractReqDTO; //35506
 import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
+import my.ep.dto.pm.authorization.user.InactiveUserReqDTO; //#30737
+import my.ep.dto.pm.authorization.user.InactiveUserResDTO; //#30737
+import my.ep.dto.pm.authorization.user.UserStatusCheckDTO; //#30737
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
@@ -82,6 +86,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.RoleHelper;
 import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.lang3.StringUtils;
@@ -114,6 +119,23 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	
 	private String confirmationContentMsg;//34442 
 
+	//#30737 - Start 
+    @Override
+    protected List<PmUser> getSelectedApprovers() {
+        return getManagedBean().getApproverModel().getTarget();
+    }
+    
+    @Override
+    protected CtContractVer getContractVer() {
+    	return getManagedBean().getContractVer();
+    }
+    
+    @Override
+    protected String getTaskName() {
+    	return getManagedBean().getTaskName();
+    }
+    //#30737 - End
+	    
 	/**
 	 * The constructor used for initializing the variable.
 	 * This method will initialize the button and approver list.
@@ -535,6 +557,8 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}    
 
+			reqDTO.setPrepareGroupTask(getManagedBean().isPrepareGroupTask()); // 30737
+			
 			changeBankAccSO = (IChangeBankAccSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IChangeBankAccSO.class);
 			resDTO = changeBankAccSO.saveChangeBankAccRequest(reqDTO);
 			if (resDTO.isSuccessful()) {
@@ -590,6 +614,11 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				throw new EpException(MessageConst.ERROR_750037);
 			}
 		}
+		
+		//#30737 - Start
+		checkUserStatusForSubmit(action);
+		//#30737 - End
+		
 	}
 
 	/**
@@ -651,6 +680,8 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			/*25139-basri*/
 			reqDTO.setReqType(getManagedBean().getFcRequestType());
 			/*25139-end*/
+			
+			reqDTO.setPrepareGroupTask(getManagedBean().isPrepareGroupTask()); // 30737
 			
 			if (getManagedBean().getPmDigiSign() != null) {
 				reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
@@ -799,8 +830,110 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				getManagedBean().setTextBeforeSign(sb.toString());	
 				getManagedBean().setButtonAction(action);
 			}
+			
+			//#30737 - Start
+			if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equalsIgnoreCase(action)) {
+				String docType = getManagedBean().getDocType();
+				String approverType = (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+						ParameterConst.CONTRACT_TYPE_MINISTRY)) ? RoleCode.CT_APPROVER.value() : RoleCode.BPK_CC_APPROVER.value();
+				List<UserStatusCheckDTO> userStatusResults = 
+						checkInactiveUsers(approverType, getSelectedApprovers(), docType);
+		        handleInactiveUserValidation(userStatusResults);
+				log.info(" action : "+action);
+			}
+			
+			// if supplier submit to MCA, 
+			// when selected MCA is inactive, please send group task
+			checkUserStatusForSubmit(action);
+			//#30737 - End
+			
 		}
 	}
+	
+	// 30737 start
+	private void checkUserStatusForSubmit(String action) {
+		// change bank request
+		String docType = getManagedBean().getDocType();
+		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
+			log.info(" action : "+action);
+			String roleCode = (getManagedBean().getCtContract().getContractType().getParameterCode()
+					.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) ? RoleCode.MIN_CONTRACT_ADMIN.value()
+					: RoleCode.BPK_CCA.value();
+
+			List<UserStatusCheckDTO> userStatusResults = checkInactiveUsers(roleCode, getManagedBean()
+					.getContractAdminlist(), docType);
+
+			if (!userStatusResults.isEmpty()) {
+				Long userStatus = null;
+
+				for (UserStatusCheckDTO ctActor : userStatusResults) {
+					userStatus = ctActor.getStatus(); // expected only 1 actor
+				}
+
+				if (InactiveUserConst.INACTIVE_USER_5.equals(userStatus)) {
+					log.info(" BPM_SUBMIT + return 5");
+					handleInactiveUserValidation(userStatusResults);
+				}
+			}
+		}
+	}
+	
+	// getInactiveUsers
+	private List<UserStatusCheckDTO> checkInactiveUsers(String roleCode, List<PmUser> users, String docType) {
+  		
+  	    IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+
+  	    InactiveUserReqDTO inactiveDto = new InactiveUserReqDTO();
+  	    inactiveDto.setUserIds(buildUserIdString(users));
+  	    inactiveDto.setUserRoleCode(roleCode);
+  	    inactiveDto.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+  	    inactiveDto.setDocType(docType);
+  	    inactiveDto.setDocNo(getManagedBean().getCtContract().getContractNo());
+  	    inactiveDto.setNotifyAdmin(RoleCode.PTJ_ADMIN.value());
+  	    
+  	    log.info("xoxoxoxoxo getInactiveUsers docType : "+docType);
+  	    
+  	    InactiveUserResDTO resDto = userSO.checkInactiveUserBySP(inactiveDto);
+  	    resDto.setRoleCode(roleCode);
+  	    
+  	    log.info("xoxoxo getStatus "+resDto.getStatus());
+  	    log.info("xoxoxo getMessage "+resDto.getMessage());
+  	    log.info("xoxoxo roleCode "+roleCode);
+
+  	    return buildUserStatusCheckResults(users, resDto);
+  	}
+	
+	// private to populate user id into string with comma delimiter 
+  	private String buildUserIdString(List<PmUser> pmUsers){
+  		StringBuilder sb = new StringBuilder();
+  		for(PmUser user : pmUsers){
+  			if (sb.length() > 0) {
+  		        sb.append(",");
+  		    }
+  		    sb.append(user.getUserId());
+  		}
+  		return sb.toString();
+  	}
+  	
+  	private List<UserStatusCheckDTO> buildUserStatusCheckResults(List<PmUser> users, InactiveUserResDTO resDto) {
+
+  	    List<UserStatusCheckDTO> selectedUsers = new ArrayList<>();
+  	    if (!users.isEmpty()) {
+  	    	String[] statuses = resDto.getStatus().split(",");
+  	  	    for (int i = 0; i < statuses.length; i++) {
+  	  	    	
+  	  	    	String userRoleDesc = RoleHelper.getInstance().getRoleDescByCode(resDto.getRoleCode()).getRoleName();
+  	  	    	
+  	  	        UserStatusCheckDTO selectedUser = new UserStatusCheckDTO();
+  	  	        selectedUser.setUserName(users.get(i).getUserName());
+  	  	        selectedUser.setUserRoleDesc(userRoleDesc);
+  	  	        selectedUser.setStatus(Long.parseLong(statuses[i].trim()));
+  	  	        selectedUsers.add(selectedUser);
+  	  	    }
+  	    }
+  	    return selectedUsers;
+  	}
+  	// 30737 end
 
 	/**
 	 * The method used to authenticate user during submit the change bank request.
@@ -1658,6 +1791,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 										// Oracle BPM product limitation, ASSIGNEE field size is 1000; only can support up to 83*12(IC number)
 										userList_1 = (List<PmUser>) BpmCommonUtils.limitAssigneeSizeArrayList(userList_1); // Fix - #34213										
 										getManagedBean().setContractAdminlist(userList_1);
+										getManagedBean().setPrepareGroupTask(true); // 30737 flag true if send group task
 										// End Fix - #31962
 									}
 									//getManagedBean().getContractAdminlist().add(userResDTO);
@@ -1913,4 +2047,5 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	    this.confirmationContentMsg = confirmationContentMsg;
 	}
 	//34442 - end
+
 }

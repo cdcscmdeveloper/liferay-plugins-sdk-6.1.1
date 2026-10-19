@@ -14533,6 +14533,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	private void assignSupplierBusinessType(SmSupplier sup) {
 		getManagedBean().setBusinessTypeVal(
 				SmApplicationUtil.assignSupplierBusinessType(sup));
+		//#32304 - start
+		SmCompanyBasic cb = getManagedBean().getSmAppl() != null
+				? getManagedBean().getSmAppl().getSmCompanyBasic() : null;
+		SelectItem[] bussTypeLs = getManagedBean().getBusinessTypeLs();
+		if (cb != null && sup != null && (cb.getBusinessType() == null
+				|| bussTypeLs == null || bussTypeLs.length == 0)) {
+			cb.setBusinessType(sup.getBusinessType());
+		}
+		//#32304 - end
 
 	}
 
@@ -15651,6 +15660,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				supplier.setLocalAuthorityId(getManagedBean().getSmSupplier()
 						.getLocalAuthorityId());
 			}
+			cleanOwnershipTypeFacilityType();	//#40368 
 		}
 	}
 
@@ -18528,6 +18538,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		SmAppl latestAppl = getManagedBean().getLatestAppl();
 		String bussType = getManagedBean().getSmAppl().getSmCompanyBasic().getBusinessType();
 		if(latestAppl != null && latestAppl.getSmCompanyBasic() != null && bussType != null
+				&& latestAppl.getSmCompanyBasic().getBusinessType() != null
 				&& !bussType.equals(latestAppl.getSmCompanyBasic().getBusinessType())){
 			SmAppl bumiAppl = getManagedBean().getPendingBumiAppl();
 			if(bumiAppl == null){
@@ -20431,7 +20442,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			}
 			switch (ownershipType) {
 			case SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN:
-				basicCompanyFacility.setSmAddress(null);
 				basicCompanyFacility.setRentalRate(null);
 				break;
 			case SupplierManagementConst.SM_FACILITY_OWNERSHIP_RENTED:
@@ -20441,7 +20451,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			default:
 				basicCompanyFacility.setPurchaseDate(null);
 				basicCompanyFacility.setPurchasePrice(null);
-				basicCompanyFacility.setSmAddress(null);
 				basicCompanyFacility.setRentalRate(null);
 				break;
 			}

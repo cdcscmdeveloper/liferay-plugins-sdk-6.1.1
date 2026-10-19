@@ -2949,7 +2949,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		return statusId == FulfilmentStatusConst.CO_PENDING_INVOICE.longValue()
 				|| statusId == FulfilmentStatusConst.PO_PENDING_INVOICE.longValue()
 				|| statusId == FulfilmentStatusConst.CO_PENDING_REVISION_INVOICE.longValue()
-				|| statusId == FulfilmentStatusConst.PO_PENDING_REVISION_INVOICE.longValue();
+				|| statusId == FulfilmentStatusConst.PO_PENDING_REVISION_INVOICE2.longValue();
 	}
 
 	/**

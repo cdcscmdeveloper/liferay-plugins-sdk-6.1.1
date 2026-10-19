@@ -49,8 +49,21 @@
 		
 			<f:event type="preRenderComponent" listener="#{ai.initContext(cc.attrs.docType, cc.attrs.smAppl)}" />
 			
-			<h:inputHidden id="ai"/>
-			<p:messages id="messages" for="ai" showSummary="false" showDetail="true" autoUpdate="true" closable="true"/>
+			<!-- #40112 -->
+			<p:outputPanel id="messages" layout="block" styleClass="ui-messages ui-widget" autoUpdate="true">
+				<ui:repeat var="sev" value="#{fn:split('warn,error', ',')}">
+					<h:panelGroup layout="block" styleClass="ui-messages-#{sev} ui-corner-all"
+						rendered="#{not empty ai.getDialogMessages(sev)}">
+						<a href="#" class="ui-messages-close" onclick="$(this).parent().slideUp();return false;"><span class="ui-icon ui-icon-close"></span></a>
+						<span class="ui-messages-#{sev}-icon"></span>
+						<ul>
+							<ui:repeat var="msg" value="#{ai.getDialogMessages(sev)}">
+								<li><span class="ui-messages-#{sev}-detail">#{msg}</span></li>
+							</ui:repeat>
+						</ul>
+					</h:panelGroup>
+				</ui:repeat>
+			</p:outputPanel>
 			
 			<h:outputText value="#{lbl['lbl.sm.ai.tnc.instruction']}" rendered="#{cc.attrs.docType eq 'tenancy'}"
 				styleClass="instruction" escape="false"/>
@@ -68,6 +81,12 @@
 					<p:outputPanel rendered="#{ai.getDocVerdict(doc) eq 2}">
 						<p:graphicImage id="imgAiEpf2" value="/css/images/ai/no.png" />
 						<p:tooltip for="imgAiEpf2" rendered="#{not empty ai.getDocLabel(doc)}">
+							<p:outputLabel escape="false" value="#{ai.getDocLabel(doc)}"/>
+						</p:tooltip>
+					</p:outputPanel>
+					<p:outputPanel rendered="#{ai.getDocVerdict(doc) eq 3}">
+						<p:graphicImage id="imgAiEpf3" value="/css/images/ai/warning.png" />
+						<p:tooltip for="imgAiEpf3" rendered="#{not empty ai.getDocLabel(doc)}">
 							<p:outputLabel escape="false" value="#{ai.getDocLabel(doc)}"/>
 						</p:tooltip>
 					</p:outputPanel>

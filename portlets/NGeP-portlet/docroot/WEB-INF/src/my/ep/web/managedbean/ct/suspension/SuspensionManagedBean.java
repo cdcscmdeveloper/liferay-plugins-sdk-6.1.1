@@ -102,6 +102,10 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	private String supplierOffer;
 	private List<ScRequestItemSpecOffer> scRequestItemSpecOfferList;
 	//#28854 - end	
+	
+	//30737 - start
+	private Long userStatusCheckResult;
+	//30737 - end
 
 private IPagingDataModel<CtContractItem> SuspensionProductListingPagingDataModel = new SuspensionProductListingPagingDataModel();
 //#29214
@@ -756,5 +760,15 @@ private IPagingDataModel<CtAgency> agencyPersistDataModel = new AgencyPersistDat
 	public void setScRequestItemSpecOfferList(List<ScRequestItemSpecOffer> scRequestItemSpecOfferList) {
 		this.scRequestItemSpecOfferList = scRequestItemSpecOfferList;
 	}	
-	/* #28854 end*/	
+	/* #28854 end*/
+
+	//30737 - start
+	public Long getUserStatusCheckResult() {
+		return userStatusCheckResult;
+	}
+
+	public void setUserStatusCheckResult(Long userStatusCheckResult) {
+		this.userStatusCheckResult = userStatusCheckResult;
+	}	
+	//30737 - end
 }

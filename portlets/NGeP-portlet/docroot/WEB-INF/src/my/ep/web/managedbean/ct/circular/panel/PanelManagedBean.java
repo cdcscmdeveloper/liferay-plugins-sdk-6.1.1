@@ -14,8 +14,6 @@ import javax.faces.bean.SessionScoped;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 
-import my.ep.constant.EpPropertiesConst;
-import my.ep.constant.pm.ParameterConst;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtRemark;
@@ -38,7 +36,6 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
-import my.ep.util.EpPropertiesUtils;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -145,6 +142,10 @@ public class PanelManagedBean extends BaseManagedBean {
 	//#30014 - Start
 	private List<CtPanelCategory> selectedCategoryList;
 	//#30014 - End
+	
+	//#30737 start
+	private Long userStatusCheckResult;
+	//#30737 end
 	
 	/**
 	 * @return the circular
@@ -1117,4 +1118,22 @@ public class PanelManagedBean extends BaseManagedBean {
 		this.circularType = circularType;
 	}
 	//#37620,#34367 - End
+
+	//#30737 - start
+	/**
+	 * @return the userStatusCheckResult
+	 */
+	public Long getUserStatusCheckResult() {
+		return userStatusCheckResult;
+	}
+
+	/**
+	 * @param userStatusCheckResult the userStatusCheckResult to set
+	 */
+	public void setUserStatusCheckResult(Long userStatusCheckResult) {
+		this.userStatusCheckResult = userStatusCheckResult;
+	}
+	//#30737 - end
+	
+	
 }

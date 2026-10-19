@@ -1914,6 +1914,9 @@ public class SupplierFinalizationBackingBean extends
 	 */
 	// 25037 - start
 	public void saveSupplierFinalization() {
+		// #34860 Start
+		this.getManagedBean().setOutcome(BpmOutcomeConst.BPM_SAVE);
+		// #34860 End
 		saveSupplierFinalization(false);
 	}
 
@@ -3020,7 +3023,10 @@ public class SupplierFinalizationBackingBean extends
 		String outcome = this.getManagedBean().getOutcome();
 		this.getManagedBean().setAction(outcome);
 		//#34860 Start
-		if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome)) {
+		if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && this.getManagedBean().getFinalizationMethod() != null
+				&& (this.getManagedBean().getFinalizationMethod().equals(ParameterConst.RECOMMEND_BY_AWARD) 
+						|| this.getManagedBean().getFinalizationMethod().equals(ParameterConst.RECOMMEND_BY_SINGLE_AWARD)) 
+				&& !getManagedBean().isDisableJustifications()) {
 			List<String> selectedJustificationList = this.getManagedBean().getJustificationReasonList();
 			if (CollectionUtils.isEmpty(selectedJustificationList)) {
 				throw new EpException(MessageConst.ERR_760832);
@@ -4130,6 +4136,7 @@ return	remarksNotFound;
 		if (epException != null) {
 			saveAndReloadFinalizationDetails(
 						qtSuppFinalizationSO, reqDTO);
+			prepareUpdateCommitteeMember(); //#41497
 			
 			navigateToPreparationTab();
 			qtSuppFinalizationSO = null;
@@ -12069,6 +12076,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			if (epException != null) {
 				saveAndReloadFinalizationDetails(
 							qtSuppFinalizationSO, reqDTO);
+				prepareUpdateCommitteeMember(); //#41497
 				
 				navigateToPreparationTab();
 				qtSuppFinalizationSO = null;
