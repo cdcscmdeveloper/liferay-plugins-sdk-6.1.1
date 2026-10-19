@@ -268,9 +268,10 @@
 	</p:outputPanel>
 	<!-- #28175 end -->
 	
-	<p:outputPanel layout="block" rendered="#{not empty viewSmApplBackingBean.managedBean.smAppl.smCategoryOverlapDocs}">
+	<!-- #40444 -START -->
+	<p:outputPanel layout="block" rendered="#{viewSmApplBackingBean.checkOverLappedCategoryExists(viewSmApplBackingBean.managedBean.smAppl)}"> 
 		<ui:include src="overlapCategorySuppDocViewOnly.xhtml"></ui:include>
-	</p:outputPanel>
+	</p:outputPanel><!-- #40444 -END -->
 	
 	<!-- 36504 - START -->
 	<ac:otherDescriptionHistoryMaintenance

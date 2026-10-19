@@ -20,17 +20,26 @@
 		<div class="ppRightBtn">
 			<h:panelGroup id="bsvattandanceBtns">
 
-
+				<!-- #34444 -  start -->
 				<ui:repeat var="bpmAction"
 					value="#{bsvAttendanceBackingBean.managedBean.outComes}">
 					<ui:param name="buttonLabel"
 						value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-					<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
-						onclick = "confirmSubmit.show();"
-						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
-						
-					
-						
+					<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"						
+						onstart="blockWidget.show();" 
+						actionListener="#{bsvAttendanceBackingBean.managedBean.prepareAction(bpmAction)}"
+						process="@form" update="@form" 
+						oncomplete="blockWidget.hide(); popupConfirmInfoDlg.show();" />
+										
+					<ac:confirmationPopupQT id="popupConfirmInfoDlg"
+						widget="popupConfirmInfoDlg"
+						okAction=""
+						title="#{bsvAttendanceBackingBean.managedBean.confirmTitle}"
+						content="#{bsvAttendanceBackingBean.managedBean.confirmContent}"
+						update="@form"
+						oncompleteOk="confirmSubmit.show();" />
+			   <!-- #34444 -  end-->
+
 					<p:confirmDialog id="confirmSubmit"
 						header="#{lbl['lbl.sc.dialog.cofirm.header']}"
 						widgetVar="confirmSubmit" severity="alert"  >

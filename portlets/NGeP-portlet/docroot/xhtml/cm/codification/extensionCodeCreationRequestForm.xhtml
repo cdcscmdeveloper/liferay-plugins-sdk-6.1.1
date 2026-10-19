@@ -14,10 +14,12 @@
 		<h:panelGroup id="cmExtensionRequestFormID">
 
 			<div style="text-align: right; min-height: 40px;">
-				<p:commandButton value="#{lbl['lbl.cm.create.publish']}"
-				     id="btnSubmit"
-				     disabled="#{extensionCodeCreationBackingBean.managedBean.disableSelectBtn}"
-                     onclick="extensionCodeCreation.show()"></p:commandButton>
+                 <!-- 34447 Start -->
+                 <p:commandButton value="#{lbl['lbl.cm.create.publish']}"
+                   id="btnSubmit"
+                   disabled="#{extensionCodeCreationBackingBean.managedBean.disableSelectBtn}"
+                   update="@form" oncomplete="extensionCodeCreation.show();" />
+                 <!-- 34447 End -->
 
 				<div style="float: left; clear: both;">
 					<p:commandButton value="#{lbl['lbl.cm.back']}"
@@ -25,6 +27,21 @@
 					</p:commandButton>
 				</div>
 			</div>
+
+			<!-- 34447 Start -->
+			<p:blockUI block="cmExtensionRequestFormID" widgetVar="pageBlockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif" />
+			</p:blockUI>
+
+			<ac:confirmationPopupCM
+				id="extensionCodeCreation" widget="extensionCodeCreation"
+				loadingWidget="pageBlockWidget"
+				okAction="extensionCodeCreationBackingBean.submitIntoDB" hasParam="false"
+				content="#{lbl['lbl.cm.dialog.message.extension.code.creation']}"
+				selectedItem="#{extensionCodeCreationBackingBean.managedBean.selectedLovUnspsc}"
+				update="@form">
+			</ac:confirmationPopupCM>
+			<!-- 34447 End -->
 
 			<p:panel header="#{lbl['lbl.cm.extension.code.request.form']}" toggleable="true">
 				<table style="width: 100%; height: 100%;">
@@ -108,16 +125,6 @@
 				<ui:include src="requestExtensionCodeCreationPopUp.xhtml" />
 			</p:dialog>
 		</h:panelGroup>
-		
-		
-			<ac:confirmationPopup id="extensionCodeCreation" widget="extensionCodeCreation"
-				okAction="extensionCodeCreationBackingBean.submitIntoDB"
-				width="400" height="100"
-				title="#{lbl['lbl.cm.dialog.cofirm.header']}"
-				content="#{lbl['lbl.cm.dialog.message.extension.code.creation']}"
-				update=":form"
-				oncomplete="extensionCodeCreation.hide();"/>
-		
 	</ui:define>
 
 </ui:composition>

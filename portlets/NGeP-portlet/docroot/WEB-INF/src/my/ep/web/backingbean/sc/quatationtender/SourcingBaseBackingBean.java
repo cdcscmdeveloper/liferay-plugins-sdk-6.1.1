@@ -171,8 +171,11 @@ import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMemberHistory;
 import my.ep.persistence.entity.sc.quationtender.ScEvaluationCommitteeReportAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScEvaluationCommitteeReportDetailAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScFinancialEvaluationReportAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScFinancialEvaluationReportDetailAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScOpenCommitteeReportAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScOpenCommitteeReportDetailAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;//#28188
@@ -190,12 +193,15 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportDetail;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportDetailAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScTechnicalEvaluationReportAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScTechnicalEvaluationReportDetailAttachment;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalReportAttachment;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
@@ -458,7 +464,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				|| scAttachment instanceof ScOpenCommitteeReportAttachment
 				|| scAttachment instanceof ScTechnicalEvaluationReportAttachment
 				|| scAttachment instanceof ScFinancialEvaluationReportAttachment
-				|| scAttachment instanceof ScQtProposalReportAttachment) {
+				|| scAttachment instanceof ScQtProposalReportAttachment 
+			    || scAttachment instanceof ScEvaluationCommitteeReportDetailAttachment
+			    || scAttachment instanceof ScOpenCommitteeReportDetailAttachment
+			    || scAttachment instanceof ScTechnicalEvaluationReportDetailAttachment
+			    || scAttachment instanceof ScFinancialEvaluationReportDetailAttachment) {//#25651
 
 			return new AttachmentDateFormat();
 		} else {
@@ -968,6 +978,20 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	// 38523, #35320 - end
+	
+	
+	// 29661 - start
+	protected IQTSpecSO getQTSpecSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+	}
+	// 29661 - end
+	
+	// 29661 - start
+	protected ICategoryCodeSO getCategoryCodeSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				ICategoryCodeSO.class);
+	}
+	// 29661 - end
 	
 	// 12471 - start
 	protected IScWorkFlowStatusSO getScWorkflowStatusSO() {
@@ -1850,6 +1874,31 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				ParameterTypeConst.COMMITTEE_ROLE, searchBean);
 
 	}
+	
+	// #30447 - start
+	/**
+	 * To retrieve salutation + name with salutation duplication checking
+	 * 
+	 * @param salutation, name
+	 * @return String salutation+name | name
+	 */
+	public String getFormattedSalutationName(String salutation, String name ) {
+		name = StringUtils.trimToEmpty(name);
+
+		salutation = StringUtils.trimToEmpty(salutation);
+		
+        if (name.isEmpty() || salutation.isEmpty()) {
+            return name;
+        }
+        if (StringUtils.startsWithIgnoreCase(name, salutation)) {
+            return name;
+        }
+        if (name.equals(name.toUpperCase())) {
+            salutation = salutation.toUpperCase();
+        }
+        return salutation + " " + name;
+	}
+	// #30447 - end
 
 	/**
 	 * Retrive mof account by supplier.
@@ -5322,6 +5371,32 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	}
 	
+	//#25651 - Start
+	
+	/**
+	 * Delete reports upload file.Event handle to delete upload file in
+	 * reports tab.
+	 * @param delEntity
+	 *               (BaseEntity delEntity).
+	 */
+	public void deleteReportDetailsUploadFile(BaseEntity delEntity) {
+		log.debug("deleteUploadFile");
+		
+		try{
+		log.debug("deleteReportsUploadFile");
+		ScQtFinalizationReportDetail selectedEvaluationReport = getManagedBean()
+				.getSelectedBriefingReportDetail();
+		selectedEvaluationReport.setScQtFinalizationReportDetailAttachment(null);
+		 getManagedBean()
+			.setSelectedBriefingReportDetail(selectedEvaluationReport);
+		}finally{
+		
+		}
+
+	}
+	
+	//#25651 - End
+	
 	/**
 	 * @param finalizationReports
 	 * @param scQt 
@@ -5579,6 +5654,62 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 	
+	//#25651 - Start
+	/**
+	 *reports file upload.to upload files for manual added reports.
+	 * 
+	 * @param event
+	 *            (Mandatory)
+	 * @throws FileNotFoundException
+	 *             the file not found exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public void reportDetailsUploadAttachment(FileUploadEvent event)
+			throws FileNotFoundException, IOException {
+		if (event.getFile() != null) {
+			ScAttachment scAttachment = null;
+			ScQtFinalizationReportDetail briefingReport = getManagedBean()
+					.getSelectedBriefingReportDetail();
+			ScQtFinalizationReportDetailAttachment reportAttachment = briefingReport
+					.getScQtFinalizationReportDetailAttachment();
+			if (null == reportAttachment) {
+				reportAttachment = new ScQtFinalizationReportDetailAttachment();
+				reportAttachment.setScQtFinalizationReportDetail(briefingReport);
+				briefingReport
+						.setScQtFinalizationReportDetailAttachment(reportAttachment);
+			} else {
+				reportAttachment.setScQtFinalizationReportDetail(briefingReport);
+				briefingReport
+						.setScQtFinalizationReportDetailAttachment(reportAttachment);
+			}
+			
+			int index = 0;
+			
+			if (CollectionUtils.isNotEmpty(getManagedBean().getScQtFinalizationReportDetail())
+			    && this.getManagedBean().getScQtFinalizationReportDetail().size() > 0) {
+			  for (ScQtFinalizationReportDetail finalizationReport : getManagedBean().getScQtFinalizationReportDetail()) {
+			    if (finalizationReport.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)) {
+			      index++;
+			    }
+			  }
+			}
+			reportAttachment.setDocNo(getManagedBean().getDocNo());
+			scAttachment = reportAttachment;
+			uploadAttachment(event.getFile(), scAttachment);
+			String fileName = scAttachment.getFileName();
+			
+			if (index >= 0 && fileName != null) {
+              reportAttachment.setFileName(index + UNDER_SCORE
+                      + fileName);
+			}
+			
+			briefingReport.setScQtFinalizationReportDetailAttachment(reportAttachment);
+		
+		}
+	}
+	//#25651 - End
+	
 	// 18685 - START.
 	/**
 	 * @param reportTitle
@@ -5647,6 +5778,29 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 
 	}
+	
+	//#25651 - Start
+	/**
+	 * delete existing report details records from database.
+	 *  
+	 */
+	public void deleteReportDetailsTabDtls() {
+		List<ScQtFinalizationReportDetail> removeFinalizationReports = getManagedBean()
+				.getRemoveFinalizationReportDetails();
+		if (null == removeFinalizationReports) {
+			removeFinalizationReports = new ArrayList<ScQtFinalizationReportDetail>();
+			getManagedBean()
+			.setRemoveFinalizationReportDetails(removeFinalizationReports);
+		}
+		markDeleteSelectedRowsAction(getManagedBean()
+				.getScQtFinalizationReportDetail(), removeFinalizationReports);
+		if(CollectionUtils.isNotEmpty(removeFinalizationReports)){
+			getManagedBean()
+			.setRemoveFinalizationReportDetails(removeFinalizationReports);
+		}
+
+	}
+	//#25651 - End
 	
 	// 18685 - START.
 	/**
@@ -7896,6 +8050,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		if (null == ctContractver) {
 			newCtContractver.setCtTermination(new CtTermination());
 		} else {
+			//41079 && 29661 -start-
+			if(null==ctContractver.getCtTermination()){
+				ctContractver.setCtTermination(new CtTermination());
+			}
+			//41079 && 29661 -end-
 			return ctContractver;
 		}
 
@@ -8201,7 +8360,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			for (SmCompExpMasterDoc compExpDocs : supportingDocuments) {
 				ScLoaReportAttachment attachemnt = new ScLoaReportAttachment();
 				attachemnt.setFileName(compExpDocs.getFileName());
-				attachemnt.setFilePath(compExpDocs.getFilePath());
+				attachemnt.setFilePath(compExpDocs.getFilePath() + compExpDocs.getFileName()); //#41093
 				attachmentList.add(attachemnt);
 
 			}
@@ -8285,6 +8444,23 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	// 29661 -end-
 	
+	// 41312 -start-
+	/**
+	 * check estimated amount is null fetched amount from templatespec.
+	 * 
+	 * @param scQt
+	 * @return BigDecimal
+	 */
+	protected BigDecimal checkEstimatedAmount(ScQt scQt) {
+		SpecificationReqDTO estimatedReqDTo = new SpecificationReqDTO();
+		estimatedReqDTo.setQtId(scQt.getQtId());
+		return getQTSpecSO().calCulateTemplateSpecEstimations(estimatedReqDTo)
+				.getTotalSpecEstimatedAmount();
+
+	}
+
+	// 41312 -end-
+
 	//#28784 - Start
 	private boolean checkDemoWIP(ScQt scQt) {
 		try {
@@ -8415,8 +8591,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param scAttachments
 	 * @throws IOException
 	 */
-	protected <ATTACHMENT extends ScAttachment> void downloadSFAndRecommendationFiles(String zipFileName,
-			List<ATTACHMENT> scAttachments) throws IOException {
+	public <ATTACHMENT extends ScAttachment> void downloadSFAndRecommendationFiles(String zipFileName,
+			List<ATTACHMENT> scAttachments) throws IOException {//#25651
 		HttpServletResponse response = null;
 		ZipOutputStream zos = null;
 		try {
@@ -8795,6 +8971,66 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	// #25651 - End
 	
+	// #25651 - Start
+	public void saveFinalizationReportDetails() {
+		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+
+		List<ScQtFinalizationReportDetail> finalizationReportList = this.getManagedBean()
+				.getScQtFinalizationReportDetail();
+
+		SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+		reqDTO.setFinalizationReportDetailList(finalizationReportList);
+		reqDTO.setReportType(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
+		if (CollectionUtils.isNotEmpty(getManagedBean().getRemoveFinalizationReportDetails())) {
+			List<ScQtFinalizationReportDetail> localReports = new ArrayList<>();
+			for (ScQtFinalizationReportDetail finalizationReport : getManagedBean().getRemoveFinalizationReportDetails()) {
+				if (null != finalizationReport.getQtReportId() && !finalizationReport.isBrandNew()) {
+					finalizationReport.setDeleted(true);
+					localReports.add(finalizationReport);
+				}
+
+			}
+			reqDTO.setToBeRemovedReportDetailList(localReports);
+		}
+		qtSuppFinalizationSO.saveReportDetails(reqDTO);
+	    getManagedBean().setRemoveFinalizationReportDetails(null);
+
+	}
+	// #25651 - End
+	
+	// #25651 - Start
+	public void addDocumentDetailList(ScQt scqt) {
+	
+		List<ScQtFinalizationReportDetail> newBPReportDetailList = this.getManagedBean()
+				.getScQtFinalizationReportDetail();
+		if (newBPReportDetailList == null) {
+			newBPReportDetailList = new ArrayList<>();
+		}
+		ScQtFinalizationReportDetail report = new ScQtFinalizationReportDetail();
+		report.setDocCategory(SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT);
+		ScQtFinalization scQtFinalization = scqt.getFinalization();
+		if (scQtFinalization == null) {
+			scQtFinalization = new ScQtFinalization();
+		}
+		report.setScQtFinalization(scQtFinalization);
+		IParameterSO parameterSO = null;
+		try {
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
+			reqDTO.setParameterCode(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
+			ParameterResDTO resDTO = parameterSO
+					.retrieveParameterByTypeAndCode(reqDTO);
+			report.setDefinationType(resDTO.getPmParameter());
+		} finally {
+			parameterSO = null;
+		}
+		newBPReportDetailList.add(report);
+	}
+	// #25651 - End
+	
 	// #28188 - Start
 	/**
 	 * Group and sort briefingsitevist details.
@@ -8957,6 +9193,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			List<ScQtBsvDtl> rejectList = new ArrayList<>();
 			List<ScQtBsvDtl> pendingList = new ArrayList<>();
 			List<ScQtBsvDtl> completedList = new ArrayList<>();
+			List<ScQtBsvDtl> cancelledList = new ArrayList<>();
 			List<ScQtBsvDtl> pendingUpdateApprList = new ArrayList<>();
 			for (ScQtBsvDtl scQtBsvDtl : list) {
 				if (scQtBsvDtl.getBsvStatus() != null
@@ -8975,6 +9212,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						&& scQtBsvDtl.getBsvStatus().getStatusId()
 								.equals(QTStatusConst.BSV_COMPLETED)) {
 					completedList.add(scQtBsvDtl);
+				} else if (scQtBsvDtl.getBsvStatus() != null
+						&& scQtBsvDtl.getBsvStatus().getStatusId()
+								.equals(QTStatusConst.BSV_CANCELLED)) {
+					cancelledList.add(scQtBsvDtl);	
 				} else if (scQtBsvDtl.getBsvStatus() != null
 						&& scQtBsvDtl
 								.getBsvStatus()
@@ -8996,6 +9237,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 			if (CollectionUtils.isNotEmpty(completedList)) {
 				sortedList.addAll(completedList);
+			}
+			if (CollectionUtils.isNotEmpty(cancelledList)) {
+				sortedList.addAll(cancelledList);
 			}
 			if (CollectionUtils.isNotEmpty(pendingUpdateApprList)) {
 				sortedList.addAll(pendingUpdateApprList);

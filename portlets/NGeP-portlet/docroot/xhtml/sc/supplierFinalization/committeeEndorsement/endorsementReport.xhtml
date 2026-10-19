@@ -85,50 +85,64 @@
 		<p:panel id="panelJustificationId"
 			header="#{lbl['lbl.sc.sf.justification']}" toggleable="true">
 			<table style="width: 100%;">
-				<tr><!-- #34860 Start -->
-					<td style="width: 20%;vertical-align:top; padding-top:5px; margin-left: 55px;"><p:outputLabel
+				<tr>
+					<ui:remove>34860 Start</ui:remove>
+					<td class="TableFieldLeft" width="100px" style="text-align: left; padding-left: 59px;">
+						<ui:remove>34860 End</ui:remove>
+						<p:outputLabel
 							value="#{lbl['lbl.sc.sf.justification.selection']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" 
+							value="*" styleClass="mandatory"
 							rendered="#{!suppFinalizationBackingBean.managedBean.disableJustifications}"/></td>
-					<!-- #34860 End -->
-					<!-- #34860 Start -->
-					<td style="margin-left: 55px;"><p:selectManyCheckbox
+
+					<td style="margin-left: 55px;">
+					<ui:remove>34860 Start</ui:remove> 
+						<p:selectManyCheckbox
 							id="justificationDDId"
 							value="#{suppFinalizationBackingBean.managedBean.justificationReasonList}"
 							layout="pageDirection"
 							disabled="#{readOnly or suppFinalizationBackingBean.managedBean.disableJustifications}">
-
+							<ui:remove>34860 End</ui:remove>
 							<f:selectItems
 								value="#{suppFinalizationBackingBean.managedBean.justDropdown}" />
-
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								update="panelWithJustificationTxtId"
 								listener="#{suppFinalizationBackingBean.justificationChange}"
 								disabled="#{readOnly}" />
-						</p:selectManyCheckbox> <p:message id="justificationDDMsgId" for="justificationDDId"
-							display="icon" /></td>
-					<!-- #34860 End -->		
+						</p:selectManyCheckbox> <ui:remove>34860</ui:remove>
+						<p:message id="justificationDDMsgId" for="justificationDDId" display="icon" /></td>
+				</tr>
+				<ui:remove>34860 Start</ui:remove>
+				<tr>
+					<td
+						class="TableFieldLeft" width="100px"></td>
+					<td style="margin-left: 55px;">
+					<ui:remove>34860 End</ui:remove>
+						<h:panelGroup id="panelWithJustificationTxtId">
+							<c:if
+								test="#{suppFinalizationBackingBean.managedBean.renderjustificationTextbox}">
+								<table>
+									<tr>
+										<td style="float: right; margin-left: 55px;">
+										<ui:remove>34860 Start</ui:remove>
+											<p:inputTextarea id="justificationTxtId"
+												required="#{!readOnly}"
+												value="#{suppFinalizationBackingBean.managedBean.justificationText}"
+												cols="80" rows="3" onkeydown="limitTextArea(this,1000);"
+												onmouseout="limitTextArea(this,1000);"
+												disabled="#{readOnly}"
+												label="#{lbl['lbl.sc.sf.justification']}" /> 
+												<ui:remove>34860 End</ui:remove>
+											<p:message id="justificationTxtMsgId"
+												for="justificationTxtId" display="icon" /></td>
+										<td></td>
+									</tr>
+								</table>
+							</c:if>
+						</h:panelGroup>
+						<ui:remove>34860 Start</ui:remove></td>
 				</tr>
 			</table>
-			<h:panelGroup id="panelWithJustificationTxtId">
-				<c:if
-					test="#{suppFinalizationBackingBean.managedBean.renderjustificationTextbox}">
-					<table>
-						<tr>
-							<!-- #34860 Start -->
-							<td style="float: right; margin-left: 55px;"><p:inputTextarea
-									id="justificationTxtId" required="#{!readOnly}"
-									value="#{suppFinalizationBackingBean.managedBean.justificationText}" cols="80" rows="3"
-									onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,1000);"
-									disabled="#{readOnly}"
-									label="#{lbl['lbl.sc.sf.justification']}" /> <p:message
-									id="justificationTxtMsgId" for="justificationTxtId"
-									display="icon" /></td><!-- #34860 End -->
-							<td></td>
-						</tr>
-					</table>
-				</c:if>
-			</h:panelGroup>
+			<ui:remove>34860 End</ui:remove>
 		</p:panel>
 
 		<p:panel header="#{lbl['lbl.sc.committee.endorsement.report']}"
@@ -149,6 +163,7 @@
 			</table>
 		</p:panel>
 	</p:panel>
+	<ui:remove>34860 End</ui:remove>
 
 	<p:panel header="#{lbl['lbl.sc.sf.up.edorse.rpt']}" toggleable="true">
 
@@ -183,4 +198,5 @@
 		</p:dataTable>
 
 	</p:panel>
+
 </ui:composition>

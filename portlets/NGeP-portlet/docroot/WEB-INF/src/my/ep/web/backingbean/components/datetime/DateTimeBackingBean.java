@@ -172,8 +172,6 @@ public class DateTimeBackingBean {
 	 * @return the date
 	 */
 	public Date timeChangedActionBSV(UIComponent component) {
-		debugLogger("timeChangedAction");
-
 	    Date dateValue = null;
 	    FacesScopes facesScopes = new FacesScopes();
 
@@ -183,25 +181,66 @@ public class DateTimeBackingBean {
 
 	    Object dateObj = calDateObj.getValue();
 
-	    Object hourObj =
-	            ((HtmlSelectOneMenu)
-	                    facesScopes.findComponentById(component, "calHour"))
-	                    .getValue();
+	    HtmlSelectOneMenu hourMenu =
+	            (HtmlSelectOneMenu)
+	                    facesScopes.findComponentById(component, "calHour");
 
-	    Object minuteObj =
-	            ((HtmlSelectOneMenu)
-	                    facesScopes.findComponentById(component, "calMin"))
-	                    .getValue();
+	    HtmlSelectOneMenu minuteMenu =
+	            (HtmlSelectOneMenu)
+	                    facesScopes.findComponentById(component, "calMin");
+
+	    Object hourObj = hourMenu.getValue();
+	    Object minuteObj = minuteMenu.getValue();
 
 	    //#28188 - Start
-	    if (dateObj != null){
+	    if (dateObj != null) {
+
+	        /*
+	         * Always check whether the currently selected hour is still valid.
+	         *
+	         * This is important when postponing on CURRENT DATE.
+	         *
+	         * Example:
+	         * Old BSV = 01/09/2026 09:00
+	         * Current time = 01/09/2026 13:08
+	         *
+	         * Old hour 09 is no longer valid.
+	         * The first available hour may be 13.
+	         */
+	        String firstAvailableHour = getFirstAvailableHour(component);
+
 	        if (hourObj == null || StringUtils.isBlank(hourObj.toString())) {
-	            //hourObj = "00";
-	        	hourObj = getFirstAvailableHour(component);
+	            hourObj = firstAvailableHour;
+	        } else {
+	            int selectedHour = Integer.parseInt(hourObj.toString());
+	            int availableHour = Integer.parseInt(firstAvailableHour);
+
+	            if (selectedHour < availableHour) {
+	                hourObj = firstAvailableHour;
+	            }
 	        }
-	        
+
+	        /*
+	         * Check the minute against the selected/effective hour.
+	         *
+	         * This prevents an old minute such as 00 from being used when
+	         * the current-day restriction requires 30, 45, etc.
+	         */
+	        String firstAvailableMinute = getFirstAvailableMinute(component);
+
 	        if (minuteObj == null || StringUtils.isBlank(minuteObj.toString())) {
-	            minuteObj = getFirstAvailableMinute(component);
+	            minuteObj = firstAvailableMinute;
+	        } else {
+	            int selectedMinute = Integer.parseInt(minuteObj.toString());
+	            int availableMinute = Integer.parseInt(firstAvailableMinute);
+
+	            /*
+	             * Only replace the minute when it is below the minimum
+	             * minute for the currently selected/effective hour.
+	             */
+	            if (selectedMinute < availableMinute) {
+	                minuteObj = firstAvailableMinute;
+	            }
 	        }
 
 	        int hourValue = Integer.parseInt(hourObj.toString());
@@ -230,72 +269,94 @@ public class DateTimeBackingBean {
 	 * @return the date
 	 */
 	public List<SelectItem> getHoursDropdownValuesBSV(UIComponent component) {
-	    List<SelectItem> hours = new ArrayList<>();
+		List<SelectItem> hours = new ArrayList<>();
 
-	    FacesContext context = FacesContext.getCurrentInstance();
-	    UIComponent composite =
-	            UIComponent.getCurrentCompositeComponent(context);
+		FacesContext context = FacesContext.getCurrentInstance();
+		UIComponent composite = UIComponent
+				.getCurrentCompositeComponent(context);
 
-	    
-	    Date minDate = (Date) composite.getAttributes().get("restrictionDateTime");
-	    
-	    /*FacesScopes facesScopes = new FacesScopes();
+		Date bsvNormalMaintain = (Date) composite.getAttributes().get(
+				"checkBSVNormalMain");
 
-	    org.primefaces.component.calendar.Calendar calDateObj =
-	            (org.primefaces.component.calendar.Calendar)
-	                    facesScopes.findComponentById(composite, "calDate");*/
+		Date minDate = (Date) composite.getAttributes().get(
+				"restrictionDateTime");
 
-	    
-	    Date selectedDate = getSelectedCalendarDate(composite, minDate);
+		Date selectedDate = getSelectedCalendarDate(composite, minDate);
 
-	    log.info("MIN DATE = " + minDate);
-	    log.info("SELECTED DATE = " + selectedDate);
+		// 28188 -start-
+		/*
+		 * Use effective restriction: - existing BSV -> retain existing
+		 * restriction - postpone today -> use current time if later
+		 */
+		Date effectiveMinDate = getEffectiveBSVRestriction(composite, minDate,
+				selectedDate);
+		// 28188 -end-
 
-	    int minHour = 0;
-	    
-	    //#28188 - Start
-	    if (minDate != null && selectedDate != null) {
+		int minHour = 0;
 
-	        Calendar calMin = Calendar.getInstance();
-	        calMin.setTime(minDate);
+		// 28188 -start-
+		if (effectiveMinDate != null && selectedDate != null) {
+			Calendar calMin = Calendar.getInstance();
+			calMin.setTime(effectiveMinDate);
+			Calendar calSel = Calendar.getInstance();
+			calSel.setTime(selectedDate);
 
-	        Calendar calSel = Calendar.getInstance();
-	        calSel.setTime(selectedDate);
+			boolean sameDay = calMin.get(Calendar.YEAR) == calSel
+					.get(Calendar.YEAR)
+					&& calMin.get(Calendar.DAY_OF_YEAR) == calSel
+					.get(Calendar.DAY_OF_YEAR);
 
-	        boolean sameDay =
-	            calMin.get(Calendar.YEAR) == calSel.get(Calendar.YEAR)
-	            &&
-	            calMin.get(Calendar.DAY_OF_YEAR) == calSel.get(Calendar.DAY_OF_YEAR);
-	        
-	        if (sameDay) {
+			if (sameDay) {
+				int modValue = Integer.parseInt(composite.getAttributes()
+						.get("modVal").toString());
+				int oldHour = calMin.get(Calendar.HOUR_OF_DAY);
+				int oldMinute = calMin.get(Calendar.MINUTE);
+				if (bsvNormalMaintain != null) {
+					/*
+					 * Existing/edit BSV: retain existing hour.
+					 */
+					minHour = oldHour;
+				} else {
+					/*
+					 * Postpone/new BSV: add minimum interval first.
+					 */
+					int nextMinute = oldMinute + modValue;
+					/*
+					 * Round UP to next valid slot.
+					 * 
+					 * Example: 15:41 + 15 = 15:56 rounded = 16:00
+					 */
+					if (nextMinute % modValue != 0) {
+						nextMinute = ((nextMinute / modValue) + 1) * modValue;
+					}
+					/*
+					 * If minute rolls to 60 or above, minimum hour becomes next
+					 * hour.
+					 */
+					if (nextMinute >= 60) {
+						minHour = oldHour + 1;
+					} else {
+						minHour = oldHour;
+					}
+				}
+			} else {
+				minHour = 0;
+			}
+		}
+		// 28188 -end-
 
-	            int modValue = Integer.parseInt(
-	                composite.getAttributes().get("modVal").toString()
-	            );
+		/*
+		 * Safety for end of day.
+		 */
+		if (minHour > 23) {
+			minHour = 23;
+		}
 
-	            int oldHour = calMin.get(Calendar.HOUR_OF_DAY);
-	            int oldMinute = calMin.get(Calendar.MINUTE);
+		for (int i = minHour; i < 24; i++) {
 
-	            int lastMinuteSlot = 60 - modValue; // 45 if modVal = 15
-
-	            if (oldMinute >= lastMinuteSlot) {
-	                minHour = oldHour + 1;
-	            } else {
-	                minHour = oldHour;
-	            }
-
-	        } else {
-	            minHour = 0;
-	        }
-	    }
-	    //#28188 - End
-
-	    for (int i = minHour; i < 24; i++) {
-	        hours.add(new SelectItem(
-	                String.format("%02d", i),
-	                String.format("%02d", i)
-	        ));
-	    }
+			hours.add(new SelectItem(String.valueOf(i), String
+					.format("%02d", i)));
+		}
 
 	    return hours;
 	}
@@ -340,106 +401,217 @@ public class DateTimeBackingBean {
 	    List<SelectItem> minutes = new ArrayList<>();
 
 	    FacesContext context = FacesContext.getCurrentInstance();
-	    UIComponent composite =
-	            UIComponent.getCurrentCompositeComponent(context);
+	    UIComponent composite = UIComponent
+	            .getCurrentCompositeComponent(context);
 
-		// 28188 -start-
+	    Date bsvNormalMaintain = (Date) composite.getAttributes().get(
+	            "checkBSVNormalMain");
 
-		Date bsvNormalMaintain = (Date) composite.getAttributes().get(
-				"checkBSVNormalMain");
-		// 28188 -end-
-	    
-	    Date minDate = (Date) composite.getAttributes().get("restrictionDateTime");
+	    Date minDate = (Date) composite.getAttributes().get(
+	            "restrictionDateTime");
 
 	    FacesScopes facesScopes = new FacesScopes();
 
-	    /*org.primefaces.component.calendar.Calendar calDateObj =
-	            (org.primefaces.component.calendar.Calendar)
-	                    facesScopes.findComponentById(composite, "calDate");*/
+	    Object hourObj = ((HtmlSelectOneMenu) facesScopes.findComponentById(
+	            composite, "calHour")).getValue();
 
-	    Object hourObj =
-	            ((HtmlSelectOneMenu)
-	                    facesScopes.findComponentById(composite, "calHour"))
-	                    .getValue();
-
-	    if (hourObj == null || StringUtils.isBlank(hourObj.toString())) {
-	        hourObj = getFirstAvailableHour(component);
-	    }
-	    
+	    /*
+	     * Get the selected calendar date first.
+	     */
 	    Date selectedDate = getSelectedCalendarDate(composite, minDate);
 
-	    int modValue = Integer.parseInt(
-	            composite.getAttributes().get("modVal").toString()
-	    );
+	    /*
+	     * Use exactly the same restriction as hour dropdown.
+	     *
+	     * IMPORTANT:
+	     * Keep this unchanged so the future-date fix continues to work.
+	     */
+	    Date effectiveMinDate = getEffectiveBSVRestriction(composite, minDate,
+	            selectedDate);
+
+	    int modValue = Integer.parseInt(composite.getAttributes().get("modVal")
+	            .toString());
+
+	    /*
+	     * Determine the first valid hour.
+	     *
+	     * If the existing hour is older than the valid hour, use the valid hour
+	     * for minute calculation.
+	     *
+	     * Example:
+	     *
+	     * Old BSV       = 09:00
+	     * Current time  = 13:08
+	     * Valid hour    = 13
+	     *
+	     * Even if calHour still contains 09, calculate minutes using 13.
+	     */
+	    String firstAvailableHour = getFirstAvailableHour(component);
+
+	    if (hourObj == null || StringUtils.isBlank(hourObj.toString())) {
+	        hourObj = firstAvailableHour;
+	    } else {
+	        int selectedHour = Integer.parseInt(hourObj.toString());
+	        int availableHour = Integer.parseInt(firstAvailableHour);
+
+	        if (selectedHour < availableHour) {
+	            hourObj = firstAvailableHour;
+	        }
+	    }
 
 	    int minMinute = 0;
 
-	    if (minDate != null && selectedDate != null && hourObj != null) {
+	    if (effectiveMinDate != null && selectedDate != null && hourObj != null) {
 
 	        Calendar calMin = Calendar.getInstance();
-	        calMin.setTime(minDate);
+	        calMin.setTime(effectiveMinDate);
 
 	        Calendar calSel = Calendar.getInstance();
 	        calSel.setTime(selectedDate);
 
 	        boolean sameDay =
 	                calMin.get(Calendar.YEAR) == calSel.get(Calendar.YEAR)
-	                        && calMin.get(Calendar.DAY_OF_YEAR) == calSel.get(Calendar.DAY_OF_YEAR);
+	                &&
+	                calMin.get(Calendar.DAY_OF_YEAR)
+	                        == calSel.get(Calendar.DAY_OF_YEAR);
 
 	        int selectedHour = Integer.parseInt(hourObj.toString());
-
 
 	        //#28188 - Start
 	        if (sameDay) {
 
 	            int oldHour = calMin.get(Calendar.HOUR_OF_DAY);
 	            int oldMinute = calMin.get(Calendar.MINUTE);
-	            
-				// 28188 -start-
-				int nextMinute = oldMinute;
-				if (null == bsvNormalMaintain) {
-					nextMinute = oldMinute + modValue;
-				}
-				// 28188 -end-
-                
-	            if (nextMinute >= 60) {
+
+	            int nextMinute = oldMinute;
+
+	            /*
+	             * Postpone/new BSV:
+	             * move one interval forward.
+	             *
+	             * Keep your existing logic.
+	             */
+	            if (bsvNormalMaintain == null) {
+	                nextMinute = oldMinute + modValue;
+
 	                /*
-	                 * Old time is at last minute slot, example 07:45.
-	                 * Next valid time is next hour 08:00.
+	                 * Round UP to next valid slot.
+	                 *
+	                 * Example:
+	                 * 13:08 + 15 = 13:23
+	                 * Rounded = 13:30
 	                 */
-	                if (selectedHour <= oldHour) {
-	                    selectedHour = oldHour + 1;
+	                if (nextMinute % modValue != 0) {
+	                    nextMinute = ((nextMinute / modValue) + 1)
+	                            * modValue;
 	                }
-
-	                minMinute = 0;
-
-	            } else if (selectedHour <= oldHour) {
-
-	                minMinute = nextMinute;
-
-	                if (minMinute % modValue != 0) {
-	                    minMinute = ((minMinute / modValue) + 1) * modValue;
-	                }
-
-	            } else {
-	                minMinute = 0;
 	            }
 
+	            /*
+	             * Rollover case.
+	             *
+	             * Example:
+	             * 13:50 + 15 = 14:05
+	             * Minimum hour becomes 14.
+	             *
+	             * Hour dropdown already starts from 14,
+	             * therefore minutes start from 00.
+	             */
+	            if (nextMinute >= 60) {
+	                minMinute = 0;
+	            } else if (selectedHour <= oldHour) {
+	                /*
+	                 * Same minimum hour.
+	                 */
+	                minMinute = nextMinute;
+
+	            } else {
+	                /*
+	                 * User selected a later hour.
+	                 * All minute slots are available.
+	                 */
+	                minMinute = 0;
+	            }
 	        } else {
+	            /*
+	             * Different/future date:
+	             * keep ALL minute slots available.
+	             *
+	             * This is important for your Video 1 fix.
+	             */
 	            minMinute = 0;
 	        }
-	        
 	        //#28188 - End
 	    }
 
+	    /*
+	     * Safety:
+	     * never allow 60 to become the starting minute.
+	     */
+	    if (minMinute >= 60) {
+	        minMinute = 0;
+	    }
+
+	    /*
+	     * Build allowed minute list.
+	     */
 	    for (int i = minMinute; i < 60; i++) {
 	        if (i % modValue == 0) {
 	            minutes.add(new SelectItem(
-	                    String.format("%02d", i),
-	                    String.format("%02d", i)
-	            ));
+	                    String.valueOf(i),
+	                    String.format("%02d", i)));
 	        }
 	    }
+
+	    /*
+	     * Restore existing BSV minute only when it is actually valid
+	     * for the currently displayed/effective hour.
+	     */
+	    if (selectedDate != null && hourObj != null) {
+
+	        Calendar existingCal = Calendar.getInstance();
+	        existingCal.setTime(selectedDate);
+
+	        int existingHour = existingCal.get(Calendar.HOUR_OF_DAY);
+	        int existingMinute = existingCal.get(Calendar.MINUTE);
+	        int displayedHour = Integer.parseInt(hourObj.toString());
+
+	        /*
+	         * Only restore the existing minute when:
+	         *
+	         * 1. the displayed hour is the existing BSV hour, AND
+	         * 2. the existing minute is not earlier than the calculated minimum.
+	         *
+	         * This prevents an old minute such as 00 from being inserted back
+	         * into a current-date postpone selection that requires 30 or 45.
+	         */
+	        	
+        	if (displayedHour == existingHour
+        	        && existingMinute >= minMinute
+        	        && existingMinute % modValue == 0) {
+	 
+	            boolean minuteFound = false;
+
+	            for (SelectItem item : minutes) {
+	                if (item.getValue() != null
+	                        && Integer.parseInt(item.getValue().toString())
+	                                == existingMinute) {
+
+	                    minuteFound = true;
+	                    break;
+	                }
+	            }
+
+	            if (!minuteFound) {
+	                minutes.add(0,
+	                        new SelectItem(
+	                                String.valueOf(existingMinute),
+	                                String.format("%02d", existingMinute)));
+	            }
+	        }
+	    }
+
+	    //#28188 - End
 
 	    return minutes;
 	}
@@ -453,23 +625,128 @@ public class DateTimeBackingBean {
 	        (org.primefaces.component.calendar.Calendar)
 	            facesScopes.findComponentById(composite, "calDate");
 
-	    if (calDateObj == null) {
-	        return fallbackDate;
+	    if (calDateObj != null) {
+
+	        Object value = calDateObj.getLocalValue();
+
+	        if (value == null) {
+	            value = calDateObj.getValue();
+	        }
+
+	        if (value instanceof Date) {
+	            return (Date) value;
+	        }
 	    }
 
-	    Object value = calDateObj.getLocalValue();
+	    // For existing/edit record, use composite value first.
+	    Object componentValue = composite.getAttributes().get("value");
 
-	    if (value == null) {
-	        value = calDateObj.getValue();
+	    if (componentValue instanceof Date) {
+	        return (Date) componentValue;
 	    }
 
-	    if (value instanceof Date) {
-	        return (Date) value;
-	    }
-
-	    // IMPORTANT: if calendar value not available during AJAX/render,
-	    // use restrictionDateTime date as selected date
+	    // Only use restriction as last fallback.
 	    return fallbackDate;
 	}
 	//#28188 - End
+	
+	//#28188 - Start
+	private Date getEffectiveBSVRestriction(UIComponent composite,Date restrictionDateTime,
+	        Date selectedDate) {
+
+	    if (selectedDate == null) {
+	        return restrictionDateTime;
+	    }
+
+	    Date bsvNormalMaintain =
+	            (Date) composite.getAttributes().get("checkBSVNormalMain");
+
+	    Calendar selectedCal = Calendar.getInstance();
+	    selectedCal.setTime(selectedDate);
+
+	    Calendar todayCal = Calendar.getInstance();
+
+	    boolean selectedToday =
+	            selectedCal.get(Calendar.YEAR) == todayCal.get(Calendar.YEAR)
+	            &&
+	            selectedCal.get(Calendar.DAY_OF_YEAR)
+	                    == todayCal.get(Calendar.DAY_OF_YEAR);
+
+	    /*
+	     * Normal existing/edit record.
+	     * Do NOT replace its original time.
+	     */
+	    if (bsvNormalMaintain != null) {
+	        return restrictionDateTime;
+	    }
+
+	    /*
+	     * Postpone mode + selected date is today.
+	     *
+	     * Must not use old BSV time when current
+	     * time is already later.
+	     */
+	    
+	    if (selectedToday) {
+
+	        Date now = new Date();
+
+	        if (restrictionDateTime == null ||
+	                now.after(restrictionDateTime)) {
+
+	            /*
+	             * For postpone on CURRENT DATE, always move to the
+	             * NEXT valid interval.
+	             *
+	             */
+	            int modValue = Integer.parseInt(
+	                    composite.getAttributes().get("modVal").toString());
+
+	            return getFirstAvailableBSVTime(now, modValue);
+	        }
+	    }
+
+	    return restrictionDateTime;
+	}
+	//#28188 - End
+	
+	//#28188 - Start
+	/**
+	 * Gets the first valid BSV time based on the current minute.
+	 *
+	 * This is only used when postponing to the current date.
+	 *
+	 */
+	private Date getFirstAvailableBSVTime(Date restrictionDateTime,
+	        int modValue) {
+
+	    if (restrictionDateTime == null) {
+	        return null;
+	    }
+
+	    Calendar cal = Calendar.getInstance();
+	    cal.setTime(restrictionDateTime);
+
+	    int minute = cal.get(Calendar.MINUTE);
+
+	    /*
+	     * Move to the next valid interval.
+	     */
+	    int nextMinute = ((minute / modValue) + 1) * modValue;
+
+	    if (nextMinute >= 60) {
+	        cal.add(Calendar.HOUR_OF_DAY, 1);
+	        cal.set(Calendar.MINUTE, 0);
+	    } else {
+	        cal.set(Calendar.MINUTE, nextMinute);
+	    }
+
+	    cal.set(Calendar.SECOND, 0);
+	    cal.set(Calendar.MILLISECOND, 0);
+
+	    return cal.getTime();
+	}
+	//#28188 - End
+
+
 }

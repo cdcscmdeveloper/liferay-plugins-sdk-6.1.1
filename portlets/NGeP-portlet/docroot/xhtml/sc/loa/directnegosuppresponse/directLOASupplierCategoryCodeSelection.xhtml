@@ -41,8 +41,12 @@
 
 					<p:column headerText="#{lbl['lbl.sc.category.type']}"
 						style="width:10%;white-space:normal;">
-						<h:outputText
-							value="#{directLOABackingBean.getParameterDesc(categorySelected.pmCategoryL3.categoryTypeCode)}" />
+						<!-- #41103 start -->
+						<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
+							rendered="#{not directLOABackingBean.isSpecialCategoryType(categorySelected.pmCategoryL3)}" />
+						<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
+							rendered="#{directLOABackingBean.isSpecialCategoryType(categorySelected.pmCategoryL3)}" />
+						<!-- #41103 end -->
 					</p:column>
 
 				</p:dataTable>

@@ -101,6 +101,7 @@ import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItemSummary;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
+import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -289,12 +290,15 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				if(resDTO.getApproverGroupUserList().isEmpty()){
-					//#24764
-					throw new EpException(MessageConst.ERROR_740058);
-				}
+				// Skip this checking to allow save (this checking ady done in signaction
 				FlActor actor = fulfilmentSO.retrieveFlActors(getManagedBean().getInvoice().getFlRequest().getDocType(), getManagedBean().getInvoice().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value());
 				listOfApprover = sortApproverUserList(resDTO.getApproverGroupUserList(),actor.getUser(),getManagedBean().getInvoice().getFlRequest().getPmUserGroup().getUserGroupId());
+				
+				// #31788 - Update new user need to be assigned
+				if (getManagedBean().isAssignNewUser()) {
+					reqDTO.setAssignNewUser(Boolean.TRUE);
+					reqDTO.setNewUser(listOfApprover.get(0));
+				}
 			}
 			reqDTO.setApproverUserList(listOfApprover);
 			reqDTO.setOutcome(action);
@@ -314,6 +318,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			if(null != getManagedBean().getPmDigiSign()){
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}
+			
 			if(!(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE))){
 
 				reqDTO.setPmUser(getManagedBean().getPmUser());
@@ -345,6 +350,11 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				}
 				listOfApprover = sortApproverUserList(resDTO.getApproverGroupUserList(),approver,getManagedBean().getInvoice().getFlRequest().getPmUserGroup().getUserGroupId());
 				reqDTO.setApproverUserList(listOfApprover);
+				// #31788 - Update new user need to be assigned
+				if (getManagedBean().isAssignNewUser()) {
+					reqDTO.setAssignNewUser(Boolean.TRUE);
+					reqDTO.setNewUser(listOfApprover.get(0));
+				}
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					if(reqDTO.isDan()){
 						if(null !=getManagedBean().getInvoice().getFlAdjustments()){
@@ -418,11 +428,25 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					//end 21229
 				}
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(messageId, 
-									new String[]{resDTO.getSupplierInvoiceNo()}, 
-									MessageUtils.BUNDLE_COMMON_MESSAGES, 
-									new FacesScopes().getUserLocale())));
+					//#31788 - acnowldegement page inactive user
+					if (reqDTO.isAssignNewUser()) {
+						messageId = MessageConst.INFO_700128;
+						FacesContext.getCurrentInstance().addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+										messageId,
+										new String[] {
+												getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
+														ParameterConst.DOCTYPE_INVOICE), resDTO.getSupplierInvoiceNo(),
+												reqDTO.getNewUser().getUserName() },
+										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					} else {
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(messageId, 
+										new String[]{resDTO.getSupplierInvoiceNo()}, 
+										MessageUtils.BUNDLE_COMMON_MESSAGES, 
+										new FacesScopes().getUserLocale())));
+					}
 				}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 							MessageUtils.getMessage(messageId, 
@@ -430,13 +454,27 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 									MessageUtils.BUNDLE_COMMON_MESSAGES, 
 									new FacesScopes().getUserLocale())));
 				}else{
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-							FacesMessage.SEVERITY_INFO, 
-							null,
-							MessageUtils.getMessage(messageId, 
-									new String[]{messagePrefix+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_INVOICE), resDTO.getSupplierInvoiceNo()}, 
-									MessageUtils.BUNDLE_COMMON_MESSAGES, 
-									new FacesScopes().getUserLocale())));
+					//#31788 - acnowldegement page inactive user
+					if (reqDTO.isAssignNewUser()) {
+						messageId = MessageConst.INFO_700128;
+						FacesContext.getCurrentInstance().addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+										messageId,
+										new String[] {
+												getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
+														ParameterConst.DOCTYPE_INVOICE), resDTO.getSupplierInvoiceNo(),
+												reqDTO.getNewUser().getUserName() },
+										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					} else {
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+								FacesMessage.SEVERITY_INFO, 
+								null,
+								MessageUtils.getMessage(messageId, 
+										new String[]{messagePrefix+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_INVOICE), resDTO.getSupplierInvoiceNo()}, 
+										MessageUtils.BUNDLE_COMMON_MESSAGES, 
+										new FacesScopes().getUserLocale())));
+					}
 				}
 				
 				boolean isPendingAP59Decision = false;
@@ -1826,7 +1864,12 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 	public String signingAction(String outcome) throws Exception{
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		IInvoiceSO invoiceSO = (IInvoiceSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IInvoiceSO.class);
+		//#31788 - fulfilmentSO
+		IFulfilmentSO fulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		// #31788 - fulfilment request
+		FlFulfilmentRequest flRequest = getManagedBean().getInvoice().getFlRequest();
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 			if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
 				getManagedBean().setSelectedTabIndex(0);
@@ -1925,6 +1968,32 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			}
 		}
 		
+		// #31788 - Check FL Approver if DAN and Submit / (Update & Cancel)
+		if ((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isDanExists())
+				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)
+				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IUserSO.class);
+			FlActor flApprover = fulfilmentSO.retrieveFlActors(flRequest.getDocType(), flRequest.getFulfilmentReqId(),
+					RoleCode.FL_APPROVER.value());
+			BigDecimal sumItemAmt = fulfilmentSO.getSumTotalItemsAmtByReqId(flRequest.getFulfilmentReqId());
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(flApprover.getUser().getUserId());
+			userReqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
+			userReqDTO.setGroupId(flRequest.getPmUserGroup().getUserGroupId());
+			userReqDTO.setRoleCode(RoleCode.FL_APPROVER.value());
+			userReqDTO.setApprovalLimit(sumItemAmt);
+			UserResDTO userResDTO = userSO.validateUserByRoleCode(userReqDTO);
+			if (userResDTO.getUserStatus().equals(FulfilmentConst.REPLACE_USER)) {
+				getManagedBean().setAssignNewUser(Boolean.TRUE);
+			} else if (userResDTO.getUserStatus().equals(FulfilmentConst.INACTIVE_USER)) {
+				PmOrgProfile orgProfile = flRequest.getPreparedOrgProfile();
+				throw new EpException(MessageConst.ERROR_740130,
+						new String[] { orgProfile.getOrgValidity().getOrgName(),
+								getEpRoleDescByRoleCode(RoleCode.FL_APPROVER.value()) });
+			}
+		}
+		
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 				if(!getManagedBean().isReliefDeclarationCheck()){
@@ -1940,14 +2009,21 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					getManagedBean().setSelectedTabIndex(0);
 					throw new EpException(MessageConst.ERROR_745072);
 				}
-				IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);//28719
-				UserReqDTO userReqDTO = new UserReqDTO();
-				userReqDTO.setRoleCode(RoleCode.PAY_OFFICER.toString());
-				userReqDTO.setOrgProfileId(getManagedBean().getInvoice().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
-				UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
-				if(userResDTO.getUserList() == null || userResDTO.getUserList().isEmpty()){
-					throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.paymentMatchOfficer",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
-				}				
+				//#31788 - Check PMO without DAN
+				if (!isDanExists()) {
+					IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);// 28719
+					UserReqDTO userReqDTO = new UserReqDTO();
+					userReqDTO.setRoleCode(RoleCode.PAY_OFFICER.value());
+					userReqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
+					UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
+					if (userResDTO.getUserList() == null || userResDTO.getUserList().isEmpty()) {
+						PmOrgProfile orgProfile = flRequest.getPreparedOrgProfile();
+						throw new EpException(MessageConst.ERROR_740130, new String[] {
+								orgProfile.getOrgValidity().getOrgName(),
+								getEpRoleDescByRoleCode(RoleCode.PAY_OFFICER.value()) });
+					}
+				}		
 			}
 			reqDTO.setOutcome(outcome);
 			reqDTO.setInvoice(getManagedBean().getInvoice());
@@ -2875,6 +2951,39 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 	}
 	// #34443 end
 	
+	// #31788 - START
+	/**
+	 * Checks whether any invoice item summary has a DAN (positive adjustedamount).
+	 * 
+	 * @param invoiceItemSummaries list of invoice item summaries to check
+	 * @return true if DAN exists, false otherwise
+	 */
+	private boolean isDanExists() {
+		List<FlInvoiceItemSummary> invoiceItemSummaries = getManagedBean().getInvoice().getFlInvoiceItemSummary();
+		for (FlInvoiceItemSummary invItemSumm : invoiceItemSummaries) {
+			BigDecimal adjustedAmt = invItemSumm.getInvAmt().subtract(invItemSumm.getOrderedAmt());
+			if (invItemSumm.getRecalledAmt() != null && invItemSumm.getRecalledAmt().doubleValue() > 0) {
+				BigDecimal receivedItemAmount = new BigDecimal(0);
+				for (FlInvoiceItem invItem : invItemSumm.getFlInvoiceItem()) {
+					if (invItem.getReceivedQty() != null && invItem.getReceivedQty().doubleValue() >= 0
+							&& invItem.getGstUnitPrice() != null && invItem.getGstUnitPrice().doubleValue() >= 0) {
+						BigDecimal receivedAmt = invItem.getReceivedQty().multiply(invItem.getGstUnitPrice());
+						receivedItemAmount = receivedItemAmount.add(receivedAmt);
+					}
+				}
+				adjustedAmt = invItemSumm.getInvAmt().subtract(
+						receivedItemAmount.setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE,
+								RoundingMode.HALF_UP));
+			}
+
+			if (adjustedAmt.doubleValue() > 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+	// #31788 - END
+
 	//40793-start
 	/**
 	 * validate current POCO work flow status
@@ -2903,6 +3012,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			throw new EpException(MessageConst.ERROR_740069);
 		}
 	}
-	//40793-end
+	//40793-
 	
 }

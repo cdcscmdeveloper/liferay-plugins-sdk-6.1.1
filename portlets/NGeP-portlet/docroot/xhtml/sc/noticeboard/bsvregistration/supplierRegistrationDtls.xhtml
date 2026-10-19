@@ -7,33 +7,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
-<style type="text/css">
-
- #bsvId:hover {
-	background-color: none !important;
-	box-shadow: none !important;
-	border:none !important;
-  	background-color: none !important;
-}
-#briefigDtlId:hover {
-	background-color: none !important;
-	box-shadow: none !important;
-	border:none !important;
-  	background-color: none !important;
-}
-#sitevisitDtlId:hover {
-	background-color: none !important;
-	box-shadow: none !important;
-	border:none !important;
-  	background-color: none !important;
-}
-#bsvDtls:hover {
-	background-color: none !important;
-	box-shadow: none !important;
-	border:none !important;
-  	background-color: none !important;
-}
-</style>
+     <ui:remove>#28188 -start-</ui:remove>
 		
           <c:if test="#{bsvDetails.scQtBsv.sameBsv}">
 			<p:panel id="bsvId" header="#{lbl['lbl.sc.notice.board.briefing.and.sv.dtls']}" toggleable="true">
@@ -43,7 +17,7 @@
 					selectionMode="single"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					selection="#{noticeBoardBackingBean.managedBean.briefingDtls}"
-					styleClass="bsvDtls">
+					><ui:remove>#28188 -start-</ui:remove>
 					<p:ajax event="rowSelect"
 						listener="#{noticeBoardBackingBean.onRowSelect}" process="@this"
 						update="@all" partialSubmit="true" />
@@ -93,10 +67,10 @@
 					selectionMode="single"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					selection="#{noticeBoardBackingBean.managedBean.briefingDtls}"
-					styleClass="bsvDtls">
+					><ui:remove>#28188 -start-</ui:remove>
 					<p:ajax event="rowSelect"
 						listener="#{noticeBoardBackingBean.onRowSelect}" process="@this"
-						update=":form:attendanceDetailstbl :form:attendanceNavInfo :form:registerBtnId"  />
+						update="@all" partialSubmit="true"  /><ui:remove>#28188 -start-</ui:remove>
 					<!-- <p:column style="width:2%" selectionMode="multiple" /> -->
 					<p:column headerText="#{lbl['lbl.sc.description']}"
 						style="width:25%;white-space: normal;">
@@ -133,19 +107,23 @@
 				</p:dataTable>
 
 			</p:panel>
-
-			<p:panel id="sitevisitDtlId"  header="#{lbl['lbl.sc.site.visit.dtls']}" toggleable="true">
+			
+			
+        <ui:remove>#28188 -start-</ui:remove>
+		<h:panelGroup id="suppSlefRegGroup">
+				
+	<p:panel id="sitevisitDtlId"  header="#{lbl['lbl.sc.site.visit.dtls']}" toggleable="true">
 
 				<p:dataTable var="sitevisitDtls" value="#{bsvDetails.sitevisitList}"
 					rowKey="#{sitevisitDtls.qtBsvDtlId}" selectionMode="single"
 					selection="#{noticeBoardBackingBean.managedBean.briefingDtls}"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					styleClass="bsvDtls">
+					><ui:remove>#28188 -start-</ui:remove>
 
 					<!-- <p:column style="width:2%" selectionMode="multiple" /> -->
 					<p:ajax event="rowSelect"
 						listener="#{noticeBoardBackingBean.onRowSelect}" process="@this"
-						update=":form:attendanceDetailstbl :form:attendanceNavInfo :form:registerBtnId" />
+						update="@all" partialSubmit="true"  /><ui:remove>#28188 -start-</ui:remove>
 					<p:column headerText="#{lbl['lbl.sc.description']}"
 						style="width:25%;white-space: normal;">
 						<h:outputText value="#{sitevisitDtls.bsvDesc}" />
@@ -183,7 +161,10 @@
 				</p:dataTable>
 
 			</p:panel>
-		</c:if>
+		</h:panelGroup>
+		<ui:remove>#28188 -end-</ui:remove>
+		
+	</c:if>
 		<p:spacer height="5px"></p:spacer>
 		<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0"
 			width="100%">

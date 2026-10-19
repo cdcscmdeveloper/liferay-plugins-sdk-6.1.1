@@ -41,9 +41,11 @@ import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.audit.AuditContractReqDTO; //35506
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
+import my.ep.dto.pm.authorization.user.UserStatusCheckDTO; // 30737
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.requestctadmin.CTContractReqadminDataType;
 import my.ep.persistence.entity.ct.CtActor;
+import my.ep.persistence.entity.ct.CtContract; // 30737
 import my.ep.persistence.entity.ct.CtContractVer; //35506
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -78,6 +80,23 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 
 	private String confirmationContentMsg;//34442 
 
+	//#30737 - Start 
+    @Override
+    protected List<PmUser> getSelectedApprovers() {
+        return getManagedBean().getApproverModel().getTarget();
+    }
+    
+    @Override
+    protected CtContractVer getContractVer() {
+    	return getManagedBean().getContractVer();
+    }
+    
+    @Override
+    protected String getTaskName() {
+    	return getManagedBean().getTaskName();
+    }
+    //#30737 - End
+	
 	/**
 	 * This constructor method used to initialize the variable on start up
 	 * Setting button if user not call from BPM
@@ -691,7 +710,37 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 				&& getManagedBean().getCtContract().getAssignedCtAdmin().getUserId() == null) {
 			throw new EpException(MessageConst.ERROR_750054); 
 		}
+		
+		//#30737 - Start
+		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
+			log.info("xoxoxoxoxooxoxo action : "+outcome);
+			String approverType = determineRoleCode();
+			
+	        List<UserStatusCheckDTO> userStatusResults = 
+	        		checkUserStatus(approverType, getSelectedApprovers(), ctBB.getManagedBean().getDocTypeFromAgreementTaskList(), null);
+	        handleInactiveUserValidation(userStatusResults);
+		}
+		//#30737 - End
+		
 	}
+	
+	//#30737 - Start
+	/**
+	 * Determines the role code based on the contract type.
+	 * 
+	 * @return the role code string, or null if no matching contract type is
+	 *         found
+	 */
+	private String determineRoleCode() {
+		CtContract ctContract = getContractVer().getCtContract();
+		if (ctContract.getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+			return RoleCode.CT_APPROVER.value();
+		} else if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+			return RoleCode.BPK_CC_APPROVER.value();
+		}
+		return null;
+	}
+	//#30737 - End
 	
 	/*
 	 * Method to set user role as per user login

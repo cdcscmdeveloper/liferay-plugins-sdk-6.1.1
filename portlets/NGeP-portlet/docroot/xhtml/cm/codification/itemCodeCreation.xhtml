@@ -31,14 +31,32 @@
 				    value="#{lbl['lbl.btn.back']}"
 					action="#{itemCodeCreationBackingBean.backToCodificationPortal()}">
 					</p:commandButton></td>
-			<td style="text-align: right"><p:commandButton	
-			         value="#{lbl['lbl.cm.create.publish']}"
-                     onclick="createItem.show()">
-              </p:commandButton>
-				  </td>
-				</tr>
+			<td style="text-align: right">
+				<!-- 34447 Start -->
+				<p:commandButton
+				    value="#{lbl['lbl.cm.create.publish']}"
+				    actionListener="#{itemCodeCreationBackingBean.validateAddUnspscBeforePopup('createItem')}"
+				    process="@form" update="@form" />
+	            <!-- 34447 End -->
+			</td>
+			</tr>
 			</table> 
 			<br />
+
+			<!-- 34447 Start -->
+			<p:blockUI block="cmUNSPSCSingleUploadID" widgetVar="pageBlockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif" />
+			</p:blockUI>
+
+			<ac:confirmationPopupCM
+				id="createItem" widget="createItem"
+				loadingWidget="pageBlockWidget"
+				okAction="itemCodeCreationBackingBean.addNewUnspsc" hasParam="false"
+				content="#{lbl['lbl.cm.dialog.message']}"
+				selectedItem="#{itemCodeCreationBackingBean.managedBean.selectedLovUnspsc}"
+				update="@form">
+			</ac:confirmationPopupCM>
+			<!-- 34447 End -->
 
 			<p:panel header="#{lbl['lbl.cm.create.UNSPSC.code']}"
 				toggleable="true">
@@ -178,14 +196,6 @@
 
 			</p:panel>
 			
-			
-			<ac:confirmationPopup id="createItem" widget="createItem"
-				okAction="itemCodeCreationBackingBean.addNewUnspsc()"
-				width="400" height="100"
-				title="#{lbl['lbl.cm.dialog.cofirm.header']}"
-				content="#{lbl['lbl.cm.dialog.message']}"
-				update=":form"
-				oncomplete="createItem.hide();"/>
 			</h:panelGroup>
 
 	</ui:define>

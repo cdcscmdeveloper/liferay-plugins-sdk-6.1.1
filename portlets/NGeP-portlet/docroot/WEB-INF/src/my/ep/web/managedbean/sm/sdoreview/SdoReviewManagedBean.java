@@ -46,6 +46,11 @@ public class SdoReviewManagedBean extends BaseManagedBean{
 	private boolean emptyMandatoryDocHistory;
 	private boolean emptyNonMandatoryDocHistory;
 	//#11641 - END
+	
+	//#40112 - start
+	// the application has a successful AI extraction to review
+	private boolean aiExtracted;
+	//#40112 - end
 
 	public SmAppl getSmAppl() {
 		return smAppl;
@@ -224,5 +229,14 @@ public class SdoReviewManagedBean extends BaseManagedBean{
 		this.emptyNonMandatoryDocHistory = emptyNonMandatoryDocHistory;
 	}
 
+	//#40112 - start
+	public boolean isAiExtracted() {
+		return aiExtracted;
+	}
+
+	public void setAiExtracted(boolean aiExtracted) {
+		this.aiExtracted = aiExtracted;
+	}
+	//#40112 - end
 	
 }

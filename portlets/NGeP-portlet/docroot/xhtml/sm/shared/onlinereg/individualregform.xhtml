@@ -165,7 +165,8 @@
 				<td class="tdContent">
 				<p:outputPanel id="divisionIndiDropdownPanelId">
 					<ui:fragment rendered="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.adoptDivision}">
-						<p:selectOneMenu id="cmbPermDivision"
+						<!-- #36717 - ADD REQUIRED -->
+            			<p:selectOneMenu id="cmbPermDivision" required="#{!empty param['disableValidation']}"
 						label="#{lbl['lbl.sm.division']}"
 						value="#{registrationBackingBean.managedBean.smPermenantAdd.pmDivision.divisionId}"
 						style="width:80%">
@@ -174,11 +175,13 @@
 							value="#{registrationBackingBean.managedBean.permenantDivisionLs}"
 							itemValue="#{division.divisionId}"
 							itemLabel="#{division.divisionName}" />
-						<!-- #36718 - START - process panel when change dropdown value, reset value, update postcode -->
+						<!-- #36718, #36717 - START - process panel when change dropdown value, reset value, change parameer value to true, update postcode, add pmessage -->
 						<p:ajax event="change" process="@([id$=individualAddrPanel])"
 							listener="#{registrationBackingBean.populateDivisionByAddType('permenant',true)}"
 							update="cmbPermDistrict,cmbPermCity,txtPermPostcodeMy" />
 					</p:selectOneMenu>
+          <p:message id="cmbPermDivisionMsg" for="cmbPermDivision" display="icon" />
+					<!-- #36717 - END -->
 					</ui:fragment>
 				</p:outputPanel>
 				</td>
@@ -253,7 +256,9 @@
 								value="#{registrationBackingBean.managedBean.smPermenantAdd.postcode}"
 								validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
 								size="40" disabled="#{registrationBackingBean.managedBean.viewMode}">
-								<f:validator validatorId="postcodeValidator" />
+								<!-- #36717 - ADD AJAX -->
+								<p:ajax event="blur" partialSubmit="true"></p:ajax>
+                <f:validator validatorId="postcodeValidator" />
 							</p:inputText>
 							<p:message id="txtPermPostcodeMyMsg" for="txtPermPostcodeMy"
 								showSummary="true" showDetail="false" display="icon" />	

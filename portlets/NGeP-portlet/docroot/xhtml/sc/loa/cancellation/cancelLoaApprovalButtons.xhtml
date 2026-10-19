@@ -9,20 +9,37 @@
 
 	<ui:param name="bpmActionApprove" value="APPROVE" />
 	<ui:param name="bpmActionReject" value="REJECT" />
+
+	<ui:remove> 34449 - start</ui:remove>
+	<style type="text/css">
+	    .leftMsgConfirmDlg .ui-confirm-dialog-severity {
+	        display: none !important;
+	    }
+	    .leftMsgConfirmDlg .ui-dialog-content p {
+	        text-align: left !important;
+	        margin-left: 0 !important;
+	        padding-left: 0 !important;
+	    }
+	</style>
+	<ui:remove> 34449 - end</ui:remove>
+	
 	<div>
 		<p:commandButton value="#{lbl['lbl.btn.reject']}" onclick="rj.show()"
 			style="float:right;" />
 		<p:commandButton value="#{lbl['lbl.btn.approve']}" onclick="ap.show()"
 			style="float:right;" />
 
+		<ui:remove> 34449 - start</ui:remove>
 		<p:confirmDialog
 			message="#{lbl['lbl.sc.loa.cancel.dialog.confirm.reject.message']}"
-			header="#{lbl['lbl.sm.decision.reject.uppercase']}" severity="alert" widgetVar="rj">
+			header="#{lbl['lbl.sc.header.message.reject']}" severity="alert"
+			styleClass="leftMsgConfirmDlg"
+			widgetVar="rj">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}"
 					actionListener="#{lOACancelDetailBackingBean.updateBpmTaskAction(bpmActionReject)}"
-					oncomplete="rj.hide();" 
-					partialSubmit="true" process="@this" immediate="true" />
+					oncomplete="rj.hide();" partialSubmit="true" process="@this"
+					immediate="true" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					oncomplete="rj.hide();" />
 			</div>
@@ -30,15 +47,18 @@
 
 		<p:confirmDialog
 			message="#{lbl['lbl.sc.loa.cancel.dialog.confirm.approval.message']}"
-			header="#{lbl['lbl.sm.decision.approve.uppercase']}" severity="alert" widgetVar="ap">
+			header="#{lbl['lbl.sc.header.message.approve']}" severity="alert"
+			styleClass="leftMsgConfirmDlg"
+			widgetVar="ap">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}"
 					actionListener="#{lOACancelDetailBackingBean.updateBpmTaskAction(bpmActionApprove)}"
-					oncomplete="ap.hide();" 
-					partialSubmit="true" process="@this" immediate="true" />
+					oncomplete="ap.hide();" partialSubmit="true" process="@this"
+					immediate="true" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					oncomplete="ap.hide();" />
 			</div>
 		</p:confirmDialog>
+		<ui:remove> 34449 - end</ui:remove>
 	</div>
 </ui:composition>

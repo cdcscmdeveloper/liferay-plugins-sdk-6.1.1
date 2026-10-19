@@ -6,7 +6,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc"> <!-- 34447 -->
 
 
 
@@ -20,28 +21,56 @@
 				<ui:repeat var="action"
 					value="#{unspscCodeBackingBean.managedBean.action}">
 					<ui:param name="lblBpmBtn" value="lbl.bpm.action.#{action}" />
+					<!-- 34447 Start -->
 					<p:commandButton value="#{lbl[lblBpmBtn]}"
 						rendered="#{bpmTasklistBackingBean.managedBean.claim and action=='SUBMIT'}"
-						oncomplete="extensionConfirmation.show()"
-						update=":form:extensionConfirmationId"
-						action="#{unspscCodeBackingBean.checkRecomendOrSubmit()}"
-						disabled="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1}"></p:commandButton>
-						
+						disabled="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1}"
+						onclick="revExtCode_submitToSupplierPopup.show();" />
+
 					<p:commandButton value="#{lbl['lbl.bpm.action.RECOMMEND_TO_SUPPLIER']}"
-						action="#{unspscCodeBackingBean.bpmTesting('RECOMMEND_TO_SUPPLIER')}"  
-						rendered="#{bpmTasklistBackingBean.managedBean.claim and action == 'RECOMMEND_TO_SUPPLIER'}" 
-						disabled="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() !=1}" 
-						update="@form">
-					</p:commandButton>
-					
+						rendered="#{bpmTasklistBackingBean.managedBean.claim and action == 'RECOMMEND_TO_SUPPLIER'}"
+						disabled="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() !=1}"
+						onclick="revExtCode_recommendSupplierPopup.show();" />
+
 					<p:commandButton value="#{lbl['lbl.bpm.action.REJECT']}"
-						action="#{unspscCodeBackingBean.bpmTesting('REJECT')}"  
-						rendered="#{bpmTasklistBackingBean.managedBean.claim and action == 'REJECT'}" 
-						update="@form">
-					</p:commandButton>
-				
+						rendered="#{bpmTasklistBackingBean.managedBean.claim and action == 'REJECT'}"
+						actionListener="#{unspscCodeBackingBean.validateRejectBeforePopup('revExtCode_rejectConfirmPopup')}"
+						process="@form" update="@form" />
+					<!-- 34447 End -->
 				</ui:repeat>
-				
+
+				<!-- 34447 Start -->
+				<p:blockUI block="extensionFlowReviewID" widgetVar="pageBlockWidget">
+					<p:graphicImage value="/css/images/ajax-loader.gif" />
+				</p:blockUI>
+
+				<ac:confirmationPopupCM
+					id="revExtCode_rejectConfirmPopup" widget="revExtCode_rejectConfirmPopup"
+					loadingWidget="pageBlockWidget"
+					okParam="#{unspscCodeBackingBean.bpmTesting('REJECT')}" hasParam="true"
+					content="#{lbl['lbl.cd.dialog.message.reject.request']}"
+					update="@form">
+				</ac:confirmationPopupCM>
+
+				<ac:confirmationPopupCM
+					id="revExtCode_submitToSupplierPopup" widget="revExtCode_submitToSupplierPopup"
+					loadingWidget="pageBlockWidget"
+					okParam="#{unspscCodeBackingBean.submitToReviewExt('SUBMIT')}" hasParam="true"
+					content="#{lbl['lbl.cd.dialog.message.recommend']}"
+					selectedExtItem="#{unspscCodeBackingBean.managedBean.reviewExtCodeList[0]}"
+					update="@form">
+				</ac:confirmationPopupCM>
+
+				<ac:confirmationPopupCM
+					id="revExtCode_recommendSupplierPopup" widget="revExtCode_recommendSupplierPopup"
+					loadingWidget="pageBlockWidget"
+					okParam="#{unspscCodeBackingBean.bpmTesting('RECOMMEND_TO_SUPPLIER')}" hasParam="true"
+					content="#{lbl['lbl.cd.dialog.message.recommend']}"
+					update="@form"
+					itemList="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes}">
+				</ac:confirmationPopupCM>
+				<!-- 34447 End -->
+
 				<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}"
 					action="#{bpmTasklistBackingBean.claimTaskInDetailPage}"
 					rendered="#{!bpmTasklistBackingBean.managedBean.claim}"
@@ -168,24 +197,6 @@
 				</p:dataTable>
 
 			</p:panel>
-
-
-			<p:confirmDialog id="extensionConfirmationId"
-				message="#{unspscCodeBackingBean.managedBean.extensionConfirmationMsg}"
-				header="#{lbl['lbl.cm.dialog.cofirm.header']}"
-				widgetVar="extensionConfirmation">
-
-				<div align="right">
-					<p:commandButton id="confirmID"
-						value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
-						action="#{unspscCodeBackingBean.submitToReviewExt('SUBMIT')}" />
-					<p:commandButton id="declineID"
-						value="#{lbl['lbl.cm.dialog.cofirm.no']}"
-						onclick="extensionConfirmation.hide()" />
-				</div>
-
-			</p:confirmDialog>
-
 
 		</h:panelGroup>
 		<h:panelGroup id="recommendPanelId">

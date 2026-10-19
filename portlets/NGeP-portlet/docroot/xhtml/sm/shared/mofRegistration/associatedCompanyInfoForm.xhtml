@@ -70,9 +70,9 @@
 
 				<p:column headerText="#{lbl['lbl.sm.companyaddress']}"
 					style="width: 60%;white-space: normal;">
-					<h:outputText
-						value="#{backingBean.getFullAddress(assocBean.smAddress)}"
-						style="float : left" />
+					<!-- #36718 - Start  -->
+					<h:outputText value="#{backingBean.getFullAddressWithCountry(assocBean.smAddress)}" style="float : left" />
+					<!-- #36718 - End -->
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
 					<p:commandLink update=":form:tt:asDisp"
@@ -459,8 +459,11 @@
 									validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
 									size="35"
 									disabled="#{backingBean.managedBean.upsCannotEdit}">
-									<f:validator validatorId="postcodeValidator" />
-								</p:inputText>
+										<!-- #36718 - Start  -->
+										<p:ajax process="@this" partialSubmit="true" update="assocCmpyPostCodeMyMsg"
+											listener="#{backingBean.checkPostcode(backingBean.managedBean.selectedAssocCompany.smAddress.postcode)}" />
+										<!-- #36718 - End  -->
+									</p:inputText>
 								<ac:smFieldChangeAlert 
 									isShow="#{backingBean.managedBean.showFieldChanges 
 									and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"

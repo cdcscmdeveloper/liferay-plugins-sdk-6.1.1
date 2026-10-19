@@ -69,7 +69,7 @@
 
 			<ac:paginator for="evaluationreport" />
 			
-			<p:column style="width:2%" >
+			<p:column style="width:2%">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllChk" value="#{consolidationReportBackingBean.managedBean.templateSpecBean.selectAll}" disabled="true">
 						<p:ajax partialSubmit="true" process="@this" update="@this" listener="#{consolidationReportBackingBean.selectAll(consolidationReportBackingBean.managedBean.templateSpecBean.selectAll, consolidationReportBackingBean.managedBean.newBriefingPaperReportList)}"/>
@@ -85,7 +85,7 @@
 				<p:selectBooleanCheckbox value="#{scQtEvaluationReport.selected}"
 				disabled="#{consolidationReportBackingBean.managedBean.readOnly}"
 					rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'UP'}">
-					<p:ajax partialSubmit="true" process="@this" update="@([id$=evaluationReportsFilesDownloadIds])" />
+					<p:ajax partialSubmit="true" process="@this" update="@([id$=evaluationReportsFilesDownloadIds])" /> 
 				</p:selectBooleanCheckbox>
 			</p:column>
 
@@ -130,9 +130,52 @@
 						rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'UI'}" />
 				</p:commandLink>
 				</ui:fragment>
-	
+			    <ui:fragment
+						rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'UP'}">
+						<ac:scSingleFileUploadButton id="evaluationReportUploadBtn"
+							popupWidgetVar="evaluationManualReportUploadWidget"
+							attachment="#{scQtEvaluationReport.scQtFinalizationReportAttachment}"
+							readonly="#{consolidationReportBackingBean.managedBean.readOnly}"
+							deleteFileUploadListener="consolidationReportBackingBean.deleteReportsUploadFile"
+							rowIndex="#{rowIndex}">
+							<f:setPropertyActionListener for="actionEvent"
+								value="#{scQtEvaluationReport}"
+								target="#{consolidationReportBackingBean.managedBean.selectedBriefingReport}" />
+						</ac:scSingleFileUploadButton>
+				</ui:fragment>
 			</p:column>
 		</p:dataTable>
+		
+		<ui:remove> 25651 - Start </ui:remove>  
+		<c:if test="#{empty consolidationReportBackingBean.managedBean.scQtFinalizationReportDetail}"> 
+		<ui:remove> 25651 - End </ui:remove> 
+		
+		<div class="ppRightBtn">
+			<ui:remove>38523 - start </ui:remove>
+			<p:commandButton value="#{lbl['lbl.btn.download.all']}" ajax="false"
+			action="#{consolidationReportBackingBean.downloadAllBriefingPaperReports(false)}" styleClass="BtnSpacing" />
+			<ui:remove>38523 - end </ui:remove>
+			
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
+			disabled="#{consolidationReportBackingBean.managedBean.readOnly}"
+				styleClass="BtnSpacing" process="@this, evaluationreport"
+				partialSubmit="true" action="#{consolidationReportBackingBean.addDocumentList(consolidationReportBackingBean.managedBean.scQt)}"
+				oncomplete="documentWidget.paginator.endLink.click();"
+				update="@([id$=evaluationreport])" />
+				
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				styleClass="BtnSpacing"
+				disabled="#{consolidationReportBackingBean.deleteselectedList(consolidationReportBackingBean.managedBean.newBriefingPaperReportList)}"
+				process="@this,evaluationReportsFilesDownloadIds" partialSubmit="true"
+				oncomplete="evaluationReportsDeletePopUp.show();"
+				update="@([id$=#{evaluationReportListDeleteId}])"/> 
+
+		 </div>
+		
+	     <ui:remove> 25651 - Start </ui:remove>  	 
+		 </c:if>
+		 <ui:remove> 25651 - End </ui:remove>  
+			
 	</p:panel>
 	
 	<ui:remove> 25651 - Start </ui:remove>
@@ -147,10 +190,10 @@
 
 			<ac:paginator for="evaluationreportdetail" />
 			
-			<p:column style="width:2%" >
+			<p:column style="width:2%">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllChk" value="#{consolidationReportBackingBean.managedBean.templateSpecBean.selectAll}" disabled="true">
-						<p:ajax partialSubmit="true" process="@this" update="@this" listener="#{consolidationReportBackingBean.selectAll(consolidationReportBackingBean.managedBean.templateSpecBean.selectAll, consolidationReportBackingBean.managedBean.newBriefingPaperReportList)}"/>
+						<p:ajax partialSubmit="true" process="@this" update="@this" listener="#{consolidationReportBackingBean.selectAll(consolidationReportBackingBean.managedBean.templateSpecBean.selectAll, consolidationReportBackingBean.managedBean.scQtFinalizationReportDetail)}"/>
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				
@@ -206,31 +249,47 @@
 					action="#{consolidationReportBackingBean.downloadReport(scQtFinalizationReportDetail)}" />
 		
 				</ui:fragment>
-			
+				<ui:fragment
+					rendered="#{scQtFinalizationReportDetail.definationType.parameterCode eq 'UP'}">
+					<ac:scSingleFileUploadButton id="evaluationReportDetailUploadBtn"
+						popupWidgetVar="evaluationManualReportDetailUploadWidget"
+						attachment="#{scQtFinalizationReportDetail.scQtFinalizationReportDetailAttachment}"
+						readonly="#{consolidationReportBackingBean.managedBean.readOnly}"
+						deleteFileUploadListener="consolidationReportBackingBean.deleteReportDetailsUploadFile"
+						rowIndex="#{rowIndex}">
+						<f:setPropertyActionListener for="actionEvent"
+							value="#{scQtFinalizationReportDetail}"
+							target="#{consolidationReportBackingBean.managedBean.selectedBriefingReportDetail}" />
+					</ac:scSingleFileUploadButton>
+				</ui:fragment>
 			</p:column>
 		</p:dataTable>
 		
-	    <div class="ppRightBtn">
-			<ui:remove>38523 - start </ui:remove>
+	
+		
+		<div class="ppRightBtn">
+		
 			<p:commandButton value="#{lbl['lbl.btn.download.all']}" ajax="false"
-			action="#{consolidationReportBackingBean.downloadAllBriefingPaperReports(false)}" styleClass="BtnSpacing" />
-			<ui:remove>38523 - end </ui:remove>
+			action="#{consolidationReportBackingBean.downloadAllBriefingPaperReportDetails(false)}" styleClass="BtnSpacing" />
 			
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 			disabled="#{consolidationReportBackingBean.managedBean.readOnly}"
-				styleClass="BtnSpacing" process="@this, evaluationreport"
-				partialSubmit="true" action="#{consolidationReportBackingBean.addDocumentList(consolidationReportBackingBean.managedBean.scQt)}"
+				styleClass="BtnSpacing" process="@this, evaluationreportdetail"
+				partialSubmit="true" action="#{consolidationReportBackingBean.addDocumentDetailList(consolidationReportBackingBean.managedBean.scQt)}"
 				oncomplete="documentWidget.paginator.endLink.click();"
-				update="@([id$=evaluationreport])" />
+				update="@([id$=evaluationreportdetail])" />
 				
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				styleClass="BtnSpacing"
-				disabled="#{consolidationReportBackingBean.deleteselectedList(consolidationReportBackingBean.managedBean.newBriefingPaperReportList)}"
-				process="@this,evaluationReportsFilesDownloadIds" partialSubmit="true"
-				oncomplete="evaluationReportsDeletePopUp.show();"
-				update="@([id$=#{evaluationReportListDeleteId}])"/>
+				disabled="#{consolidationReportBackingBean.deleteselectedList(consolidationReportBackingBean.managedBean.scQtFinalizationReportDetail)}"
+				process="@this,evaluationReportsDetailFilesDownloadIds" partialSubmit="true"
+				oncomplete="evaluationReportDetailsDeletePopUp.show();"
+				update="@([id$=#{evaluationReportDetailListDeleteId}])"/>
 
 		</div>
+			
+	
+
 		
     </p:panel>
     <ui:remove> 25651 - End </ui:remove>
@@ -263,7 +322,24 @@
 			</div>			
 		</p:dialog>
 		
-		<ac:scSingleFileUploadPopup widgetVar="evaluationManualReportUploadWidget"
+		<ui:remove> 25651 - Start </ui:remove>
+		<ac:scSingleFileUploadPopup widgetVar="evaluationManualReportDetailUploadWidget"
+		fileUploadListener="consolidationReportBackingBean.reportDetailsUploadAttachment"
+		autoUpdateValue="#{consolidationReportBackingBean.managedBean.autoUpdate}" 
+		readonly="#{consolidationReportBackingBean.managedBean.readOnly}"
+		update="@([id$=evaluationReportDetailUploadBtn])" />
+		
+		<ui:param name="evaluationReportDetailListDeleteId"
+			value="evaluationReportDetailListDeleteId"></ui:param>
+			<ac:confirmationPopup id="#{evaluationReportDetailListDeleteId}"
+			widget="evaluationReportDetailsDeletePopUp" width="450" height="100"
+			okAction="consolidationReportBackingBean.deleteReportDetailsTabDtls"
+			title="#{lbl['lbl.sc.content']}"
+			content="#{lbl['lbl.sc.dialog.confirm.message']}"
+			update="@([id$=evaluationReportsDetailFilesDownloadIds])" />
+		<ui:remove> 25651 - End </ui:remove>
+			
+	    <ac:scSingleFileUploadPopup widgetVar="evaluationManualReportUploadWidget"
 		fileUploadListener="consolidationReportBackingBean.reportsUploadAttachment"
 		autoUpdateValue="#{consolidationReportBackingBean.managedBean.autoUpdate}" 
 		readonly="#{consolidationReportBackingBean.managedBean.readOnly}"

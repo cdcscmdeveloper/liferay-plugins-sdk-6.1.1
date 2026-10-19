@@ -117,20 +117,23 @@
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.rpt.group']}" /></td>
+			<!-- #41069 start -->
 			<td><p:selectOneMenu value="#{reportBackingBean.flGroupOne}">
 
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
-						itemValue="#{null}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" itemDisabled="#{purSiSupplierRptBB.hasSupplierRole()}"
-						itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptGroupNone()}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
+						itemDisabled="#{purSiSupplierRptBB.hasSupplierRole()}"
+						itemValue="#{FlReportConst.getFlRptGroupSuppName()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.fl.do.poco.no']}"
-						itemValue="#{lbl['lbl.fl.do.poco.no']}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptPurchaseOrderNo()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.fl.approver.name']}"
-						itemValue="#{lbl['lbl.fl.approver.name']}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptCcApproverName()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.treasurycrclr']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.treasurycrclrvalue']}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptGroupTreasuryCircular()}"></f:selectItem>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
+			<!-- #41069 end-->
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.fl.created.date.from']}" /></td>

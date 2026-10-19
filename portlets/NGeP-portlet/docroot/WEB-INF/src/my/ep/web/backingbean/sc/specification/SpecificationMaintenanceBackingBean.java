@@ -29,6 +29,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTSpecSO;//#38151
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.constant.CompositeValidityConst;
 import my.ep.constant.ModuleCodeConst;
@@ -889,7 +890,6 @@ public boolean isSpecCommittee() {
 		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTDetailSO.class);
 		ScQt qt = this.getManagedBean().getQt();
-		Date publishDate = qt.getPublishDate();
 		Date createdDate = qt.getCreatedDate();
 
 		QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
@@ -900,69 +900,17 @@ public boolean isSpecCommittee() {
 
 		Date effDate = appVerDtls.getEffDate();
 		Timestamp effTimestamp = new Timestamp(effDate.getTime());
+		boolean checkStatusWip =(checkWipScoreSettingFlag(qt.getQtId()));
 
-		boolean reviseEndorse = specStatusEndorseRev(effTimestamp);
-		boolean reviseEndorsePenDoc = specStatusPendingDocRev(effTimestamp);
-		
-		if ((createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus() && (reviseEndorse || reviseEndorsePenDoc)) 
-				|| (null != publishDate && publishDate.before(effDate))) {
+		if ((createdDate.before(effTimestamp) && !checkStatusWip)) {
 			this.getManagedBean().setWeightage35384WIP(true);
 		}
 	}
 
-	// #38151 End
-
-	// #38151 start
-	public boolean checkWeightage35384WIPbyStatus() {
-		Long currentStatusId = this.getManagedBean().getCurrentStatusId();
-		if (QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT.equals(currentStatusId)
-				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF.equals(currentStatusId)
-				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH.equals(currentStatusId)
-				|| QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT.equals(currentStatusId) 
-				|| QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL.equals(currentStatusId) 
-				|| QTStatusConst.SE_PENDING_ENDORSMENT.equals(currentStatusId)
-				|| QTStatusConst.SE_PENDING_SIGNOFF.equals(currentStatusId)) {
-			return Boolean.TRUE;
-		}
-		return Boolean.FALSE;
-	}
-	
-	private boolean specStatusEndorseRev(Date effTimestamp) {
-		
-		IScWorkFlowStatusSO workFlowStatusSO;
-		try {
-			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
-			ScWorkFlowStatus workFlowStat = workFlowStatusSO.checkSpecStatus(this.getManagedBean().getQt().getQtId());
-			if(null != workFlowStat && workFlowStat.getCreatedDate().before(effTimestamp)){
-				return Boolean.TRUE;
-			}else{
-				return Boolean.FALSE;
-			}
-			
-			 
-		} finally {
-			workFlowStatusSO = null;
-		}
-	}
-
-	private boolean specStatusPendingDocRev(Date effTimestamp) {
-		
-		IScWorkFlowStatusSO workFlowStatusSO;
-		try {
-			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
-			ScWorkFlowStatus workFlowStat = workFlowStatusSO.checkSpecStatusPenDoc(this.getManagedBean().getQt().getQtId());
-			if(null != workFlowStat && workFlowStat.getCreatedDate().before(effTimestamp)){
-				return Boolean.TRUE;
-			}else{
-				return Boolean.FALSE;
-			}
-			
-			 
-		} finally {
-			workFlowStatusSO = null;
-		}
+	private boolean checkWipScoreSettingFlag(Long qtId) {
+	    IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+	            IQTSpecSO.class);
+	    return specSo.checkWipScoreFlag(qtId);
 	}
 	//#38151 & #38679 end
 }

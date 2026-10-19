@@ -170,7 +170,7 @@
 				<div class="ppRightBtn">
 					<p:commandButton id="committeeAddButton" styleClass="BtnSpacing"
 						value="#{lbl['lbl.btn.add']}" process="@this"
-						action="#{committeBackingBean.addTplCommitteMember(committeBackingBean.managedBean.headerTitle)}"
+						action="#{committeBackingBean.addTplCommitteeMember(committeBackingBean.managedBean.headerTitle)}"
 						oncomplete="committeeScreen3.show();" update="@(.addQCMember)"
 						rendered="#{isCommitteeRecordStatusActive}" />
 

@@ -67,7 +67,6 @@
 							<p:menuitem value="#{lbl['lbl.sc.sr.cat.code']}"
 								update="@form"
 								action="#{directLOABackingBean.tabChangeActionDirectLOA(1)}"
-								actionListener="#{directLOABackingBean.getSmSupplierCategory(directLOABackingBean.managedBean.scLoa)}"
 								rendered="#{directLOABackingBean.managedBean.showCategoryCode}" /><!-- #29661 #40096 adli  -->
 							<!-- #29661 end -->
 							<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.contents']}"
@@ -105,43 +104,43 @@
 						
 						<!-- #29661 start -->
 						<c:if
-							test="#{directLOABackingBean.managedBean.selectedTabIndex == 1}">
+							test="#{directLOABackingBean.managedBean.showCategoryCode and directLOABackingBean.managedBean.selectedTabIndex == 1}"> <!-- #40974  -->
 							<ui:include src="directLOACategoryCodeSelection.xhtml" />
 						</c:if>
 						<!-- #29661 end -->
 						
 						<c:if
-							test="#{directLOABackingBean.managedBean.selectedTabIndex == 2}">
+							test="#{directLOABackingBean.managedBean.selectedTabIndex ==  directLOABackingBean.newTabIndexDirectLOA(2)}"> <!-- #40974  -->
 							<ui:include src="directawardloaLetterOfAcceptance.xhtml" />
 						</c:if>
 
 						<c:if
-							test="#{directLOABackingBean.managedBean.selectedTabIndex == 3}">
+							test="#{directLOABackingBean.managedBean.selectedTabIndex ==  directLOABackingBean.newTabIndexDirectLOA(3)}"> <!-- #40974  -->
 							<ui:include src="directLoaAwardDetailsMenu.xhtml" />
 						</c:if>
 
 						<c:if
-							test="#{directLOABackingBean.managedBean.selectedTabIndex == 4}">
+							test="#{directLOABackingBean.managedBean.selectedTabIndex ==  directLOABackingBean.newTabIndexDirectLOA(4)}"> <!-- #40974  -->
 							<ui:include src="directawardloaDeductionPaymentMenu.xhtml" />
 						</c:if>
 
 						<c:if
-							test="#{directLOABackingBean.managedBean.selectedTabIndex == 5}">
+							test="#{directLOABackingBean.managedBean.selectedTabIndex ==  directLOABackingBean.newTabIndexDirectLOA(5)}"> <!-- #40974  -->
 							<ui:include src="directawardloaPaymentDetailsMenu.xhtml" />
 						</c:if>
 
 						<c:if
-							test="#{directLOABackingBean.managedBean.selectedTabIndex == 6}">
+							test="#{directLOABackingBean.managedBean.selectedTabIndex ==  directLOABackingBean.newTabIndexDirectLOA(6)}"> <!-- #40974  -->
 							<ui:include src="directawardloaFulfilmentSchedule.xhtml" />
 						</c:if>
 
 						<c:if
-							test="#{directLOABackingBean.managedBean.selectedTabIndex == 7}">
+							test="#{directLOABackingBean.managedBean.selectedTabIndex ==  directLOABackingBean.newTabIndexDirectLOA(7)}"> <!-- #40974  -->
 							<ui:include src="directawardloaPerformanceBondMenu.xhtml" />
 						</c:if>
 
 						<c:if
-							test="#{directLOABackingBean.managedBean.selectedTabIndex == 8}">
+							test="#{directLOABackingBean.managedBean.selectedTabIndex ==  directLOABackingBean.newTabIndexDirectLOA(8)}"> <!-- #40974  -->
 							<ui:include src="directawardloaApprovalMenu.xhtml" />
 						</c:if>
 					</h:panelGroup></td>

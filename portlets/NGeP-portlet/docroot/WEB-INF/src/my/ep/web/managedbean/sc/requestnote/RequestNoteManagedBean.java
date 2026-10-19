@@ -436,6 +436,12 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private String selectedBpmAction;
   //#26059 - End
     
+    //34449 - start
+    private String assignMethod; 
+    private String reviseMethod;
+    private String approveMethod;
+    //34449 - end
+    
     /**
      * Instantiates a new request note managed bean.
      */
@@ -2735,6 +2741,51 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setSelectedBpmAction(String selectedBpmAction) {
 		this.selectedBpmAction = selectedBpmAction;
 	}
-	
+
 	// #26059 - end
+	
+	//34449 - start
+	/**
+	 * @return the assignMethod
+	 */
+	public String getAssignMethod() {
+		return assignMethod;
+	}
+
+	/**
+	 * @param assignMethod the assignMethod to set
+	 */
+	public void setAssignMethod(String assignMethod) {
+		this.assignMethod = assignMethod;
+	}
+
+	/**
+	 * @return the reviseMethod
+	 */
+	public String getReviseMethod() {
+		return reviseMethod;
+	}
+
+	/**
+	 * @param reviseMethod the reviseMethod to set
+	 */
+	public void setReviseMethod(String reviseMethod) {
+		this.reviseMethod = reviseMethod;
+	}
+
+	/**
+	 * @return the approveMethod
+	 */
+	public String getApproveMethod() {
+		return approveMethod;
+	}
+
+	/**
+	 * @param approveMethod the approveMethod to set
+	 */
+	public void setApproveMethod(String approveMethod) {
+		this.approveMethod = approveMethod;
+	}
+
+	//34449 - end
 }

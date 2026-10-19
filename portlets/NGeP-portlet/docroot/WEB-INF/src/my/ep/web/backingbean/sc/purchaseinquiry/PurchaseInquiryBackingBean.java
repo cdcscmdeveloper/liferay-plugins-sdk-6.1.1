@@ -48,6 +48,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.userorg.UserOrgReqDTO;  //#27868
 import my.ep.dto.pm.authorization.userorg.UserOrgResDTO;  //#27868
+import my.ep.dto.pm.authorization.user.InactiveUserReqDTO; //#33224
+import my.ep.dto.pm.authorization.user.InactiveUserResDTO; //#33224
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;  //#27868
 import my.ep.dto.pm.common.reason.ReasonResDTO;
@@ -1147,6 +1149,12 @@ public class PurchaseInquiryBackingBean extends
 		List<ScRequestSupplierItem> scRequestSupplierItems = new ArrayList<ScRequestSupplierItem>();
 		scRequestSupplierItems.add(scRequestSupplierItem);
 		//prInquiry.setScRequestSupplierItems(scRequestSupplierItems); //#29557
+		//#29557 - start
+		// prices saved separately; stale copies break merge
+		for (ScRequestSupplierItem item : prInquiry.getScRequestSupplierItems()) {
+			item.getSupplierItemPrices().clear();
+		}
+		//#29557 - end
 
 		prInquiry.setIsStockAvailable(getManagedBean().getStockAvailable());
 		reqDTO.setPrInquiryDetail(prInquiry);
@@ -1160,6 +1168,9 @@ public class PurchaseInquiryBackingBean extends
 		//#26129 - Start
 		reqDTO.setCurrentStatusId(getManagedBean().getCurrentStatusId());
 		//#26129 - End
+		//#33224 - Start (Gate 4)
+		reqDTO.setInactiveUserResDTO(checkUserStatus());		
+		//#33224 - End (Gate 4)
 
 		PrInquiryResDTO resDTO = getPrInquirySO().submitPrInquiryPrice(reqDTO);
 		if (resDTO.isSuccessful()) {
@@ -1176,6 +1187,31 @@ public class PurchaseInquiryBackingBean extends
 		return null;
 	}
 	
+	
+	// #33224 (Gate 4) - start
+	/**
+	 * Checks whether the purchase inquiry creator is an inactive user.
+	 *
+	 * @return the inactive user response containing the creator's status
+	 */
+	public InactiveUserResDTO checkUserStatus() {
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+
+		ScPrInquiry inquiry = getManagedBean().getScPrInquiry();
+		PmOrgProfile orgProfile = getManagedBean().getPmOrgProfile();
+
+		InactiveUserReqDTO reqDTO = new InactiveUserReqDTO();
+		reqDTO.setUserIds(inquiry.getCreatedBy().toString());
+		reqDTO.setUserRoleCode(DPConstants.ROLE_CODE_REQUISITIONER);
+		reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+		reqDTO.setDocType(ParameterConst.DOCTYPE_PURCHASE_INQUIRY);
+		reqDTO.setDocNo(inquiry.getPrInquiryNo());
+
+		return userSO.checkInactiveUserBySP(reqDTO);
+	}
+	// #33224 (Gate 4) - end	
+
 	private void updatePricing(ScRequestSupplierItem scRequestSupplierItem){
 		List<ScSupplierItemPrice> result = getManagedBean().getSupplierItemPrices();
 		if (result != null) {
@@ -4407,7 +4443,7 @@ public class PurchaseInquiryBackingBean extends
 
 		if (parameterCode.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
 			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
-					"lbl.sc.reason'", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+					"lbl.sc.reason", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
 		} else if (parameterCode.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)
 				|| parameterCode.equalsIgnoreCase(ParameterConst.PROC_TYPE_SPECIAL_ITEM)) {
 			return MessageUtils.getMessage(MessageConst.ERROR_760706, msgParam, MessageUtils.BUNDLE_COMMON_MESSAGES,
@@ -4991,6 +5027,4 @@ public class PurchaseInquiryBackingBean extends
 	    }
 	}
 	//#26059 - End
-	
-	
 }

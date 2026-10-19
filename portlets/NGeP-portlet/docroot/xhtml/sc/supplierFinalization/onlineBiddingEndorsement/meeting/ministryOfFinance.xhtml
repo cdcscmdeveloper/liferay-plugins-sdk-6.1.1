@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- #27502 - New DO MOF Role and Process -->
+<ui:composition 	
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<style>
+		.committeeDtlTblCl th, .committeeDtlTblCl td{
+			width: auto;
+			min-width: 50px;
+            word-break: break-word !important;
+            white-space: normal !important;
+		}
+		.committeeDtlTblCl th{
+			text-align: center !important;
+		}
+		.committeeDtlTblCl tr td:last-child{
+			width: auto;
+			text-align: center !important;
+		}
+	
+	</style>
+
+	<p:panel id="mofPanel" header="#{lbl['lbl.sc.mof']}"
+		toggleable="true">
+		
+	<h:outputText styleClass="instruction" escape="false"
+		value="#{lbl['lbl.sc.sf.mof.instn']}" />
+	
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
+			columnClasses="columnWidth20">
+			
+			<h:column>
+				<p:outputLabel value="#{lbl['lbl.sc.sf.mof.approval.auth']}" />
+				<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory"/>
+			</h:column>
+			<h:column>
+							<p:selectOneMenu id="approvalAuth"  label="#{lbl['lbl.sc.sf.mof.approval.auth']}"
+							value="#{suppFinalBiddingBackingBean.managedBean.approvalAuthority.authId}" style="width:333px;">
+							       <p:ajax process="@this"
+									  update="approvalAuthComm"
+						              listener="#{suppFinalBiddingBackingBean.changeApprovalAuth()}" />
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+									itemValue="#{null}" noSelectionOption="true" />
+							        <f:selectItems value="#{suppFinalBiddingBackingBean.managedBean.listApprovalAuthority}"
+								    var="approvalAuthority" itemLabel="#{approvalAuthority.authCodeDesc}"
+								    itemValue="#{approvalAuthority.authId}" />		
+						    
+					   		</p:selectOneMenu>	
+				   	
+
+
+
+			</h:column>
+		</h:panelGrid>
+		
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
+			columnClasses="columnWidth20">
+			
+			<h:column>
+				<p:outputLabel value="#{lbl['lbl.sc.sf.mof.comm.name']}" />
+				<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory"/>
+			</h:column>
+			<h:column>
+							<p:selectOneMenu id="approvalAuthComm"  label="#{lbl['lbl.sc.sf.mof.comm.name']}" 
+							disabled="#{null eq suppFinalBiddingBackingBean.managedBean.approvalAuthority.authId}"
+							required="true"
+							requiredMessage="#{lbl['lbl.sc.sf.mof.validate.message']}" 
+							value="#{suppFinalBiddingBackingBean.managedBean.approvalAuthCommittee.authCommitteeId}" 
+							 style="width:333px;">
+							       <p:ajax event="change"  update="@([id$=approvalAuthComm])" partialSubmit="true"
+										listener="#{suppFinalBiddingBackingBean.changeCommApprovalAuth()}" process="@this"/>
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+									itemValue="#{null}" noSelectionOption="false" />
+							        <f:selectItems value="#{suppFinalBiddingBackingBean.managedBean.listApprovalAuthCommittee}"
+								    var="approvalAuthCommittee" itemLabel="#{approvalAuthCommittee.committeeName}"
+								    itemValue="#{approvalAuthCommittee.authCommitteeId}" />
+									
+					   		</p:selectOneMenu>					   	
+
+			</h:column>
+		</h:panelGrid>	
+
+	</p:panel>
+
+</ui:composition>

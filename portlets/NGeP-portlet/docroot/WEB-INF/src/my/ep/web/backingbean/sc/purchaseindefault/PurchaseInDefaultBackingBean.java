@@ -35,6 +35,7 @@ import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO; //#28865
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.web.constant.sc.DPConstants; //#33224
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -44,6 +45,8 @@ import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.authorization.user.InactiveUserReqDTO; //#33224
+import my.ep.dto.pm.authorization.user.InactiveUserResDTO; //#33224
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
@@ -91,6 +94,7 @@ import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.report.ReportConst;
@@ -411,16 +415,21 @@ public class PurchaseInDefaultBackingBean extends
 	/**
 	 * Checking for dialog message shown 
 	 */
-	public void dialogMsgCheck(){
-		if(getManagedBean().getPmReason() != null){
-			if (getManagedBean().getPmReason().getReasonId().intValue() == reasonAllowSupplierResponse().getReasonId().intValue())
-				RequestContext.getCurrentInstance().execute("submitSuppDlg.show()");
-			else
-				submitPurchaseInDefault(null); //#9133
+	public void dialogMsgCheck() {
+		// 34449 - start
+			if (getManagedBean().getPmReason() != null) {
+				if (getManagedBean().getPmReason().getReasonId().intValue() == reasonAllowSupplierResponse().getReasonId()
+						.intValue()) {
+					RequestContext.getCurrentInstance().execute("submitSuppDlg.show()");
+				} else {
+					RequestContext.getCurrentInstance().execute("submitConformDlg.show()");
+					// submitPurchaseInDefault(null); //#9133
+				}
+			} else {
+			RequestContext.getCurrentInstance().execute("submitConformDlg.show()");
+			// submitPurchaseInDefault(null); //#9133
 		}
-		else{
-			submitPurchaseInDefault(null); //#9133
-		}
+		// 34449 - end
 	}
 	//end #28865
 
@@ -936,6 +945,10 @@ public class PurchaseInDefaultBackingBean extends
 				purchaseInDefaultSO.savePurchaseInDefault(reqDTO);
 	
 				reqDTO.setSupRes(true);
+				//#33224 - Start (Gate 4)
+				reqDTO.setInactiveUserResDTO(checkUserStatus());		
+				//#33224 - End (Gate 4)
+				
 				resDTO = purchaseInDefaultSO.updateResponsePurchaseInDefault(reqDTO);
 			}else if(DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(stsId)){						
 				boolean validateRemark = true; //#31603 - set to true
@@ -1138,8 +1151,11 @@ public class PurchaseInDefaultBackingBean extends
 		if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 				getManagedBean().setAutoUpdate(true);//#9133
 				RequestContext.getCurrentInstance().execute("rejectPID.show()");
-		} else {
-			approverAction(outcome);
+		} 
+		//34449 - start
+		else {
+			constructConfirmationPopup(outcome,"pidConformDlg.show()");
+			//34449 - end
 		}
 	}
 	// 20190417@asyrafhaziq_12095 - End 	
@@ -2361,7 +2377,7 @@ public class PurchaseInDefaultBackingBean extends
 						
 						if (!DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(getManagedBean()
 								.getPidStatus().getStatusId()))// #31603
-							shouldBreak = true;
+							break; //#34449 - changes from sonarqube fixing that cause logic issue during execute. Revert to existing code
 					}
 
 					ScPIDRemark fetchRemark = purchaseInDefaultSO
@@ -2373,7 +2389,7 @@ public class PurchaseInDefaultBackingBean extends
 					
 					if (!DPStatusConstants.PID_PENDING_VERIFICATION_SUPPLIER_RESPONSE.equals(getManagedBean()
 							.getPidStatus().getStatusId()))// #31603
-						shouldBreak = true;
+						break; //#34449 - changes from sonarqube fixing that cause logic issue during execute. Revert to existing code
 				}
 				// start - #9133 (reopen comment 146)
 				else{
@@ -2382,9 +2398,6 @@ public class PurchaseInDefaultBackingBean extends
 					}
 				}
 				// end - #9133
-				if (shouldBreak) {
-			        break;
-			    }
 			}
 			//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 			// start - #9133 (reopen comment 146)
@@ -2397,7 +2410,7 @@ public class PurchaseInDefaultBackingBean extends
 			log.info(e.getStackTrace());
 		}
 	}
-	
+	//#34449 - start
 	/**
 	 * Checking for reject dialog popup shown
 	 * 
@@ -2409,13 +2422,12 @@ public class PurchaseInDefaultBackingBean extends
 		debugLogger("supplierAction");
 		this.getManagedBean().setAction(outcome);
 		if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
-			//getManagedBean().setAutoUpdate(Boolean.FALSE);
-			updateBPMTask(outcome, null);
+			RequestContext.getCurrentInstance().execute("acceptSuppDlg.show()");
 		} else if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
-			//getManagedBean().setAutoUpdate(Boolean.TRUE);
 			RequestContext.getCurrentInstance().execute("rejectDlg.show()");
 		}
 	}
+	//#34449 - end
 	
 	/**
 	 * Checking for cancel dialog popup shown
@@ -2428,10 +2440,8 @@ public class PurchaseInDefaultBackingBean extends
 		debugLogger("requisitionerAction");
 		this.getManagedBean().setAction(outcome);
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
-			//getManagedBean().setAutoUpdate(Boolean.FALSE);
-			updateBPMTask(outcome, null);
+			RequestContext.getCurrentInstance().execute("reqSubmitDlg.show()"); //34449
 		} else if (BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)) {
-			//getManagedBean().setAutoUpdate(Boolean.TRUE);
 			RequestContext.getCurrentInstance().execute("cancelDlg.show()");
 		}
 	}
@@ -3330,5 +3340,74 @@ public class PurchaseInDefaultBackingBean extends
 		FacesScopes facesScopes = new FacesScopes();
 		return username != null && username.equals(facesScopes.getUserScreenName());
 	}
+	
 	//#31603 - end
+	// 34449 - start
+	/**
+	 * Construct confirmation message pop up based on bpm outcome
+	 * Bpm Outcome Verify, Cancel.
+	 * 
+	 * @param outcome
+	 * @param lovId
+	 */
+	public void constructConfirmationPopup(String outcome, String lovId) {
+		if (outcome == null || outcome.isEmpty()){
+			
+			return;
+		}
+
+		String outcomeLowerCase = outcome.toLowerCase();
+		String confirmationMessageContent = ResourceBundleUtils.getMessage("lbl.sc.confirmation.message." + outcomeLowerCase,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale());
+
+		String confirmationMessageTitle = ResourceBundleUtils.getMessage("lbl.sc.header.message." + outcomeLowerCase,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale());
+		
+		this.getManagedBean().setConfirmationMessageContent(confirmationMessageContent);
+		this.getManagedBean().setConfirmationMessageTitle(confirmationMessageTitle);
+		this.getManagedBean().setSelectedAction(outcome);
+		RequestContext.getCurrentInstance().execute(lovId);
+	}
+	
+	/**
+	 * 
+	 * 
+	 * This method is a wrapper that delegates to the main BPM task update logic
+	 * without digi sign information.
+	 * 
+	 * 
+	 * @param outcome
+	 *            the selected BPM outcome
+	 * @return the update result
+	 * 
+	 * @param outcome
+	 * @return
+	 */
+	public PurchaseInDefaultResDTO wrappedUpdateBPMTask (String outcome){
+		return updateBPMTask(outcome, null);
+	}
+	// 34449 - end
+	
+	// #33224 (Gate 4) - start
+	/**
+	 * Checks whether the purchase inquiry creator is an inactive user.
+	 * 
+	 * @return the inactive user response containing the creator's status
+	 */
+	public InactiveUserResDTO checkUserStatus() {
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
+
+		ScPurchaseInDefault purchaseInDefault = getManagedBean().getPurchaseInDefault();
+
+		InactiveUserReqDTO reqDTO = new InactiveUserReqDTO();
+		reqDTO.setUserIds(purchaseInDefault.getCreatedBy().toString());
+		reqDTO.setUserRoleCode(DPConstants.ROLE_CODE_REQUISITIONER);
+		reqDTO.setOrgProfileId(purchaseInDefault.getPmOrgProfile().getOrgProfileId());
+		reqDTO.setDocType(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT);
+		reqDTO.setDocNo(purchaseInDefault.getPurchaseInDefaultNo());
+
+		return userSO.checkInactiveUserBySP(reqDTO);
+	}
+	// #33224 (Gate 4) - end
 }

@@ -81,6 +81,8 @@ import my.ep.persistence.entity.fl.order.FlStopInstrItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
+import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -175,6 +177,13 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
 			reqDTO.setFlDeleteAttachmentList(flBB.getManagedBean().getDeleteAttachments());//38898
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+			
+			// #31788 - Start update reqDTO for new user
+			if (getManagedBean().isAssignNewUser()) {
+				reqDTO.setAssignNewUser(Boolean.TRUE);
+				reqDTO.setNewUser(getManagedBean().getNewUser());
+			}
+			// #31788 - End
 
 			FulfilmentResDTO resDTO;//36386
 			reqDTO.setApprover(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()));
@@ -231,11 +240,26 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 						messageId = MessageConst.INFO_745015;
 					}
 				} 
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-						FacesMessage.SEVERITY_INFO, null,
-						MessageUtils.getMessage(messageId, 
-								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_STOP_DELIVERY), resDTO.getFlStopInstr().getStopInstrNo()}, 
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				// #31788 - acknowledgement message assign new user.
+				if (getManagedBean().isAssignNewUser()) {
+					messageId = MessageConst.INFO_700128;
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+									messageId,
+									new String[] {
+											getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
+													ParameterConst.DOCTYPE_STOP_DELIVERY),
+											resDTO.getFlStopInstr().getStopInstrNo(),
+											getManagedBean().getNewUser().getUserName() },
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				} else {
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+							FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(messageId, 
+									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_STOP_DELIVERY), resDTO.getFlStopInstr().getStopInstrNo()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				}
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);
 			}
@@ -592,6 +616,12 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				
 				List<PmUser> approverUserList = sortApproverUserList(userGroupResDTO.getUserGroupUserList(), approver, getManagedBean().getStopInstr().getFlRequest().getPmUserGroup().getUserGroupId());
 				getManagedBean().getApproverList().addAll(approverUserList);
+				
+				//#31788 - start assign new user if needed
+				if (getManagedBean().isAssignNewUser()) {
+					getManagedBean().setNewUser(approverUserList.get(0));
+				}
+				//#31788 - end
 			}
 		}
 
@@ -1125,6 +1155,34 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				}
 			}
 		}
+		
+		// #31788 - Start validate fl approver status
+		if (hasSupplierRole() && outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)) {
+			FlFulfilmentRequest flRequest = getManagedBean().getStopInstr().getFlRequest();
+			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IUserSO.class);
+			IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+			FlActor flApprover = fulfilmentSO.retrieveFlActors(flRequest.getDocType(), flRequest.getFulfilmentReqId(),
+					RoleCode.FL_APPROVER.value());
+			BigDecimal sumItemAmt = fulfilmentSO.getSumTotalItemsAmtByReqId(flRequest.getFulfilmentReqId());
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(flApprover.getUser().getUserId());
+			userReqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
+			userReqDTO.setGroupId(flRequest.getPmUserGroup().getUserGroupId());
+			userReqDTO.setRoleCode(RoleCode.FL_APPROVER.value());
+			userReqDTO.setApprovalLimit(sumItemAmt);
+			UserResDTO resDTO = userSO.validateUserByRoleCode(userReqDTO);
+			if (resDTO.getUserStatus().equals(FulfilmentConst.REPLACE_USER)) {
+				getManagedBean().setAssignNewUser(Boolean.TRUE);
+			} else if (resDTO.getUserStatus().equals(FulfilmentConst.INACTIVE_USER)) {
+				PmOrgProfile orgProfile = flRequest.getPreparedOrgProfile();
+				throw new EpException(MessageConst.ERROR_740130,
+						new String[] { orgProfile.getOrgValidity().getOrgName(),
+								getEpRoleDescByRoleCode(RoleCode.FL_APPROVER.value()) });
+			}
+		}
+		// #31788 - End
 	}
 	// #34443 end
 }

@@ -27,12 +27,25 @@ public final class AiOcrClient {
 	}
 
 	/**
+	 * The HTTP status and body of one OCR call.
+	 */
+	public static final class OcrResponse {
+		public final int status;
+		public final String body;
+
+		private OcrResponse(int status, String body) {
+			this.status = status;
+			this.body = body;
+		}
+	}
+
+	/**
 	 * Call API
 	 * @param requestBody
 	 * @param docType
 	 * @return
 	 */
-	public static String callDocumentOcr(String requestBody, String docType) {
+	public static OcrResponse callDocumentOcr(String requestBody, String docType) {
 		if (!AiDocSupport.isAiEnabled()) {
 			log.info("AI doc extraction is off (google.doc.ai.onoff), skipping OCR call for docType: " + docType);
 			return null;
@@ -82,7 +95,8 @@ public final class AiOcrClient {
 
 			int responseCode = conn.getResponseCode();
 			log.info("callDocumentOcr [" + docType + "] status=" + responseCode);
-			return readResponseBody(conn, responseCode);
+			String body = readResponseBody(conn, responseCode);
+			return body == null ? null : new OcrResponse(responseCode, body);
 
 		} catch (Exception e) {
 			log.error("AI OCR call failed for docType=" + docType, e);

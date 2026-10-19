@@ -121,9 +121,9 @@
 				<!-- #34135 START -->
 				<p:column headerText="#{lbl['lbl.sm.companyaddress']}"
 					style="width :50%;white-space : normal">
-					<h:outputText
-						value="#{backingBean.getFullBranchAddress(branchBean.smAddress)}"
-						style="float : left" />
+					<!-- #36718 - Changing function name -->
+					<h:outputText value="#{backingBean.getFullAddressWithCountry(branchBean.smAddress)}" style="float : left" />
+					<!-- #36718 - End -->
 				</p:column>
 				<!-- #34135 START -->
 				<p:column headerText="#{lbl['lbl.sm.person.composition.poc']}"

@@ -376,6 +376,13 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			if(getManagedBean().getPmDigiSign() != null){
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}
+			
+			// #31788 - Update reqDTO if new user to be reassigned
+			if (getManagedBean().isAssignNewUser()) {
+				reqDTO.setAssignNewUser(Boolean.TRUE);
+				reqDTO.setNewUser(getManagedBean().getNewUser());
+			}
+			
 			FulfilmentResDTO resDTO = fulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
 			reqDTO.setTriggerBPM(true);
 			reqDTO.setFlFulfilmentRequest(resDTO.getFlFulfilmentRequest());
@@ -388,7 +395,12 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					messageId = MessageConst.INFO_745004;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-					messageId = MessageConst.INFO_700009;
+					// #31788 - Message ID for reassign new user
+					if (getManagedBean().isAssignNewUser()) {
+						messageId = MessageConst.INFO_700128;
+					} else {
+						messageId = MessageConst.INFO_700009;
+					}
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 					messageId = MessageConst.INFO_700008;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
@@ -396,10 +408,24 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				}
 				//28718 - start
 				if(!getManagedBean().isTriggerPRErrorMsg()) {
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(messageId, 
-									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_REQUEST), flFulfilmentRequest.getDocNo()}, 
-									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					// #31788 - acknowledgement message assign new user.
+					if (getManagedBean().isAssignNewUser()) {
+						FacesContext.getCurrentInstance().addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+										messageId,
+										new String[] {
+												getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
+														ParameterConst.DOCTYPE_PURCHASE_REQUEST),
+												flFulfilmentRequest.getDocNo(),
+												getManagedBean().getNewUser().getUserName() },
+										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					} else {
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(messageId, 
+										new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_REQUEST), flFulfilmentRequest.getDocNo()}, 
+										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					}
 				}
 				//28718 - end
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
@@ -3544,6 +3570,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	private void validateFulfilmentRequest(String outcome){		
 		IFulfilmentRequestSO fulfilmentRequestSO = null;
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		FlFulfilmentRequest flRequest = getManagedBean().getFulfilmentRequest(); // #31788
 		try {
 			getManagedBean().setAutoUpdate(Boolean.TRUE);
 			if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome) || BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
@@ -3557,6 +3584,30 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				if(getManagedBean().getFulfilmentRequest().getTitle() == null || getManagedBean().getFulfilmentRequest().getTitle().trim().length() < 1){
 					getManagedBean().setSelectedTabIndex(0);
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.title",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+				}
+				
+				//#31788 - validate selected fl approver active/inactive.
+				if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && flRequest.getApproverId() != null) {
+					IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+					UserReqDTO userReqDTO = new UserReqDTO();
+					userReqDTO.setUserId(flRequest.getApproverId());
+					userReqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
+					userReqDTO.setGroupId(flRequest.getPmUserGroup().getUserGroupId());
+					userReqDTO.setRoleCode(RoleCode.FL_APPROVER.value());
+					userReqDTO.setNotify(Boolean.TRUE);
+					userReqDTO.setApprovalLimit(calculatesTotalOrderedAmt());
+					userReqDTO.setDocType(flRequest.getDocType());
+					userReqDTO.setDocNo(flRequest.getDocNo());
+					UserResDTO resDTO = userSO.validateUserByRoleCode(userReqDTO);
+					if (resDTO.getUserStatus().equals(FulfilmentConst.REPLACE_USER)) {
+						throw new EpException(MessageConst.ERROR_740129, new String[] { resDTO.getPmUser()
+								.getUserName() });
+					} else if (resDTO.getUserStatus().equals(FulfilmentConst.INACTIVE_USER)) {
+						throw new EpException(MessageConst.ERROR_700128, new String[] {
+								getEpRoleDescByRoleCode(RoleCode.FL_APPROVER.value()),
+								flRequest.getPreparedOrgProfile().getOrgValidity().getOrgName() });
+					}
 				}
 				if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && getManagedBean().getSelectedApprover() == null){
 					getManagedBean().setSelectedTabIndex(4);
@@ -3585,13 +3636,26 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					getManagedBean().setSelectedTabIndex(0);
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
-				if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)){
-					IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+					// #31788 - validate requisitioner active/inactive
+					IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 					UserReqDTO userReqDTO = new UserReqDTO();
-					userReqDTO.setUserId(getManagedBean().getFulfilmentRequest().getCreatedBy());
-					UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
-					if(userResDTO.getPmUser().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE){
-						throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.fl.requisitioner",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+					userReqDTO.setUserId(flRequest.getRequistioner().getUser().getUserId());
+					userReqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
+					userReqDTO.setRoleCode(RoleCode.REQUISITIONER.value());
+					userReqDTO.setNotify(Boolean.TRUE);
+					userReqDTO.setDocType(flRequest.getDocType());
+					userReqDTO.setDocNo(flRequest.getDocNo());
+					UserResDTO resDTO = userSO.validateUserByRoleCode(userReqDTO);
+					if (resDTO.getUserStatus().equals(FulfilmentConst.REPLACE_USER)) {
+						getManagedBean().setAssignNewUser(Boolean.TRUE);
+						UserResDTO availableUser = userSO.retrieveUserByRoleWithLoginHistory(userReqDTO);
+						getManagedBean().setNewUser(availableUser.getPmUser());
+					} else if (resDTO.getUserStatus().equals(FulfilmentConst.INACTIVE_USER)) {
+						throw new EpException(MessageConst.ERROR_700128, new String[] {
+								getEpRoleDescByRoleCode(RoleCode.REQUISITIONER.value()),
+								flRequest.getPreparedOrgProfile().getOrgValidity().getOrgName() });
 					}
 				}
 			}
@@ -3960,7 +4024,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			reqDTO.setAddressType(AddressType.RECEIVING_OFFICER_ADDRESS.value());
 			AddressResDTO resDTO = addressSO.retrieveReceivingOfficerList(reqDTO);
 			if(resDTO.getAddressTypeList().isEmpty()){//TODO others as well needed to throw if list is empty
-				throw new EpException(MessageConst.ERROR_745077, new String[]{getFullAddress(delAddr.getFlAddress())});
+				// 31788 - Update alert message when receiving officer is not exist
+				throw new EpException(MessageConst.ERROR_745077,
+						new String[] { delAddr.getFlAddress().getAddressName() });
 			}
 		}
 		
@@ -6083,7 +6149,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			}
 		}
 	}
-	
 	// #31344 end
 	
 	// #34443 start

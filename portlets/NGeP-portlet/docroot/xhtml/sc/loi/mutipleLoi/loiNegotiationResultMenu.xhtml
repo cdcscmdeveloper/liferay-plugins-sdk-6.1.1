@@ -58,13 +58,15 @@
 						value="#{lOIDetailBackingBean.managedBean.outComes}">
 						<ui:param name="buttonLabel"
 							value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-
+						<!-- #34444 -  start -->
 						<p:commandButton value="#{lbl[buttonLabel]}"
 							styleClass="ui-button"
-							action="#{lOIDetailBackingBean.updateMultiLoiBpmTaskAction(bpmAction)}"
 							partialSubmit="true" onstart="blockWidget.show();"
-							oncomplete="blockWidget.hide();" process="@form" update="@form"
+							oncomplete="blockWidget.hide(); popupConfirmInfoDlg.show();" 
+							actionListener="#{lOIDetailBackingBean.managedBean.prepareAction(bpmAction)}" 
+							process="@form" update="@form"
 							rendered="#{validityDaysExpiredQt}" />
+							<!-- #34444 -  end-->
 					</ui:repeat>
 				</ui:define>
 			</ui:decorate>
@@ -185,7 +187,16 @@
 			<p:commandButton value="#{lbl['lbl.btn.no']}"
 				onclick="reviseLoiDlgs.hide();" type="button" />
 			</div>
-		</p:dialog>	
+		</p:dialog>
+
+		<!-- #34444 -  start -->
+		<ac:confirmationPopupQT id="popupConfirmInfoDlg"
+			widget="popupConfirmInfoDlg"
+			okAction="#{lOIDetailBackingBean.updateMultiLoiBpmTaskAction(lOIDetailBackingBean.managedBean.btnAction)}"
+			title="#{lOIDetailBackingBean.managedBean.confirmTitle}"
+			content="#{lOIDetailBackingBean.managedBean.confirmContent}"
+			update="@all" okProcess="@all" oncompleteOk="" />
+		<!-- #34444 -  end-->
 
 	</ui:define>
 </ui:composition>

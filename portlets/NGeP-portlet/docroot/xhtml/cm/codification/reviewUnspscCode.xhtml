@@ -5,7 +5,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"> <!-- 34447 -->
 
 	<ui:define name="contentSection">
 
@@ -17,16 +18,52 @@
 			<div style="text-align: right;">
 				<ui:repeat var="action" value="#{unspscCodeBackingBean.managedBean.action}">
 					<ui:param name="lblBpmBtn" value="lbl.bpm.action.#{action}" />
-					<p:commandButton value="#{lbl[lblBpmBtn]}"
-						disabled="#{((action == 'SUBMIT' or action == 'REJECT' ) and (unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1)) or (action == 'RECOMMEND_TO_SUPPLIER' and !(unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1))}"
-						rendered="#{action != 'REQUEST_EXTENSION' and bpmTasklistBackingBean.managedBean.claim}"
-						action="#{unspscCodeBackingBean.bpmTesting(action)}"
-						update="@form"></p:commandButton>
+						<!-- 34447 Start -->
+						<p:commandButton value="#{lbl[lblBpmBtn]}"
+							disabled="#{!(unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1)}"
+							rendered="#{action == 'RECOMMEND_TO_SUPPLIER' and bpmTasklistBackingBean.managedBean.claim}"
+        					type="button" onclick="recommendConfirmPopup.show();" />
+
+        				<p:commandButton value="#{lbl[lblBpmBtn]}"
+        					disabled="#{action == 'SUBMIT' and (unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1)}"
+        					rendered="#{action != 'REQUEST_EXTENSION' and action != 'REJECT'
+        						and action != 'RECOMMEND_TO_SUPPLIER' and bpmTasklistBackingBean.managedBean.claim}"
+							action="#{unspscCodeBackingBean.bpmTesting(action)}" process="@form" update="@form" />
+
+						<p:commandButton value="#{lbl[lblBpmBtn]}"
+						    disabled="#{(action == 'REJECT') and (unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1)}"
+						    rendered="#{action != 'REQUEST_EXTENSION' and bpmTasklistBackingBean.managedBean.claim and action == 'REJECT'}"
+						    actionListener="#{unspscCodeBackingBean.validateRejectBeforePopup('rejectConfirmPopup')}"
+						    process="@form" update="@form" />
+    					<!-- 34447 End -->
 				</ui:repeat>
 				<p:commandButton value="#{lbl['lbl.bpm.btn.claim']}"
 					action="#{bpmTasklistBackingBean.claimTaskInDetailPage}"
 					rendered="#{!bpmTasklistBackingBean.managedBean.claim}"
 					update="@form"></p:commandButton>
+
+				<!-- 34447 Start -->
+				<p:blockUI block="cmReviewUnspsc" widgetVar="pageBlockWidget">
+					<p:graphicImage value="/css/images/ajax-loader.gif" />
+				</p:blockUI>
+
+				<ac:confirmationPopupCM
+					id="rejectConfirmPopup" widget="rejectConfirmPopup"
+					loadingWidget="pageBlockWidget"
+					okParam="#{unspscCodeBackingBean.bpmTesting('REJECT')}" hasParam="true"
+					content="#{lbl['lbl.cd.dialog.message.reject.request']}"
+					update="@form">
+				</ac:confirmationPopupCM>
+
+				<ac:confirmationPopupCM
+					id="recommendConfirmPopup" widget="recommendConfirmPopup"
+					loadingWidget="pageBlockWidget"
+					okParam="#{unspscCodeBackingBean.bpmTesting('RECOMMEND_TO_SUPPLIER')}" hasParam="true"
+					content="#{lbl['lbl.cd.dialog.message.recommend']}"
+					update="@form"
+					itemList="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes}">
+				</ac:confirmationPopupCM>
+				<!-- 34447 End -->
 			</div>
 
 			<ui:include src="DocumentHeader.xhtml"></ui:include>

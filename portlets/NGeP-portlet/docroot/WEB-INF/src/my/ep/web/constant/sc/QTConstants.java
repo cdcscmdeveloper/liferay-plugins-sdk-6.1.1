@@ -314,6 +314,12 @@ public interface QTConstants {
 	public static final int DIRECT_LOA_TAB_INDEX_THREE=3;
 	//#29468 End Vinod
 	
+	// #40974 - Start
+	public static final int DIRECT_LOA_TAB_INDEX_ONE = 1;
+	public static final int DIRECT_LOA_TAB_INDEX_TWO = 2;
+	// #40974 - End
+
+	
 	// #33831 - Start
 	public static final String PORTLET_NAME_SUPPLIER_PROPOSAL = "scSupplierProposal_WAR_NGePportlet";
 	// #33831 - Start
@@ -462,23 +468,13 @@ public interface QTConstants {
 	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_FN = "FN";
 	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_PC = "PC";
 	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_AL = "AL";
-	public static final String[] TECHNICAL_CHECKLIST_SELECT_LIST = new String[]{
-		TECH_CHECKLIST_DOC_DEFINATION_KEY_TG,
-		TECH_CHECKLIST_DOC_DEFINATION_KEY_TN,
-		TECH_CHECKLIST_DOC_DEFINATION_KEY_NE,
-		TECH_CHECKLIST_DOC_DEFINATION_KEY_TL
-	};
-	public static final String[] FINANCIAL_CHECKLIST_SELECT_LIST = new String[]{
-		FIN_CHECKLIST_DOC_DEFINATION_KEY_BS,
-		FIN_CHECKLIST_DOC_DEFINATION_KEY_CF,
-		FIN_CHECKLIST_DOC_DEFINATION_KEY_FG,
-		FIN_CHECKLIST_DOC_DEFINATION_KEY_FN,
-		FIN_CHECKLIST_DOC_DEFINATION_KEY_PC,
-		FIN_CHECKLIST_DOC_DEFINATION_KEY_AL
-	};
+	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_FGE = "FGE";
+	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_FNE = "FNE";
+	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_CH = "CH";
+	public static final String FIN_CHECKLIST_DOC_DEFINATION_KEY_SD = "SD";
 	public static final String FILE_EXTENSION_TYPE_PDF = ".pdf";
-	public static final String SPAN_ERROR_ICON = "<div style=\"display: flex;align-items: flex-start;gap: 5px;\"><div><span class=\"ui-messages-error-icon\" style=\"position: relative;right: 25px;\"></span></div>";
-	public static final String SPAN_ERROR_CONTENT_OPEN = "<div><span style=\"position: relative;right: 25px;\">";
+	public static final String SPAN_ERROR_ICON = "<div style=\"display: flex;align-items: flex-start;gap: 5px;\"><div><span class=\"ui-messages-error-icon\" style=\"position: relative;right: 30px;\"></span></div>";
+	public static final String SPAN_ERROR_CONTENT_OPEN = "<div><span style=\"position: relative;right: 30px;\">";
 	public static final String SPAN_ERROR_CONTENT_CLOSE = "</span></div></div>";
 	public static final String INACTIVE_CHECKLIST_NOTIFICATION_HIDE = "inActiveChecklistNotification.hide()";
 	public static final String LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_SPECMAINT = "lbl.sc.spec.confirm.inactive.techfin.checklist.specmaint";
@@ -545,10 +541,6 @@ public interface QTConstants {
 	// #36757 Start Vinod 04/12/2024
 	public static final String LBL_TPL_SPEC_CONTENT_UNIT_PRICE = "lbl.tpl.spec.content.unit.price";
 	// #36757 Start Vinod 04/12/2024
-	// #29766 Start Vinod
-	public static final String REVISE_FOR_PK7_POPUP = "reviseForPK7PopUp.show()";
-	public static final String UPDATE_REVISE_FOR_PK7_ID = "@([id$=reviseForPK7Id])";
-	// #29766 End Vinod
 	// 6906 - start
 	public static final String SELECTION_MODE_MULTIPLE = "multiple";
 	public static final String SELECTION_MODE_SINGLE = "single";

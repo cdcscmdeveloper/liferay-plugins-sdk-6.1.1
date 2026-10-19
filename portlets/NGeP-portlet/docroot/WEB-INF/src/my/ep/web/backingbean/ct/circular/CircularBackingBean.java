@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.ct.circular;
 
@@ -22,6 +22,7 @@ import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
+import my.ep.constant.ct.ContractStatusConst; //#37620,#34367
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.ct.circular.CircularReqDTO;
@@ -752,4 +753,107 @@ public class CircularBackingBean extends CircularBaseBackingBean<CircularManaged
 				|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value());
 	}
 	//#35506 - End
+
+	//#30737 - Start
+	@Override
+	protected CtCircularVer getCircularVer() {
+		String docType = getManagedBean().getSearchCircularDocType();
+		if (docType == null) {
+			return null;
+		}
+		if (docType.equals(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR)) {
+			return getManagedBean().getCircularCqCentralContractList();
+		} else if (docType.equals(ParameterConst.DOCTYPE_PANEL_CIRCULAR)
+				|| docType.equals(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY)) {
+			String procurementModeCode = getManagedBean().getProcurementModeCode();
+			if (procurementModeCode != null) {
+				if (procurementModeCode.equals(ParameterConst.PROCUREMENT_MODE_QUOTATION)
+						|| procurementModeCode.equals(ParameterConst.PROCUREMENT_MODE_TENDER)) {
+					return getManagedBean().getCircularPqQtList();
+				} else if (procurementModeCode.equals(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+					return getManagedBean().getCircularPqDirectPurchaseList();
+				}
+			}
+		}
+		return null;
+	}
+	//#30737 - End
+	
+	//#37620,#34367 - Start
+	/**
+	 * Checks whether the current user is allowed to update the circular based
+	 * on the user's role and circular status.
+	 * 
+	 * @param statusId
+	 *            the current circular status identifier
+	 * @return {@code true} if the circular can be updated; otherwise
+	 *         {@code false}
+	 */
+	public boolean isUpdateStatusAllowed(Long statusId, String circularType) {
+
+		if (statusId == null) {
+			return false;
+		}
+		// update process for PQ and MQ
+		if (isPanelAdmin() && ContractConst.CIRCULAR_DOC_TYPE_PANEL.equalsIgnoreCase(circularType)) {
+			return isPqUpdateStatusAllowed(statusId) || isMqUpdateStatusAllowed(statusId);
+		} else {
+			// update process for CQ
+			return isCqUpdateStatusAllowed(statusId);
+		}
+	}
+	
+	/**
+	 * Checks whether the status is allowed for the PQ update process.
+	 */
+	private boolean isPqUpdateStatusAllowed(Long statusId) {
+
+		if (statusId.equals(ContractStatusConst.PQ_APPROVED) || statusId.equals(ContractStatusConst.PQ_UPDATE_APPROVED)
+				|| statusId.equals(ContractStatusConst.PQ_UPDATE_REJECTED)) {
+			return true;
+		}
+
+		return statusId.equals(ContractStatusConst.PQ_UPDATE_CANCELLED) || statusId.equals(ContractStatusConst.PQ_CANCEL_REQUEST_REJECTED);
+	}
+	
+	/**
+	 * Checks whether the status is allowed for the MQ update process.
+	 */
+	private boolean isMqUpdateStatusAllowed(Long statusId) {
+
+		if (statusId.equals(ContractStatusConst.MQ_APPROVED) || statusId.equals(ContractStatusConst.MQ_UPDATE_APPROVED)
+				|| statusId.equals(ContractStatusConst.MQ_UPDATE_REJECTED)) {
+			return true;
+		}
+
+		return statusId.equals(ContractStatusConst.MQ_UPDATE_CANCELLED) || statusId.equals(ContractStatusConst.MQ_CANCEL_REQUEST_REJECTED);
+	}
+	
+	/**
+	 * Checks whether the status is allowed for the CQ update process.
+	 */
+	private boolean isCqUpdateStatusAllowed(Long statusId) {
+
+		if (statusId.equals(ContractStatusConst.CQ_APPROVED) || statusId.equals(ContractStatusConst.CQ_UPDATE_APPROVED)
+				|| statusId.equals(ContractStatusConst.CQ_UPDATE_REJECTED)) {
+			return true;
+		}
+		return statusId.equals(ContractStatusConst.CQ_UPDATE_CANCELLED) || statusId.equals(ContractStatusConst.CQ_CANCEL_REQUEST_REJECTED);
+	}
+
+	/**
+	 * Checks whether the current user is allowed to update the circular based
+	 * on the circular type and PTJ ownership.
+	 * 
+	 * @param circularType
+	 *            the circular document type
+	 * @return {@code true} if the circular is not a panel circular or the
+	 *         current user is the PTJ owner; otherwise {@code false}
+	 */
+	public boolean isUpdateCircularTypeAllowed(String circularType) {
+
+		return (ContractConst.CIRCULAR_DOC_TYPE_PANEL.equalsIgnoreCase(circularType) && getManagedBean().isPtjOwner())
+				|| !ContractConst.CIRCULAR_DOC_TYPE_PANEL.equalsIgnoreCase(circularType);
+	}
+	//#37620,#34367 - End
 }

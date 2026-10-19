@@ -162,6 +162,13 @@ public class DPConstants {
 	public static final int NUMBER_ZERO = 0;
 	
 	public static final int NUMBER_ONE = 1;
+	
+	// 33224 - start
+	public static final String ROLE_CODE_REQUISITIONER = "REQUISITIONER";
+	// 33224 - end
+	
+	//34449 - start
+	public static final String DIALOG_MESSAGE_CANCEL_SHOW = "cancelDlg.show()";
 	// 26059 - end
 	private DPConstants() {
 		// This constructor is intentionally left empty

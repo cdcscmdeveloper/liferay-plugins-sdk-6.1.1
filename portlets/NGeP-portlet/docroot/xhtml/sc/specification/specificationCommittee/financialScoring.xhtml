@@ -190,7 +190,7 @@
 	
 	<c:if test="#{specificationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}">
 	<!-- ahmaa-#25138 Reendorsed- start -->
-	<h:panelGroup id="offeredPrice" toggleable="true" rendered="#{!specificationBackingBean.managedBean.isSingleItem() and !specificationBackingBean.checkFinancialSpecificationForItems()}"> <ui:remove> #25651 </ui:remove>
+	<h:panelGroup id="offeredPrice" toggleable="true" rendered="#{!specificationBackingBean.managedBean.isSingleItem()}">
 		<p:panel header="#{lbl['lbl.sc.by.package']}" id="financialScoringPackageOfferedPrice" toggleable="true"> 			
 			<table>
 				<tr>

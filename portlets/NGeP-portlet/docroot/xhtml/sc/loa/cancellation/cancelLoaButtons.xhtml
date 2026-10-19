@@ -14,9 +14,10 @@
 
 		<p:commandButton value="#{lbl['lbl.btn.cancel']}" onclick="cd.show()"
 			style="float:right;" />
+		<ui:remove>34449 - start</ui:remove>	
 		<p:confirmDialog
 			message="#{lbl['lbl.sc.loa.cancel.dialog.confirm.message']}"
-			header="#{lbl['lbl.sc.note.request.dialog.confirm.cancel']}"
+			header="#{lbl['lbl.sc.header.message.cancel']}"
 			severity="alert" widgetVar="cd">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}"
@@ -27,5 +28,6 @@
 					oncomplete="cd.hide();" />
 			</div>
 		</p:confirmDialog>
+		<ui:remove>34449 - end</ui:remove>
 	</div>
 </ui:composition>

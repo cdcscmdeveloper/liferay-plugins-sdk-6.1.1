@@ -17,6 +17,44 @@
 	</cc:interface>
 
 	<cc:implementation>
+		<!-- #40112 - start -->
+		<script type="application/javascript">
+			// processAI must wait for every file in the batch: PF 3.5 oncomplete fires per file
+			var aiUpload = {uploaded: false, uploading: false, closeDeferred: false};
+
+			function aiDialogShown(dlg) {
+				aiUpload = {uploaded: false, uploading: false, closeDeferred: false};
+				uploadWV_AI.form.unbind('fileuploadstop.ai').bind('fileuploadstop.ai', function() {
+					aiUpload.uploading = false;
+					if (!aiUpload.closeDeferred) {
+						return;
+					}
+					aiUpload.closeDeferred = false;
+					if (aiUpload.uploaded) {
+						dlg.cfg.behaviors.close.call(dlg);
+					} else {
+						blockAI.hide();
+					}
+				});
+			}
+
+			// false holds the close; the stop handler above fires it again once the batch is in
+			function aiDialogClosing() {
+				if (!aiUpload.uploaded) {
+					if (!aiUpload.uploading) {
+						return false;
+					}
+				}
+				blockAI.show();
+				if (aiUpload.uploading) {
+					aiUpload.closeDeferred = true;
+					return false;
+				}
+				return true;
+			}
+		</script>
+		<!-- #40112 - end -->
+
 		<p:dataTable var="table" id="#{cc.attrs.tableId}" 
 			value="#{cc.attrs.smApplSupportDocs}" rowIndexVar="index" 
 			style="width:100% !important; table-layout: fixed !important;" 
@@ -140,7 +178,7 @@
 				<p:commandLink oncomplete="#{cc.attrs.uploadDialogId}AI.show();return false;"
 					process="@this" partialSubmit="true"
 					rendered="#{cc.attrs.hasAI and backingBean.isAiUploadDocRow(table.pmDocument)}"
-					update="@([id$=#{cc.attrs.uploadDialogId}])"
+					update="@([id$=#{cc.attrs.uploadDialogId}AI])"
 					action="#{backingBean.assignSelectedSupportDocIndex(table,index)}">
 					<p:graphicImage value="/css/images/ai/upload.png"
 						style="margin-right:2px;" />
@@ -174,20 +212,20 @@
 				<ui:repeat var="applDocs" value="#{table.smApplDocFiles}">
 					<p:outputPanel rendered="#{applDocs.validatedAI eq 1}">
 						<p:graphicImage id="imgHasAI1" value="/css/images/ai/yes.png" />
-						<p:tooltip for="imgHasAI1">
-							<p:outputLabel escape="false" value="#{applDocs.mappedFieldAI}"/>
+						<p:tooltip for="imgHasAI1" rendered="#{not empty applDocs.mappedFieldAI}">
+							<p:outputLabel escape="false" value="#{smAIDocBackingBean.getSuppDocLabel(applDocs)}"/>
 						</p:tooltip>
 					</p:outputPanel>
 					<p:outputPanel rendered="#{applDocs.validatedAI eq 2}">
 						<p:graphicImage id="imgHasAI2" value="/css/images/ai/no.png" />
-						<p:tooltip for="imgHasAI2">
-							<p:outputLabel escape="false" value="#{applDocs.mappedFieldAI}"/>
+						<p:tooltip for="imgHasAI2" rendered="#{not empty applDocs.mappedFieldAI}">
+							<p:outputLabel escape="false" value="#{smAIDocBackingBean.getSuppDocLabel(applDocs)}"/>
 						</p:tooltip>
 					</p:outputPanel>
 					<p:outputPanel rendered="#{applDocs.validatedAI eq 3}">
-						<p:graphicImage id="imgHasAI3" value="/css/images/ai/icon.png" />
+						<p:graphicImage id="imgHasAI3" value="/css/images/ai/warning.png" />
 						<p:tooltip for="imgHasAI3" rendered="#{not empty applDocs.mappedFieldAI}">
-							<p:outputLabel escape="false" value="#{applDocs.mappedFieldAI}"/>
+							<p:outputLabel escape="false" value="#{smAIDocBackingBean.getSuppDocLabel(applDocs)}"/>
 						</p:tooltip>
 					</p:outputPanel>
 					<br/>
@@ -220,11 +258,12 @@
 		<!-- #40112 - start -->
 		<p:dialog id="#{cc.attrs.uploadDialogId}AI" widgetVar="#{cc.attrs.uploadDialogId}AI" modal="true"
 			rendered="#{cc.attrs.hasAI}"
-			dynamic="true" resizable="false" width="700px" height="200"
+			dynamic="true" resizable="true" width="700px" height="300"
 			styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}"
-			onShow="singleUploadListener(uploadWV_AI);"
+			onShow="singleUploadListener(uploadWV_AI);aiDialogShown(#{cc.attrs.uploadDialogId}AI);"
 			onHide="uploadWV_AI.buttonBar.find('input[type=file]').get(0).disabled=false;">
 			
+			<h:outputText value="#{lbl['lbl.sm.ai.upload.guideline']}" styleClass="instruction" escape="false"/>
 			<p:spacer width="10" />
 			<p:fileUpload widgetVar="uploadWV_AI" 
 				allowTypes="/(\.|\/)(pdf|json)$/"
@@ -237,11 +276,12 @@
 				label="#{lbl['lbl.btn.addfile']}" 
 				cancelLabel="#{lbl['lbl.btn.cancel']}"
 				multiple="true"
+				onstart="aiUpload.uploading=true;" oncomplete="aiUpload.uploaded=true;"
 				showButtons="false"/>
 			<p:spacer width="10" />
 			<p:graphicImage value="/css/images/ai/icon.png"/> #{lbl['lbl.sm.ai.reminder']}
 			<p:ajax event="close" listener="#{backingBean.processAI()}" update="#{cc.attrs.tableId}" 
-				onstart="blockAI.show()" oncomplete="blockAI.hide()"/>
+				onstart="return aiDialogClosing();" oncomplete="blockAI.hide()"/>
 		</p:dialog>
 		<p:blockUI block=":form" widgetVar="blockAI" rendered="#{cc.attrs.hasAI}">
 			<p:outputPanel style="display: flex; flex-direction: column;align-items: center;">

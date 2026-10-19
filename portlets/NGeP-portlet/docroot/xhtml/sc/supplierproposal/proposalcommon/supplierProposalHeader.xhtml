@@ -53,6 +53,7 @@
 					
 					<td width="8%"><h:outputLabel value="#{lbl['lbl.sc.remaining.time']}" /></td>
 					<td class="header-info-text; lastUpdated">
+						<f:event type="preRenderView" listener="#{supplierProposalDetailBackingBean.showQtClosingTime}" /><ui:remove>#41606</ui:remove>
 						<h:outputText value="#{supplierProposalDetailBackingBean.managedBean.closingTime}" id="remainTimeId" />  
 						<p:poll interval="60" update="remainTimeId" listener="#{supplierProposalDetailBackingBean.showQtClosingTime}" /> </td>
 				</tr>

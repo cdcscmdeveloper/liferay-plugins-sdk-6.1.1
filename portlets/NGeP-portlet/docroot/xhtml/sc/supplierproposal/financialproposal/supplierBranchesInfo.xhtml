@@ -35,8 +35,10 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.contact.person']}"
 				style="width : 20%;">
+				<!-- #30447 start -->
 				<h:outputText style="float : left;"
-					value="#{companyBranch.smPersonnel.name}"></h:outputText>
+					value="#{supplierProposalDetailBackingBean.getFormattedSalutationName(companyBranch.smPersonnel.title.salutationName, companyBranch.smPersonnel.name)}"></h:outputText>
+			<!-- #30447 end -->
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.tel.no']}" style="width : 15%;">

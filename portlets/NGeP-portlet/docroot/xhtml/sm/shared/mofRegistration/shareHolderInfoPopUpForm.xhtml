@@ -57,7 +57,8 @@
 						</p:inputText>
 						<p:outputPanel id="shareHolderNameAiIcon">
 							<p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" 
-							rendered="#{backingBean.managedBean.selectedShareHolder.nameFromAI}" />
+							rendered="#{backingBean.managedBean.selectedShareHolder.nameFromAI
+								and backingBean.managedBean.currentPageType ne SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}" />
 						</p:outputPanel>
 						<!-- #40112 - end -->
 						<ac:smFieldChangeAlert
@@ -218,13 +219,14 @@
 							<p:ajax process="@this" partialSubmit="true" update="@this"
 								listener="#{backingBean.trimPersonnelPassportValue}" />
 							<!-- #40112 -->
-							<p:ajax event="change" partialSubmit="true" process="@this"
+							<p:ajax partialSubmit="true" process="@this"
 								listener="#{backingBean.managedBean.selectedShareHolder.clearIcAI()}" update="shareHolderIcAiIcon" />
 						</p:inputText>
 						<!-- #40112 -->
 						<p:outputPanel id="shareHolderIcAiIcon">
 							<p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" 
-							rendered="#{backingBean.managedBean.selectedShareHolder.icFromAI}"/>
+							rendered="#{backingBean.managedBean.selectedShareHolder.icFromAI
+								and backingBean.managedBean.currentPageType ne SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}"/>
 						</p:outputPanel>
 						   &#160; <p:graphicImage id="tooltip1"
 							value="/css/images/design/tooltips.png" />
@@ -314,7 +316,8 @@
 					</p:inputText>
 					<p:outputPanel id="shareHolderEpfNoAiIcon">
 						<p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" 
-						rendered="#{backingBean.managedBean.selectedShareHolder.epfNoFromAI}" />
+						rendered="#{backingBean.managedBean.selectedShareHolder.epfNoFromAI
+							and backingBean.managedBean.currentPageType ne SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}" />
 					</p:outputPanel>
 					<!-- #40112 - end -->
 					<ac:smFieldChangeAlert 

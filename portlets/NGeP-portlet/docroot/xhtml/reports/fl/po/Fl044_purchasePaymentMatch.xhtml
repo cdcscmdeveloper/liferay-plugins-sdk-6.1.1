@@ -175,17 +175,22 @@
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.rpt.group']}" /></td>
 			<!-- 29550 - start(to cater option displayed by factoring user & supplier)-->
+			<!-- #41069 start -->
 			<td><p:selectOneMenu value="#{purPmRptBB.managedBean.group}">
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}" itemValue="#{null}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" itemDisabled="#{purPmRptBB.hasSupplierRole()}"
-								itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>	
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
+						itemValue="#{FlReportConst.getFlRptGroupNone()}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
+						itemDisabled="#{purPmRptBB.hasSupplierRole()}"
+						itemValue="#{FlReportConst.getFlRptGroupSuppName()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.doc.status']}"
-						itemValue="#{lbl['lbl.fl.doc.maintain.doc.status']}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptGroupDocStatus()}"></f:selectItem>
 					<c:choose>
-						<c:when test="#{flReportBB.hasFactoringUserRole() or flReportBB.hasSupplierRole()}">
-							<f:selectItem itemLabel="#{lbl['lbl.fl.paymentMatchOfficers']}" 
-								itemValue="#{lbl['lbl.fl.paymentMatchOfficers']}"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.fl.central.contract.panel.name']}"
+						<c:when
+							test="#{flReportBB.hasFactoringUserRole() or flReportBB.hasSupplierRole()}">
+							<f:selectItem itemLabel="#{lbl['lbl.fl.paymentMatchOfficers']}"
+								itemValue="#{FlReportConst.getFlRptPaymentMatchOfficerName()}"></f:selectItem>
+							<f:selectItem
+								itemLabel="#{lbl['lbl.fl.central.contract.panel.name']}"
 								itemValue="#{lbl['lbl.fl.central.contract.panel.name']}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.fl.invoice.no']}"
 								itemValue="#{lbl['lbl.fl.invoice.no']}"></f:selectItem>
@@ -193,33 +198,37 @@
 								itemValue="#{lbl['lbl.fl.doc.maintain.inv.ref']}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.paymentAdviceNo']}"
 								itemValue="#{lbl['lbl.rpt.paymentAdviceNo']}"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
-								itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.fl.physical.treasury.circular']}"
+							<f:selectItem
+								itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
+								itemValue="#{FlReportConst.getFlRptPurchaseOrderNo()}"></f:selectItem>
+							<f:selectItem
+								itemLabel="#{lbl['lbl.fl.physical.treasury.circular']}"
 								itemValue="#{lbl['lbl.fl.physical.treasury.circular']}"></f:selectItem>
 						</c:when>
 						<c:otherwise>
-							<f:selectItem itemLabel="#{lbl['lbl.txt.paymentMatchOfficer']}" 
-								itemValue="#{lbl['lbl.txt.paymentMatchOfficer']}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.txt.paymentMatchOfficer']}"
+								itemValue="#{FlReportConst.getFlRptPaymentMatchOfficerName()}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.treasurycrclr']}"
-								itemValue="#{lbl['lbl.rpt.drpdown.treasurycrclrvalue']}"></f:selectItem>
+								itemValue="#{FlReportConst.getFlRptGroupTreasuryCircular()}"></f:selectItem>
 						</c:otherwise>
 					</c:choose>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
-			
-			<c:if test="#{flReportBB.hasFactoringUserRole() or flReportBB.hasSupplierRole()}">	
-				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}"/></td>
-				<td>
-					<ac:lov id="flSupplierName" readonly="true"
-						lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="44" rendered="#{!purPmRptBB.managedBean.supplier}"
+			<!-- #41069 end-->
+
+			<c:if
+				test="#{flReportBB.hasFactoringUserRole() or flReportBB.hasSupplierRole()}">
+				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
+				<td><ac:lov id="flSupplierName" readonly="true"
+						lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" size="44"
+						rendered="#{!purPmRptBB.managedBean.supplier}"
 						headerText="#{lbl['lbl.fl.supp.name']}" update="@form"
 						value="#{purPmRptBB.managedBean.selectedOrgProfile.smSupplier.companyName}"
-						saveObject="purPmRptBB.managedBean.selectedOrgProfile" />
-					<p:inputText size="51" disabled="true" id="supplierCompName" rendered="#{purPmRptBB.managedBean.supplier}"
+						saveObject="purPmRptBB.managedBean.selectedOrgProfile" /> <p:inputText
+						size="51" disabled="true" id="supplierCompName"
+						rendered="#{purPmRptBB.managedBean.supplier}"
 						value="#{purPmRptBB.managedBean.supplierCompName}">
-					</p:inputText>
-				</td>
+					</p:inputText></td>
 			</c:if>
 			<!-- 29550 - end -->
 		</tr>

@@ -98,6 +98,10 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getSearchBean().setSearching(true);
 		
+		if(null == this.getManagedBean().getSearchBean().getChangeTypeID()){ 
+			throw new EpException(MessageConst.ERROR_880003);
+		}
+		
 		if(this.getManagedBean().getSearchBean().getChangeTypeID().equals(AuditPatchConst.CHANGE_TYPE_EKONTRAK)){
 			checkEKontrakValidation();
 		} else {
@@ -113,7 +117,7 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 	}
 
 	/**
-	 * this method checks data validation for changetype user request/system errors
+	 * This method checks data validation for change type of user request/system errors
 	 */
 	public void checkValidation(){
 		if(this.getManagedBean().getSearchBean().getDocNo().isEmpty() && this.getManagedBean().getSearchBean().geteAduanNo().isEmpty()){
@@ -122,7 +126,7 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 	}
 	
 	/**
-	 * this method checks data validation for changetype user request/system errors
+	 * This method checks data validation for change type of eKontrak (Lampiran C)
 	 */
 	public void checkEKontrakValidation(){
 		if(this.getManagedBean().getSearchBean().getDocNo().isEmpty()){
@@ -154,6 +158,7 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 	}
 
 	/**
+	 * To redirect Audit Trail Details Page.
 	 * @param changeTypeID
 	 * @param eAduanNo
 	 * @param docTypeID
@@ -332,7 +337,7 @@ public class AuditPatchBackingBean extends BaseBackingBean<AuditPatchManagedBean
 				
 		this.getManagedBean().getSearchBean().setDocTypeID(null);
 		this.getManagedBean().getSearchBean().setDocNo(null);
-		this.getManagedBean().getSearchBean().seteAduanNo(null);
+		this.getManagedBean().getSearchBean().seteAduanNo(null);	
 		
 		getManagedBean().setLazy(false);//#40761#8, #35740
 		getSearchMaster().resetData();//#40761, #35740

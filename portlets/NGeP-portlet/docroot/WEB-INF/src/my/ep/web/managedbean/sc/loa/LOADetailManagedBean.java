@@ -398,6 +398,15 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	//start - 27868
 	private List<Long> ptjIds = new ArrayList<>();
 	//end - 27868
+	
+	//#34449 - start
+	private String cancelMethod;
+	private String submitMethod;
+	private String reviseMethod;
+	private String verifyMethod;
+	private String resubmitMethod;
+	private String rejectMethod;
+	//#34449- end
 
     /**
      * Gets the spki backing bean.
@@ -2270,6 +2279,91 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	}
 	// #29661 end
 
+	//#34449 - start
+	/**
+	 * @return the cancelMethod
+	 */
+	public String getCancelMethod() {
+		return cancelMethod;
+	}
+
+	/**
+	 * @param cancelMethod the cancelMethod to set
+	 */
+	public void setCancelMethod(String cancelMethod) {
+		this.cancelMethod = cancelMethod;
+	}
+
+	/**
+	 * @return the submitMethod
+	 */
+	public String getSubmitMethod() {
+		return submitMethod;
+	}
+
+	/**
+	 * @param submitMethod the submitMethod to set
+	 */
+	public void setSubmitMethod(String submitMethod) {
+		this.submitMethod = submitMethod;
+	}
+
+	/**
+	 * @return the reviseMethod
+	 */
+	public String getReviseMethod() {
+		return reviseMethod;
+	}
+
+	/**
+	 * @param reviseMethod the reviseMethod to set
+	 */
+	public void setReviseMethod(String reviseMethod) {
+		this.reviseMethod = reviseMethod;
+	}
+
+	/**
+	 * @return the verifyMethod
+	 */
+	public String getVerifyMethod() {
+		return verifyMethod;
+	}
+
+	/**
+	 * @param verifyMethod the verifyMethod to set
+	 */
+	public void setVerifyMethod(String verifyMethod) {
+		this.verifyMethod = verifyMethod;
+	}
+	
+	/**
+	 * @return the resubmitMethod
+	 */
+	public String getResubmitMethod() {
+		return resubmitMethod;
+	}
+
+	/**
+	 * @param resubmitMethod the resubmitMethod to set
+	 */
+	public void setResubmitMethod(String resubmitMethod) {
+		this.resubmitMethod = resubmitMethod;
+	}
+
+	/**
+	 * @return the rejectMethod
+	 */
+	public String getRejectMethod() {
+		return rejectMethod;
+	}
+
+	/**
+	 * @param rejectMethod the rejectMethod to set
+	 */
+	public void setRejectMethod(String rejectMethod) {
+		this.rejectMethod = rejectMethod;
+	}
+	//34449 - end
 }
 
 

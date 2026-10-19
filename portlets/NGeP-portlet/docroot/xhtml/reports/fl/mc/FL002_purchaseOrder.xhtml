@@ -196,20 +196,21 @@
 			<td>
 				<p:outputLabel value="#{lbl['lbl.rpt.group']}" />
 			</td>
+			<!-- #41069 start -->
 			<td>
-				<!-- 29550 - start(to cater option displayed by factoring user)-->
-				<p:selectOneMenu value="#{mcPoRptBB.managedBean.group}">
+				<!-- 29550 - start(to cater option displayed by factoring user)--> <p:selectOneMenu
+					value="#{mcPoRptBB.managedBean.group}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
-						itemValue="#{null}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" 
+						itemValue="#{FlReportConst.getFlRptGroupNone()}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}"
 						itemDisabled="#{mcPoRptBB.hasSupplierRole()}"
-      					itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptGroupSuppName()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
-						itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptCcContractNo()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptCcPhysicalContractNo()}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptCcPhysicalLoaNo()}"></f:selectItem>
 					<c:choose>
 						<c:when test="#{flReportBB.hasFactoringUserRole()}">
 							<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.loa.no']}"
@@ -217,23 +218,25 @@
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.itmName']}"
 								itemValue="#{lbl['lbl.rpt.itmName']}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.approverName']}"
-								itemValue="#{lbl['lbl.rpt.approverName']}"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
-								itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.doc.status']}"
-								itemValue="#{lbl['lbl.fl.doc.maintain.doc.status']}"></f:selectItem>
+								itemValue="#{FlReportConst.getFlRptCcApproverName()}"></f:selectItem>
+							<f:selectItem
+								itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
+								itemValue="#{FlReportConst.getFlRptPurchaseOrderNo()}"></f:selectItem>
+							<f:selectItem
+								itemLabel="#{lbl['lbl.fl.doc.maintain.doc.status']}"
+								itemValue="#{FlReportConst.getFlRptGroupDocStatus()}"></f:selectItem>
 						</c:when>
 						<c:otherwise>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
-								itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
+								itemValue="#{FlReportConst.getFlRptCcSstNo()}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.treasurycrclr']}"
-								itemValue="#{lbl['lbl.rpt.drpdown.treasurycrclrvalue']}"></f:selectItem>
+								itemValue="#{FlReportConst.getFlRptGroupTreasuryCircular()}"></f:selectItem>
 						</c:otherwise>
 					</c:choose>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
-				</p:selectOneMenu>
-				<!-- 29550 - End -->
+				</p:selectOneMenu> <!-- 29550 - End -->
 			</td>
+			<!-- #41069 end-->
 			<td>
 				<p:outputLabel
 					value="#{lbl['lbl.fl.doc.maintain.doc.status']}" />

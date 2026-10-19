@@ -19,6 +19,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCurrency;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
+import my.ep.persistence.entity.sc.loaloi.ScLoaRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaSupportingDoc;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
@@ -384,7 +385,6 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	// Bug #35078@Syazani -- 22/09/2023 -- End
 	// #29766 Start Vinod
 	private String alertForInactivePK7;
-	private boolean autoRevise;
 	// #29766 End Vinod
 
 	// #29661 start
@@ -393,13 +393,15 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	private List<SmSupplierCategory> addedCategoryList;
 	private List<SmSupplierCategory> procurementRelatedCategoryList;
 	private List<SmSupplierCategory> deletedCategoryList;
-	private boolean categorySelected;
-	private List<ScQtCategory> qtCategoryList;
-	private boolean showCategoryCode = false; 
-	private List<SmSupplierCategory> originalSupplierCategoryList;
+	private boolean showCategoryCode;
 	// #29661 end
 	
 	private SmSupplier tempSmSupplier;	// Bug #40022@Syazani -- 16/02/2026
+	
+	//#11134/#41092 -start-
+	private List<ScLoaRemark> supplierRemarks;
+	//#11134/#41092 -end-	
+	private boolean isSaveTemplate = true;	// Bug #40798@Syazani 21/09/2026
 	
 	/**
 	 * Gets the spki backing bean.
@@ -2229,14 +2231,6 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 		this.alertForInactivePK7 = alertForInactivePK7;
 	}
 	
-	public boolean isAutoRevise() {
-		return autoRevise;
-	}
-
-	public void setAutoRevise(boolean autoRevise) {
-		this.autoRevise = autoRevise;
-	}
-	
 	// #29766 End Vinod
 
 	//#29661 Start
@@ -2264,22 +2258,6 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 		this.procurementRelatedCategoryList = procurementRelatedCategoryList;
 	}
 
-	public boolean isCategorySelected() {
-		return categorySelected;
-	}
-
-	public void setCategorySelected(boolean categorySelected) {
-		this.categorySelected = categorySelected;
-	}
-
-	public List<ScQtCategory> getQtCategoryList() {
-		return qtCategoryList;
-	}
-
-	public void setQtCategoryList(List<ScQtCategory> qtCategoryList) {
-		this.qtCategoryList = qtCategoryList;
-	}
-
 	public List<SmSupplierCategory> getDeletedCategoryList() {
 		return deletedCategoryList;
 	}
@@ -2303,14 +2281,6 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	public void setShowCategoryCode(boolean showCategoryCode) {
 		this.showCategoryCode = showCategoryCode;
 	}
-
-	public List<SmSupplierCategory> getOriginalSupplierCategoryList() {
-		return originalSupplierCategoryList;
-	}
-
-	public void setOriginalSupplierCategoryList(List<SmSupplierCategory> originalSupplierCategoryList) {
-		this.originalSupplierCategoryList = originalSupplierCategoryList;
-	}
 	//#29661 End
 	// Bug #40022@Syazani -- 16/02/2026 -- Start
 	public SmSupplier getTempSmSupplier() {
@@ -2321,4 +2291,25 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 		this.tempSmSupplier = tempSmSupplier;
 	}
 	// Bug #40022@Syazani -- 16/02/2026 -- End
+	
+	// #11134/#41092 -start-
+	public List<ScLoaRemark> getSupplierRemarks() {
+		return supplierRemarks;
+	}
+
+	public void setSupplierRemarks(List<ScLoaRemark> supplierRemarks) {
+		this.supplierRemarks = supplierRemarks;
+	}
+	// #11134/#41092 -end-
+
+	// Bug #40798@Syazani 21/09/2026 -- Start
+	public boolean isSaveTemplate() {
+		return isSaveTemplate;
+	}
+
+	public void setSaveTemplate(boolean isSaveTemplate) {
+		this.isSaveTemplate = isSaveTemplate;
+	}
+	// Bug #40798@Syazani 21/09/2026 -- End
+	
 }

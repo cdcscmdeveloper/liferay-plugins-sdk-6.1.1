@@ -416,6 +416,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		reqDTO.setTaskId(taskId);
 		reqDTO.setCtxToken(token);
 		bpmSO.claimTask(reqDTO);
+		//#38885
+		SmCommonUtil.saveGroupTaskTrackingDiary(bpmSO, reqDTO, false);
 	}
 
 	/**
@@ -433,6 +435,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		reqDTO.setTaskId(taskId);
 		reqDTO.setCtxToken(token);
 		bpmSO.releaseTask(reqDTO);
+		//#38885
+		SmCommonUtil.saveGroupTaskTrackingDiary(bpmSO, reqDTO, true);
 	}
 	
 	/**
@@ -4398,17 +4402,18 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return userIdSession;
 	}
 	//#31849, #34090, #32682 end
-	//#34135 START
+	// #34135, #36718 - Renaming funct - START
 	/**
 	 * Gets the full address.
-	 *
-	 * @param smAddress the sm address
+	 * 
+	 * @param smAddress
+	 *            the sm address
 	 * @return the full address
 	 */
-	public String getFullBranchAddress(SmAddress smAddress) {
+	public String getFullAddressWithCountry(SmAddress smAddress) {
 		return AddressUtils.getFullBranchAddress(smAddress);
 	}
-	//#34135 END
+	// #34135, #36718 - END
 	
 	//29021 - start 34865,34866,34867 - 29021 WIP
 	/**
@@ -4963,5 +4968,19 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		codificationBB.getManagedBean().setHideExtension(itemName.trim().isEmpty());
 	}
 	//End - #31341
+	
+	// 29661 - start
+	public <ENTITY_CLASS extends BaseEntity> boolean isSelected(List<ENTITY_CLASS> list) {
+		if(null == list){
+			return false;
+		}
+		for (ENTITY_CLASS entity : list) {
+			if (entity.isSelected()) {
+				return true;
+			}
+		}
+		return false;
+	}
+	// 29661 - end
 }
 

@@ -25,7 +25,7 @@ public class ApproveAuthorityManagedBean extends BaseManagedBean {
 	private String authCodeDesc;
 	
 	private String committeeName;
-		
+	
 	private PmAuthority authority;
 	
 	private PmAuthorityCommittee pmAuthCommittee;
@@ -47,11 +47,11 @@ public class ApproveAuthorityManagedBean extends BaseManagedBean {
 	private String authIdInString;
 	
 	private String comName;
-					
-	public ApproveAuthorityManagedBean() {
-		//ApproveAuthorityManagedBean constructor
+	
+	public ApproveAuthorityManagedBean(){
+		//Default constructor required by JSF for managed bean instantiation
 	}
-
+	
 	public String getAuthCodeDesc() {
 		return authCodeDesc;
 	}

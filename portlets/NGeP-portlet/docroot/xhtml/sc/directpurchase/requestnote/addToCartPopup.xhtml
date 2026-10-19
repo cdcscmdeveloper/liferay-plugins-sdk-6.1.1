@@ -61,10 +61,12 @@
 					        required="#{requestNoteBackingBean.managedBean.required}"
 							label="#{lbl['lbl.sc.order.qty']}" maxlength="14" id="oderQtyId"
 							validatorMessage="Order Qty : must be a decimal number between 0.0 and 9999999999.999"
-							value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.quantity}">
-							<p:ajax partialSubmit="true" process="@this" 
+							value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.quantity}"
+							onchange="if (this.value.endsWith('.')) { this.value = this.value.slice(0, -1); }"> <ui:remove>#39230</ui:remove>
+							<p:ajax event="change" 
+								partialSubmit="true" process="@this" 
 								update="@this, addToCartId"
-								listener="#{requestNoteBackingBean.onChangePriceType()}" />
+								listener="#{requestNoteBackingBean.onChangePriceType()}" /> <ui:remove>#39230</ui:remove>
 							<ac:validateNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, uomCode)}"
 								maxIntegerDigits="10" />

@@ -6,13 +6,16 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<ac:scFieldQuotationNumber bBean="#{qtBriefingReportBB}" />
-
-
-
+	<ac:scFieldSearchQuotationNumber bBean="#{qtBriefingReportBB}" />  <ui:remove> 25651 </ui:remove>
 
 	<ac:generateReport bBean="#{qtBriefingReportBB}"
 		reportMainBean="#{qtReportMainBB}">
 	</ac:generateReport>
+	
+	<ui:remove> 25651 - Start </ui:remove>
+	<ac:scFieldResultListReportAttachments bBean="#{qtBriefingReportBB}"
+		reportMainBean="#{qtReportMainBB}">
+	</ac:scFieldResultListReportAttachments>  
+	<ui:remove> 25651 - End </ui:remove>
 
 </ui:composition>

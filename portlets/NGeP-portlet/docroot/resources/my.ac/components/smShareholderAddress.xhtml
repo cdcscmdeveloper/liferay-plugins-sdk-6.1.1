@@ -30,6 +30,7 @@
 		<cc:attribute name="disableValidation" required="true"/>
 		<!-- #36718 - Start -->
 		<cc:attribute name="disablePostCodeValidator" required="false" default="false" />
+		<cc:attribute name="reassignaddress" required="false" default="true" />
 		<!-- #36718 - End -->
 	</cc:interface>
 
@@ -149,11 +150,11 @@
 				</tr>
 
 				<tr>
-					<!-- #32014 - START -->
-						<p:outputPanel rendered="#{cc.attrs.addrObj.smPersonnel.identificationType.parameterCode == SupplierManagementConst.IDENTIFICATION_TYPE_PASSPORT}">
+					<!-- #32014, #36718 (adding new condition to make sure only call on first load) - START -->
+						<p:outputPanel rendered="#{cc.attrs.reassignaddress and cc.attrs.addrObj.smPersonnel.identificationType.parameterCode == SupplierManagementConst.IDENTIFICATION_TYPE_PASSPORT}">
 							#{cc.attrs.bBean.reassignSelShareHolderResAddress(cc.attrs.addrObj)}
 						</p:outputPanel>
-					  <!-- #32014 - END -->
+					  <!-- #32014, #36718 - END -->
 					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td>
@@ -230,11 +231,11 @@
 				</tr>
 
 				<tr>
-					<!-- #32014 - START -->
-						<p:outputPanel rendered="#{cc.attrs.addrObj.smPersonnel.identificationType.parameterCode == SupplierManagementConst.NEW_IC}">
+					<!-- #32014, #36718 (adding new condition to make sure only call on first load) - START -->
+						<p:outputPanel rendered="#{cc.attrs.reassignaddress and cc.attrs.addrObj.smPersonnel.identificationType.parameterCode == SupplierManagementConst.NEW_IC}">
 							#{cc.attrs.bBean.reassignSelShareHolderResAddress(cc.attrs.addrObj)}
 						</p:outputPanel>
-					 <!-- #32014 - END -->
+					 <!-- #32014, #36718 - END -->
 					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td>

@@ -30,10 +30,12 @@
 				  				</p:commandButton>
 					  		</c:when>
 					  		<c:otherwise>
-					  			<p:commandButton value="#{lbl['lbl.btn.update']}"
-					  				oncomplete="if (!args.validationFailed) updateInfoDlg.show();">
-					  				<f:param name="disableValidation" value="true" />
-				  				</p:commandButton>
+				  				<ui:remove>#33867 - Start</ui:remove>
+				  				<p:commandButton id="searchBtnId" widgetVar="searchBtnId"
+									value="#{lbl['lbl.btn.update']}"
+									actionListener="#{profileManagementBackingBean.validateStatusAndRole}"
+									update=":form:attentionInfoDlg"/>
+								<ui:remove>#33867 - End</ui:remove>
 					  		</c:otherwise>
 					  		<!-- 34445 end -->
 						</c:choose>
@@ -59,5 +61,23 @@
 			content="#{lbl['lbl.pm.btn.update.msg']}"
 			update=":form"/>
 		<!-- 34445 end -->
+
+		<ui:remove>#33867 - Start</ui:remove>
+		<p:dialog id="attentionInfoDlg" header="#{lbl['lbl.btn.dialog.attention.header']}" modal="true" widgetVar="attentionInfoDlg"
+			closable="false" width="500" resizable="false">
+			<h:outputText value="#{profileManagementBackingBean.managedBean.attentionMsg}" escape="false"
+				style="display:block;white-space:normal;word-break:break-word;overflow-wrap:anywhere;"/>
+			<div align="right">
+				<br/>
+				<!-- Proceed button -->
+				<p:commandButton value="#{lbl['lbl.btn.dialog.confirm.proceed']}" process="@this" update=":form"
+					action="#{profileManagementBackingBean.saveUserProfile}" onclick="blockWidget.show();attentionInfoDlg.hide();"
+					oncomplete="blockWidget.hide();" />
+				<!-- Cancel button -->
+				<p:commandButton value="#{lbl['lbl.btn.dialog.confirm.cancel']}" immediate="true"
+					oncomplete="attentionInfoDlg.hide(); blockWidget.hide();" />
+			</div>
+		</p:dialog>
+		<ui:remove>#33867 - End</ui:remove>
 	</p:outputPanel>
 </ui:composition>

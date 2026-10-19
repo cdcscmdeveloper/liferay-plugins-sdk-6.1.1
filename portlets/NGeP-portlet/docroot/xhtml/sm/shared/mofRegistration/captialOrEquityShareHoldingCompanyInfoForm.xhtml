@@ -62,16 +62,20 @@
 				selection="#{backingBean.managedBean.selectedEquityCompanies}"
 				rowKey="#{equiBean}" rowIndexVar="index" id="eqiComDt">
 				<ac:paginator for="eqiComDt" />
+				<!-- #40387 - start - refresh Delete button on checkbox select/unselect -->
 				<p:ajax event="rowSelect" listener="#{backingBean.unSelectEquityCompany}"
-					update=":form:tt:eqiComDt"></p:ajax>
+					update=":form:tt:eqiComDt :#{p:component('equiCompDelBtnId')}"></p:ajax>
 				<p:ajax event="rowUnselect" listener="#{backingBean.unSelectEquityCompany}"
-					update=":form:tt:eqiComDt"></p:ajax>
+					update=":form:tt:eqiComDt :#{p:component('equiCompDelBtnId')}"></p:ajax>
 				<p:ajax event="rowSelectCheckbox"
-					listener="#{backingBean.unSelectEquityCompany}" update=":form:tt:eqiComDt"></p:ajax>
+					listener="#{backingBean.unSelectEquityCompany}" update=":form:tt:eqiComDt :#{p:component('equiCompDelBtnId')}"></p:ajax>
 				<p:ajax event="rowUnselectCheckbox"
-					listener="#{backingBean.unSelectEquityCompany}" update=":form:tt:eqiComDt"></p:ajax>
+					listener="#{backingBean.unSelectEquityCompany}" update=":form:tt:eqiComDt :#{p:component('equiCompDelBtnId')}"></p:ajax>
 				<p:ajax event="rowDblselect" listener="#{backingBean.unSelectEquityCompany}"
-					update=":form:tt:eqiComDt"></p:ajax>
+					update=":form:tt:eqiComDt :#{p:component('equiCompDelBtnId')}"></p:ajax>
+				<p:ajax event="toggleSelect" listener="#{backingBean.unSelectEquityCompany}"
+					update=":form:tt:eqiComDt :#{p:component('equiCompDelBtnId')}"></p:ajax>
+				<!-- #40387 - end -->
 
 				<p:column selectionMode="multiple" width="1%" rendered="#{(not empty backingBean.managedBean.smAppl.smEquityCompanies) and (!backingBean.managedBean.upsCannotEdit)}" disabledSelection="#{equiBean.ssmData}" />
 				<p:column headerText="#{lbl['lbl.sm.equiComp.compName']}" style="white-space: break-spaces;">
@@ -79,9 +83,9 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.equiComp.addr']}" style="white-space:normal;word-break:break-word;">
-					<h:outputText
-						value="#{backingBean.getFullAddress(equiBean.smAddress)}"
-						style="float : left" />
+					<!-- #36718 - Start -->
+					<h:outputText value="#{backingBean.getFullAddressWithCountry(equiBean.smAddress)}" style="float : left" />
+					<!-- #36718 - End -->
 				</p:column>
 
 				<!-- 28466 - start - add mandatory sign (*) and allow supplier to key-in the Share Amount (RM) -->
@@ -141,11 +145,12 @@
 					disabled="#{backingBean.managedBean.disAllowOwnerEdit}"
 					value="#{lbl['lbl.sm.button.add']}"
 					action="#{backingBean.assignNewEquiCompBean}" partialSubmit="true" 
-					process="@this" update=":form:tt:eqiCompDialog" /> 
+					process="@this" update=":form:tt:eqiCompDialog" />
+				<!-- #40387 - disable Delete when no equity company is selected -->
 				<p:commandButton
 					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					value="#{lbl['lbl.sm.button.delete']}" id="equiCompDelBtnId"
-					disabled="#{empty backingBean.managedBean.smAppl.smEquityCompanies or backingBean.managedBean.disAllowOwnerEdit}"
+					disabled="#{empty backingBean.managedBean.smAppl.smEquityCompanies or empty backingBean.managedBean.selectedEquityCompanies or backingBean.managedBean.disAllowOwnerEdit}"
 					oncomplete="equiCompDeletePopUp.show()" process="equiInfPan"
 					partialSubmit="true" update=":form:tt:eqiComDt" />
 				<!-- #30660 end -->
@@ -426,10 +431,12 @@
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="equiCountry"
 								value="#{backingBean.managedBean.countryItems}" />
-							<p:ajax event="change" process="@this"
-								listener="#{backingBean.onChangeCountry(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
-								update="equiState,divisionCapitalLabelPanelId,divisionCapitalDropdownPanelId,equiDivision,equiDist,equiCity,postCodeSuppEquiPanelId" />
-						</p:selectOneMenu> 
+								<!-- #36718 - Start -->
+								<p:ajax event="change" process="@this @([id$=suppEquityCompAddrPanelId])"
+									listener="#{backingBean.onChangeCountry(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
+									update="equiState,divisionCapitalLabelPanelId,divisionCapitalDropdownPanelId,equiDivision,equiDist,equiCity,postCodeSuppEquiPanelId" />
+								<!-- #36718 - End -->
+							</p:selectOneMenu> 
 					<!-- #34159 - END -->
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges
@@ -459,11 +466,12 @@
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="equiState"
 								value="#{backingBean.managedBean.equiCompanyStates}" />
-							<!-- #36718 - process panel when change address dropdown -->
-							<p:ajax event="change" process="@this @([id$=suppEquityCompAddrPanelId])"
-								listener="#{backingBean.onChangeState(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
-								update="divisionCapitalLabelPanelId,divisionCapitalDropdownPanelId,equiDist,equiCity" />
-						</p:selectOneMenu> 
+								<!-- #36718 - Start -->
+								<p:ajax event="change" process="@this @([id$=suppEquityCompAddrPanelId])"
+									listener="#{backingBean.onChangeState(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
+									update="divisionCapitalLabelPanelId,divisionCapitalDropdownPanelId,equiDist,equiCity" />
+								<!-- #36718 - End -->
+							</p:selectOneMenu> 
 					<!-- #34159 - END -->
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -500,11 +508,12 @@
 							value="#{backingBean.managedBean.equiCompanyDivisions}"
 							itemValue="#{division.divisionId}"
 							itemLabel="#{division.divisionName}" />
-						<!-- #36718 - process panel when change address dropdown -->
-						<p:ajax event="change" process="@this @([id$=suppEquityCompAddrPanelId])"
-							listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
-							update="equiDist,equiCity"/>
-					</p:selectOneMenu>
+									<!-- #36718 - Start -->
+									<p:ajax event="change" process="@this @([id$=suppEquityCompAddrPanelId])"
+										listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
+										update="equiDist,equiCity" />
+									<!-- #36718 - End -->
+								</p:selectOneMenu>
 					<!-- #34159 - END -->
 					<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -535,11 +544,12 @@
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="equiDist"
 								value="#{backingBean.managedBean.equiCompanyDistricts}" />
-							<!-- #36718 - process panel when change address dropdown -->
-							<p:ajax event="change" process="@this @([id$=suppEquityCompAddrPanelId])"
-								listener="#{backingBean.onChangeDistrict(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
-								update="equiCity" />
-						</p:selectOneMenu> 
+								<!-- #36718 - Start -->
+								<p:ajax event="change" process="@this @([id$=suppEquityCompAddrPanelId])"
+									listener="#{backingBean.onChangeDistrict(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
+									update="equiCity" />
+								<!-- #36718 - End -->
+							</p:selectOneMenu> 
 					<!-- #34159 - END -->
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -567,11 +577,12 @@
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="equiCity"
 								value="#{backingBean.managedBean.equiCompanyCities}" />
-							<!-- #36718 - process panel when change address dropdown -->
-							<p:ajax event="change" process="@this @([id$=suppEquityCompAddrPanelId])"
-								listener="#{backingBean.onChangeCity(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
-								update="equiCity" />
-						</p:selectOneMenu> 
+								<!-- #36718 - Start -->
+								<p:ajax event="change" process="@this @([id$=suppEquityCompAddrPanelId])"
+									listener="#{backingBean.onChangeCity(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
+									update="equiCity" />
+								<!-- #36718 - End -->
+							</p:selectOneMenu> 
 					<!-- #34159 - END -->
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -584,24 +595,22 @@
 						<p:message id="equiCityMsg" for="equiCity" showSummary="true"
 							showDetail="false" display="icon" /></td>
 				</tr>
-				</p:panel>
-				<!-- #36718 - END -->
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:outputPanel id="postCodeSuppEquiPanelId">
 							<p:outputPanel
 								rendered="#{backingBean.managedBean.selectedEquityCompany.smAddress.countryId==backingBean.managedBean.myCountryId}">
-								<!-- #30660 start - fix reopen -->
-								<p:inputText maxlength="5" 
-									required="#{backingBean.managedBean.valueReqd and not backingBean.managedBean.disAllowOwnerEdit}"
-									label="#{lbl['lbl.sm.postcode']}" id="suppEquiCompPostCodeMy" 
-									value="#{backingBean.managedBean.selectedEquityCompany.smAddress.postcode}" 
-									validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}" 
-									size="35"
-									disabled="#{backingBean.managedBean.upsCannotEdit}"> 
-								<!-- #30660 end -->
-									<f:validator validatorId="postcodeValidator" />
+								<!-- #30660, #36718 - Start -->
+								<p:inputText maxlength="5"
+									required="#{backingBean.managedBean.valueReqd and not backingBean.managedBean.disAllowOwnerEdit and !empty param['disableValidation']}"
+									label="#{lbl['lbl.sm.postcode']}" id="suppEquiCompPostCodeMy" value="#{backingBean.managedBean.selectedEquityCompany.smAddress.postcode}"
+									validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}" size="35" disabled="#{backingBean.managedBean.upsCannotEdit}">
+									<!-- #30660, #36718 - end -->
+									<!-- #36718 - Start  -->
+									<p:ajax process="@this" partialSubmit="true" update="suppEquiCompPostCodeMyMsg"
+										listener="#{backingBean.checkPostcode(backingBean.managedBean.selectedEquityCompany.smAddress.postcode)}" />
+									<!-- #36718 - End  -->
 								</p:inputText>
 								<ac:smFieldChangeAlert 
 									isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -614,15 +623,12 @@
 							</p:outputPanel>
 							<p:outputPanel
 								rendered="#{backingBean.managedBean.selectedEquityCompany.smAddress.countryId!=backingBean.managedBean.myCountryId}">
-								<!-- #30660 start - fix reopen -->
-								<p:inputText maxlength="10" 
-									required="#{backingBean.managedBean.valueReqd and not backingBean.managedBean.disAllowOwnerEdit}"
-									label="#{lbl['lbl.sm.postcode']}" 
-									id="suppEquiCompPostCodeForeign" 
-									value="#{backingBean.managedBean.selectedEquityCompany.smAddress.postcode}" 
-									size="35"
-									disabled="#{backingBean.managedBean.upsCannotEdit}"> 
-								<!-- #30660 end -->
+								<!-- #30660, #36718 - start -->
+								<p:inputText maxlength="10"
+									required="#{backingBean.managedBean.valueReqd and not backingBean.managedBean.disAllowOwnerEdit and !empty param['disableValidation']}"
+									label="#{lbl['lbl.sm.postcode']}" id="suppEquiCompPostCodeForeign"
+									value="#{backingBean.managedBean.selectedEquityCompany.smAddress.postcode}" size="35" disabled="#{backingBean.managedBean.upsCannotEdit}">
+									<!-- #30660, #36718 - end -->
 								</p:inputText>
 								<ac:smFieldChangeAlert 
 									isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -635,6 +641,8 @@
 							</p:outputPanel>
 						</p:outputPanel></td>
 				</tr>
+				</p:panel>
+				<!-- #36718 - END -->
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
 					<td>

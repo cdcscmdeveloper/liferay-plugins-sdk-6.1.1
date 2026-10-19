@@ -19,12 +19,17 @@
 				action="#{evaluationMeetingBackingBean.saveCommitteeAction}"
 				update="@all" onstart="blockWidget.show();"
 				oncomplete="blockWidget.hide();" />
-			<p:commandButton value="#{lbl['lbl.btn.submit']}"
-				styleClass="ui-button"
-				action="#{evaluationMeetingBackingBean.resolveSubmitMeetingDialog()}" style="float:right;"
-				process="@all" partialSubmit="true">
-			</p:commandButton>
-		</div>
+		<!-- #34444 -  start -->
+		<ui:param name="btnAction" value="SUBMIT" />
+		<p:commandButton value="#{lbl['lbl.btn.submit']}"
+			onstart="blockWidget.show();" styleClass="ui-button"
+			oncomplete="blockWidget.hide(); #{evaluationMeetingBackingBean.committeeModified and evaluationMeetingBackingBean.managedBean.validFor25037 ? 'confirmSubmitToApproverPopup.show();' : 'confirmSubmitMeetingPopup.show();'}"
+			style="float:right;"
+			actionListener="#{evaluationMeetingBackingBean.managedBean.prepareAction(btnAction)}"
+			process="@form" update="@form">
+		</p:commandButton>
+		<!-- #34444 -  end-->
+	</div>
 		<ui:include src="evaluationMeetingHeader.xhtml"></ui:include>
 
 	<p:panel id="evaluationConfirmmeetingId" header="#{lbl['lbl.sc.meeting.details']}" toggleable="true">
@@ -298,19 +303,36 @@
 					update="@([id$=evaluationConfirmMeetingCommitteemembersListPanel])" />
 			</c:otherwise>
 		</c:choose>
-	<ac:confirmationPopup id="confirmSubmitMeetingId"
-		widget="confirmSubmitMeetingPopup" loadingWidget="blockWidget"
-		title="#{lbl['lbl.sc.confirmation']}"
-		okAction="evaluationMeetingBackingBean.submitMettingDetails()"
-		content="#{lbl['lbl.sc.popup.sendproposaleval']}"/>
-	<ac:confirmationPopup id="confirmSubmitToApproverId"
-		widget="confirmSubmitToApproverPopup" loadingWidget="blockWidget"
-		title="#{lbl['lbl.sc.confirmation']}"
-		okAction="evaluationMeetingBackingBean.submitMettingDetails()"
-		content="#{lbl['lbl.sc.popup.submitcommitteeapprover']}"/>
+		<!-- #34444 -  start -->
+		<h:outputText
+				value="#{(evaluationMeetingBackingBean.isCommitteeModified(evaluationMeetingBackingBean.managedBean.committeeMemberActivity)) and (evaluationMeetingBackingBean.managedBean.validFor25037)}" />
+		
+		<ac:confirmationPopup id="confirmSubmitMeetingId"
+			widget="confirmSubmitMeetingPopup"
+			okAction=""
+			title="#{lbl['lbl.sc.confirmation']}"
+			content="#{lbl['lbl.sc.popup.sendproposaleval']}"
+			oncompleteOk="popupConfirmInfoDlg.show();" />
+
+		<ac:confirmationPopup id="confirmSubmitToApproverId"
+			widget="confirmSubmitToApproverPopup"
+			okAction=""
+			title="#{lbl['lbl.sc.confirmation']}"
+			content="#{lbl['lbl.sc.popup.submitcommitteeapprover']}"
+			oncompleteOk="popupConfirmInfoDlg.show();" />
+		<!-- #34444 -  end-->
 	</p:panel>
 
 	<ac:scRemarkAndAttachment
 		remarkList="#{evaluationMeetingBackingBean.managedBean.qtCommitteeRemarks}"
 		showAttachment="false" />
+
+	<!-- #34444 -  start -->
+	<ac:confirmationPopupQT id="popupConfirmInfoDlg"
+		widget="popupConfirmInfoDlg"
+		okAction="#{evaluationMeetingBackingBean.submitMettingDetails()}"
+		title="#{evaluationMeetingBackingBean.managedBean.confirmTitle}"
+		content="#{evaluationMeetingBackingBean.managedBean.confirmContent}"
+		update="@all" okProcess="@all" oncompleteOk="" />
+	<!-- #34444 -  end-->
 </ui:composition>

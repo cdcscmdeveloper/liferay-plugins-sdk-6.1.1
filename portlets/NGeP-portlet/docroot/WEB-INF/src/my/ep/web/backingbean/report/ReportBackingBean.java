@@ -20116,6 +20116,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			roleReqDTO.setRoleCode(getRoleCodes());
 			roleReqDTO.setOrgTypeId(getManagedBean().getSelectedOrgType().getParameterId());
 			roleReqDTO.setBpk(true);
+			roleReqDTO.setPtjAuthCC(true); //#34945
 			roleSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IRoleSO.class);

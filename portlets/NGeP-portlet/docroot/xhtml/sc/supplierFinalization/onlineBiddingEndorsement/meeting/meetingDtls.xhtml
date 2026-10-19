@@ -20,7 +20,15 @@
 			<ui:param name="disableMeeting"
 					  value="#{!isSecretaryUser or 
 									meetingDtl.recordStatusFlg ne DbValueConst.recordStatusActive}" />
-									
+
+			<ui:remove>
+				20230727@asyrafhaziq #27502 - New DO MOF Role and Process - Start
+			</ui:remove>
+			<ui:param name="disableMeetingStatus"
+				value="#{disableMeeting or isMofFinalization}" />
+			<ui:remove>
+				20230727@asyrafhaziq #27502 - New DO MOF Role and Process - End
+			</ui:remove>
 			<p:column style="width:20px;" styleClass="td-check-box-spacing">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllChk" 
@@ -57,7 +65,13 @@
 					showDetail="false"></p:message>
 			</p:column>
 
-			<p:column style="width:30%;">
+			<ui:remove>
+			20230727@asyrafhaziq #27502 - New DO MOF Role and Process - Start
+			</ui:remove>
+			<p:column style="width:30%" rendered="#{!isMofFinalization}">
+			<ui:remove>
+			20230727@asyrafhaziq #27502 - New DO MOF Role and Process - End
+			</ui:remove>
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.txt.mandatory']}"
 						styleClass="mandatory" />
@@ -82,8 +96,14 @@
 						styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.status']}" />
 				</f:facet>
+				<ui:remove>
+				20230727@asyrafhaziq #27502 - New DO MOF Role and Process - Start
+				</ui:remove>
 				<p:selectOneMenu label="#{lbl['lbl.sc.status']}" required="false"
-					value="#{meetingDtl.meetingStatusStr}" disabled="#{disableMeeting}">
+					value="#{meetingDtl.meetingStatusStr}" disabled="#{disableMeetingStatus}">
+				<ui:remove>
+				20230727@asyrafhaziq #27502 - New DO MOF Role and Process - End
+				</ui:remove>
 					<f:selectItems
 						value="#{suppFinalBiddingBackingBean.getMeetingStatusDropDown()}" />
 					<p:ajax partialSubmit="true" process="@this" update="@this"

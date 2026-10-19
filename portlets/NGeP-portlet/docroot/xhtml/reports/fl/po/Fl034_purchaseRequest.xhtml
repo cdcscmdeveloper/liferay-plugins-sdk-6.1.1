@@ -126,8 +126,10 @@
 			</td>
 			<td><p:outputLabel value="#{lbl['lbl.rpt.group']}" /></td>
 			<td><p:selectOneMenu value="#{prRptBB.managedBean.group}">
+					<!-- #41069 start -->
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
-						itemValue="#{null}"></f:selectItem>
+						itemValue="#{FlReportConst.getFlRptGroupNone()}"></f:selectItem>
+					<!-- #41069 end-->
 					<ui:remove>#27476 start</ui:remove>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" itemDisabled="#{prRptBB.hasSupplierRole()}"
 						itemValue="#{FlReportConst.getFlRptGroupSuppName()}"></f:selectItem>

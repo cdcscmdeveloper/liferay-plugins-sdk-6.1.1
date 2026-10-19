@@ -633,18 +633,15 @@ public class ConsolidationReportBackingBean extends
 	}
 	// #25651 - End
 	
-	// #18685 - Start
-	/**
-	 * @throws Exception
-	 */
-	// 38523 - start
-	public void downloadAllBriefingPaperReports(boolean skipDownload) throws Exception {
-		// #18685 - Start.
-		debugLogger("downloadAllReports");
-		List<ScAttachment> attachments = new ArrayList<>(); //#25651
+	// #25651 - Start
+	public void  downloadAllBriefingPaperReportDetails(boolean skipDownload) throws Exception {
+	
+		List<ScAttachment> attachments = new ArrayList<>(); 
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<>();
+		List<ScQtFinalizationReportDetailAttachment> scAttachmentDetails = new ArrayList<>();
 		List<ScQtFinalizationReport> scQtFinalizationReports = briefingPaperDisplayFilter(getManagedBean()
 				.getScQtFinalization().getScQtFinalizationReports());
+		
 		for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReports) {
 			ScQtFinalizationReportAttachment attachment;
 			if (scQtFinalizationReport.getTitle().contains(QTConstants.QT_REPORT_BRIEFING_PAPER)) {
@@ -658,7 +655,6 @@ public class ConsolidationReportBackingBean extends
 		}
 
 		if (CollectionUtils.isNotEmpty(this.getManagedBean().getNewBriefingPaperReportList())) {
-			// 38523 - end
 			for (ScQtFinalizationReport uploadedSfReport : this.getManagedBean().getNewBriefingPaperReportList()) {
 				if (uploadedSfReport.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)
 						&& null != uploadedSfReport.getScQtFinalizationReportAttachment()) {
@@ -666,9 +662,18 @@ public class ConsolidationReportBackingBean extends
 				}
 			}
 		}
-		
-		//#25651 - Start
 		attachments.addAll(scAttachments);
+		
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getScQtFinalizationReportDetail())) {
+			for (ScQtFinalizationReportDetail uploadedSfReportDetail : this.getManagedBean().getScQtFinalizationReportDetail()) {
+				if (uploadedSfReportDetail.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)
+						&& null != uploadedSfReportDetail.getScQtFinalizationReportDetailAttachment()) {
+					scAttachmentDetails.add(uploadedSfReportDetail.getScQtFinalizationReportDetailAttachment());
+				}
+			}
+		}
+		attachments.addAll(scAttachmentDetails);
+		
 		List<Object[]> reportDetailList = reportDetailAttachmentType();
 		List<ScQtFinalizationReportDetail> scQtFinalizationReportDetail = this.getManagedBean().getScQtFinalizationReportDetail();
 		if (CollectionUtils.isNotEmpty(scQtFinalizationReportDetail)) {
@@ -684,11 +689,50 @@ public class ConsolidationReportBackingBean extends
 				}
 			}
 		}
-		//#25651 - Start
 		
 		// Generate all the reports before submission
+		if (!skipDownload) {
+			downloadAllFiles(SourcingConstants.LAPORAN_KERTAS_TAKLIMAT, attachments); 
+		}
+	
+	}
+	// #25651 - End
+	
+	// #18685 - Start
+	/**
+	 * @throws Exception
+	 */
+	// 38523 - start
+	public void downloadAllBriefingPaperReports(boolean skipDownload) throws Exception {
+		// #18685 - Start.
+		debugLogger("downloadAllReports");
+		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<>();
+		List<ScQtFinalizationReport> scQtFinalizationReports = briefingPaperDisplayFilter(getManagedBean()
+				.getScQtFinalization().getScQtFinalizationReports());
+		for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReports) {
+			ScQtFinalizationReportAttachment attachment;
+			if (scQtFinalizationReport.getTitle().contains(QTConstants.QT_REPORT_BRIEFING_PAPER)) {
+				attachment = retrieveBriefingPaperAttachment(scQtFinalizationReport, skipDownload);
+			  } else {
+				attachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
+				  }
+			if (null != attachment) {
+				scAttachments.add(attachment);
+			}
+		}
+
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getNewBriefingPaperReportList())) {
+			// 38523 - end
+			for (ScQtFinalizationReport uploadedSfReport : this.getManagedBean().getNewBriefingPaperReportList()) {
+				if (uploadedSfReport.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)
+						&& null != uploadedSfReport.getScQtFinalizationReportAttachment()) {
+					scAttachments.add(uploadedSfReport.getScQtFinalizationReportAttachment());
+				}
+			}
+		}
+
 		if (!skipDownload) {// 38523
-			downloadAllFiles(SourcingConstants.LAPORAN_KERTAS_TAKLIMAT, attachments); //#25651
+			downloadAllFiles(SourcingConstants.WIP_LAPORAN_KERTAS_TAKLIMAT, scAttachments);	//#25651
 		}
 		// #18685 - End.
 	}
@@ -759,11 +803,11 @@ public class ConsolidationReportBackingBean extends
 			scAttachments.add(attachment);
 		}
 		// 37622 - end
-
+		
 		// Generate all the reports before submission
 		if (!getManagedBean().isSubmit()) {
 			//#28784 - Start
-			downloadSFAndRecommendationFiles("NGeP-Evaluation-Report", scAttachments);
+			downloadSFAndRecommendationFiles("NGeP-Evaluation-Report", scAttachments); 
 			//#28784 - End
 		}
 	}
@@ -810,7 +854,8 @@ public class ConsolidationReportBackingBean extends
 			// #18685 - End 
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 					.saveConsolidationReport(reqDTO);
-			//saveEvaluationReportsDetaills();
+			
+			saveFinalizationReportDetails(); //#25651
 			
             // #18685 - Start
             /*for (ScQtFinalizationRemarks updatedRemark : resDTO.getScQtFinalization().getScQtFinalizationRemarks()) {
@@ -1249,7 +1294,8 @@ public class ConsolidationReportBackingBean extends
 			// #25651 - Start
 			reqDTO.setDocumentCategory(ParameterConst.DOCUMENT_CATEGORY_BRIEFING_PAPER);
 			reqDTO.setExcludedDocNames(ConsolidationReportManagedBean.getDirectdownloaddocdefkeys());
-			List<ScQtFinalizationReportDetail> finalizationReportsDetail = qtSuppFinalizationSO.retriveFinalizationReportDetail(reqDTO).getScQtFinalizationReportDetails();
+			List<ScQtFinalizationReportDetail> finalizationReportsDetail = qtSuppFinalizationSO
+					.retriveFinalizationReportDetail(reqDTO).getScQtFinalizationReportDetails();
 			this.getManagedBean().setScQtFinalizationReportDetail(finalizationReportsDetail);
 			// #25651 - End
 			

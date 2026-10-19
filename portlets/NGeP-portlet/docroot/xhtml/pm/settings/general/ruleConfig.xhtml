@@ -480,8 +480,8 @@
 		       </f:facet>
 		      	#{typeValueObj.categoryL3Id.categoryName}
 		</p:column>
-			<!-- 27827 - START -->
-			<p:column width="35%" style="white-space:normal" rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'PC')}">
+			<!-- 27827, #34945 - START -->
+			<p:column width="35%" style="white-space:normal" rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType != 'PTJCC' and ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'PC')}">
 				<f:facet name="header">
 	             	#{lbl['lbl.pm.desc']}
 		       	</f:facet>
@@ -489,7 +489,7 @@
 			</p:column>
 			<!-- #34397, #34398 - start -->
 			<p:column width="15%" style="white-space:normal"
-				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'PC')
+				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType != 'PTJCC' and ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleDataTypeId.parameterCode == 'PC')
 				or ruleCatalogueBackingBean.isRenewTypes(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType)}">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
@@ -510,7 +510,22 @@
 				</p:selectOneMenu>
 				<p:message id="zoneCodeMsg" for="zoneCode" display="icon"/>
 			</p:column>
-			<!-- 27827, #34397, #34398 - END -->
+			<!-- 27827, #34397, #34398, #34945 - END -->
+
+			<!-- #34945 - START -->
+			<p:column width="35%" style="white-space:normal" rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType == 'PTJCC')}">
+				<f:facet name="header">
+	             	#{lbl['lbl.pm.settings.ministry']}
+		       	</f:facet>
+		       	<h:outputText value="#{ruleCatalogueBackingBean.retrieveMinistry(typeValueObj.ptjId.orgProfileId)}" />
+			</p:column>
+			<p:column width="35%" style="white-space:normal" rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleDescType.ruleType.ruleType == 'PTJCC')}">
+				<f:facet name="header">
+	             	#{lbl['lbl.pm.settings.PTJ']}
+		       	</f:facet>
+		      	#{typeValueObj.ruleDescription}
+			</p:column>
+			<!-- #34945 - END -->
 
 			<p:column width="16%" id="effDateColumnId">
 				<f:facet name="header">

@@ -133,6 +133,11 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private VCtContract contractDetailsAuditList;
 	private transient IPagingDataModel<VCtFl> contractDataModelForCtAuditViewFl = new contractDataModelForCtAuditViewSubFl();
 	// End - #30866
+	
+	//30737 - start
+	private Long userStatusCheckResult;
+	//30737 - end
+		
 	/**
 	 * @return the taskName
 	 */
@@ -1401,4 +1406,20 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 		this.dpContinuitySession = dpContinuitySession;
 	}
 	//end - #25790
+
+	//30737 - start
+	/**
+	 * @return the userStatusCheckResult
+	 */
+	public Long getUserStatusCheckResult() {
+		return userStatusCheckResult;
+	}
+
+	/**
+	 * @param userStatusCheckResult the userStatusCheckResult to set
+	 */
+	public void setUserStatusCheckResult(Long userStatusCheckResult) {
+		this.userStatusCheckResult = userStatusCheckResult;
+	}
+	//30737 - end
 }

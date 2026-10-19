@@ -57,11 +57,15 @@
 								rendered="#{isClone}" />
 							<ui:remove><!-- Add Disable #29732 below--></ui:remove>
 							<ui:remove>#10141 Added disableButtonForInactiveChecklist Vinod</ui:remove>
-							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
-								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-								styleClass="ui-button" style="float:right;" rendered="#{!isClone}"
-								disabled ="#{(specificationBackingBean.managedBean.disableButtonForInactiveChecklist or specificationBackingBean.managedBean.checkUserCanRevise) and ((bpmAction eq BpmOutcomeConstant.bpmEndorse) or (bpmAction eq BpmOutcomeConstant.bpmSignOff))}"
-								action="#{specificationBackingBean.submitAction(bpmAction)}" />
+								<!-- #34444 -  start -->
+								<p:commandButton value="#{lbl[buttonLabel]}"
+									onstart="blockWidget.show();" styleClass="ui-button"
+									style="float:right;" rendered="#{!isClone}"
+									disabled="#{(specificationBackingBean.managedBean.disableButtonForInactiveChecklist or specificationBackingBean.managedBean.checkUserCanRevise) and ((bpmAction eq BpmOutcomeConstant.bpmEndorse) or (bpmAction eq BpmOutcomeConstant.bpmSignOff))}"
+									oncomplete="blockWidget.hide(); popupConfirmInfoDlg.show();"
+									actionListener="#{specificationBackingBean.managedBean.prepareAction(bpmAction)}"
+									process="@form" update="@form">
+								</p:commandButton><!-- #34444 -  end-->
 						</ui:fragment>
 					</ui:repeat>
 					<ui:fragment
@@ -305,5 +309,14 @@
 		</p:dialog>
 		<ui:remove><!-- //1873 - note 52--></ui:remove>
 	</h:panelGroup>
+
+	<!-- #34444 -  start -->
+	<ac:confirmationPopupQT id="popupConfirmInfoDlg"
+		widget="popupConfirmInfoDlg"
+		okAction="#{specificationBackingBean.submitAction(specificationBackingBean.managedBean.btnAction)}"
+		title="#{specificationBackingBean.managedBean.confirmTitle}"
+		content="#{specificationBackingBean.managedBean.confirmContent}"
+		update="@form" />
+	<!-- #34444 -  end-->
 
 </ui:composition>

@@ -42,7 +42,10 @@
 				</h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sm.projDtls.workProgress']}">
+			<!-- #40869,29661 - start -->
+			<!-- <p:column headerText="#{lbl['lbl.sm.projDtls.workProgress']}"> -->
+			<p:column headerText="#{lbl['lbl.sm.projDtls.contractStatus']}">
+			<!-- #40869,29661 - end -->
 				<h:outputText value="#{lbl['lbl.sm.projDtls.inProgress']}" rendered="#{suppExperience.progressStatus eq 'P'}" />
 				<h:outputText value="#{lbl['lbl.sm.projDtls.success']}" rendered="#{suppExperience.progressStatus eq 'S'}" />
 				<h:outputText value="#{lbl['lbl.sm.projDtls.fail']}" rendered="#{suppExperience.progressStatus eq 'F'}" />

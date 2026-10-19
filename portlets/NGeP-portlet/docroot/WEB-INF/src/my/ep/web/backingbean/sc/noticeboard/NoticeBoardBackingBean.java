@@ -2134,13 +2134,13 @@ public class NoticeBoardBackingBean extends
 				this.getManagedBean().setZones(resDTO.getZones());
 					specZoneId = resDTO.getZones().get(0).getSpecZoneId();
 					List<ScLoa> scLoalist = retrieveLOA(qtId,specZoneId);
-					awardedItemList = getAwardedItemDetails(scLoalist,qtId);
+					awardedItemList = getAwardedItemDetails(scLoalist,qtId,specZoneId); //#29624
 				
 			} else {
 				this.getManagedBean().setProposalAmts(resDTO.getProposalAmts());
 				// Setting Awarded list tab details
 				List<ScLoa> scLoalist = retrieveLOA(qtId,specZoneId);
-				awardedItemList = getAwardedItemDetails(scLoalist,qtId);
+				awardedItemList = getAwardedItemDetails(scLoalist,qtId,specZoneId); //#29624
 			}
 			PmParameter pmParameter = this.getManagedBean().getScQt()
 					.getFinalization().getRecommendedTypeId();
@@ -2409,6 +2409,7 @@ public class NoticeBoardBackingBean extends
 
 				for (TplSpecZoneDtl specZoneDtl : zoneDtls) {
 
+					// 28188 -start-
 					BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
 					briefingReqDTO.setQtId(scQt.getQtId());
 					briefingReqDTO.setSpecZoneId(specZoneDtl.getSpecZoneId());
@@ -2601,10 +2602,11 @@ public class NoticeBoardBackingBean extends
 						attendance.setEmail(smPersonal.getEmail());
 						
 						// #30447 - Start
-						attendance.setSalutation(setSalutationSupplierName(smPersonal.getIdentificationNo()));
+						attendance.setSalutation(setSalutationSupplierName(smPersonal.getIdentificationNo(), smPersonal.getName()));
 						// #30447 - End
 						
 						attendance.setName(smPersonal.getName());
+						
 						attendance.setBsvRegistration(bsvRegistration);
 						setUserDetails(attendance);
 						bsvAttandances.add(attendance);
@@ -2620,7 +2622,7 @@ public class NoticeBoardBackingBean extends
 							bsvAttandances.remove(extAttandance);
 	
 							// #30447 - Start
-							extAttandance.setSalutation(setSalutationSupplierName(extAttandance.getIcPassPort()));
+							extAttandance.setSalutation(setSalutationSupplierName(extAttandance.getIcPassPort(), extAttandance.getName()));
 							// #30447 - End
 						}
 						bsvAttandances.add(extAttandance);
@@ -3130,7 +3132,7 @@ public class NoticeBoardBackingBean extends
 	 * @param qtId
 	 * @return
 	 */
-	private List<AwardedItemsBean> getAwardedItemDetails(List<ScLoa> scLoalist, Long qtId){
+	private List<AwardedItemsBean> getAwardedItemDetails(List<ScLoa> scLoalist, Long qtId, Long specZoneId){ //#29624
 		
 		PmParameter pmParameter = this.getManagedBean().getScQt()
 				.getFinalization().getRecommendedTypeId();
@@ -3144,6 +3146,7 @@ public class NoticeBoardBackingBean extends
 		
 		List<AwardedItemsBean> awardedItemList = new ArrayList<>();
 		List<ScLoa> tempScLoaList = new ArrayList<>(); // #29624
+		List<Long> loaIds = new ArrayList<>(); //#29624
 		
 		//Bug #32512 start
 		boolean isLoaRejected = false; 
@@ -3151,6 +3154,12 @@ public class NoticeBoardBackingBean extends
 		//Bug #32512 end
 		
 		for (ScLoa scLoa : scLoalist) {
+			//#29624 - Start
+			if (loaIds.contains(scLoa.getLoaId())) {
+				continue;
+			}
+			loaIds.add(scLoa.getLoaId());
+			//#29624 - End
 			//Bug #32512 start
 			try{
 				isLoaRejected = isLOARejected(ParameterConst.DOCTYPE_LETTER_OF_AWARD , scLoa.getLoaId());
@@ -3175,6 +3184,12 @@ public class NoticeBoardBackingBean extends
 					// #29624 end
 				} else {
 					for (ScLoiLoaItem scLoiLoaItem : scLoa.getScLoiLoaItems()) {
+						//#29624 - Start
+						if (specZoneId != null && scLoiLoaItem.getTplSpecZoneDtl() != null
+								&& !specZoneId.equals(scLoiLoaItem.getTplSpecZoneDtl().getSpecZoneId())) {
+							continue;
+						}
+						//#29624 - End
 						AwardedItemsBean awardedItem = new AwardedItemsBean();
 						ScRequestItem reqItem = scLoiLoaItem.getScRequestItem();
 						awardedItem.setItemName(reqItem.getItemName());
@@ -3251,7 +3266,7 @@ public class NoticeBoardBackingBean extends
 		Long qtId = this.getManagedBean().getScQt().getQtId();
 		List<ScLoa> scLoaList = retrieveLOA(qtId, zoneDtl.getSpecZoneId());
 		this.getManagedBean().setAwardedItems(
-				getAwardedItemDetails(scLoaList, qtId));
+				getAwardedItemDetails(scLoaList, qtId, zoneDtl.getSpecZoneId())); //#29624
 
 	}
 	
@@ -3653,10 +3668,14 @@ public class NoticeBoardBackingBean extends
 	 * @param identificationNo
 	 * @return salutationName
 	 */
-	public String setSalutationSupplierName(String identificationNo) {
+	public String setSalutationSupplierName(String identificationNo, String name) {
 		String salutation = supplierSalutation(identificationNo);
+		
 		if (StringUtils.isNotBlank(salutation)) {
-			return salutation;
+			if( StringUtils.isNotBlank(name) && name.equals(name.toUpperCase())){
+				return StringUtils.upperCase(salutation);
+			} 
+		return salutation;
 		}
 		return StringUtils.EMPTY;
 	}

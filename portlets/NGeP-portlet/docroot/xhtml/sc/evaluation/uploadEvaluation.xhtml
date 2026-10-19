@@ -31,6 +31,15 @@
 		autoUpdateValue="#{evaluationBackingBean.managedBean.autoUpdate}" 
 		readonly="#{evaluationBackingBean.managedBean.readOnly}"
 		update="@([id$=evaluationReportUploadBtn])" />
+		
+		<ui:remove> 25651 - Start </ui:remove>    
+		<ac:scSingleFileUploadPopup widgetVar="evaluationManualReportDetailUploadWidget"
+		fileUploadListener="evaluationBackingBean.reportDetailsUploadAttachment"
+		autoUpdateValue="#{evaluationBackingBean.managedBean.autoUpdate}" 
+		readonly="#{evaluationBackingBean.managedBean.readOnly}"
+		update="@([id$=evaluationReportDetailUploadBtn])" />
+		<ui:remove> 25651 - End </ui:remove>   
+		
 		<!-- #28784 start -->
 		<ac:scSingleFileUploadPopup widgetVar="demoSupplierAttachDlg"
 		fileUploadListener="evaluationBackingBean.demoSupplierListFileUpload"

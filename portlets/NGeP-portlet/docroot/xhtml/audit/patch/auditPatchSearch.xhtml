@@ -23,7 +23,7 @@
 						value="#{lbl['lbl.audit.patch.change.type']}" /> <h:outputLabel
 						value="*" styleClass="mandatory" /></th>
 				<td><p:selectOneMenu id="changeTypeList"
-						styleClass="ppDropDownWidthM" required="true"
+						styleClass="ppDropDownWidthM" 
 						label="#{lbl['lbl.audit.patch.change.type']}"
 						value="#{auditPatchBackingBean.managedBean.searchBean.changeTypeID}"
 						style="width: 265px;margin-bottom: 5px;">
@@ -34,7 +34,7 @@
 							var="changeType" itemLabel="#{changeType.changeTypeName}"
 							itemValue="#{changeType.auPatchChangeTypeID}" />
 						<p:ajax event="change" update=":form:auditPatchSearchPanel,:form:searchPatchMaster,:form:docTypeList,:form:eAduanNo"
-							listener="#{auditPatchBackingBean.changeType()}" />
+							listener="#{auditPatchBackingBean.changeType()}"/>
 					</p:selectOneMenu>
 					<ac:iconTooltip value="#{lbl['lbl.audit.patch.change.type.tooltip']}" />
 				</td>					
@@ -70,9 +70,11 @@
 			<tr>
 				<td width="20%"><p:outputLabel
 						value="#{lbl['lbl.audit.patch.eaduan.no']}"></p:outputLabel></td>
-				<td width="275px;"><p:inputText
+				<td width="275px;">
+				<p:inputText
 						value="#{auditPatchBackingBean.managedBean.searchBean.eAduanNo}"
-						id="eAduanNo" disabled="#{auditPatchBackingBean.managedBean.searchBean.changeTypeID eq 1}" styleClass="ppDisplayTextM" size="36" /></td>
+						id="eAduanNo" disabled="#{auditPatchBackingBean.managedBean.searchBean.changeTypeID eq 1}" styleClass="ppDisplayTextM" size="36" />
+				</td>
 			</tr>
 			<tr>
 				<td colspan="4" width="100%">

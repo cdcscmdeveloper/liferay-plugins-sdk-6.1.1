@@ -48,6 +48,7 @@
 		/* Button text alignment */
 		.ui-button.ai-assistant-btn .ui-button-text {
 			display: inline-flex !important;
+			white-space: nowrap !important;
 			align-items: center !important;
 			vertical-align: middle !important;
 			gap: 3px !important;
@@ -204,7 +205,7 @@
 							<!-- #40112 -->
 							<p:outputPanel id="ownerNameAiIcon" layout="inline">
 								<p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" 
-								rendered="#{backingBean.managedBean.basicCompanyFacility.ownerNameFromAI}" />
+								rendered="#{backingBean.managedBean.basicCompanyFacility.ownerNameFromAI and backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}" />
 							</p:outputPanel>
 								
 								<ac:smFieldChangeAlert
@@ -217,12 +218,12 @@
 								<p:outputPanel layout="inline"
 									rendered="#{backingBean.showTenancyAiBtn}">
 									<p:commandButton value="#{lbl['lbl.sm.ai.btn']}" 
-										styleClass="ai-assistant-btn" style="width: 150px;" onclick="tenancyAI.show()" immediate="true">
+										styleClass="ai-assistant-btn" style="min-width: 150px;" onclick="tenancyAI.show()" immediate="true">
 										<p:ajax partialSubmit="true" process="@this" />
 									</p:commandButton>
 									<p:graphicImage id="tttenancyAI" value="/css/images/design/tooltips.png" style="margin-left: 5px; vertical-align: middle;" />
 									<p:tooltip id="tt2tenancyAI" for="tttenancyAI">
-										<p:outputLabel value="#{lbl['lbl.sm.ai.tnc.tips']}" />
+										<p:outputLabel escape="false" value="#{lbl['lbl.sm.ai.tnc.tips']}" />
 									</p:tooltip>&#160;
 								</p:outputPanel>
 								<!-- #40112 - end -->
@@ -469,9 +470,14 @@
 										<!-- #39097 & #36718 - add more id id ajax process -->
 										<p:ajax event="change" process="@this @([id$=compFacilityAddrPanel])"
 											listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.basicCompanyFacility.smAddress, SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
-											update="basicOffFacDist,basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId,basicOffFacDistAiIcon,basicOffFacCityAiIcon,companyPostMyCodeAiIcon" /><!-- #40112 -->
+											update="basicOffFacDist,basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId,basicOffFacDivisionAiIcon,basicOffFacDistAiIcon,basicOffFacCityAiIcon,companyPostMyCodeAiIcon" /><!-- #40112 -->
 										<!-- #39097 & #36718 - End  -->
 									</p:selectOneMenu>
+									<!-- #40112 -->
+									<p:outputPanel id="basicOffFacDivisionAiIcon" layout="inline">
+										<p:graphicImage value="/css/images/ai/icon.png" style="margin-left:5px; vertical-align:middle;" 
+										rendered="#{backingBean.managedBean.basicCompanyFacility.smAddress.divisionFromAI}" />
+									</p:outputPanel>
 									<!-- #39097 & #34159 - End  -->
 									<!-- #35086 -->
 									<ac:smFieldChangeAlert isShow="#{backingBean.managedBean.showFieldChanges}"

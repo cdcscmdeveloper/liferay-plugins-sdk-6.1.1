@@ -12,11 +12,12 @@
 
 	<ui:param name="isReQuote"
 		value="#{simpleQuoteBackingBean.managedBean.scQuote.parentQuoteId eq null}" />
-
+	<ui:remove>34449 - Start Change Label</ui:remove>
 	<p:dialog id="quoteSubmitConform" widgetVar="sqConformDlg"
-		header="#{lbl['lbl.sc.confirmation']}" resizable="false" width="600"
+	
+		header="#{lbl['lbl.sc.confirmation.submit']}" resizable="false" width="600"
 		closable="false" modal="true">
-
+	<ui:remove>34449 - End</ui:remove>
 		<p:blockUI block="conformDlgId" trigger="yesButton">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
@@ -57,15 +58,28 @@
 	</p:dialog>
 
 <!-- 20190417@asyrafhaziq_12095 - Start -->
+ <ui:remove>34449 - start (Change Label)</ui:remove>
 	<ui:param name="cancel" value="CANCEL" />
 	<ui:param name="cancelSQ" value="cancelSQ" />
 	<ac:cancelRejectPopup id="#{cancelSQ}" widget="cancelSQ" width="30%"
 		height="100"
 		okAction="#{simpleQuoteBackingBean.submitSimpleQuote(cancel)}"
-		title="#{lbl['lbl.cancel.details']}"
-		content="#{lbl['lbl.cancel.dialog.confirm.message']}" update="@this" />
+		title="#{lbl['lbl.sc.confirmation.cancel']}"
+		content="#{lbl['lbl.sc.confirmation.cancel.message']}" update="@this" />
+	<ui:remove>34449 - end</ui:remove>
 <!-- 20190417@asyrafhaziq_12095 - End -->
-
+	<ui:remove>34449 - start (New Submit popup)</ui:remove>
+	<ui:remove> New cancel popup</ui:remove>
+	<ac:confirmationPopupSM id="cancelBackConfirmDlg"
+		    widget="cancelBackConfirmDlg"
+		    width="400"
+		    height="100"
+		    okAction="#{simpleQuoteBackingBean.backToPrevious()}"
+		    title="#{lbl['lbl.sc.confirmation.cancel']}"
+		    content="#{lbl['lbl.sc.confirmation.cancel.message']}"
+		    update="@form" />
+	<ui:remove>34449 - end</ui:remove>
+	
 	<table style="width: 100%">
 		<tr>
 			<td><p:commandButton immediate="true"
@@ -95,7 +109,7 @@
 				onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
 				action="#{simpleQuoteBackingBean.saveSimpleQuote('')}"
 				process="@all" update="@form" rendered="#{isEditable}" />
-
+			<ui:remove>34449 - start (Connect Popup to Button)</ui:remove>
 			<p:commandButton value="#{lbl['lbl.btn.submit']}"
 				actionListener="#{simpleQuoteBackingBean.submitPromptAction}"
 				onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
@@ -104,12 +118,14 @@
 				<f:setPropertyActionListener
 					target="#{simpleQuoteBackingBean.managedBean.selectedAction}"
 					value="#{action}" />
-			</p:commandButton>
-
+			</p:commandButton>		
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-				onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
-				action="#{simpleQuoteBackingBean.cancel}" style="float:right;"
-				process="@this" partialSubmit="true" rendered="#{isEditable}" />
+			    type="button"
+			    onclick="cancelBackConfirmDlg.show();"
+			    style="float:right;"
+			    rendered="#{isEditable}" >
+			</p:commandButton>
+			<ui:remove>34449 - end  </ui:remove>
 		</c:if>
 	</div>
 
@@ -136,7 +152,7 @@
 				value="#{simpleQuoteBackingBean.managedBean.outComes}">
 				<ui:param name="buttonLabel"
 					value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-
+					
 				<h:panelGroup rendered="#{bpmAction eq 'SUBMIT'}">
 					<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 					onclick="blockWidget.show();" oncomplete="blockWidget.hide();"

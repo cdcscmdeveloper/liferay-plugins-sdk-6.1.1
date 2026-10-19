@@ -78,18 +78,21 @@
 	        	<ui:repeat var="applDocs" value="#{suppDoc.smApplDocFiles}">
 					<p:outputPanel rendered="#{applDocs.validatedAI eq 1}">
 						<p:graphicImage id="imgHasAI1" value="/css/images/ai/yes.png" />
-						<p:tooltip for="imgHasAI1">
+						<p:tooltip for="imgHasAI1" rendered="#{not empty applDocs.mappedFieldAI}">
 							<p:outputLabel escape="false" value="#{applDocs.mappedFieldAI}"/>
 						</p:tooltip>
 					</p:outputPanel>
 					<p:outputPanel rendered="#{applDocs.validatedAI eq 2}">
 						<p:graphicImage id="imgHasAI2" value="/css/images/ai/no.png" />
-						<p:tooltip for="imgHasAI2">
+						<p:tooltip for="imgHasAI2" rendered="#{not empty applDocs.mappedFieldAI}">
 							<p:outputLabel escape="false" value="#{applDocs.mappedFieldAI}"/>
 						</p:tooltip>
 					</p:outputPanel>
 					<p:outputPanel rendered="#{applDocs.validatedAI eq 3}">
-						<p:graphicImage id="imgHasAI3" value="/css/images/ai/icon.png" />
+						<p:graphicImage id="imgHasAI3" value="/css/images/ai/warning.png" />
+						<p:tooltip for="imgHasAI3" rendered="#{not empty applDocs.mappedFieldAI}">
+							<p:outputLabel escape="false" value="#{applDocs.mappedFieldAI}"/>
+						</p:tooltip>
 					</p:outputPanel>
 					<br/>
 				</ui:repeat>

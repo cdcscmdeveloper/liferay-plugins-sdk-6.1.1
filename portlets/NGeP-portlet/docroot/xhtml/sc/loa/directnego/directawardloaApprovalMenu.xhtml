@@ -108,10 +108,12 @@
 		</table>
 	</p:panel>
 	
+	<ui:remove>#41092 - start</ui:remove>
 	<ac:scRemarkAndAttachment
-		remarkList="#{directLOABackingBean.managedBean.scLoa.scLoaRemarks}"
+		remarkList="#{directLOABackingBean.sortedRemarksByDate}"
 		showAttachment="false"
 		readonly="#{directLOABackingBean.managedBean.readOnly}" />
+	<ui:remove>#41092 - end</ui:remove>
 
 	<p:panel header="#{lbl['lbl.sc.history']}" toggleable="true">
 		<p:dataTable id="apprHistTbl" var="scLoaApproval"

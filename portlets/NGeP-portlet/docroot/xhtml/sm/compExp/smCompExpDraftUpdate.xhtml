@@ -8,6 +8,41 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 	<ui:define name="resourceSection">
+		<ui:remove>#9299 - #41341 Start</ui:remove>
+		<!-- Keep project category descriptions readable at increased browser zoom. -->
+		<style type="text/css">
+			.sm-comp-exp-categories .ui-selectonemenu {
+				height: auto;
+				min-height: 20px;
+				min-width: 0;
+			}
+			.sm-comp-exp-categories .ui-selectonemenu .ui-selectonemenu-label {
+				box-sizing: border-box;
+				padding-right: 28px !important;
+				white-space: normal;
+				height: auto !important;
+				overflow-wrap: anywhere;
+			}
+			.sm-comp-exp-categories td {
+				white-space: normal;
+				height: auto !important;
+				overflow-wrap: anywhere;
+			}
+			.ui-selectonemenu-panel.sm-comp-exp-category-panel {
+				box-sizing: border-box;
+				width: 40em !important;
+				max-width: calc(100vw - 24px);
+			}
+			.sm-comp-exp-category-panel .ui-selectonemenu-items-wrapper {
+				max-height: 50vh;
+			}
+			.sm-comp-exp-category-panel .ui-selectonemenu-list-item {
+				white-space: normal;
+				height: auto !important;
+				overflow-wrap: anywhere;
+			}
+		</style>
+		<ui:remove>#9299 - #41341 End</ui:remove>
 		<script>
 			$('#portlet_smCompExp_WAR_NGePportlet').find('.portlet-title-text')
 					.html("#{smCompExpMB.headerTitle}");
@@ -32,8 +67,7 @@
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.project.for']}" /> <p:outputLabel
-							rendered="#{!smCompExpMB.disableClienType}"
-							styleClass="mandatory" value="*" /></td>
+							styleClass="mandatory" value="*" /><!-- 9299 - #41078 --></td>
 					<td style="width: 66%"><p:selectOneRadio
 							disabled="#{smCompExpMB.disableClienType}"
 							value="#{smCompExpMB.selectedDraft.clientType}">
@@ -62,11 +96,7 @@
 					<td style="width: 34%"><p:outputLabel id="agencyNameLbl"
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.agency.name']}" /> <p:outputLabel
-							rendered="#{smCompExpMB.selectedDraft.clientType ne null and 
-							smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm and
-							(smCompExpMB.selectedDraft.clientType eq ParameterConst.clientTypeFederal or
-							(!smCompExpMB.disableClienType and smCompExpMB.selectedDraft.oriAgencyName eq null))}"
-							value="*" styleClass="mandatory" /></td>
+							value="*" styleClass="mandatory" /><!-- 9299 - #41078 --></td>
 					<td style="width: 66%"><p:outputPanel
 							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm}">
 							<p:outputPanel
@@ -89,7 +119,7 @@
 									rendered="#{smCompExpMB.disableClienType or (!smCompExpMB.disableClienType and 
 								smCompExpMB.selectedDraft.oriAgencyName ne null)}"
 									value="#{smCompExpMB.selectedDraft.agencyName}" />
-								<p:inputText size="60" style="width: auto !important;"
+								<p:inputText maxlength="255" size="60" style="width: auto !important;"
 									rendered="#{!smCompExpMB.disableClienType and smCompExpMB.selectedDraft.oriAgencyName eq null}"
 									value="#{smCompExpMB.selectedDraft.agencyName}" />
 							</p:outputPanel>
@@ -106,7 +136,7 @@
 							value="*" styleClass="mandatory" /></td>
 					<td style="width: 66%"><p:outputPanel
 							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeIdQt}">
-							<p:inputText id="fileReferenceNo"
+							<p:inputText maxlength="50" id="fileReferenceNo"
 								label="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}"
 								value="#{smCompExpMB.selectedDraft.fileReferenceNo}">
 								<p:ajax event="blur"
@@ -141,7 +171,7 @@
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.loa.no']}" /></td>
-					<td style="width: 66%"><p:inputText
+					<td style="width: 66%"><p:inputText maxlength="20"
 							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm or
 							(smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdCt and
 							smCompExpMB.selectedDraft.loaNo eq null)}"
@@ -156,7 +186,7 @@
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
-							value="#{lbl['lbl.sm.comp.exp.draft.table.title']}" /></td>
+							value="#{lbl['lbl.sm.comp.exp.draft.table.title']}" /> <p:outputLabel styleClass="mandatory" value="*" /><!-- 9299 - #41078 --></td>
 					<td style="width: 66%"><h:outputText
 							style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
 							styleClass="outputLabel-view"
@@ -165,7 +195,7 @@
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
-							value="#{lbl['lbl.sm.comp.exp.draft.table.value']}" /></td>
+							value="#{lbl['lbl.sm.comp.exp.draft.table.value']}" /> <p:outputLabel styleClass="mandatory" value="*" /><!-- 9299 - #41078 --></td>
 					<td style="width: 66%"><h:outputText
 							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeIdSm or 
 							(smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm and 
@@ -173,10 +203,11 @@
 							value="#{smCompExpMB.selectedDraft.contractValue}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-						</h:outputText> <p:inputText label="#{lbl['lbl.sm.comp.exp.draft.table.value']}"
+						</h:outputText> <p:inputText maxlength="14" label="#{lbl['lbl.sm.comp.exp.draft.table.value']}"
 							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm and 
 							(smCompExpMB.selectedDraft.contractValue eq 0 or smCompExpMB.selectedDraft.contractValue eq null)}"
 							value="#{smCompExpMB.selectedDraft.contractValue}">
+							<p:ajax event="blur" process="@this" update="@this" /><!-- #41341 format decimal on blur -->
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText></td>
@@ -186,11 +217,11 @@
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.payment.method']}" /></td>
 					<td style="width: 66%"><h:outputText
-							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm}"
+							rendered="#{smCompExpMB.selectedDraft.paymentMethod.parameterType eq ParameterConst.paramTypePaymentMethod}"
 							styleClass="outputLabel-view"
 							value="#{smCompExpBB.getParameterDesc(smCompExpMB.selectedDraft.paymentMethod)}" />
 						<p:selectOneMenu
-							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeIdSm}"
+							rendered="#{smCompExpMB.selectedDraft.paymentMethod.parameterType ne ParameterConst.paramTypePaymentMethod}"
 							value="#{smCompExpMB.selectedDraft.paymentMethod.parameterId}">
 							<f:selectItems
 								value="#{smCompExpBB.getDropdownValues(ParameterConst.paramTypePaymentMethod)}" />
@@ -200,7 +231,7 @@
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
-							value="#{lbl['lbl.sm.comp.exp.update.procument.method']}" /></td>
+							value="#{lbl['lbl.sm.comp.exp.update.procument.method']}" /> <p:outputLabel value="*" styleClass="mandatory" rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm}" /><!-- 9299 - #41078 --></td>
 					<td style="width: 66%"><h:outputText
 							rendered="#{smCompExpMB.selectedDraft.procumentMode.parameterType eq ParameterConst.paramTypeProcurementMethod}"
 							styleClass="outputLabel-view"
@@ -218,8 +249,7 @@
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.draft.table.eff.date']}" /> <p:outputLabel
 							value="*" styleClass="mandatory"
-							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm and 
-							smCompExpMB.tempEffDate}" /></td>
+							rendered="#{smCompExpMB.selectedDraft.sourceType.parameterId eq ParameterConst.sourceTypeIdSm}" /><!-- 9299 - #41078 --></td>
 					<td style="width: 66%"><h:outputText
 							rendered="#{!smCompExpMB.tempEffDate}"
 							styleClass="outputLabel-view"
@@ -301,32 +331,32 @@
 						<tr>
 							<td style="width: 34%"><p:outputLabel
 									styleClass="outputLabel-view-label2"
-									value="#{lbl['lbl.sm.comp.exp.update.proj.loc']}" /></td>
+									value="#{lbl['lbl.sm.comp.exp.update.proj.loc']}" /> <p:outputLabel styleClass="mandatory" value="*" /><!-- 9299 - #41078 --></td>
 							<td style="width: 66%"><h:outputText
 									style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
 									styleClass="outputLabel-view"
-									value="#{smCompExpMB.selectedDraft.projectLoc}" /></td>
+									value="#{smCompExpMB.selectedDraft.projectLoc}" rendered="#{not empty smCompExpMB.selectedDraft.projectLoc}" /> <p:inputText maxlength="300" rendered="#{empty smCompExpMB.selectedDraft.projectLoc}" styleClass="outputLabel-view" value="#{smCompExpMB.selectedDraft.projectLoc}" /><!-- 9299 - #41078 --></td>
 						</tr>
 						<tr>
 							<td style="width: 34%"><p:outputLabel
 									styleClass="outputLabel-view-label2"
-									value="#{lbl['lbl.sm.comp.exp.update.serv.provide']}" /></td>
+									value="#{lbl['lbl.sm.comp.exp.update.serv.provide']}" /> <p:outputLabel styleClass="mandatory" value="*" /><!-- 9299 - #41078 --></td>
 							<td style="width: 66%"><h:outputText
 									style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
 									styleClass="outputLabel-view"
-									value="#{smCompExpMB.selectedDraft.workServDesc}" /></td>
+									value="#{smCompExpMB.selectedDraft.workServDesc}" rendered="#{not empty smCompExpMB.selectedDraft.workServDesc}" /> <p:inputText maxlength="500" rendered="#{empty smCompExpMB.selectedDraft.workServDesc}" styleClass="outputLabel-view" value="#{smCompExpMB.selectedDraft.workServDesc}" /><!-- 9299 - #41078 --></td>
 						</tr>
 						<tr>
 							<td style="width: 34%"><p:outputLabel
 									styleClass="outputLabel-view-label2"
-									value="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}" /></td>
+									value="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}" /> <p:outputLabel styleClass="mandatory" value="*" /><!-- 9299 - #41078 --></td>
 							<td style="width: 66%"><h:outputText
 									style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
 									styleClass="outputLabel-view"
-									value="#{smCompExpMB.selectedDraft.consultantFee}">
+									rendered="#{not empty smCompExpMB.selectedDraft.consultantFee}" value="#{smCompExpMB.selectedDraft.consultantFee}">
 									<f:convertNumber
 										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-								</h:outputText></td>
+								</h:outputText> <p:inputText maxlength="14" rendered="#{empty smCompExpMB.selectedDraft.consultantFee}" label="#{lbl['lbl.sm.comp.exp.update.consultant.fee']}" value="#{smCompExpMB.selectedDraft.consultantFee}"><p:ajax event="blur" process="@this" update="@this" /><!-- #41341 format decimal on blur --><f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText><!-- 9299 - #41078 --></td>
 						</tr>
 					</p:outputPanel>
 					<tr>
@@ -377,7 +407,7 @@
 				value="#{lbl['lbl.sm.comp.exp.update.project.cat.code.instruction.ct.qt']}" />
 			<p:dataTable id="smCompExpCatCodes" rows="10" rowIndexVar="index"
 				value="#{smCompExpMB.smCompExpCatDraftList}" var="smCompExpCatCode"
-				widgetVar="smCompExpCatCodesWV">
+				widgetVar="smCompExpCatCodesWV" styleClass="sm-comp-exp-categories">
 				<ac:paginator for="smCompExpCatCodes" />
 				<p:column style="width:2% !important;">
 					<f:facet name="header">
@@ -393,12 +423,13 @@
 				</p:column>
 				<p:column style="width:34% !important;"
 					headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
-					<h:outputText
+					<h:outputText style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
 						value="#{smCompExpCatCode.categoryL1.categoryL1Code} - #{smCompExpCatCode.categoryL1Name}"
 						rendered="#{!smCompExpCatCode.brandNew}" />
 					<h:outputText styleClass="mandatory" value="*"
 						rendered="#{smCompExpCatCode.brandNew}" />
 					<p:selectOneMenu id="mainDDId" style="width:95% !important;"
+						panelStyleClass="sm-comp-exp-category-panel"
 						label="#{lbl['lbl.sm.projDtls.mainCat']}"
 						value="#{smCompExpCatCode.categoryL1.categoryL1Id}"
 						rendered="#{smCompExpCatCode.brandNew}">
@@ -415,12 +446,13 @@
 				</p:column>
 				<p:column style="width:32% !important;"
 					headerText="#{lbl['lbl.sm.projDtls.subCat']}">
-					<h:outputText
+					<h:outputText style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
 						value="#{smCompExpCatCode.categoryL2.categoryL2Code} - #{smCompExpCatCode.categoryL2Name}"
 						rendered="#{!smCompExpCatCode.brandNew}" />
 					<h:outputText styleClass="mandatory" value="*"
 						rendered="#{smCompExpCatCode.brandNew}" />
 					<p:selectOneMenu id="subDDId" style="width:95% !important;"
+						panelStyleClass="sm-comp-exp-category-panel"
 						label="#{lbl['lbl.sm.projDtls.subCat']}"
 						value="#{smCompExpCatCode.categoryL2.categoryL2Id}"
 						rendered="#{smCompExpCatCode.brandNew}">
@@ -437,12 +469,13 @@
 				</p:column>
 				<p:column style="width:32% !important;"
 					headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
-					<h:outputText
+					<h:outputText style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
 						value="#{smCompExpCatCode.categoryL3.categoryL3Code} - #{smCompExpCatCode.categoryL3Name}"
 						rendered="#{!smCompExpCatCode.brandNew}" />
 					<h:outputText styleClass="mandatory" value="*"
 						rendered="#{smCompExpCatCode.brandNew}" />
 					<p:selectOneMenu id="subDivDDId" style="width:95% !important;"
+						panelStyleClass="sm-comp-exp-category-panel"
 						label="#{lbl['lbl.sm.projDtls.subCatDiv']}"
 						value="#{smCompExpCatCode.categoryL3.categoryL3Id}"
 						rendered="#{smCompExpCatCode.brandNew}">
@@ -557,8 +590,8 @@
 				escape="false" />
 			<!--  9299 - 40830 -->
 			<div  style="text-align:right; margin-top:10px;">
-				<p:commandButton action="#{smCompExpBB.delSmCompExpDraft}"
-					onclick="delDuplicateDialogWV.hide();"
+				<!-- #9299 - #41245 -->
+				<p:commandButton action="#{smCompExpBB.delSmCompExpDraft}" onclick="delDuplicateSmDialogWV.hide();"
 					oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
 					process="@form" update=":form"
 					value="#{lbl['lbl.sm.comp.exp.yes.btn']}" />

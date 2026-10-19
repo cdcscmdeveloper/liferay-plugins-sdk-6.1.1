@@ -1,5 +1,5 @@
 /**
-' * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.ct.amendment;
 
@@ -62,6 +62,7 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO; //#26186
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.InactiveUserConst; //#30737
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
@@ -82,6 +83,7 @@ import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.user.UserStatusCheckDTO; //#30737
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
@@ -244,6 +246,23 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	private String confirmationContentMsg;//34442 
 	
+	//#30737 - Start 
+    @Override
+    protected List<PmUser> getSelectedApprovers() {
+        return getManagedBean().getApproverModel().getTarget();
+    }
+    
+    @Override
+    protected CtContractVer getContractVer() {
+    	return ctBackingBean.getManagedBean().getContractVer();
+    }
+    
+    @Override
+    protected String getTaskName() {
+    	return getManagedBean().getTaskName();
+    }
+    //#30737 - End
+	    
 	/**
 	 * The constructor used for initializing the variable.
 	 * This method will initialize the button and approver list.
@@ -658,7 +677,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			
 			// #25956 - Start (view Contract Amendment url from notification)
 			if (contractVerId != null) {
-
 				ctReqDTO = new ContractReqDTO();
 				ctReqDTO.setContractVerId(Long.parseLong(contractVerId));
 				ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
@@ -709,6 +727,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					checkandResetBondExempted();
 				  }
 				//End Fix- #29368 / #30856
+				
+				//#24336 - Start
+				if (!ctBackingBean.getManagedBean().isInitPage()) {
+		            initCommitteeType(taskId);
+		            ctBackingBean.getManagedBean().setInitPage(true);
+		        }
+				//#24336 - End
+				
 				return;
 			}
 			
@@ -810,7 +836,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			// #24336 - Start
 			// Runs all initial setup when the page is first loaded
 			if (!ctBackingBean.getManagedBean().isInitPage()) {
-			    initializePage();
+			    initializePage(taskId);
 			}
 			// #24336 - End
 
@@ -1253,6 +1279,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			/*Setting extension history list for amendment*/
 			getManagedBean().setAmendHistoryList(contractAmendmentSO.retrieveExtensionHistory(reqDTO).getExtensionHistoryList());
 			getManagedBean().setNewAmendmentEffDate(retrieveNewEffDate());
+			
+			//#24336 - Start
+			//Initialize NewAmtEffDate
+			CtAmendment ctAmendment = resDTO.getCtContractVer().getCtAmendment();
+			if(ctAmendment != null && ctAmendment.getNewAmtEffDate() != null){
+				getManagedBean().setInitialNewAmtEffDate(ctAmendment.getNewAmtEffDate());
+			}else{
+				getManagedBean().setInitialNewAmtEffDate(retrieveNewEffDate());
+			}
+			//#24336 - End
 
 			// Initialize new amendment details
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment() == null) {
@@ -1860,7 +1896,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				
 				ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemList());
 				ctBackingBean.getManagedBean().getContractVer().getCtContractItems().addAll(ctBackingBean.getManagedBean().getCtItemServiceList());
-
 		}
 		// for Fixing Enhancement #20997 and #Bug #28339 - End	
 		log.info("Check Putra CtContractItems :"+ctBackingBean.getManagedBean().getContractVer().getCtContractItems().size());
@@ -1994,6 +2029,27 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			// Start Fix - #30022
 			contractadminstatuschecking();
 			// End Fix - #30022
+			
+			//#30737 - start - for revise, cancel and review fa approval without committee
+			Long userStatusCheckResult = getManagedBean().getUserStatusCheckResult();
+			reqDTO.setScLoa(getContractVer().getCtContract().getLoa());
+			reqDTO.setUserStatusCheckResult(userStatusCheckResult);
+			
+			//Get new approver
+			Long docId = getContractVer().getContractVerId();
+			String docType = getContractVer().getDocType();
+			if (hasInactiveUserStatus(userStatusCheckResult)
+					&& CTProcessNameConst.PREPARE_LOA_HT_NAME.equalsIgnoreCase(getTaskName())
+					&& ctAmendment.getAmendmentLoa().isApprovalReq()) {
+				
+				PmUser currentApprover = getCurrentApprover();
+				List<PmUser> availableApprovers
+					= contractAmendmentSO.retrieveActiveContractApproverList(docId, docType, currentApprover.getUserId());
+				
+				reqDTO.setNewApprover(resolveReplacementApprover(availableApprovers, currentApprover.getUserId()));
+			}
+	        //#30737 - end 
+			
 			ContractResDTO resDTO = contractAmendmentSO.saveContractAmendmentVerDtls(reqDTO);
 			if (resDTO.isSuccessful()) {
 				log.debug("Record saved successfully");
@@ -2110,9 +2166,28 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 					if (getManagedBean().getTaskName() != null) {
 						if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)) {
-							messageId = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isApprovalReq()
-									? MessageConst.INFO_700046 : MessageConst.INFO_700043;
-
+							
+							//#30737 acknowledgement for inactive user - start
+							if (hasInactiveUserStatus(getManagedBean().getUserStatusCheckResult())) {
+								messageId = MessageConst.INFO_700128;
+								params = new String[] {
+										getParameterDesc(
+												ParameterTypeConst.DOCUMENT_TYPES,
+												this.ctBackingBean
+														.getManagedBean()
+														.getContractVer()
+														.getDocType()),
+										this.ctBackingBean.getManagedBean()
+												.getContractVer()
+												.getCtContract()
+												.getContractNo(),
+										resDTO.getNewApprover().getUserName() };
+							} else {
+								messageId = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isApprovalReq()
+										? MessageConst.INFO_700046 : MessageConst.INFO_700043;
+							}
+							//#30737 - end
+							
 						} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)) {
 							messageId = MessageConst.INFO_758002;
 							params = new String[] { this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo()};
@@ -3211,6 +3286,70 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 		}
 		//#25890 - End
+		
+		//#30737 - Start
+		String taskName = getTaskName();
+		CtAmendment ctAmendment = getContractVer().getCtAmendment();
+		
+		boolean isExcludedTask = CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME.equalsIgnoreCase(taskName)
+		        || CTProcessNameConst.UPDATE_MOF_RESULT_HT_NAME.equalsIgnoreCase(taskName);
+		boolean isSubmit = BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action);
+		boolean isAcknowledge = BpmOutcomeConst.BPM_ACKNOWLEDGE.equalsIgnoreCase(action);
+		boolean isApprove = BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action);
+		boolean isValidAcknowledge = !CTProcessNameConst.SIGN_OFF_HT_NAME.equalsIgnoreCase(taskName)
+		        && isAcknowledge;
+		
+		if (!isExcludedTask && (isSubmit || isValidAcknowledge || isApprove)) {
+			
+			boolean isApprovalReq = false;
+			if (ctAmendment.getAmendmentLoa() != null) {
+				isApprovalReq = ctAmendment.getAmendmentLoa().isApprovalReq();
+			}
+	    	
+		    List<UserStatusCheckDTO> userStatusResults;
+		    
+		    if (CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME.equalsIgnoreCase(taskName)) {
+		    	userStatusResults = retrieveCommitteeInactiveUsers();
+		    } 
+		    
+		    else {
+		    	
+		    	boolean isApproveReviewFa = BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)
+		    	        && CTProcessNameConst.REVIEW_FA_HT_NAME.equalsIgnoreCase(taskName)
+		    	        && !ctAmendment.isPbqcAuthorityReq();
+
+		    	boolean isAcknowledgeSignOff = BpmOutcomeConst.BPM_ACKNOWLEDGE.equalsIgnoreCase(action)
+		    	        && (CTProcessNameConst.CHAIR_PERSON_SIGN_OFF_HT_NAME.equalsIgnoreCase(taskName)
+		    	                || CTProcessNameConst.ACK_FA_HT_NAME.equalsIgnoreCase(taskName));
+		    	
+		    	if (isApproveReviewFa || isAcknowledgeSignOff) {
+		    	    processContractAdminUserStatus();
+		    	    return;
+		    	}
+		    	
+		    	userStatusResults = retrieveUserStatusResults(action, taskName, isApprovalReq);
+		    }
+	    	
+		    //MCA to CA (prepare loa with approval)
+		    if (CTProcessNameConst.PREPARE_LOA_HT_NAME.equalsIgnoreCase(taskName)
+		            && !userStatusResults.isEmpty() 
+		            && isApprovalReq) {
+	    		
+	    		UserStatusCheckDTO userStatusCheck = userStatusResults.get(0);
+		        Long userStatus = userStatusCheck.getStatus();
+
+		        if (InactiveUserConst.INACTIVE_USER_5.equals(userStatus)) {
+		            handleInactiveUserValidation(userStatusResults);
+		        } else {
+		            getManagedBean().setUserStatusCheckResult(userStatus);
+		        }
+		    	
+		    } else {
+		        handleInactiveUserValidation(userStatusResults);
+		    }
+		}
+		//#30737 - End
+		
 	}
 	//24333 - End, Refactor code for Validate Amendment because tab menu changes
 	
@@ -3743,17 +3882,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		//Bug 33096 - shaqimi start
 		BigDecimal ctAmt;
 		if(ctBackingBean.getManagedBean().isViewSCL()){
-			
-//			ctAmt = ctContractVer.getCtContractAmount().getContractAmount();
-			
-			//#24336
-			ctAmt = getOverallContractAmount(ctContractVer.getCtContractAmount());
-			
+			ctAmt = ctContractVer.getCtContractAmount().getContractAmount();
 		} else {
 			
 			//#24336 - Start
 			// Calculate the current contract amount with additions or reductions.
-			BigDecimal baseAmt = getOverallContractAmount(ctContractVer.getCtContractAmount());
+			BigDecimal baseAmt = ctContractVer.getCtContractAmount().getContractAmount();
 			BigDecimal addAmt = ctContractVer.getCtAmendment().getAdditionalAmount();
 			BigDecimal reduceAmt = ctContractVer.getCtAmendment().getReductionAmt();
 			
@@ -3785,6 +3919,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		CtAmendment ctAmendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
 		
 		// Include new GST amount if contract value changed by GST
+		// Keep isValueChangeByGst() check to prevent unnecessary NewGstAmount updates when GstAmount has a value.
 		if(ctAmendment.isValueChangeByGst() && ctAmendment.getNewGstAmount() != null){
 			contractAmt = newContractAmt().add(ctAmendment.getNewGstAmount());
 		}
@@ -3803,18 +3938,32 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @return the final contract amount including service tax (if applicable)
 	 */
 	public BigDecimal newOverallContractAmount() {
-		BigDecimal contractAmount = newOverallContractAmt();
-		
-		// #24336 - Start
-		CtAmendment ctAmendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
-		
-		// Include service tax if contract value changed by GST
-		if(ctAmendment.isValueChangeByGst() && ctAmendment.getNewStaxAmount() != null){
-			contractAmount = newOverallContractAmt().add(ctAmendment.getNewStaxAmount());
-		}
-		// #24336 - End
-		
-		return contractAmount;
+	    BigDecimal contractAmount = newOverallContractAmt();
+
+	    // #24336 - Start
+	    CtContractVer ctContractVer = ctBackingBean.getManagedBean().getContractVer();
+	    CtAmendment ctAmendment = ctContractVer.getCtAmendment();
+	    CtContractAmount ctContractAmount = ctContractVer.getCtContractAmount();
+
+	    // Include service tax if contract value changed by GST
+	    // Keep isValueChangeByGst() check to prevent unnecessary NewStaxAmount updates when StaxAmount has a value.
+	    if (ctAmendment.isValueChangeByGst() && ctAmendment.getNewStaxAmount() != null) {
+	        contractAmount = contractAmount.add(ctAmendment.getNewStaxAmount());
+	    }
+
+	    // Include current GST and STAX amounts if the contract value was not changed due to GST/SST
+	    if (!ctAmendment.isValueChangeByGst()) {
+	        if (ctContractAmount.getGstAmount() != null) {
+	            contractAmount = contractAmount.add(ctContractAmount.getGstAmount());
+	        }
+
+	        if (ctContractAmount.getStaxAmount() != null) {
+	            contractAmount = contractAmount.add(ctContractAmount.getStaxAmount());
+	        }
+	    }
+	    // #24336 - End
+
+	    return contractAmount;
 	}
 	// End - #29589
 	
@@ -5005,6 +5154,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			spToCheck = true;
 		}
 		changeAmendmentEffDate();
+		
+		//#24336
+		handleNewAmtEffDate();
 	}
 
 	/**
@@ -5273,6 +5425,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		//32418 End		
 
 		changeAmendmentEffDate();
+		
+		//#24336
+		handleNewAmtEffDate();
 	}
 
 	/**
@@ -5320,6 +5475,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				changeSelectedItemMaxQtyAmendDate(this.getManagedBean().getSelectedItem());				  
 			}
 		}
+		
+		//#24336 - Start
+		// Update NewAmtEffDate with AmendmentEffDate when AmendmentEffDate changes
+		// and the new overall contract amount remains the same.
+		CtAmendment amendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
+		if(amendment != null && amendment.isValueChange()){
+			BigDecimal newOverallCtAmount = newOverallContractAmount().setScale(2, RoundingMode.HALF_UP);
+			if (!isNewOverallCtAmountDifferent(newOverallCtAmount)) {
+				amendment.setNewAmtEffDate(amendment.getAmendmentEffDate());
+			}
+		}
+		//#24336 - End
 	}
 	
 	/**
@@ -6248,13 +6415,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			PmOrgProfile contractMinistry = retrieveMinistryOrgProfile(ctOwnerOrgProfileId);
 			PmOrgProfile committeeMinistry = retrieveMinistryOrgProfile(orgProfileId);
 			
-			log.info(":::allowChairpersonRole() orgProfileId: "+ orgProfileId);
-			
 			if (contractMinistry != null && committeeMinistry != null
-					&& contractMinistry.getOrgProfileId().longValue() == committeeMinistry.getOrgProfileId().longValue()) {	
-				log.info(":::allowChairpersonRole() "+ orgProfileId +". contract ministryOrgProfileId: "+ contractMinistry.getOrgProfileId());
-				log.info(":::allowChairpersonRole() "+ orgProfileId +". committee ministryOrgProfileId: "+ committeeMinistry.getOrgProfileId());
-				
+					&& contractMinistry.getOrgProfileId().longValue() == committeeMinistry.getOrgProfileId().longValue()) {					
 				allowChairpersonRole = true;
 			}
 			
@@ -6269,20 +6431,17 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 							|| pm.getPmRole().getRoleCode().equalsIgnoreCase(RoleCode.PPB_CHAIRPERSON.value())){
 						allowChairpersonRole = true;
 						continue;
-						
 					}
 				}
 			}
-			
 			/*end*/
 			
-			log.info(":::allowChairpersonRole() "+ orgProfileId +". committee type: "+ getManagedBean().getCommitteeType());
-
-			// QCA/QCB, need to be same PTJ
-			// #35238 start
-			allowChairpersonRole = getAmendmentCommitteeHelper().determineChairpersonAccessForQuotationCommmittee(
-					orgProfileId, ctOwnerOrgProfileId, userResDTO, allowChairpersonRole);
-			// #35238 end
+			// #35238, #41383 start
+			if (allowChairpersonRole) {
+				allowChairpersonRole = getAmendmentCommitteeHelper().determineChairpersonAccessForQuotationCommmittee(
+						orgProfileId, ctOwnerOrgProfileId, userResDTO, allowChairpersonRole);
+			}
+			// #35238, #41383  end
 			
 			//Bug #26520 - start
 			if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)
@@ -6620,7 +6779,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			} else {
 				getManagedBean().setAllowAcknowledge(false);
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -7052,6 +7211,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			return userRole;
 		}
 	}
+	
+	
+	// define dia mof / basic (by supplier admin role)
+	// check all user list by role mof/basic
+	
 
 	/**
 	 * The method used to check whether approver setting tab menu is required to display.
@@ -8206,6 +8370,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * The method used for validating Remark Cancel/Revise/Reject Button. A
 	 * warning message will display on screen when Remark is null
 	 * 
+	 * @param action the workflow action or outcome selected for the current task
 	 * @throws Exception
 	 *             if an exception occurred
 	 * @see Exception
@@ -8247,9 +8412,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					new FacesScopes().getUserLocale()) }); //#25956
 		}
 		// #26688 end
+		
+		//#30737
+		validateContractAdminUserStatusForAction(action);
 
 	}
-
+	
 	// #25956 - End
 		
 		//#30428 - Start
@@ -9487,7 +9655,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public BigDecimal getMaxAdditionalValue() {
 		BigDecimal maxAdditionalValue = BigDecimal.ZERO;
-		BigDecimal ctAmount = getApplicableOverallContractAmount();
+		BigDecimal ctAmount = getApplicableOriginalContractAmount();
 		if (ctAmount != null && ctAmount.compareTo(BigDecimal.ZERO) > 0) {
 			maxAdditionalValue = ctAmount.multiply(CommonConstants.MAX_ADDITIONAL_RATE);
 		}
@@ -9500,7 +9668,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public BigDecimal getAdditionalPercentage() {
 		BigDecimal additionalPercentage = BigDecimal.ZERO;
-		BigDecimal ctAmount = getApplicableOverallContractAmount();
+		BigDecimal ctAmount = getApplicableOriginalContractAmount();
 		BigDecimal addition = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount();
 		if (ctAmount != null && addition != null && ctAmount.compareTo(BigDecimal.ZERO) != 0) {
 	        additionalPercentage = addition
@@ -9514,33 +9682,70 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * Updates the new contract amount effective date based on certain business rules.
 	 */
 	public void handleNewAmtEffDate() {
-		BigDecimal newOverallCtAmount = newOverallContractAmount().setScale(2, RoundingMode.HALF_UP);
-		ContractManagedBean contractManagedBean = ctBackingBean.getManagedBean();
-		CtContractVer ctContractVer = contractManagedBean.getContractVer();
-		CtAmendment ctAmendment = ctContractVer.getCtAmendment();
 
-		Date newAmtEffDate;
-		// new overall contract amount is different from overall contact amount
-		if (isNewOverallCtAmountDifferent(newOverallCtAmount)) {
-			
-			newAmtEffDate = ctAmendment.getNewAmtEffDate();
-			
-			boolean isDisableNewCtAmountEffDate = contractManagedBean.isDisableNewCtAmountEffDate();
-			if(newAmtEffDate == null || isDisableNewCtAmountEffDate == true){
-				newAmtEffDate = new Date();
-			}
-			
-			// Enable date input
-			contractManagedBean.setDisableNewCtAmountEffDate(false);
+	    BigDecimal newOverallCtAmount = newOverallContractAmount()
+	    		.setScale(2, RoundingMode.HALF_UP);
+
+	    ContractManagedBean contractManagedBean = ctBackingBean.getManagedBean();
+	    CtContractVer ctContractVer = contractManagedBean.getContractVer();
+	    CtAmendment ctAmendment = ctContractVer.getCtAmendment();
+	    
+	    Date newAmtEffDate = ctAmendment.getNewAmtEffDate();
+
+	    // Original overall contract amount not same as new overall contract amount
+	    if (isNewOverallCtAmountDifferent(newOverallCtAmount)) {
+	    	newAmtEffDate = getNewAmountEffDateForChangedAmount(
+	                newAmtEffDate,
+	                contractManagedBean.isDisableNewCtAmountEffDate()
+	        );
+	        contractManagedBean.setDisableNewCtAmountEffDate(false);
+	    } else {
+	    	// Both overall amount is same
+	    	newAmtEffDate = getNewAmountEffDateForUnchangedAmount(
+	                newAmtEffDate,
+	                ctAmendment
+	        );
+	        contractManagedBean.setDisableNewCtAmountEffDate(true);
+	    }
+	    ctAmendment.setNewAmtEffDate(newAmtEffDate);
+	}
+	
+	/**
+	 * Determines the effective date when the overall contract amount has changed.
+	 */
+	private Date getNewAmountEffDateForChangedAmount(Date newAmtEffDate, boolean isDisableNewCtAmountEffDate) {
 		
-		// same as overall contract amount	
-		} else {
-			newAmtEffDate = retrieveNewEffDate();
-			
-			// Disable date input
-			contractManagedBean.setDisableNewCtAmountEffDate(true);
-		}
-		ctAmendment.setNewAmtEffDate(newAmtEffDate);
+	    if (newAmtEffDate != null && !isDisableNewCtAmountEffDate) {
+	        return newAmtEffDate;
+	    }
+	    return new Date();
+	}
+	
+	/**
+	 * Determines the effective date when the overall contract amount remains unchanged.
+	 */
+	private Date getNewAmountEffDateForUnchangedAmount(Date newAmtEffDate, CtAmendment ctAmendment) {
+		// Saved record
+	    if (newAmtEffDate != null && getManagedBean().getTaskName() != null) {
+	        return getManagedBean().getInitialNewAmtEffDate();
+	    }
+	    return getDefaultAmountEffectiveDate(ctAmendment, getManagedBean().getInitialNewAmtEffDate());
+	}
+	
+	/**
+	 * Determines the default effective date based on the contract amendment details.
+	 */
+	private Date getDefaultAmountEffectiveDate(CtAmendment ctAmendment, Date initialNewAmtEffDate) {
+
+	    if (ctAmendment.isContractExtend()) {
+	        return ctAmendment.getExtendStartDate();
+	    }
+
+	    Date amendmentEffDate = ctAmendment.getAmendmentEffDate();
+	    if (amendmentEffDate != null) {
+	        return amendmentEffDate;
+	    }
+	    return initialNewAmtEffDate != null ? initialNewAmtEffDate : new Date();
 	}
 
 	/**
@@ -9615,7 +9820,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	public BigDecimal getReducibleContractAmount() {
 		BigDecimal amount;
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isReduction() == REDUCTION_OF_CONTRACT_VALUE) {
-			BigDecimal ctAmount = getApplicableOverallContractAmount();
+			BigDecimal ctAmount = getApplicableOriginalContractAmount();
 		    BigDecimal pendingAmount = getPendingTransactionAmount();
 		    BigDecimal prePaymentAmount = getAmountBeforePendingPayment();
 
@@ -9730,7 +9935,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	/** Checks whether the current user is the Contract Approver */
 	private boolean isCtApprover() {
-		return getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value());
+	    String roleCode = getApproverRoleCode();
+	    return roleCode != null && getFacesScopes().hasRoleUser(roleCode);
 	}
 	
 	/**
@@ -9798,8 +10004,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	/** Performs initial page setup. */
-	private void initializePage() {
-	    initCommitteeType();
+	private void initializePage(String taskId) {
+	    initCommitteeType(taskId);
 	    // Loads the correct checklist options based on data.
 	    handleSelectedAmendmentChecklistValue();
 	    // Updates values when amendment type changes.
@@ -9809,19 +10015,40 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	/** Initializes the committee type during page first load. */
-	private void initCommitteeType() {
-		CtAmendment ctAmendment = ctBackingBean.getManagedBean().getContractVer().getCtAmendment();
-		if (ctAmendment == null) {
+	private void initCommitteeType(String taskId) {
+
+	    String committeeType = getManagedBean().getCommitteeType();
+	    Long secretaryId = getManagedBean().getSecretaryId();
+
+	    // New record
+	    if (taskId == null || taskId.trim().length() == 0) {
+	        if (committeeType == null) {
+	            // First initialization of new record.
+	            // Get default committee type from previous QT (if available).
+	            handleOriginalDeskOfficerCommitteeQT();
+	        }
 	        return;
 	    }
-		
-	    if (ctAmendment.getCommitteeType() == null) {
-	    	// Sets default desk officer committee from QT
+	    
+	    // Saved record but Secretary has not been selected/saved yet
+	    if (secretaryId == null) {
 	        handleOriginalDeskOfficerCommitteeQT();
-	    }else{
-	    	// Sets saved committee type into the bean
-	    	mapCommitteeType();
+	        return;
 	    }
+
+	    // Keep the existing saved committee type
+	    boolean isPbqcAuthorityReq = ctBackingBean.getManagedBean()
+	            .getContractVer()
+	            .getCtAmendment()
+	            .isPbqcAuthorityReq();
+	    if (isPbqcAuthorityReq) {
+	        // Existing saved committee type
+	        mapCommitteeType();
+	        return;
+	    }
+
+	    // PBQC Authority is not required
+	    resetPbqcAuthoritySelection();
 	}
 	
 	/** Sets default desk officer committee if no saved value. */
@@ -9836,7 +10063,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ScQt scQt = ctContractVer.getCtContract().getQuotationTender();
 			
 			if(scQt != null){
-				CommitteeMemberInfoResDTO cmiRes = contractAmendmentSO.retrieveOriginalDeskOfficerCommittee(scQt.getQtId(), SourcingConstants.MEMBER_ROLE_ID_SECRETARY);
+				CommitteeMemberInfoResDTO cmiRes = contractAmendmentSO.retrieveOriginalDeskOfficerCommittee(scQt.getQtId());
 				if(cmiRes != null){
 					
 					// tick checkbox Committee Type
@@ -9906,13 +10133,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
         getManagedBean().setSecretaryId(null);
 	}
 		
-	public BigDecimal getApplicableOverallContractAmount() {
+	public BigDecimal getApplicableOriginalContractAmount() {
 		
 		ContractManagedBean contractManagedBean = ctBackingBean.getManagedBean();
 	    CtContractVer ctContractVer = contractManagedBean.getContractVer();
 
 	    // Default overall contract amount with current version
-	    BigDecimal contractAmount = getOverallContractAmount(ctContractVer.getCtContractAmount());
+	    BigDecimal contractAmount = ctContractVer.getCtContractAmount().getContractAmount();
 
 	    // Only override if View SCL is true
 	    if (contractManagedBean.isViewSCL()) {
@@ -9931,7 +10158,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	        contractReqDTO.setContractVerId(previousContractVerId);
 	        CtContractVer previousContractVer = contractSO.retrieveContractVer(contractReqDTO).getCtContractVer();
 
-	        contractAmount = getOverallContractAmount(previousContractVer.getCtContractAmount());
+	        contractAmount = previousContractVer.getCtContractAmount().getContractAmount();
 	    }
 	    return contractAmount;
 	}
@@ -10218,4 +10445,214 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		this.confirmationContentMsg = confirmationContentMsg;
 	}
 	// 34442 - end
+	
+	// #30737 - start
+	private List<UserStatusCheckDTO> retrieveCommitteeInactiveUsers() {
+		
+		List<UserStatusCheckDTO> userStatusResults = new ArrayList<>();
+		List<PmUser> committeeMembers = new ArrayList<>();
+    	List<PmUser> committeeChairpersons = new ArrayList<>();
+    	
+    	Long statusId = getContractVer().getStatus().getStatusId();
+		List<CtCommitteeMember> ctCommitteeMembers;
+		
+		if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(statusId)
+				|| ContractStatusConst.FA_PENDING_MEETING_DECISION_REVISION.equals(statusId)) {
+			ctCommitteeMembers = getFilteredCommitteeMembers();
+		} else {
+			ctCommitteeMembers = getContractVer().getCtAmendment().getCtCommitteeMembers();
+		}
+		
+		for(CtCommitteeMember member : ctCommitteeMembers){
+			String memberRoleCode = member.getMemberRole().getParameterCode();
+			if (ParameterConst.COMMITTEE_ROLE_CHAIRPERSON.equals(memberRoleCode)) {
+			    committeeChairpersons.add(member.getPmUser());
+			} else if (ParameterConst.COMMITTEE_ROLE_MEMBER.equals(memberRoleCode)) {
+			    committeeMembers.add(member.getPmUser());
+			}
+		}
+		
+		if(!committeeChairpersons.isEmpty()) {
+			userStatusResults.addAll(checkUserStatus(
+					getManagedBean().getCommitteeType() + SourcingConstants.ROLE_EXT_CHAIRPERSON, 
+					committeeChairpersons,
+					getContractVer().getDocType(),
+					ParameterConst.COMMITTEE_ROLE_CHAIRPERSON));
+		}
+		
+		if(!committeeMembers.isEmpty()) {
+			userStatusResults.addAll(checkUserStatus(
+					getManagedBean().getCommitteeType() + SourcingConstants.ROLE_EXT_MEMBER, 
+					committeeMembers, 
+					getContractVer().getDocType(),
+					ParameterConst.COMMITTEE_ROLE_MEMBER));
+		}
+		
+		return userStatusResults;
+	}
+	
+	private List<UserStatusCheckDTO> retrieveUserStatusResults(String action, String taskName, boolean isApprovalReq) {
+	    String roleCode = determineRoleCode(action);
+	    List<PmUser> selectedUsers = determineUsers(action, taskName, isApprovalReq);
+	    return checkUserStatus(
+	            roleCode,
+	            selectedUsers,
+	            getContractVer().getDocType(),
+	            null);
+	}
+	
+	private String determineRoleCode(String action) {
+		
+	    if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)) {
+	        // CA -> DO (pending meeting confirmation)
+	        return getManagedBean().getCommitteeType() + "_SECRETARY";
+	    }
+
+	    if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
+	        // MCA -> CA (approval)
+	        // MCA -> CA (submit prepare LOA when approval is required)
+	        return determineContractApproverRole();
+	    }
+	    return null;
+	}
+	
+	private List<PmUser> determineUsers(String action, String taskName, boolean isApprovalReq) {
+		
+		if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
+			
+			// MCA -> CA (submit Prepare LOA)
+			if (CTProcessNameConst.PREPARE_LOA_HT_NAME.equalsIgnoreCase(taskName)
+					&& isApprovalReq) {
+				
+				PmUser currentApprover = getCurrentApprover();
+				List<PmUser> users = new ArrayList<>();
+		  		if (currentApprover != null) {
+			        users.add(currentApprover);
+		  		}
+		  		return users;
+			}
+			
+			// MCA -> CA (approval)
+			return getSelectedApprovers();
+		}
+		
+		else if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)) {
+				
+			// CA -> DO (pending meeting confirmation)	
+			List<PmUser> users = new ArrayList<>();
+			PmUser secretary = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSecretary();
+			if (secretary != null) {
+				users.add(secretary);
+			}
+			return users;
+		}
+		return new ArrayList<>();
+	}
+	
+	private void processContractAdminUserStatus() {
+	    List<UserStatusCheckDTO> userStatusResults =
+	    		getContractAdminUserStatus(
+	    				getContractVer().getContractVerId(),
+	    				getContractVer().getDocType());
+
+	    if (userStatusResults != null && !userStatusResults.isEmpty()) {
+
+	        UserStatusCheckDTO userStatusResult = userStatusResults.get(0);
+            Long userStatus = userStatusResult.getStatus();
+            getManagedBean().setUserStatusCheckResult(userStatus);
+
+            if (InactiveUserConst.INACTIVE_USER_5.equals(userStatus)) {
+                handleInactiveUserValidation(userStatusResults);
+            } 
+	    }
+	}
+	
+	private boolean hasInactiveUserStatus(Long userStatusCheckResult) {
+		return userStatusCheckResult != null
+				&& (userStatusCheckResult.equals(2L)
+				|| userStatusCheckResult.equals(3L)
+				|| userStatusCheckResult.equals(4L));
+	}
+	
+	/**
+	 * The method used to retrieve available approver(s).
+	 *
+	 * @param contractType the contract type
+	 * @param userMap      the user map
+	 * @return sourceList  the approver list
+	 */
+	private List<PmUser> getActiveCtApproverList(String contractTypeCode) {
+		IUserSO userSO = null;
+		List<PmUser> sourceList = new ArrayList<>();
+		UserReqDTO reqDTO = new UserReqDTO();
+		UserResDTO resDTO = new UserResDTO();
+
+		try {
+			userSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+
+			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());				
+			resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+
+			if (!resDTO.getUserOrgList().isEmpty()) {
+				reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
+			}
+
+			if (contractTypeCode.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {							
+				reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
+			} else if (contractTypeCode.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+				reqDTO.setRoleCode(RoleCode.BPK_CC_APPROVER.value());
+			}			
+			
+			resDTO = userSO.retrieveUserListByRole(reqDTO);
+			sourceList.addAll(resDTO.getUserList());
+			
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+		return sourceList;
+	}
+	
+	private PmUser resolveReplacementApprover(List<PmUser> contractApproverList, Long currentApproverUserId) {
+
+		List<PmUser> approverList;
+		if (!contractApproverList.isEmpty()) {
+			// Get random approver from CtApprover
+			approverList = contractApproverList;
+		} else {
+			// Get random availableApproverList from PmUser
+			approverList = getActiveCtApproverList(
+					getContractVer().getCtContract().getContractType().getParameterCode());
+		}
+
+		for (PmUser pmUser : approverList) {
+			if (pmUser.isRecordStatus()
+					&& currentApproverUserId != pmUser.getUserId()) {
+				return pmUser;
+			}
+		}
+		return null;
+	}
+	
+	private PmUser getCurrentApprover() {
+		CtActor currentApprover = retrieveContractActor(
+				getContractVer().getContractVerId(),
+				getContractVer().getDocType(),
+				determineContractApproverRole());
+		
+		if (currentApprover != null) {
+			return currentApprover.getUser();
+		}
+		return null;
+	}
+	
+	private void validateContractAdminUserStatusForAction(String action) {
+	    if ((!CTProcessNameConst.SIGN_OFF_HT_NAME.equalsIgnoreCase(getTaskName())
+	            && BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action))
+	            || BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(action)) {
+	        processContractAdminUserStatus();
+	    }
+	}
+	
+	// #30737 - end
 }

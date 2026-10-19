@@ -190,6 +190,10 @@ public class CreateQtBackingBean extends
 		conditionString.append("|");
 		conditionString.append("docType^");
 		conditionString.append(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+		//#34923 - start
+		conditionString.append("*docType^");
+		conditionString.append(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY);
+		//#34923 - end
 
 		return conditionString.toString();
 	}
@@ -3378,12 +3382,15 @@ public class CreateQtBackingBean extends
 						new SearchFilterBean("ctCircularVer.qt",
 								SearchOperator.OPERATOR_EQUALS.value(), true
 								));
-			
-			
+	//#34923 - start
+	List<String> docTypeList = new ArrayList<>(); //#41436
+	docTypeList.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+	docTypeList.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY);
 	itemSearchBean.getDataFilterBeans().add(
 						new SearchFilterBean("ctCircularVer.docType",
-								SearchOperator.OPERATOR_EQUALS.value(), ParameterConst.DOCTYPE_PANEL_CIRCULAR
+								SearchOperator.OPERATOR_IN.value(), docTypeList
 								));
+	//#34923 - end
 			
 		
 	itemSearchBean.getDataFilterBeans().add(

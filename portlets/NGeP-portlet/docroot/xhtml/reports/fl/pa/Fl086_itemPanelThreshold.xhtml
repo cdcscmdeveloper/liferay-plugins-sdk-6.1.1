@@ -107,35 +107,31 @@
 			</td>
 		</tr>
 		<tr>
-			<td>
-				<p:outputLabel value="#{lbl['lbl.rpt.group']}" />
-			</td>
-			<td>
-				<p:selectOneMenu value="#{itemPanelThrRptBB.managedBean.group}">
+			<td><p:outputLabel value="#{lbl['lbl.rpt.group']}" /></td>
+			<!-- #41069 start -->
+			<td><p:selectOneMenu
+					value="#{itemPanelThrRptBB.managedBean.group}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
-						itemValue="#{null}" />
+						itemValue="#{FlReportConst.getFlRptGroupNone()}" />
 					<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.circular.no']}"
 						itemValue="#{lbl['lbl.fl.doc.maintain.circular.no']}" />
 					<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.doc.status']}"
-						itemValue="#{lbl['lbl.fl.doc.maintain.doc.status']}" />
+						itemValue="#{FlReportConst.getFlRptGroupDocStatus()}" />
 					<f:selectItem itemLabel="#{lbl['lbl.fl.fulfilment.type']}"
 						itemValue="#{lbl['lbl.fl.fulfilment.type']}" />
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
-				</p:selectOneMenu>
+				</p:selectOneMenu></td>
+			<!-- #41069 end-->
+			<td><p:outputLabel value="#{lbl['lbl.fl.procurement.type']}" />
 			</td>
-			<td>
-				<p:outputLabel value="#{lbl['lbl.fl.procurement.type']}" />
-			</td>
-			<td>
-				<p:selectOneMenu
+			<td><p:selectOneMenu
 					value="#{itemPanelThrRptBB.managedBean.procurementTypeId}"
 					style="width: 100px;">
 					<f:selectItems
 						value="#{itemPanelThrRptBB.getDropdownValuesProcurementType()}" />
 
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
-				</p:selectOneMenu>
-			</td>
+				</p:selectOneMenu></td>
 		</tr>
 		<tr>
 			<td>

@@ -8,25 +8,25 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 
 	<p:panel id="pApprAuthorityResult" header="#{ApproveAuthorityBackingBean.managedBean.comName}" style="width=800px; height:50;" toggleable="true">
-		<p:spacer height="10"></p:spacer>
+		<p:spacer height="10" />
 		<div class="ppRightBtn" align="right">
 			<!-- 34445 start -->
 			<p:commandButton value="#{lbl['lbl.pm.approveAuthority.save']}" id="btnSave"
 				oncomplete="saveAuthInfoDlg.show();"/>
 			<!-- 34445 end -->
 		</div>
-		<h:panelGroup>		
+		<h:panelGroup>
 			<p:dataTable id="listAuthTbl" rows="10"
 				widgetVar="apprAuthorityTblWidVar"
 				value="#{ApproveAuthorityBackingBean.managedBean.listAuthCommittee}"
 				var="athList" rowKey="#{athList}" rowIndexVar="index">
 				<ac:paginator for="listAuthTbl"/>
-					<p:column style="width:60%;text-align:left;white-space:normal;word-wrap:break-word;">
+					<p:column style="width:60%; text-align:left; white-space:normal; word-wrap:break-word;">
 						<f:facet name="header">
 							<h:outputText value="*" styleClass="mandatory" />
 							<h:outputText value="#{lbl['lbl.pm.approveAuthority.name']}" />
 						</f:facet>
-						<h:outputText value="#{athList.committeeName}"  rendered="#{!athList.brandNew}"/>
+						<h:outputText value="#{athList.committeeName}" rendered="#{!athList.brandNew}" />
 						<p:inputText id="committeeName" value="#{athList.committeeName}"
 							size="70" maxlength="150" required="false" disabled="false"
 							rendered="#{athList.brandNew}"/>
@@ -43,8 +43,7 @@
 							value="#{athList.recordStatusFlg}"
 							disabled="true"
 							styleClass="ppDropDownWidthS">
-							<f:selectItems
-								value="#{ApproveAuthorityBackingBean.getResultStatusList()}" />
+							<f:selectItems value="#{ApproveAuthorityBackingBean.getResultStatusList()}" />
 							<p:ajax event="change"
 								listener="#{ApproveAuthorityBackingBean.apprAuthorityStatusChange(athList)}"
 								partialSubmit="true" process="@this" update="@form" />
@@ -56,10 +55,10 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.pm.approveAuthority.action']}" style="text-align:center; width:20%;">
 						<p:commandLink id="editCommittee"
-							action="#{ApproveAuthorityBackingBean.setCommittee(athList)}" 					
-								update="@([id$=#{updateCommitteeDialog}])">				
+							action="#{ApproveAuthorityBackingBean.setCommittee(athList)}"
+							update=":form:updateCommitteeDialog" oncomplete="updateCommitteeDialog.show();">
 							<p:graphicImage rendered="#{!athList.brandNew}" library="ep/images/design"
-								value="/css/images/design/edit.png" title="#{lbl['lbl.pm.approveAuthority.iconupdate']}"/>
+								value="/css/images/design/edit.png" title="#{lbl['lbl.pm.approveAuthority.iconupdate']}" />
 						</p:commandLink>
 					</p:column>
 			</p:dataTable>
@@ -77,85 +76,5 @@
 	</p:blockUI>
 	<!-- 34445 end -->
 	
-	<p:dialog id="updateCommitteeDialog" header="#{lbl['lbl.pm.approveAuthority.update']}" modal="true" 
-		widgetVar="updateCommitteeDialog" dynamic="true" width="800px" position="339,300">
-		<p:ajax event="close" update="@this" listener="#{ApproveAuthorityBackingBean.closePopup()}" />
-		<p:panel id="updateCommitteePanel" toggleable="true">
-			<h:panelGroup id="committeePopupPanel"> 	
-		 	<table>
-		 		<tr>
-		 			<td>
-		 				<p:outputLabel value="*" styleClass="mandatory"/>
-		 				<h:outputLabel value="#{lbl['lbl.pm.approveAuthority.name']}" />
-		 			</td>
-		 			<td>
-		 				<p:inputText id="comName" styleClass="ppDisplayTextL" label="#{lbl['lbl.pm.approveAuthority.name']}"
-		 				maxLength="150" value="#{ApproveAuthorityBackingBean.managedBean.updateAuthCommittee.committeeName}" size="50"></p:inputText>
-		 				<ac:iconTooltip value="#{lbl['lbl.pm.approveAuthority.tooltip']}" />
-		 			</td>
-		 		</tr>
-		 		<tr>
-		 			<td>
-		 				<p:outputLabel value="*" styleClass="mandatory"/>
-		 				<h:outputLabel value="#{lbl['lbl.pm.approveAuthority.status']}" />
-		 			</td>
-		 			<td>
-		 				<p:selectOneMenu style="width:278px;margin-bottom:5px;"
-							value="#{ApproveAuthorityBackingBean.managedBean.updateAuthCommittee.recordStatusFlg}">
-							<f:selectItems
-								value="#{ApproveAuthorityBackingBean.getResultStatusList()}">
-							</f:selectItems>							
-						</p:selectOneMenu>
-		 			</td>
-		 		</tr>
-		 		<tr>
-		 			<td>
-		 				<p:outputLabel value="*" styleClass="mandatory"/>
-		 				<h:outputLabel value="#{lbl['lbl.pm.approveAuthority.remark']}" />
-		 			</td>
-		 			<td>
-		 				<p:inputTextarea id="remark" label="#{lbl['lbl.pm.approveAuthority.remark']}"
-							value="#{ApproveAuthorityBackingBean.managedBean.remark}"
-							cols="100" rows="8" maxlength="1000" autoResize="false"  styleClass="ui-inputtextarea">
-						</p:inputTextarea>
-		 			</td>
-		 		</tr>
-		 		<tr>
-		 			<td colspan="2" style="text-align: right;">
-			 			<div class="ppRightBtn">
-			 				<!-- 34445 start -->
-							<p:commandButton id="comSaveButton"
-				                 value="#{lbl['lbl.pm.approveAuthority.save']}"
-				                 update="@([id$=updateCommitteePanel])"
-				                 process="@form"
-				                 oncomplete="if (!args.validationFailed) saveAprvAuthInfoDlg.show();" />
-							<!-- 34445 end -->
-							
-							<p:commandButton id="comCancel"
-								value="#{lbl['lbl.btn.cancel']}" process="@this"
-								action="#{ApproveAuthorityBackingBean.closePopup()}"
-								oncomplete="updateCommitteeDialog.hide()" immediate="true" />
-						</div>
-					</td>				
-		 		</tr>
-		 	</table>
-	 	</h:panelGroup>
-	 </p:panel>
-	</p:dialog>
-
-	<!-- 34445 start -->
-	<ac:confirmationPopupSM id="saveAuthInfoDlg" widget="saveAuthInfoDlg"
-		okAction="ApproveAuthorityBackingBean.saveNewCommittee"
-		width="400" height="100"
-		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
-		content="#{lbl['lbl.pm.btn.save.msg']}" 
-		update="@([id$=listAuthTbl])"/>
-				
-	<ac:confirmationPopupSM id="saveAprvAuthInfoDlg" widget="saveAprvAuthInfoDlg"
-		okAction="ApproveAuthorityBackingBean.updateAuthCommittee"
-		width="400" height="100"
-		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
-		content="#{lbl['lbl.pm.btn.save.msg']}" 
-		update="@([id$=listAuthTbl])"/>
- 	<!-- 34445 end -->
+ 	<ui:include src="authorityPopUpScreen.xhtml" />
 </ui:composition>

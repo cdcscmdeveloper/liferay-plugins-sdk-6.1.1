@@ -46,7 +46,23 @@ public static final Logger log = Logger.getLogger(ApprovePendingCancelApplRest.c
 	@GET
 	@Path("/cancelapplall")
 	public String cancelAll(){
-		SmServiceLookup.getReviewApplicationSO().cancelApplRest();
+		//SmServiceLookup.getReviewApplicationSO().cancelApplRest();
+		log.info("Start Approve Cancel Application Menunggu Semakan Pembatalan");
+		List<SmAppl> appls = SmServiceLookup.getReviewApplicationSO().getCancelApplRest();
+		if (EntityHelper.isCollectionEmpty(appls)){
+			return "No appl found to be Approve cancel";
+		}
+		log.info("Total Record to be Approve cancel ="+appls.size());
+		for(SmAppl a : appls){
+			try {
+				log.info("Approve Cancel... " + a.getApplNo());
+				SmServiceLookup.getReviewApplicationSO().cancelApplRest(a.getApplNo());
+				log.info("Complete Approve Cancel... " + a.getApplNo());
+			} catch (Exception e){
+				log.error("Failed to Approve Cancel: " + a.getApplNo(), e);
+			}
+		}
+		log.info("End Approve Cancel Application Menunggu Semakan Pembatalan");
 		return "DONE";
 	}
 	
@@ -78,19 +94,22 @@ public static final Logger log = Logger.getLogger(ApprovePendingCancelApplRest.c
 	@GET
 	@Path("/terminateapplall")
 	public String terminateAll(){
+		log.info("Start Auto Reject Menunggu Maklum Balas Pertanyaan Oleh SDO & PO ");
 		List<SmAppl> appls = SmServiceLookup.getReviewApplicationSO().terminateApplRest();
 		if (EntityHelper.isCollectionEmpty(appls)){
 			return "No appl found to be terminated";
 		}
+		log.info("Total Record to be Auto Reject ="+appls.size());
 		for(SmAppl a : appls){
 			try {
-				log.info("Terminating... " + a.getApplNo());
+				log.info("Auto Reject... " + a.getApplNo());
 				terminate(a.getApplId());
+				log.info("Complete Auto Reject... " + a.getApplNo());
 			} catch (Exception e){
-				log.error("Failed to terminate: " + a.getApplNo(), e);
+				log.error("Failed to Auto Reject: " + a.getApplNo(), e);
 			}
 		}
-		log.info("Terminated " + appls.size() +" applications");
+		log.info("Tamat Auto Reject Menunggu Maklum Balas Pertanyaan Oleh SDO & PO ");
 		return "DONE";
 	}
 }

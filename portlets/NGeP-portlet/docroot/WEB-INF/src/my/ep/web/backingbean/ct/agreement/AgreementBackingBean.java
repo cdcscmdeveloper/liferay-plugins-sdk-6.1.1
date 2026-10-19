@@ -48,6 +48,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.InactiveUserConst; //#30737
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
@@ -61,6 +62,7 @@ import my.ep.dto.ct.agreement.ContractAgreementReqDTO;
 import my.ep.dto.ct.agreement.ContractAgreementResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.user.UserStatusCheckDTO; //#30737
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -69,6 +71,8 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper; //#37620,#34367
 import my.ep.jaxb.ct.agreement.CTAgreementDataType;
 import my.ep.persistence.entity.ct.CtAttachment;
+import my.ep.persistence.entity.ct.CtContract; //#30737
+import my.ep.persistence.entity.ct.CtContractVer; //#30737 #34442
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
 import my.ep.persistence.entity.ct.agreement.CtAgreementContent;
@@ -147,7 +151,24 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	private String gstAmtChange = null;
 	private String sTaxAmtChange = null;	
 	//26686 end
-
+	
+	//#30737 - Start 
+    @Override
+    protected List<PmUser> getSelectedApprovers() {
+        return getManagedBean().getApproverModel().getTarget();
+    }
+    
+    @Override
+    protected CtContractVer getContractVer() {
+    	return getManagedBean().getContractVer();
+    }
+    
+    @Override
+    protected String getTaskName() {
+    	return getManagedBean().getTaskName();
+    }
+    //#30737 - End
+	    
 	private String confirmationContentMsg;//34442 
 
 	/**
@@ -612,6 +633,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	public String saveAgreement(String action) throws Exception {
 		IAgreementSO agreementSO = null;
 		try {
+			
 			System.out.println("Bug #30924 before validateAgreement");
 			log.info("Bug #30924 before validateAgreement");
 			validateAgreement(action);
@@ -679,7 +701,10 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			if (this.getManagedBean().getPmDigiSign() != null) {
 				reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
 			}
-
+			
+			//#30737
+			reqDTO.setUserStatusCheckResult(getManagedBean().getUserStatusCheckResult());
+			
 			System.out.println("Bug #30924 6.0");
 			log.info("Bug #30924 6.0");
 			ContractAgreementResDTO resDTO = agreementSO.saveAgreement(reqDTO);
@@ -769,7 +794,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	 * @param  outcome  the user action on this agreement. The validation will
 	 * 				    invoke base on the action
 	 */
-	private void validateAgreement(String outcome) {
+	private void validateAgreement(String outcome){
 		// Validate for Revise's Remarks
 		System.out.println("Bug #30924 revise");
 		log.info("Bug #30924 revise");
@@ -979,8 +1004,34 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				throw new EpException(MessageConst.ERROR_750042);
 			}		
 		}
-	}
+		
+		//#30737 - Start
+		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
+			String approverType = determineRoleCode();
+	        List<UserStatusCheckDTO> userStatusResults = 
+	        		checkUserStatus(approverType, getSelectedApprovers(), ctBB.getManagedBean().getDocTypeFromAgreementTaskList(), null);
+	        handleInactiveUserValidation(userStatusResults);
+		}
+		
+		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
+	         List<UserStatusCheckDTO> userStatusResults = getContractAdminUserStatus(
+					ctBB.getManagedBean().getDocIdFromAgreementTaskList(),
+					ctBB.getManagedBean().getDocTypeFromAgreementTaskList());
+			
+	        if (!userStatusResults.isEmpty()) {
+				 
+	        	Long userStatus = userStatusResults.get(0).getStatus();
+		        this.getManagedBean().setUserStatusCheckResult(userStatus);
 
+		        if (InactiveUserConst.INACTIVE_USER_5.equals(userStatus)) {
+		            handleInactiveUserValidation(userStatusResults);
+		        }
+            }
+	    }
+		//#30737 - End
+		
+	}
+	
 	/**
 	 * The method used to check duplicated identification no of agreement parties.
 	 * A error will display on screen when there is duplicated identification no.
@@ -2989,6 +3040,25 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		return false;
 	}
 	//#24333 - End
+	
+	//#30737 - Start
+	/**
+	 * Determines the role code based on the contract type.
+	 * 
+	 * @return the role code string, or null if no matching 
+	 * contract type is found
+	 */
+	private String determineRoleCode() {
+		CtContract ctContract = getContractVer().getCtContract();
+		if (ctContract.getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+			return RoleCode.CT_APPROVER.value();
+		} else if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+			return RoleCode.BPK_CC_APPROVER.value();
+		}
+		return null;
+	}
+	//#30737 - End
+	
 
 	//34442 - start
 	public String getConfirmationContentMsg() {

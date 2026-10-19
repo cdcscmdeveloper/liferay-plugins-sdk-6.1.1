@@ -77,7 +77,7 @@
 		
 		<ac:smSupplierOnlineSuppDoc tableId="mandatoryTableId" uploadDialogId="mandatoryUploadId"
 			smApplSupportDocs="#{backingBean.managedBean.mandatoryDocs}" mandatory="true" 
-			hasAI="#{backingBean.managedBean.smAppl.aiProcessed gt 0}"/> <!-- #40112 -->
+			hasAI="#{backingBean.managedBean.aiEnabled}"/> <!-- #40112 -->
 		<ui:include src="onlineLicenseInfoForm.xhtml" />
 		<ac:smSupplierOnlineSuppDoc tableId="nonMandatoryTableId" uploadDialogId="nonMandatoryUploadId"
 			smApplSupportDocs="#{backingBean.managedBean.nonMandatoryDocs}" mandatory="false" />
