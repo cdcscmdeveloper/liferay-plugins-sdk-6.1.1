@@ -3724,6 +3724,22 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			items =  itemTemp.toArray(new SelectItem[itemTemp.size()]);
 		}
 		
+		//#40863 - Start
+		if (ArrayUtils.isNotEmpty(items)) {
+		    List<SelectItem> itemList = new ArrayList<SelectItem>(Arrays.asList(items));
+		    Iterator<SelectItem> iterator = itemList.iterator();
+		    while (iterator.hasNext()) {
+		        SelectItem item = iterator.next();
+		        if (item.getValue() != null
+		                && (item.getValue().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN)
+		                        || item.getValue().equals(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2))) {
+		            iterator.remove();
+		        }
+		    }
+		    items = itemList.toArray(new SelectItem[itemList.size()]);
+		}
+		//#40863 - End
+		
 		return items;
 	}
 	
