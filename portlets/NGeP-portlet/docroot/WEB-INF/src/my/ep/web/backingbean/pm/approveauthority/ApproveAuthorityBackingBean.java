@@ -173,7 +173,7 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 	public String saveNewCommittee(){
 		try{
 			List<PmAuthorityCommittee> authCommitteeList = this.getManagedBean().getListAuthCommittee();
-
+			
 			if(authCommitteeList != null && !authCommitteeList.isEmpty()){
 				saveAuthCommittee(authCommitteeList);
 			}
@@ -190,7 +190,7 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 		}
 		return NAV_TO_MAIN;
 	}
-	
+
 	/**
 	 * Validates and saves newly added authority committees.
 	 *
