@@ -6318,25 +6318,34 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public boolean isBpkCentralContract(ScQt scQt) {
 		boolean isSbhOrSrwk = false;
 		Long ctType;
-		CommitteReqDTO reqDTO = new CommitteReqDTO();
-		reqDTO.setQtId(scQt.getQtId());
-		if (!scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)
-				&& !scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)
-				&& !Arrays.asList(QTStatusConst.CMT_APPROVAL_GROUP).contains(scQt.getQtStatus().getStatusId())) {// #25037
+		Long QtStatusId = scQt.getQtStatus().getStatusId();
+		if (!QtStatusId.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)
+				&& !QtStatusId.equals(QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)
+				&& !Arrays.asList(QTStatusConst.CMT_APPROVAL_GROUP).contains(QtStatusId)) {// #25037
 
-			IAddressSO addressSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IAddressSO.class);
-			List<String> stateCodeList = new ArrayList<>();
-			stateCodeList.add(ProfileManagementConst.STATE_CODE_SABAH);
-			stateCodeList.add(ProfileManagementConst.STATE_CODE_SARAWAK);
-			stateCodeList.add(ProfileManagementConst.STATE_CODE_LABUAN);
+			boolean isHigherAuthReq = false;
+			if (scQt.getFinalization() != null ){
+				ScQtFinalization scQtFinalization = scQt.getFinalization();
+				isHigherAuthReq = scQtFinalization.isHigherAuthReq();
+			}
+			boolean isCheckSbhSrwk = isHigherAuthReq && QtStatusId.equals(QTStatusConst.QT_SF_MOF_COMMIEEE);
+		
+			if (!isCheckSbhSrwk) {
 
-			for (String s : stateCodeList) {
-				List<Object[]> pjtcode = addressSO.getSabahSarawakPTJ(scQt.getOrgProfileId(), s);
+				IAddressSO addressSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+				List<String> stateCodeList = new ArrayList<>();
+				stateCodeList.add(ProfileManagementConst.STATE_CODE_SABAH);
+				stateCodeList.add(ProfileManagementConst.STATE_CODE_SARAWAK);
+				stateCodeList.add(ProfileManagementConst.STATE_CODE_LABUAN);
 
-				if (pjtcode != null && !pjtcode.isEmpty()) {
-					isSbhOrSrwk = true;
-					break;
+				for (String s : stateCodeList) {
+					List<Object[]> pjtcode = addressSO.getSabahSarawakPTJ(scQt.getOrgProfileId(), s);
+
+					if (pjtcode != null && !pjtcode.isEmpty()) {
+						isSbhOrSrwk = true;
+						break;
+					}
 				}
 			}
 
@@ -6365,6 +6374,40 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		return false;
 	}
+	
+	/**
+	 * #27502		 
+	 * @param scQt
+	 * @return
+	 */
+	public boolean isBPKCentralSabahSarawak(ScQt scQt) {
+		boolean isBpkCentralContract = false;
+		boolean isSbhOrSrwk = false;
+	
+		IAddressSO addressSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IAddressSO.class);
+		List<String> stateCodeList = new ArrayList<>();
+		stateCodeList.add(ProfileManagementConst.STATE_CODE_SABAH);
+		stateCodeList.add(ProfileManagementConst.STATE_CODE_SARAWAK);
+		stateCodeList.add(ProfileManagementConst.STATE_CODE_LABUAN);
+
+		for (String s : stateCodeList) {
+			List<Object[]> pjtcode = addressSO.getSabahSarawakPTJ(scQt.getOrgProfileId(), s);
+			if (pjtcode != null && !pjtcode.isEmpty()) {
+				isSbhOrSrwk = true;
+				break;
+			}
+		}
+
+		if (isSbhOrSrwk
+				&& (scQt.getContractType().getParameterId().equals(SourcingConstants.CENTRAL_CONTRACT) || ParameterConst.CONTRACT_TYPE_CENTRAL
+						.equals(scQt.getContractType().getParameterCode()))) {
+			return true;
+		}
+
+		return isBpkCentralContract;
+	}
+	//#27502 - End
 		
 		// #18685-Start.
         /**
