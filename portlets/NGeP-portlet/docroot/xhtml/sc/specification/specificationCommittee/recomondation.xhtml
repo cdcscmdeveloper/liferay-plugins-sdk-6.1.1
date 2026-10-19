@@ -28,11 +28,11 @@
 								<p:ajax event="blur" update="@([id$=package])"
 									process="@this,package"
 									listener="#{specificationBackingBean.calculateTotalPackage(specificationBackingBean.managedBean.recommendationPackageScore,true)}"
-									rendered="#{specificationBackingBean.managedBean.weightage35384WIP}"></p:ajax>
+									disabled="#{!specificationBackingBean.managedBean.weightage35384WIP}"></p:ajax><ui:remove>//#40238</ui:remove>
 								<p:ajax event="blur" update="@([id$=package])"
 									process="@this,package"
 									listener="#{specificationBackingBean.calculateonesetscoring(specificationBackingBean.managedBean.recommendationPackageScore,true)}"
-									rendered="#{!specificationBackingBean.managedBean.weightage35384WIP}"></p:ajax>
+									disabled="#{specificationBackingBean.managedBean.weightage35384WIP}"></p:ajax><ui:remove>//#40238</ui:remove>
 							</p:inputText></td> <ui:remove><!-- #38151 add rendered for WIP--></ui:remove>
 							<ui:remove>//#38151 edit listener</ui:remove>
 					</tr>
@@ -46,11 +46,11 @@
 								<p:ajax event="blur" update="@([id$=package])"
 									process="@this,package"
 									listener="#{specificationBackingBean.calculateTotalPackage(specificationBackingBean.managedBean.recommendationPackageScore,true)}"
-									rendered="#{specificationBackingBean.managedBean.weightage35384WIP}"></p:ajax>
+									disabled="#{!specificationBackingBean.managedBean.weightage35384WIP}"></p:ajax><ui:remove>//#40238</ui:remove>
 								<p:ajax event="blur" update="@([id$=package])"
 									process="@this,package"
 									listener="#{specificationBackingBean.calculateonesetscoring(specificationBackingBean.managedBean.recommendationPackageScore,true)}"
-									rendered="#{!specificationBackingBean.managedBean.weightage35384WIP}"></p:ajax>
+									disabled="#{specificationBackingBean.managedBean.weightage35384WIP}"></p:ajax><ui:remove>//#40238</ui:remove>
 							</p:inputText></td> <ui:remove>//#38151 edit rendered</ui:remove>
 							<ui:remove>//#38151 edit listener</ui:remove>
 					</tr>
