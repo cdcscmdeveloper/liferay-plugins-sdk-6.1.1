@@ -416,6 +416,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		reqDTO.setTaskId(taskId);
 		reqDTO.setCtxToken(token);
 		bpmSO.claimTask(reqDTO);
+		//#38885
+		SmCommonUtil.saveGroupTaskTrackingDiary(bpmSO, reqDTO, false);
 	}
 
 	/**
@@ -433,6 +435,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		reqDTO.setTaskId(taskId);
 		reqDTO.setCtxToken(token);
 		bpmSO.releaseTask(reqDTO);
+		//#38885
+		SmCommonUtil.saveGroupTaskTrackingDiary(bpmSO, reqDTO, true);
 	}
 	
 	/**

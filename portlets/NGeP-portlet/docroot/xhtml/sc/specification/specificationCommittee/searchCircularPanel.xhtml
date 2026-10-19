@@ -18,9 +18,11 @@
 
 
 		<h:panelGroup id="panelItemGroupList">
+			<ui:remove>34923 -start-</ui:remove>
 			<ui:fragment
-				rendered="#{specificationBackingBean.managedBean.circularType eq 'PQ'}">
-			
+				rendered="#{specificationBackingBean.managedBean.circularType eq ParameterConst.doctypePanelCircular or specificationBackingBean.managedBean.circularType eq ParameterConst.doctypePanelCircularMinistry}">
+				<ui:remove>34923 -end-</ui:remove>
+
          		#{specificationBackingBean.managedBean.ctCircularVer.circularNo}>#{lbl['lbl.sc.spec.circular.item.list']}
          		<ac:iconTooltip
 					value="#{lbl['lbl.sc.spec.circular.item.list.tooltip']}" />

@@ -164,7 +164,7 @@
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.newGstAmount}" 
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL
 					or ctBackingBean.managedBean.disableGstAmount}"
-					onblur="this.value = this.value.replace(/[^\d.,]/g, '');"> <!-- #24336 accept only digits and a single decimal point -->
+					onblur="this.value = this.value.replace(/[^\d.,-]/g, '');"> <!-- #24336 accept only digits, negative and a single decimal point -->
 					<!-- Enhancement 15851 - shaqimi -->
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -185,7 +185,7 @@
 					disabled="#{ctBackingBean.managedBean.disableAmendDetails or ctBackingBean.managedBean.viewSCL
 					or ctBackingBean.managedBean.disableStaxAmount}"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.newStaxAmount}"
-					onblur="this.value = this.value.replace(/[^\d.,]/g, '');"> <!-- #24336 accept only digits and a single decimal point -->
+					onblur="this.value = this.value.replace(/[^\d.,-]/g, '');"> <!-- #24336 accept only digits, negative and a single decimal point -->
 					<!-- Enhancement 15851 - shaqimi -->
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />

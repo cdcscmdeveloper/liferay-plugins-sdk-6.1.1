@@ -13,15 +13,25 @@ package my.ep.web.backingbean.report.qt;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import my.ep.biz.service.sc.ISourcingIntegrationSO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.web.constant.report.QtReportConst;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.qt.BriefingPaperReportManagedBean;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -52,10 +62,68 @@ QtReportBackingBean<BriefingPaperReportManagedBean> implements Serializable{
 		generateSCReport(params);
 	}
 	
+	//#25651 - Start
+	/**
+	 * Gets the source integration so.
+	 * @return the getSourcingIntegrationSO
+	 */
+	private ISourcingIntegrationSO getSourcingIntegrationSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+	}
+	//#25651 - End
+	
+	// #25651 - Start
+	/*
+	 * To validate quotation or tender number and reset search
+	 */
+	public void validateAndGetScReports() {
+
+		String qtNumber = this.getManagedBean().getQuotationNumber();
+		if (StringUtils.isNotEmpty(qtNumber)) {
+			quotationNumberValidation();
+			this.getScReports(qtNumber);
+		} else {
+			this.resetSearch();
+		}
+
+	}
+
+	// #25651 - End
+
+	// #25651 - Start
+	/*
+	 * getScReports - Gets the ScReports for briefing paper.
+	 */
+	public void getScReports(String qtNumber) {
+
+		List<ScQtFinalizationReport> reports = new ArrayList<>();
+		boolean isValidQtNumber = StringUtils.isNotEmpty(qtNumber) && qtNumber.startsWith(ReportConst.QT_VALUE);
+
+		if (isValidQtNumber) {
+			List<ScQtFinalizationReport> retrievedReports = getSourcingIntegrationSO().retriveFinalizationScReport(
+					qtNumber, SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT);
+
+			if (CollectionUtils.isNotEmpty(retrievedReports)) {
+				reports = retrievedReports;
+				this.getManagedBean().setReportStage(SourcingConstants.LAPORAN_KERTAS_TAKLIMAT);
+			}
+		}
+
+		this.getManagedBean().setAllReportExisting(CollectionUtils.isNotEmpty(reports));
+		this.getManagedBean().setQtReportDocumentList(reports);
+	}
+
+	// #25651 - End
+	
 	public void resetSearch(){
 		log.info("BriefingPaperReportBackingBean resetSearch executed");
 		this.getManagedBean().setQuotationNumber(null);
 		this.getManagedBean().setQuotationId(null);
+		//#25651 - Start
+		this.getManagedBean().setReportStage(StringUtils.EMPTY);
+		this.getManagedBean().setQtReportDocumentList(new ArrayList<ScQtFinalizationReport>()); 
+		//#25651 - End
 	}
 
 	@Override

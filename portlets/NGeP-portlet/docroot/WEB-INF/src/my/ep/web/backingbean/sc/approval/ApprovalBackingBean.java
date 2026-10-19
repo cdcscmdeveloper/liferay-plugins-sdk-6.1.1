@@ -1316,9 +1316,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale());
 				    this.getManagedBean().setActiveIndex(9);
-				    //#34444 - START
-				    showDialog = null;
-				  //#34444 - END
 					throw new EpException(approverActionmsg);
 				} //#25692-End
 				
@@ -1360,7 +1357,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				if(SCProcessNameConst.APPROVE_PUBLICATION.equalsIgnoreCase(taskName) || 
 						SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)){//#34694
 					/*34444 START*/
-					showDialog = null;
 					reqDTO.setOutcome(action);
 					detailSO.validateQtApprovalDtl(reqDTO);
 					updateReviceBpmTask();
@@ -3919,14 +3915,15 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		//#21692 - End
 		
 
-		/**
-	     * Method to prepare needed audit trails parameters for Briefing Site/Visit & Desk Officer Assistant Maintenance
-	     * #28895-35500
-	     * @param scQt
-	     * @param groupTabSection
-	     * @param reqDTO
-	     */
-	public void prepareQtMaintenanceAuditTrail(ScQt scQt, Long groupTabSection, QuationTenderReqDTO reqDTO) {
+	/**
+    * Method to prepare needed audit trails parameters for Briefing Site/Visit & Desk Officer Assistant Maintenance
+	* #28895-35500
+	* @param scQt
+	* @param groupTabSection
+	* @param reqDTO
+	*/
+	//#35500 Start
+	public void prepareQtMaintenanceAuditTrail(ScQt scQt, List<Long> groupTabSectionList, QuationTenderReqDTO reqDTO) {
 		IQTAuditTrailSO qtAuditTrailSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAuditTrailSO.class);
 
@@ -3938,7 +3935,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		auditResDTO.setDocId(scQt.getQtId());
 		auditResDTO.setDocNo(scQt.getQtNo());
 		auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
-		if (groupTabSection != null) {// BSV Audit Trails Section
+		if (CollectionUtils.isNotEmpty(groupTabSectionList)) {// BSV Audit Trails Section
+			for (Long groupTabSection : groupTabSectionList){
 			auditResDTO.setAuGroupSectionId(groupTabSection);
 			auditResDTO.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
 			auditResDTO.setStatusId(QTStatusConst.EPV_APPROVED);
@@ -3950,6 +3948,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}		
 			AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 			auditReqList.add(auditReqDTO);
+			}
 
 			qtAuditTrailSO.insertAuditTrail(auditReqList);
 		} else if (reqDTO != null) {// DOA Audit Trails Section
@@ -4025,6 +4024,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 		}
 	}
+	//#35500 End
 	
 	/**
 	 * #35500

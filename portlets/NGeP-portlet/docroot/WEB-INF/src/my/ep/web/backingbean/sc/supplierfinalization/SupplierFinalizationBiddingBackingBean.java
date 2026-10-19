@@ -27,6 +27,8 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.sc.BidItemBean;
 import my.ep.biz.bean.sc.BidPackageBean;
+import my.ep.biz.service.pm.common.approveauthority.IApproveAuthorityCommitteeSO;
+import my.ep.biz.service.pm.common.approveauthority.IApproveAuthoritySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
@@ -47,7 +49,10 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.BidStatusConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.constant.tpl.TemplateDocConst;
 import my.ep.constants.SCProcessNameConst;
+import my.ep.dto.pm.common.approveauthority.AuthorityCommitteeReqDTO;
+import my.ep.dto.pm.common.approveauthority.AuthorityCommitteeResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.SourcingIntegrationReqDTO;
@@ -73,6 +78,8 @@ import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmAuthority;
+import my.ep.persistence.entity.pm.common.PmAuthorityCommittee;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
@@ -154,6 +161,9 @@ public class SupplierFinalizationBiddingBackingBean extends
 	private static final int ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_SUMMARY = 1;
 	private static final int ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_ENDORSEMENT = 2;
 	
+	//#27502 - New DO MOF Role and Process
+	private static final int PREPARE_ACTIVE_INDEX_MINISTRY_OF_FINANCE = 1;
+	
 	// Bidding finalization meeting tab constants
 	private static final int BIDDING_ACTIVE_INDEX_MEETING = 0;
 	private static final int BIDDING_ACTIVE_INDEX_COMMITTEE = 1;
@@ -218,10 +228,17 @@ public class SupplierFinalizationBiddingBackingBean extends
 			if (getManagedBean().isOnlineBiddingEscalation()) {		
 				navigateToBriefingPaperTab();
 			} else if(mofFinal){
-				if(this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.SF_PENDING_BIDDING_FINALIZATION)){					
+				if(this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.SF_MOF_COMMITTEE_BIDDING)){					
 					getManagedBean().setMofSelection(true);	
 				}
-				getManagedBean().setMofFinalization(mofFinal);					
+				getManagedBean().setMofFinalization(mofFinal);		
+				// #27502 - New DO MOF Role and Process - Start
+
+				getManagedBean().setCommitteeType(ParameterConst.COMMITTEE_TYPE_MINISTRY_OF_FINANCES);
+				loadRecordTabDetails();
+				this.getManagedBean().setSecretaryUser(true);
+				// #27502 - New DO MOF Role and Process - end
+				
 				navigateToBriefingPaperTab();
 			} // #27502 - End
 			else {
@@ -386,8 +403,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 				retrieveOnlineEndorsement();
 			} else {
 				
-				if (QTStatusConst.SF_PENDING_BIDDING_ESCALATION.equals(getManagedBean().getCurrentStatusId())
-						|| QTStatusConst.SF_MOF_COMMITTEE_BIDDING.equals(getManagedBean().getCurrentStatusId())) {//#27502 - New DO MOF Role and Process
+				if (QTStatusConst.SF_PENDING_BIDDING_ESCALATION.equals(getManagedBean().getCurrentStatusId())) {
 					getManagedBean().setBpkUser(true);
 				}
 				retrieveOfflineEndorsement();
@@ -914,7 +930,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	public void navigateToBiddingSummaryTab() {
 		int activeIndex;
 		if (mofFinal) {// #27502 - Start
-		  activeIndex = 1;
+		  activeIndex = ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_SUMMARY;
 		} else {
     		if (getManagedBean().isOnlineBiddingEscalation()) {
     			activeIndex = ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_SUMMARY;
@@ -1532,8 +1548,16 @@ public class SupplierFinalizationBiddingBackingBean extends
 			// meeting.setPmStatus(new PmStatus());
 			meeting.setQtCommittee(this.getManagedBean().getScQtCommittee());
 			setUserDetails(meeting);
-			meeting.setMeetingStatus(getPmStatusByStatusId(QTStatusConst.MS_PENDING));
-
+			 //#27502 - New DO MOF Role and Process - Start
+			if (mofFinal){
+				meeting.setMeetingStatusStr(QTStatusConst.MS_DONE);
+			    meeting.setMeetingStatus(getPmStatusByStatusId(QTStatusConst.MS_DONE));	
+			    meeting.setMeetingLocation(TemplateDocConst.PARAM_SPACE);
+			}else{
+				meeting.setMeetingStatus(getPmStatusByStatusId(QTStatusConst.MS_PENDING));
+			}
+			 //#27502 - New DO MOF Role and Process - End
+		
 			meetingList.add(meeting);
 		} finally {
 
@@ -2104,7 +2128,9 @@ public class SupplierFinalizationBiddingBackingBean extends
 //			retrieveOnlineBiddingEndorsement(qtId);
 			renewSessionAndRetrieve();			
 			// 25037 - start
-			prepareUpdateCommitteeMember();
+			if(!mofFinal){// #27502 - Excluded if MOF
+				prepareUpdateCommitteeMember(); // 25037
+			}
 			if (!skipValidation) {
 				String variable1 = getParameterDesc(
 						ParameterTypeConst.DOCUMENT_TYPES,
@@ -2595,8 +2621,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 					if (!atleastOneMeetingIsDone) {
 						epException = new EpException(MessageConst.ERROR_760292);
 					}
-				} else if(mofFinal){// #27502
-					epException = null;
 				} else {
 					epException = new EpException(MessageConst.ERROR_760291);
 				}
@@ -2836,6 +2860,21 @@ public class SupplierFinalizationBiddingBackingBean extends
 		
 		setTaskDetails(taskId, dataType, outComes, processName, currentStatusId, committeeType,
 				onlineBiddingActiveIndex, meetingActiveIndex, taskName); // 25037	
+		
+		// #27502 - New DO MOF Role and Process - Start
+		if (null != dataType.getIsMofFinalization()) {
+			mofFinal = dataType.getIsMofFinalization();
+			getManagedBean().setMofFinalization(mofFinal);
+			if (mofFinal) {
+				if (currentStatusId.equals(QTStatusConst.SF_MOF_COMMITTEE_BIDDING)) {
+					getManagedBean().setMofSelection(true);
+				}
+				getManagedBean().setCommitteeType(ParameterConst.COMMITTEE_TYPE_MINISTRY_OF_FINANCES);
+				loadRecordTabDetails();
+				this.getManagedBean().setSecretaryUser(true);
+			}
+		}
+		// #27502 - New DO MOF Role and Process - end
 	}
 
 	private void setTaskDetails(String taskId, SCEvaluationDataType dataType, String[] outComes, String processName,
@@ -2963,7 +3002,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 */
 	public int getOnlineBiddingFinalizationMeetingActiveIndex() {
 		// #27502 - Start
-		if (getManagedBean().isOnlineBiddingEscalation() || mofFinal ) {
+		if (getManagedBean().isOnlineBiddingEscalation()) {
 			return -1;
 		} else {
 			return ONLINE_BIDDING_FINALIZATION_MEETING_ACTIVE_INDEX;
@@ -2977,7 +3016,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	public int getOnlineBiddingActiveIndexSummary() {
 		int activeIndex;
 		if(mofFinal){// #27502 - Start
-			activeIndex = 1;
+			activeIndex = ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_SUMMARY;
 		} else
 		if (this.getManagedBean().isOnlineBiddingEscalation()) {
 			activeIndex = ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_SUMMARY;
@@ -3061,7 +3100,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 		 */
 	public void navigateToBriefingPaperTab() {
 		if (mofFinal) {// #27502 - Start
-			this.getManagedBean().setOnlineBiddingActiveIndex(0);
+			this.getManagedBean().setOnlineBiddingActiveIndex(ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_BRIEFING);
 		} else {
 			this.getManagedBean().setOnlineBiddingActiveIndex(
 					this.getManagedBean().isOnlineBiddingEscalation() ? ONLINE_BIDDING_ACTIVE_INDEX_ESCLATION_BRIEFING
@@ -3077,7 +3116,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 */
 	public int getOnlineBiddinBriefingPaperActiveIndex() {
 		if (mofFinal) {// #27502 - Start
-			return 0;
+			return ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_BRIEFING;
 		} else 
 			if (getManagedBean().isOnlineBiddingEscalation()) {
 			return ONLINE_BIDDING_ACTIVE_INDEX_ESCLATION_BRIEFING;
@@ -3224,7 +3263,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 			//#29702 - end
 			if (finalizationReports != null) {
 				getManagedBean().setDocumentList(finalizationReports);
-				populateEvaluationBreifingReports(finalizationReports, getManagedBean().getScQt());//#25651
 			}
 			
 			// #25651 - Start
@@ -3232,131 +3270,13 @@ public class SupplierFinalizationBiddingBackingBean extends
 			reqDTO.setExcludedDocNames(SupplierFinalizationBiddingManagedBean.getDirectdownloaddocdefkeys());
 			List<ScQtFinalizationReportDetail> finalizationReportsDetail = qtSuppFinalizationSO
 					.retriveFinalizationReportDetail(reqDTO).getScQtFinalizationReportDetails();
-			populateEvaluationBreifingReportDetails(finalizationReportsDetail, getManagedBean().getScQt());
-			populateBriefingReportDetails(finalizationReportsDetail);
+			this.getManagedBean().setScQtFinalizationReportDetail(finalizationReportsDetail);
 			// #25651 - End
 			
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
 	}
-	
-	// #25651 - Start
-	/**
-	 * @param finalizationReports
-	 * @param scQt
-	 */
-	public void populateEvaluationBreifingReports(List<ScQtFinalizationReport> finalizationReports, ScQt scQt) {
-
-		if (null != scQt) {
-			String evaluationType = scQt.getEvaluationType();
-			if (StringUtils.isNotEmpty(evaluationType)) {
-
-				List<ScQtFinalizationReport> documentList = new ArrayList<>();
-				Iterator<ScQtFinalizationReport> iterator = finalizationReports.iterator();
-				while (iterator.hasNext()) {
-					ScQtFinalizationReport report = iterator.next();
-
-					if (null != report && report.getPmDocument() != null) {
-						String docDefinitionKey = report.getPmDocument().getDocDefinitionKey();
-
-						if (SourcingConstants.EVALUATION_TYPE_TIER1.equals(evaluationType)) {
-							if (!isWipEvaluationReportExisting(docDefinitionKey, scQt.getQtId())
-									&& SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(docDefinitionKey)) {
-								documentList.add(report);
-							} else if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equals(docDefinitionKey)) {
-								documentList.add(report);
-							}
-
-						} else if (SourcingConstants.EVALUATION_TYPE_TIER2.equals(evaluationType)) {
-
-							boolean isEvaluationType = false;
-							if (SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT.equals(docDefinitionKey)) {
-								isEvaluationType = true;
-							} else if (SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT
-									.equals(docDefinitionKey)) {
-								isEvaluationType = true;
-							} else if (SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT
-									.equals(docDefinitionKey)) {
-								isEvaluationType = true;
-							}
-
-							if (!isWipEvaluationReportExisting(docDefinitionKey, scQt.getQtId()) && isEvaluationType) {
-								documentList.add(report);
-							} else if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equals(docDefinitionKey)) {
-								documentList.add(report);
-							}
-						}
-
-					}
-
-					if (null != report && report.getDocCategory() != null) {
-						String docCategory = report.getDocCategory();
-						if (ParameterConst.DOCUMENT_CATEGORY_ENDORSEMENT_REPORT.equals(docCategory)) {
-							documentList.add(report);
-						}
-					}
-				}
-
-				this.getManagedBean().setDocumentList(documentList);
-			}
-		}
-	}
-
-	// #25651 - End
-	
-	// #25651 - Start
-	/**
-	 * @param finalizationReportDetails
-	 * @param scQt
-	 */
-	public void populateEvaluationBreifingReportDetails(List<ScQtFinalizationReportDetail> finalizationReportDetails,
-			ScQt scQt) {
-
-		if (null != scQt) {
-			String evaluationType = scQt.getEvaluationType();
-			if (StringUtils.isNotEmpty(evaluationType)) {
-
-				List<ScQtFinalizationReportDetail> documentDetailList = new ArrayList<>();
-				Iterator<ScQtFinalizationReportDetail> iterator = finalizationReportDetails.iterator();
-				while (iterator.hasNext()) {
-					ScQtFinalizationReportDetail reportDetail = iterator.next();
-
-					if (null != reportDetail && reportDetail.getPmDocument() != null) {
-						String docDefinitionKey = reportDetail.getPmDocument().getDocDefinitionKey();
-
-						if (SourcingConstants.EVALUATION_TYPE_TIER1.equals(evaluationType)) {
-							if (isWipEvaluationReportExisting(docDefinitionKey, scQt.getQtId())
-									&& SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(docDefinitionKey)) {
-								documentDetailList.add(reportDetail);
-							}
-						} else if (SourcingConstants.EVALUATION_TYPE_TIER2.equals(evaluationType)) {
-
-							boolean isEvaluationType = false;
-							if (SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT.equals(docDefinitionKey)) {
-								isEvaluationType = true;
-							} else if (SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT
-									.equals(docDefinitionKey)) {
-								isEvaluationType = true;
-							} else if (SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT
-									.equals(docDefinitionKey)) {
-								isEvaluationType = true;
-							}
-
-							if (isWipEvaluationReportExisting(docDefinitionKey, scQt.getQtId()) && isEvaluationType) {
-								documentDetailList.add(reportDetail);
-							}
-						}
-
-					}
-				}
-
-				this.getManagedBean().setDocumentDetailList(documentDetailList);
-			}
-		}
-	}
-
-	// #25651 - End
 	
 	private int findFinalizationCount() {
 		IScWorkFlowStatusSO scWorkFlowStatusSO = null;
@@ -3448,90 +3368,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 
 		downloadFile(reportAttachment);
 	}
-	
-	//#25651 - Start
-	/**
-	 * To download a report under Briefing Paper/Kertas Taklimat tab
-	 * 
-	 * @param scQtFinalizationReportDetail
-	 *            selected report which would be downloaded
-	 * @throws Exception
-	 *             the exception that would be thrown in case of any error while
-	 *             downloading the report
-	 */
-	public void downloadReportDetail(ScQtFinalizationReportDetail scQtFinalizationReportDetail) throws Exception {
-		debugLogger("downloadReport");
-		
-		ScQtFinalizationReportDetailAttachment reportAttachment = scQtFinalizationReportDetail
-				.getScQtFinalizationReportDetailAttachment();
-		if (null == reportAttachment
-				&& scQtFinalizationReportDetail.getTitle().contains(QTConstants.QT_REPORT_BRIEFING_PAPER)) {
-			reportAttachment = generateBriefingPaperAttachmentDetail(scQtFinalizationReportDetail);
-			scQtFinalizationReportDetail.setScQtFinalizationReportDetailAttachment(reportAttachment);
-		}
-
-		downloadFile(reportAttachment);
-	}
-	//#25651 - End
-	
-	//#25651 - Start
-	/**
-	 * To combine reports ScQtFinalizationReport and ScQtFinalizationReportDetail.
-	 * 
-	 * @throws Exception
-	 *             the exception that would be thrown in case of any error while
-	 *             downloading the report(s)
-	 */
-	public void downloadCombinedReport(Object report) throws Exception {
-
-		if (report instanceof ScQtFinalizationReport) {
-
-			downloadReport((ScQtFinalizationReport) report);
-
-		} else if (report instanceof ScQtFinalizationReportDetail) {
-
-			downloadReportDetail((ScQtFinalizationReportDetail) report);
-		}
-	}
-	//#25651 - End
-	
-	//#25651 - Start
-	/**
-	 * To populate reports ScQtFinalizationReport and ScQtFinalizationReportDetail.
-	 */
-	public List<Object> getCombinedEvaluationReportList() {
-		
-		List<Object> combinedReportList = new ArrayList<>();
-
-		List<ScQtFinalizationReport> reports = getManagedBean().getDocumentList();
-		List<ScQtFinalizationReportDetail> details = getManagedBean().getDocumentDetailList();
-
-		if (CollectionUtils.isNotEmpty(reports)) {
-			combinedReportList.addAll(reports);
-		}
-
-		if (CollectionUtils.isNotEmpty(details)) {
-		    combinedReportList.addAll(details);
-	
-		}
-
-		return combinedReportList;
-	}
-	//#25651 - End
-	
-	//#25651 - Start
-	private ScQtFinalizationReportDetailAttachment generateBriefingPaperAttachmentDetail(
-			ScQtFinalizationReportDetail scQtFinalizationReportDetail) throws Exception {
-		SupplierFinalizationBackingBean supplierFinalizationBackingBean = new SupplierFinalizationBackingBean();
-		supplierFinalizationBackingBean.renewSesionObject();
-		supplierFinalizationBackingBean.getManagedBean().setCurrentStatusId(this.getManagedBean().getCurrentStatusId());
-		supplierFinalizationBackingBean.getManagedBean().setScQtFinalization(
-				this.getManagedBean().getScQtFinalization());
-		supplierFinalizationBackingBean.getManagedBean().setScQt(this.getManagedBean().getScQt());
-		return supplierFinalizationBackingBean.downloadBriefingPaperReportDetailForBidding(scQtFinalizationReportDetail);
-	}
-	//#25651 - End
-	
 	
 	// 30567 - start
 	private ScQtFinalizationReportAttachment generateBriefingPaperAttachment(
@@ -3644,8 +3480,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 		//#25651 - Start
 		attachments.addAll(scAttachments); 
 		attachments.addAll(getScqtFinalizationUploadReportDetails());
-		attachments.addAll(getScqtFinalizationReportDetails());
-		attachments.addAll(getBriefingReportDetails());
 		//#25651 - Start
 		
 		downloadAllFiles(SourcingConstants.LAPORAN_KERTAS_TAKLIMAT, attachments); //#25651
@@ -3674,74 +3508,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 			}
 		}
 		attachments.addAll(scAttachmentsDetail);
-		return attachments;
-	}
-
-	// #25651 - End
-	
-	// #25651 - Start
-	/**
-	 * To download evaluation reports detail under Briefing Report tab.
-	 * 
-	 * @throws Exception
-	 *             the exception that would be thrown in case of any error while
-	 *             downloading the report(s)
-	 */
-	private List<ScAttachment> getScqtFinalizationReportDetails() throws Exception {
-
-		List<ScAttachment> attachments = new ArrayList<>();
-		List<ScQtFinalizationReportDetail> scQtFinalizationReportDetails = getManagedBean().getDocumentDetailList();
-		List<ScQtFinalizationReportDetailAttachment> scAttachmentsDetail = new ArrayList<>();
-
-		if (CollectionUtils.isNotEmpty(scQtFinalizationReportDetails)) {
-			for (ScQtFinalizationReportDetail reportDetail : scQtFinalizationReportDetails) {
-				ScQtFinalizationReportDetailAttachment attachment = reportDetail
-						.getScQtFinalizationReportDetailAttachment();
-				if (attachment == null && reportDetail.getTitle().contains(QTConstants.QT_REPORT_BRIEFING_PAPER)) {
-					attachment = generateBriefingPaperAttachmentDetail(reportDetail);
-				}
-				if (attachment != null) {
-					attachment.setTempFileName(reportDetail.getTitle());
-				}
-
-				scAttachmentsDetail.add(attachment);
-			}
-		}
-
-		attachments.addAll(scAttachmentsDetail);
-		return attachments;
-	}
-
-	// #25651 - End
-	
-	// #25651 - Start
-	/**
-	 * To download briefing reports detail under Briefing Report tab.
-	 * 
-	 * @throws Exception
-	 *             the exception that would be thrown in case of any error while
-	 *             downloading the report(s)
-	 */
-	private List<ScAttachment> getBriefingReportDetails() throws Exception {
-
-		List<ScAttachment> attachments = new ArrayList<>();
-		List<Object[]> reportDetailList = reportDetailAttachmentType();
-		List<ScQtFinalizationReportDetail> scQtFinalizationReportDetail = this.getManagedBean()
-				.getScQtFinalizationReportDetail();
-		if (CollectionUtils.isNotEmpty(scQtFinalizationReportDetail)) {
-			for (ScQtFinalizationReportDetail finalizationreport : scQtFinalizationReportDetail) {
-				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equalsIgnoreCase(finalizationreport
-						.getDefinationType().getParameterCode())) {
-					for (Object[] reportDetail : reportDetailList) {
-						String codeReportName = (String) reportDetail[0];
-						String fileReportName = (String) reportDetail[1];
-						if (codeReportName.equals(finalizationreport.getPmDocument().getDocDefinitionKey())) {
-							attachments.add(generateDocumentAttachment(codeReportName, fileReportName));
-						}
-					}
-				}
-			}
-		}
 		return attachments;
 	}
 
@@ -4298,6 +4064,152 @@ public class SupplierFinalizationBiddingBackingBean extends
 		}
 	}
 	//#21692 - End
+	
+	
+	// #27502 - New DO MOF Role and Process - Start
+	
+	/**
+	 * To retrieve committee details
+	 */
+	public void retrieveCommitteeMOFDtls() {
+		this.getManagedBean().setMeetingActiveIndex(PREPARE_ACTIVE_INDEX_MINISTRY_OF_FINANCE);
+
+		getListApprovalAuthority();
+	}
+	/**
+	 * This loadCommitteeList method is to load data from pm_authority_committee
+	 * and display to user
+	 * 
+	 * @param eventTab
+	 *            the tab where the user has clicked
+	 */
+	public void changeApprovalAuth() {
+		IApproveAuthorityCommitteeSO approveAuthorityCommitteeSo = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IApproveAuthorityCommitteeSO.class);
+
+		PmAuthority authority = this.getManagedBean().getApprovalAuthority();
+		List<PmAuthorityCommittee> newComList = new ArrayList<>();
+
+		if (authority != null && authority.getAuthId() != null) {
+			AuthorityCommitteeReqDTO reqDTO = new AuthorityCommitteeReqDTO();
+			reqDTO.setAuthority(authority);
+
+			AuthorityCommitteeResDTO resDTO = approveAuthorityCommitteeSo.retrieveListApproveAuthority(reqDTO);
+
+			if (resDTO.getListAuthorityCommittee() != null && !resDTO.getListAuthorityCommittee().isEmpty()) {
+				for (PmAuthorityCommittee committee : resDTO.getListAuthorityCommittee()) {
+					newComList.add(committee);
+				}
+
+				Collections.sort(newComList, new Comparator<PmAuthorityCommittee>() {
+					@Override
+					public int compare(PmAuthorityCommittee c1, PmAuthorityCommittee c2) {
+						return c1.getAuthCommitteeId().compareTo(c2.getAuthCommitteeId());
+					}
+				});
+			}
+		} else {
+			this.getManagedBean().setApprovalAuthCommittee(new PmAuthorityCommittee());
+		}
+
+		if (this.getManagedBean().getApprovalAuthCommittee() == null) {
+			this.getManagedBean().setApprovalAuthCommittee(new PmAuthorityCommittee());
+		}
+
+		this.getManagedBean().setListApprovalAuthCommittee(newComList);
+	}
+
+	/**
+	 * set ApprovalAuthCommittee
+	 */
+	public void changeCommApprovalAuth() {
+		PmAuthorityCommittee authorityCommittee = this.getManagedBean().getApprovalAuthCommittee();
+		ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
+
+		scQtFinalization.setAuthCommittee(authorityCommittee);
+	}
+
+	
+	private void getListApprovalAuthority() {
+		// to retrieve Approval Authority
+		IApproveAuthoritySO approveAuthoritySo = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IApproveAuthoritySO.class);
+
+		List<PmAuthority> resultComittee = approveAuthoritySo.getPMAuthorityList();
+		this.getManagedBean().setListApprovalAuthority(resultComittee);
+
+		ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
+
+		if (scQtFinalization.getAuthCommittee() != null) {
+			this.getManagedBean().setApprovalAuthCommittee(scQtFinalization.getAuthCommittee());
+
+			PmAuthority pmAuthority = scQtFinalization.getAuthCommittee().getPmAuthority();
+			this.getManagedBean().setApprovalAuthority(pmAuthority);
+
+			changeApprovalAuth();
+		}
+
+		if (this.getManagedBean().getApprovalAuthority() == null) {
+			this.getManagedBean().setApprovalAuthority(new PmAuthority());
+		}
+	}
+	
+	/**
+	 * Populate informations for record tab.
+	 */
+	public void loadRecordTabDetails() {
+		Long qtId = getManagedBean().getScQt().getQtId();
+		String committeeType = getManagedBean().getCommitteeType();
+
+		if (StringUtils.isNotBlank(committeeType)) {
+			retrieveRecordDtls(qtId, committeeType);
+		}
+
+		getListApprovalAuthority();
+	}
+
+	private void retrieveRecordDtls(Long qtId, String committeeType) {
+		IQTMeetingSO meetingSO = null;
+
+		try {
+			meetingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTMeetingSO.class);
+			MeetingReqDTO reqDTO = new MeetingReqDTO();
+			reqDTO.setQtId(qtId);
+			reqDTO.setCommitteType(committeeType);
+
+			MeetingResDTO resDTO = meetingSO.retrieveMeetingDls(reqDTO);
+			
+			if (resDTO.isSuccessful()) {
+				ScQtCommittee scQtCommittee = resDTO.getQtCommittee();
+				
+				// Meeting Details
+				List<ScQtMeeting> meetingList = scQtCommittee.getScQtMeetings();
+				List<ScQtMeeting> currentMeetingList 
+										= new ArrayList<ScQtMeeting>();
+				if (CollectionUtils.isNotEmpty(meetingList)) {
+					for (ScQtMeeting scQtMeeting : meetingList) {
+						if (DbValueConst.RECORD_STATUS_ACTIVE !=
+									scQtMeeting.getRecordStatusFlg()) {
+							continue;
+						}
+						currentMeetingList.add(scQtMeeting);
+						Long meetingStatusId = scQtMeeting.getMeetingStatus() != null ? scQtMeeting
+								.getMeetingStatus().getStatusId() : null;
+						scQtMeeting.setMeetingStatusStr(meetingStatusId);
+					}
+				}
+
+				this.getManagedBean().setMeetingList(currentMeetingList);
+				this.getManagedBean().setScQtCommittee(scQtCommittee);		
+			}
+
+		} finally {
+			meetingSO = null;
+		}
+	}
+
+	/// #27502 - New DO MOF Role and Process - End
 	
 }
 

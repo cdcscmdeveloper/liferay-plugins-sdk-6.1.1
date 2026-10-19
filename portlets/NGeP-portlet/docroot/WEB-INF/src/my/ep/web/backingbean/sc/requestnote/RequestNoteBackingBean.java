@@ -62,6 +62,7 @@ import my.ep.biz.service.sc.quationtender.IQTAwardSO; //#25790
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
+import my.ep.biz.service.trackingdiary.ITrackingDiarySO; //#33224
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -6410,6 +6411,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 		}
 		
+		//#41463 - Start		
 		/**
 		 * Processes a list of disciplinary actions and triggers an error message if
 		 * conditions are met.
@@ -6422,17 +6424,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		 *            the {@link ScRequestNoteDtl} object used for generating error
 		 *            messages.
 		 */
-		private void processDisciplinaryActions(SupplierDataMaintenanceResDTO responseDto,
-				ScRequestNoteDtl rnDtl ,  DisciplinaryActionContext context) {
-			if (responseDto.getSmDisciplinaryActions() != null) {
-				for (SmDisciplinaryAction action : responseDto.getSmDisciplinaryActions()) {
-					if (checkDisciplinaryActionStatusFlag(action)) {
-						errorMessage(rnDtl , responseDto ,context);
-					}
+		private void processDisciplinaryActions(SupplierDataMaintenanceResDTO responseDto, ScRequestNoteDtl rnDtl,
+				DisciplinaryActionContext context) {
+			if (responseDto.getSmDisciplinaryAction() != null) {
+				if (checkDisciplinaryActionStatusFlag(responseDto.getSmDisciplinaryAction())) {
+					errorMessage(rnDtl, responseDto, context);
 				}
 			}
-
 		}
+		//#41463 - End	
+
 		
 		/**
 		 * Determines if an error should be triggered based on the record status and
@@ -6761,7 +6762,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					};
 					
 					Collections.sort(getManagedBean().getPurchaseRequestMapList(), prComparator);
-					
+
+					updatePurchaseRequestDiaryGroup(purchaseRequestList, requestNoteId);//#33224 (gate 4)
 				}
 			}
 
@@ -6771,6 +6773,30 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					"viewPurchaseRequestList", getUserIdSessionFromLoginId(), e);
 		}
 	}
+
+	//#33224 - start (gate 4)
+	/**
+	 * re-group the purchase request diary rows under the request note.
+	 * 
+	 * @param purchaseRequestList
+	 *            the purchase request list
+	 * @param requestNoteId
+	 *            the request note id
+	 */
+	private void updatePurchaseRequestDiaryGroup(List<ScPurchaseRequest> purchaseRequestList, Long requestNoteId) {
+		ITrackingDiarySO trackingDiarySO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.COMMON_COMPONENT, ITrackingDiarySO.class);
+		Long statusId = Long.valueOf(ParameterConst.STATUSID_40000);
+
+		for (ScPurchaseRequest scPurchaseRequest : purchaseRequestList) {
+			for (FlFulfilmentRequest flFulfilmentRequest : scPurchaseRequest.getFlFulfilmentRequests()) {
+				trackingDiarySO.updateTrackingDiaryGroupByStatus(flFulfilmentRequest.getFulfilmentReqId(),
+						flFulfilmentRequest.getDocType(), statusId, requestNoteId,
+						ParameterConst.DOCTYPE_REQUEST_NOTE);
+			}
+		}
+	}
+	//#33224 - end (gate 4)
 
 	/**
 	 * extract purchase request list.

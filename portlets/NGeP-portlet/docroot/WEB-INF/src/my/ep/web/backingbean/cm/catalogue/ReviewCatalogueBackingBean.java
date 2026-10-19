@@ -695,7 +695,6 @@ BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
             }
         }
         RequestContext.getCurrentInstance().execute("rejectCatConfirmPopup.show();");
-        return;
     }
     //#34447 - End
 }

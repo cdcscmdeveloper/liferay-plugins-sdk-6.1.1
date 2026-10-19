@@ -3383,7 +3383,7 @@ public class CreateQtBackingBean extends
 								SearchOperator.OPERATOR_EQUALS.value(), true
 								));
 	//#34923 - start
-	List<String> docTypeList = new ArrayList<String>();
+	List<String> docTypeList = new ArrayList<>(); //#41436
 	docTypeList.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
 	docTypeList.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY);
 	itemSearchBean.getDataFilterBeans().add(

@@ -194,12 +194,12 @@
 
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
-								<!-- #30449 - start added #{pmuser.salutationCode.salutationName}-->
+								<!-- #30447, #30449 - start added #{pmuser.salutationCode.salutationName}-->
 							<f:selectItems
 								value="#{lOADetailBackingBean.managedBean.supplierContractSignerList}" 
-								var="pmuser" itemLabel="#{pmuser.salutationCode.salutationName} #{pmuser.userName}"
+								var="pmuser" itemLabel="#{lOADetailBackingBean.getFormattedSalutationName(pmuser.salutationCode.salutationName, pmuser.userName)}"
 								itemValue="#{pmuser.userId}"/>
-								<!-- #30449 - end -->
+								<!-- #30447, #30449 - end -->
 							<p:ajax event="change"
 								listener="#{lOADetailBackingBean.supplierContractSignerEvent()}"
 								partialSubmit="true" process="@this" update="@this supplierContractSignerPanel " />
@@ -207,11 +207,11 @@
 						<p:message id="supplierContractSignerMsg" for="supplierContractSigner"
 							display="icon" />
 					</c:if> <c:if test="#{!isSupplierAckStatus}">
-					<!-- #30449 - start -->
+					<!-- #30447, #30449 - start -->
 						<p:inputText
-							value="#{lOADetailBackingBean.managedBean.scLoa.ackBy.salutationCode.salutationName} #{lOADetailBackingBean.managedBean.scLoa.ackBy.userName}"
+							value="#{lOADetailBackingBean.formattedSupplierContractSigner}"
 							disabled="true" size="35" /> 
-					<!-- #30449 - end -->
+					<!-- #30447, #30449 - end -->
 					</c:if></td>
 			</tr>
 			<tr>

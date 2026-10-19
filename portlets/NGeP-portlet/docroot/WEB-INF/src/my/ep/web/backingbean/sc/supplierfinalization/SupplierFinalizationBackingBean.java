@@ -1914,6 +1914,9 @@ public class SupplierFinalizationBackingBean extends
 	 */
 	// 25037 - start
 	public void saveSupplierFinalization() {
+		// #34860 Start
+		this.getManagedBean().setOutcome(BpmOutcomeConst.BPM_SAVE);
+		// #34860 End
 		saveSupplierFinalization(false);
 	}
 
@@ -2293,7 +2296,7 @@ public class SupplierFinalizationBackingBean extends
 					reqDTO.setScQtCommittee(scQtCommittee);
 					reqDTO.setSubmit(this.getManagedBean().isSubmit());
 					// 25037 - start
-					if (!skipValidation) {
+					if (!skipValidation && !getManagedBean().isMofFinalization() ) { // #27502 - New DO MOF Role and Process
 						qtSuppFinalizationSO.validatePreparation(reqDTO);
 					}
 					// 25037 - end
@@ -3020,7 +3023,10 @@ public class SupplierFinalizationBackingBean extends
 		String outcome = this.getManagedBean().getOutcome();
 		this.getManagedBean().setAction(outcome);
 		//#34860 Start
-		if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome)) {
+		if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && this.getManagedBean().getFinalizationMethod() != null
+				&& (this.getManagedBean().getFinalizationMethod().equals(ParameterConst.RECOMMEND_BY_AWARD) 
+						|| this.getManagedBean().getFinalizationMethod().equals(ParameterConst.RECOMMEND_BY_SINGLE_AWARD)) 
+				&& !getManagedBean().isDisableJustifications()) {
 			List<String> selectedJustificationList = this.getManagedBean().getJustificationReasonList();
 			if (CollectionUtils.isEmpty(selectedJustificationList)) {
 				throw new EpException(MessageConst.ERR_760832);
@@ -3375,6 +3381,7 @@ public class SupplierFinalizationBackingBean extends
 			}
 		} else {
 			/*#34444 - Start*/
+			getManagedBean().prepareAction(outcome);
 			RequestContext.getCurrentInstance().execute("popupConfirmInfoDlg.show()");
 			/*#34444 - End*/
 		}
@@ -4129,6 +4136,7 @@ return	remarksNotFound;
 		if (epException != null) {
 			saveAndReloadFinalizationDetails(
 						qtSuppFinalizationSO, reqDTO);
+			prepareUpdateCommitteeMember(); //#41497
 			
 			navigateToPreparationTab();
 			qtSuppFinalizationSO = null;
@@ -4701,8 +4709,7 @@ return	remarksNotFound;
 			reqDTO.setExcludedDocNames(SupplierFinalizationManagedBean.getDirectdownloaddocdefkeys());
 			List<ScQtFinalizationReportDetail> finalizationReportsDetail = qtSuppFinalizationSO
 					.retriveFinalizationReportDetail(reqDTO).getScQtFinalizationReportDetails();
-			populateEvaluationReportDetails(finalizationReportsDetail, this.getManagedBean().getScQt());
-			populateBriefingReportDetails(finalizationReportsDetail);
+			this.getManagedBean().setScQtFinalizationReportDetail(finalizationReportsDetail);
 			// #25651 - End
 			
 		} finally {
@@ -4813,32 +4820,6 @@ return	remarksNotFound;
 			uploadAttachment(event.getFile(), scAttachment);
 		}
 	}		
-	
-	//#25651 - Start
-	/**
-	 * To download a report detail under evaluation tab
-	 * 
-	 * @param scQtFinalizationReport
-	 *            selected report which would be downloaded
-	 * @throws Exception
-	 *             the exception that would be thrown in case of any error while
-	 *             downloading the report
-	 */
-	public void downloadReportDetail(ScQtFinalizationReportDetail scQtFinalizationReportDetail)
-			throws Exception {
-		log.info("downloadReport");
-		
-		ScQtFinalizationReportDetailAttachment reportAttachment = scQtFinalizationReportDetail.getScQtFinalizationReportDetailAttachment();
-
-		if (reportAttachment == null) {
-			reportAttachment = generateDocumentAttachmentDetail(scQtFinalizationReportDetail, false);
-			scQtFinalizationReportDetail
-					.setScQtFinalizationReportDetailAttachment(reportAttachment);
-		}
-		downloadFile(reportAttachment);
-
-	}
-	//#25651 - End
 
 	/**
 	 * To download a report under Briefing Paper/Kertas Taklimat tab
@@ -5167,54 +5148,6 @@ return	remarksNotFound;
 
 		return streamContent;
     }	
-    
-    //#25651 - Start
-    /**
-	 *Get the Documents Report Information.
-	 * 
-	 *@return the ScQtFinalizationReportDetailAttachment instance.
-	 *             
-	 */
-	public ScQtFinalizationReportDetailAttachment generateDocumentAttachmentDetail(
-			ScQtFinalizationReportDetail scQtFinalizationReportDetail, boolean isDirectDownload) throws Exception {
-
-		String definitionType = scQtFinalizationReportDetail.getDefinationType()
-				.getParameterCode();
-		ScQtFinalization scQtFinalization = getManagedBean()
-				.getScQtFinalization();
-
-		ScQtFinalizationReportDetailAttachment reportAttachment = null;
-		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
-				.equals(definitionType)) {
-			String docDefinitionKey = scQtFinalizationReportDetail.getPmDocument()
-					.getDocDefinitionKey();
-			ScQt scQt = getManagedBean().getScQt();
-			reportAttachment = new ScQtFinalizationReportDetailAttachment();
-			reportAttachment.setScQtFinalizationReportDetail(scQtFinalizationReportDetail);
-			reportAttachment.setDocNo(scQtFinalization.getScQt().getQtNo());
-			ScAttachment attachment = (ScAttachment) reportAttachment;
-			StringBuilder filename = new StringBuilder();
-			// replace white space due to firefox
-			filename.append(scQtFinalizationReportDetail.getTitle()
-					.replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE,SourcingConstants.UNDER_SCORE)
-					.replaceAll(SourcingConstants.REG_EXP_BACK_SLASH,SourcingConstants.UNDER_SCORE));
-			
-			if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equals(docDefinitionKey)) {
-				filename.append(".rtf");
-				reportAttachment.setFileName(filename.toString());
-				generateKertasTaklimatPdf(scQt, attachment, isDirectDownload);
-
-			} else {
-				debugLogger("No document type is exists with the key "
-						+ docDefinitionKey);
-				reportAttachment = null;
-			}
-
-		} 
-		
-		return reportAttachment;
-	}
-	//#25651 - End
      
     /**
 	 *Get the Documents Report Information.
@@ -6732,7 +6665,7 @@ return	remarksNotFound;
 	public void signOff() {
 		log.info("signOff");
 		if (StringUtils.isNotBlank(
-				getManagedBean().getCommitteeType())) {
+				getManagedBean().getCommitteeType()) && getManagedBean().getCommitteeList() != null  ) {// #27502 - New DO MOF Role and Process
 			for (ScQtCommitteeActivity scQtCommitteeActivity 
 						: getManagedBean().getCommitteeList()) {
 				if (scQtCommitteeActivity.getScCommitteeMember().getPmUser().getUserId()
@@ -11370,7 +11303,6 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	public void downloadAllEvaluationReports() throws Exception {
 		debugLogger("downloadAllEvaluationReports");
 
-		List<ScAttachment> attachments = new ArrayList<>();//#25651 
 		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean().getEvaluationReportList();
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<ScQtFinalizationReportAttachment>();
 
@@ -11389,175 +11321,25 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 						.setScQtFinalizationReportAttachment(attachment);
 			}
 			
-			if (null != attachment && StringUtils.isNotBlank(attachment.getFilePath())) {//#25651
-				
-				// Bug #35485@Syazani 08/02/2024 -- Start
-				File file = new File(getActualFilePath(attachment));
-				if (file.exists() && file.length() <= 1000 && ArrayUtils.contains(SourcingConstants.DOCUMENT_EVALUATIONS, docDefinitionKey)) {
-					regenEvaluationDownload(attachment, false);
-				}
-				// Bug #35485@Syazani 08/02/2024 -- End
-				attachment.setTempFileName(scQtFinalizationReport.getTitle()); // 37622
-				attachment.setDocNo(getManagedBean().getScQt().getQtNo());
-				scAttachments.add(attachment);
+			// Bug #35485@Syazani 08/02/2024 -- Start
+			File file = new File(getActualFilePath(attachment));
+			if (file.exists() && file.length() <= 1000 && ArrayUtils.contains(SourcingConstants.DOCUMENT_EVALUATIONS, docDefinitionKey)) {
+				regenEvaluationDownload(attachment, false);
+			}
+			// Bug #35485@Syazani 08/02/2024 -- End
+			attachment.setTempFileName(scQtFinalizationReport.getTitle()); // 37622
+			attachment.setDocNo(getManagedBean().getScQt().getQtNo());
+			scAttachments.add(attachment);
 			
-			}//#25651
 		}
-		
-		//#25651 - Start
-		attachments.addAll(scAttachments); 
-		attachments.addAll(getScqtFinalizationReportDetails());
-		//#25651 - End
 
 		// Generate all the reports before submission
 		if (!getManagedBean().isSubmit()) {
 			//#28784 - Start
-			downloadSFAndRecommendationFiles("NGeP-Evaluation-Report", attachments); //#25651
+			downloadSFAndRecommendationFiles("NGeP-Evaluation-Report", scAttachments);
 			//#28784 - End
 		}
 	}
-	
-	// #25651 - Start
-	/**
-	 * To download evaluation reports detail under Evaluation Report tab.
-	 * 
-	 * @throws Exception
-	 *             the exception that would be thrown in case of any error while
-	 *             downloading the report(s)
-	 */
-	private List<ScAttachment> getScqtFinalizationReportDetails() throws Exception {
-
-		List<ScAttachment> attachments = new ArrayList<>();
-		List<ScQtFinalizationReportDetail> scQtFinalizationReportDetails = getManagedBean()
-				.getEvaluationReportDetailList();
-		List<ScQtFinalizationReportDetailAttachment> scAttachmentsDetail = new ArrayList<>();
-
-		for (ScQtFinalizationReportDetail reportDetail : scQtFinalizationReportDetails) {
-
-			ScQtFinalizationReportDetail scQtFinalizationReportDetail = reportDetail;
-			ScQtFinalizationReportDetailAttachment attachment = scQtFinalizationReportDetail
-					.getScQtFinalizationReportDetailAttachment();
-
-			if (attachment == null) {
-				attachment = generateDocumentAttachmentDetail(reportDetail);
-				reportDetail.setScQtFinalizationReportDetailAttachment(attachment);
-			}
-
-			if (null != attachment && StringUtils.isNotBlank(attachment.getFilePath())) {
-
-				attachment.setTempFileName(scQtFinalizationReportDetail.getTitle());
-				attachment.setDocNo(getManagedBean().getScQt().getQtNo());
-				scAttachmentsDetail.add(attachment);
-
-			}
-
-		}
-
-		attachments.addAll(scAttachmentsDetail);
-		return attachments;
-	}
-
-	// #25651 - End
-	
-	//#25651 - Start
-	/**
-	 * To combine download evaluation report ScQtFinalizationReport and ScQtFinalizationReportDetail
-	 */
-	public void downloadCombinedReport(Object report) throws Exception {
-
-		if (report instanceof ScQtFinalizationReport) {
-
-			downloadReport((ScQtFinalizationReport) report);
-
-		} else if (report instanceof ScQtFinalizationReportDetail) {
-
-			downloadReportDetail((ScQtFinalizationReportDetail) report);
-		}
-	}
-	//#25651 - End
-	
-	//#25651 - Start
-	/**
-	 * To get list evaluation report ScQtFinalizationReport and ScQtFinalizationReportDetail
-	 */
-	public List<Object> getCombinedEvaluationReportList() {
-
-		List<Object> combinedReportList = new ArrayList<>();
-		Long qtId = this.getManagedBean().getScQt().getQtId();
-
-
-		List<ScQtFinalizationReport> reports = getManagedBean().getEvaluationReportList();
-		List<ScQtFinalizationReportDetail> details = getManagedBean().getEvaluationReportDetailList();
-
-		if (CollectionUtils.isNotEmpty(reports)) {
-			for (ScQtFinalizationReport report : reports) {
-				String key = report.getPmDocument().getDocDefinitionKey();
-
-				if (!isWipEvaluationReportExisting(key, qtId)) {
-					combinedReportList.addAll(reports);
-					break;
-				}
-			}
-		}
-
-		if (CollectionUtils.isNotEmpty(details)) {
-			for (ScQtFinalizationReportDetail detail : details) {
-				String key = detail.getPmDocument().getDocDefinitionKey();
-
-				if (isWipEvaluationReportExisting(key, qtId)) {
-					combinedReportList.addAll(details);
-					break;
-				}
-			}
-		}
-
-		return combinedReportList;
-	}
-	//#25651 - End
-	
-	//#25651 - Start
-	/**
-	 * @param scQtFinalizationReportDetail
-	 * @return
-	 * @throws Exception
-	 */
-	private ScQtFinalizationReportDetailAttachment generateDocumentAttachmentDetail(
-			ScQtFinalizationReportDetail scQtFinalizationReportDetail) throws Exception {
-	
-		ScQtFinalization scQtFinalization = getManagedBean()
-				.getScQtFinalization();
-
-		ScQtFinalizationReportDetailAttachment reportAttachment = null;
-		String docDefinitionKey = scQtFinalizationReportDetail.getPmDocument()
-				.getDocDefinitionKey();
-	
-		reportAttachment = new ScQtFinalizationReportDetailAttachment();
-		reportAttachment.setScQtFinalizationReportDetail(scQtFinalizationReportDetail);
-		reportAttachment.setDocNo(scQtFinalization.getScQt().getQtNo());
-		StringBuilder filename = new StringBuilder();
-		// replace white space due to firefox
-		filename.append(scQtFinalizationReportDetail
-				.getTitle()
-				.replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE,
-						SourcingConstants.UNDER_SCORE)
-				.replaceAll(SourcingConstants.REG_EXP_BACK_SLASH,
-						SourcingConstants.UNDER_SCORE));
-
-		if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT
-				.equals(docDefinitionKey)) {
-			filename.append(".rtf");
-			reportAttachment.setFileName(filename.toString());
-			generateKertasTaklimatPdf(scQt, reportAttachment);
-		} else {
-			debugLogger("No document type exists with the key "
-					+ docDefinitionKey);
-			reportAttachment = null;
-		}
-
-	
-		return reportAttachment;
-	}
-	//#25651 - End
 
 	/**
 	 * @param scQtFinalizationReport
@@ -11606,10 +11388,10 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		return reportAttachment;
 	}
 
-	private void generateKertasTaklimatPdf(ScQt qt,
-			ScAttachment attachment) throws Exception {//#25651
+	private void generateKertasTaklimatPdf(ScQt qt, ScQtFinalizationReportAttachment attachment) throws Exception {
 		debugLogger("generateKertasTaklimatPdf");
 		populateAttachmentDetails(attachment);
+
 		//#35015 4ser -Start
 		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION,
@@ -12294,6 +12076,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			if (epException != null) {
 				saveAndReloadFinalizationDetails(
 							qtSuppFinalizationSO, reqDTO);
+				prepareUpdateCommitteeMember(); //#41497
 				
 				navigateToPreparationTab();
 				qtSuppFinalizationSO = null;
@@ -12962,31 +12745,6 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			
 		}
 		// 18685 - END.
-		
-		
-	// #25651 - Start.
-	/**
-	 * @param scQtFinalizationReportDetail
-	 * @return
-	 * @throws Exception
-	 */
-	public ScQtFinalizationReportDetailAttachment downloadBriefingPaperReportDetailForBidding(ScQtFinalizationReportDetail scQtFinalizationReportDetail) throws Exception {
-	    ScQtFinalizationReportDetailAttachment reportAttachment = null;
-		if (null != getManagedBean().getCurrentStatusId() 
-				&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_BIDDING_FINALIZATION.longValue()
-						|| getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_BIDDING_FINALIZATION_REVISION.longValue()
-						)) {
-			reportAttachment = generateDocumentAttachmentDetail(scQtFinalizationReportDetail, false);
-		} else {
-			reportAttachment = scQtFinalizationReportDetail.getScQtFinalizationReportDetailAttachment();
-
-			if (reportAttachment == null) {
-				reportAttachment = generateDocumentAttachmentDetail(scQtFinalizationReportDetail, false);
-			}
-		}
-		return reportAttachment;
-	}
-	// #25651 - End.	
 		
 	// #30567 - Start.
 	/**
@@ -13755,7 +13513,13 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE.equals(committeeType)
 				|| ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD.equals(committeeType)) {
 			return new BigDecimal(SourcingConstants.QT_BELOW_500K);
-		}		
+		}	
+		
+		// #41184 - Start
+		if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equals(committeeType)
+				|| ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equals(committeeType)) {
+			return new BigDecimal(SourcingConstants.QT_BELOW_30MILL);
+		} // #41184 - End
 
 		return null;
 	}
@@ -13832,6 +13596,13 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE.equals(committeeType)) {
 			throw new EpException(MessageConst.ERROR_760710, new String[] { procurementMode, offeredPrice });
 		}
+		
+		// #41184 - Start
+		if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equals(committeeType)
+				|| ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equals(committeeType)) {
+			throw new EpException(MessageConst.ERROR_760723, new String[] { committeeName, procurementMode,
+					offeredPrice });
+		} // #41184 - End
 	}
 	
 	/**

@@ -55,6 +55,7 @@ import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.InactiveUserConst; //#30737
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
@@ -72,6 +73,7 @@ import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.user.UserStatusCheckDTO; //#30737
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
@@ -81,6 +83,7 @@ import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.circular.CTCircularContractDataType;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.ct.CtActor; //#30737
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
@@ -116,7 +119,6 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils; //#39594
 import my.ep.util.pm.OrgProfileUtil;
-import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.audit.AuditContractBackingBean; //35506
 import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
@@ -143,14 +145,14 @@ import my.ep.web.backingbean.ct.circular.CircularBaseBackingBean;//Fix - #34367
  */
 @ManagedBean (name = "centralContractBackingBean") 
 @ViewScoped
-public class CentralContractBackingBean extends CircularBaseBackingBean<CentralContractManagedBean>{ //Fix - #34367
+public class CentralContractBackingBean extends CircularBaseBackingBean<CentralContractManagedBean> { // 30737 //Fix - #34367
 
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(CentralContractBackingBean.class);
 	private ContractBackingBean ctBB = new ContractBackingBean();
 	private static String baseDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 	private IPagingDataModel<PmOrgProfile> exemptedOrgDataModel = new ExemptedOrgDataModel();	
-	
+		
 	private String confirmationContentMsg;//34442
 
 	/**
@@ -588,28 +590,34 @@ public class CentralContractBackingBean extends CircularBaseBackingBean<CentralC
 			if(!getManagedBean().getCircularVer().isPid()){
 				getManagedBean().getCircularVer().setCtCircularPidReason(null);
 			}
-			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL))
-				validateCircular(action);
-
+			
 			CtCircular circular = getManagedBean().getCircular();
 			if(circular==null) {
 				circular = new CtCircular();
 				circular.setCircularType(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT);
 			}
-			getPTJOwner();//Fix - #34367
+			getPTJOwner();//Fix - #34367 , #30737
 			CtCircularVer circularVer = getManagedBean().getCircularVer();
 			if(circularVer.getDocType()==null) {
 				circularVer.setDocType(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
-				circular.setOwnerOrgProfile(getOwnerOrgProfile());//Fix - #34367
+				circular.setOwnerOrgProfile(getOwnerOrgProfile());//Fix - #34367 , #30737
 			}
-			
+
+			//#30737 - start
+			circularVer.setCtCircular(circular);
+			getManagedBean().setCircular(circular);
+
+			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL))
+				validateCircular(action);
+			//#30737 - end
+
 			// #39594 - Start
 			if (!circularVer.getCtCircularPidReason().isEmpty()) {
 				circularVer.getCtCircularPidReason().clear();
 			}
 			circularVer.getCtCircularPidReason().addAll(getManagedBean().getCtCircularPidReasons());
 			// #39594 - End
-
+			
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setUserMap(getManagedBean().getUserMap());
 			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
@@ -631,6 +639,8 @@ public class CentralContractBackingBean extends CircularBaseBackingBean<CentralC
 			if(getManagedBean().getPmDigiSign() !=null){
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}
+			
+			reqDTO.setSelectedInactiveList(getManagedBean().getUserStatusCheckResult());
 
 			CircularResDTO resDTO = circularSO.saveCircular(reqDTO);
 			if(resDTO.isSuccessful()) {
@@ -896,6 +906,8 @@ public class CentralContractBackingBean extends CircularBaseBackingBean<CentralC
 							 new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				 }
 			 }
+			 
+			 validateUserToCheckStatus(outcome);
 		}finally{
 
 		}
@@ -2484,6 +2496,73 @@ public class CentralContractBackingBean extends CircularBaseBackingBean<CentralC
 	}
 	//#28713-end
 	
+	//#30737 - start
+	
+	public List<UserStatusCheckDTO> validateInactiveUserForRevise(CtCircular circular, CtCircularVer ctCircularVer, String userRole) {
+		try {
+			CtActor ctActor = retrieveContractActor(ctCircularVer.getCircularVerId(), ctCircularVer.getDocType(), userRole);
+			if (ctActor != null) {
+	            List<PmUser> users = new ArrayList<>();
+	            users.add(ctActor.getUser());
+
+	            return getLoginStatusFromSP(circular, 
+	            		ctCircularVer,
+	            		users,
+	            		RoleCode.BPK_CCA.value());
+	        }
+		} catch (Exception e) {
+			log.error(e);
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		} 
+		return new ArrayList<>();
+	}
+	
+	public void validateUserToCheckStatus(String outcome) {
+
+		CtCircularVer ctCircularVer = getManagedBean().getCircularVer();
+		CtCircular circular = getManagedBean().getCircular();
+
+		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
+			log.info("validateCircular action : " + outcome);
+			String userRole = RoleCode.BPK_CQ_APPROVER.value();
+			List<UserStatusCheckDTO> userListStatus = getLoginStatusFromSP(
+					circular, ctCircularVer,
+					getManagedBean().getApproverModel().getTarget(), userRole);
+			handleInactiveUserValidation(outcome, circular.getCircularNo(), userListStatus);
+		}
+
+		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
+			log.info("validateCircular action : " + outcome);
+
+			List<UserStatusCheckDTO> userListStatus = validateInactiveUserForRevise(
+					ctCircularVer.getCtCircular(), ctCircularVer,
+					RoleCode.BPK_CCA.value());
+
+			if (!userListStatus.isEmpty()) {
+
+				for (UserStatusCheckDTO userStatusResult : userListStatus) {
+					Long userStatus = userStatusResult.getStatus();
+					this.getManagedBean().setUserStatusCheckResult(
+							userStatusResult.getStatus());
+					
+					if (InactiveUserConst.INACTIVE_USER_5.equals(userStatus)) {
+						log.info("xoxoxoxoxooxoxo REVISE + return 5");
+						handleInactiveUserValidation(outcome, circular.getCircularNo(), userListStatus);
+						
+						break;
+					}
+					
+				}
+			}
+		}
+	}
+
+	@Override
+	protected CtCircularVer getCircularVer() {
+		return getManagedBean().getCircularVer();
+	}
+	//#30737 - end
+
 	//34442 - start
 	public String getConfirmationContentMsg() {
 	    return confirmationContentMsg;

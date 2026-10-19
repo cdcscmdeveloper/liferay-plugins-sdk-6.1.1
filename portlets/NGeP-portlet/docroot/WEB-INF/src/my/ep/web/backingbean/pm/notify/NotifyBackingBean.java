@@ -659,7 +659,7 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 			return notificationId.equals(NotificationTextConst.TEMPLATE_ID_401223) ? SourcingConstants.ROLE_CODE_EGPA
 					: notify.getSender().getUserName();
 		}
-		return "";
+		return notify.getSender() != null ? notify.getSender().getUserName() : "";
 	}
 	//#38107 - End
 }

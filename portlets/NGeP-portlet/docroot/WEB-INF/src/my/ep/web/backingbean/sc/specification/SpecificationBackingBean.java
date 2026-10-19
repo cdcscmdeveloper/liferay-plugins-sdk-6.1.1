@@ -1270,7 +1270,9 @@ public class SpecificationBackingBean extends
 				SCProcessNameConst.SPEC_MAINTENANCE_REVISE_SCORING //1873 note 149
 			};
 			//#34656 move validation position ,trigger before popup-start
-			specSo.validateSpecZoneQtyZero(specReqDTO);
+			if (activeIndex >= 2) { //#21695,#25138,#29021,#25635,#41460
+				specSo.validateSpecZoneQtyZero(specReqDTO);
+			}
 			//#34656 move validation position -end
 			if (Arrays.asList(allowedTaskName).contains(taskName)
 					|| (StringUtils.isEmpty(taskName) && !this.getManagedBean().isReadOnly())) {
@@ -10654,7 +10656,7 @@ public class SpecificationBackingBean extends
 								SearchOperator.OPERATOR_EQUALS.value(), true));
 
 				//#34923 - start
-				List<String> docTypeList = new ArrayList<String>();
+				List<String> docTypeList = new ArrayList<>(); //#41437
 				docTypeList.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
 				docTypeList.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR_MINISTRY);
 				searchBean.getDataFilterBeans().add(
@@ -16310,7 +16312,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			if (null != financialPackageScore
 					&& financialPackageScore.getSettingType() == 2) {
 				//#25138 - add if condition for one item only - start
-				if(!this.getManagedBean().isSingleItem() && !checkFinancialSpecificationForItems()){ //#25651
+				if(!this.getManagedBean().isSingleItem()){
 					if (null == financialPackageScore.getPassingScore()) {
 
 						this.getManagedBean().setActiveIndex(5);
@@ -23880,7 +23882,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 						|| StringUtils.isNotBlank(inactive.toString())) {
 					inactive.append(", ");
 				}
-				inactive.append(cl.getTitle());
+				inactive.append("\u2018").append(cl.getTitle()).append("\u2019");
 			}
 		}
 
@@ -25612,37 +25614,5 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 	}
 	 // #41066 - End
-	
-	//#25651 - Start
-	/**
-	 * To check technical specification more than one item
-	 * @return true or false
-	 */  
-	public Boolean checkTechnicalSpecificationForItems(){
-		IQTSpecSO specSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
-		ScQt scQt = this.getManagedBean().getQt();
-		if(specSO.checkTechnicalSpecificationForItems(scQt)){
-			return true;
-		}
-		return false;
-	}
-	//#25651 - End
-	
-	//#25651 - Start
-	/**
-	 * To check financial specification for items
-	 * @return true or false
-	 */  
-	public Boolean checkFinancialSpecificationForItems(){
-		IQTSpecSO specSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
-		ScQt scQt = this.getManagedBean().getQt();
-		if(specSO.checkFinancialSpecificationForItems(scQt)){
-			return true;
-		}
-		return false;
-	}
-	//#25651 - End
 	
 }

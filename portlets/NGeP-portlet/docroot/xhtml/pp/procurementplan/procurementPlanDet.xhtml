@@ -42,7 +42,9 @@
 	
 		<p:outputPanel id="opPlanDetails">
 			<!-- Validation Message -->
-			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+			<ui:remove>33690 START</ui:remove>
+			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" escape="false"/>
+			<ui:remove>33690 END</ui:remove>
 		
 			<!-- Header Buttons -->
 			<ui:include src="common/headerSection.xhtml"/>

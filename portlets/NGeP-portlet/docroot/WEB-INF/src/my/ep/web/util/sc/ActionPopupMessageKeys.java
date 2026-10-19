@@ -17,19 +17,21 @@ import org.apache.log4j.Logger;
  * Issue #34444
  */
 public class ActionPopupMessageKeys {
-	
-	private static final Logger log = EpLogger
-			.getLogger(ActionPopupMessageKeys.class);
+
+	private static final Logger log = EpLogger.getLogger(ActionPopupMessageKeys.class);
 
 	/** Action â† title key */
-	private static final Map<String, String> TITLE_KEYS = new HashMap<String, String>();
+	private static final Map<String, String> TITLE_KEYS = new HashMap<>();
 
 	/** Action â† content key */
-	private static final Map<String, String> CONTENT_KEYS = new HashMap<String, String>();
+	private static final Map<String, String> CONTENT_KEYS = new HashMap<>();
+
+	private static String labelApproved = "lbl.sc.popup.confirm.approve.header";
+	private static String labelSubmit = "lbl.sc.popup.confirm.submit.header";
 
 	static {
 		// ===== APPROVE =====
-		TITLE_KEYS.put("APPROVE", "lbl.sc.popup.confirm.approve.header");
+		TITLE_KEYS.put("APPROVE", labelApproved);
 		CONTENT_KEYS.put("APPROVE", "lbl.sc.popup.confirm.approve.content");
 
 		// ===== REVISE =====
@@ -45,23 +47,23 @@ public class ActionPopupMessageKeys {
 		CONTENT_KEYS.put("SIGNOFF", "lbl.sc.popup.confirm.signOff.content");
 
 		// ===== SUBMIT =====
-		TITLE_KEYS.put("SUBMIT", "lbl.sc.popup.confirm.submit.header");
+		TITLE_KEYS.put("SUBMIT", labelSubmit);
 		CONTENT_KEYS.put("SUBMIT", "lbl.sc.popup.confirm.submit.content");
 
 		// ===== SUBMISSIONLOA =====
-		TITLE_KEYS.put("SUBMISSIONLOA", "lbl.sc.popup.confirm.submit.header");
+		TITLE_KEYS.put("SUBMISSIONLOA", labelSubmit);
 		CONTENT_KEYS.put("SUBMISSIONLOA", "lbl.sc.popup.confirm.loa.submission.content");
 
 		// ===== APPROVELOA =====
-		TITLE_KEYS.put("APPROVELOA", "lbl.sc.popup.confirm.approve.header");
+		TITLE_KEYS.put("APPROVELOA", labelApproved);
 		CONTENT_KEYS.put("APPROVELOA", "lbl.sc.popup.confirm.loa.approve.content");
 
 		// ===== SUBMISSIONLOI =====
-		TITLE_KEYS.put("SUBMISSIONLOI", "lbl.sc.popup.confirm.submit.header");
+		TITLE_KEYS.put("SUBMISSIONLOI", labelSubmit);
 		CONTENT_KEYS.put("SUBMISSIONLOI", "lbl.sc.popup.confirm.loi.submission.content");
 
 		// ===== APPROVELOI =====
-		TITLE_KEYS.put("APPROVELOI", "lbl.sc.popup.confirm.approve.header");
+		TITLE_KEYS.put("APPROVELOI", labelApproved);
 		CONTENT_KEYS.put("APPROVELOI", "lbl.sc.popup.confirm.loi.approve.content");
 	}
 
@@ -104,19 +106,6 @@ public class ActionPopupMessageKeys {
 	 *            the resource bundle to use for message lookup
 	 * @return the title message, or the key itself if not found in the bundle
 	 */
-	// public static String getTitleMessage(String action, ResourceBundle
-	// resourceBundle) {
-	// String key = getTitleKey(action);
-	// if (key != null && resourceBundle != null) {
-	// try {
-	// return resourceBundle.getString(key);
-	// } catch (Exception e) {
-	// return key;
-	// }
-	// }
-	// return key;
-	// }
-	//
 	public static String getTitleMessage(String action, ResourceBundle resourceBundle) {
 
 		String key = getTitleKey(action);
@@ -124,9 +113,9 @@ public class ActionPopupMessageKeys {
 		if (key != null && resourceBundle != null) {
 			try {
 				return resourceBundle.getString(key);
-			}catch (MissingResourceException e) {
-			    log.warn("Missing resource bundle key:"  + key);
-			    return "Message unavailable";
+			} catch (MissingResourceException e) {
+				log.warn("Missing resource bundle key:" + key, e);
+				return "Message unavailable";
 			}
 		}
 
@@ -150,24 +139,12 @@ public class ActionPopupMessageKeys {
 		if (key != null && resourceBundle != null) {
 			try {
 				return resourceBundle.getString(key);
-				} catch (MissingResourceException e) {
+			} catch (MissingResourceException e) {
 				log.warn("Missing resource bundle key: " + key, e);
 				return key;
-				}
+			}
 		}
 
 		return key;
 	}
-	// public static String getContentMessage(String action, ResourceBundle
-	// resourceBundle) {
-	// String key = getContentKey(action);
-	// if (key != null && resourceBundle != null) {
-	// try {
-	// return resourceBundle.getString(key);
-	// } catch (Exception e) {
-	// return key;
-	// }
-	// }
-	// return key;
-	// }
 }

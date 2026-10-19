@@ -141,6 +141,7 @@ import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.dto.sm.sst.SupplierSstReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
+import my.ep.dto.sm.trackingdiary.SmTrackingDiaryReqDTO;//#38885
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
@@ -6563,4 +6564,44 @@ public class SmCommonUtil {
 		String requestURL = httpServletRequest.getRequestURL().toString();
 		return requestURL.substring(0, requestURL.length() - httpServletRequest.getRequestURI().length());
 	}
+
+	//#38885 - START
+	/**
+	 * Record in the tracking diary who claimed or released an SM group task.
+	 *
+	 * @param bpmSO
+	 *            the BPM service the caller already resolved
+	 * @param reqDTO
+	 *            the same request the claim / release is made with (taskId and
+	 *            ctxToken set)
+	 * @param isRelease
+	 *            true for release, false for claim
+	 */
+	public static void saveGroupTaskTrackingDiary(IBpmSO bpmSO, BpmRequestDTO reqDTO, boolean isRelease) {
+		try {
+			FacesScopes fc = new FacesScopes();
+			log.info("role code : " + fc.getUserRoleList());
+			if (!fc.hasRoleUser(RoleCode.UPS_SDO.value())
+					&& !fc.hasRoleUser(RoleCode.UPS_APPROVER.value())) {
+				//#38885
+				log.info("38885 - role code besides sdo & approver : " + fc.getUserRoleList());
+				return;
+			}
+
+			BpmResponseDTO taskDTO = bpmSO.getTaskDetails(reqDTO);
+			if (taskDTO == null
+					|| !ParameterConst.DOCTYPE_SUPPLIER_APPLICATION.equalsIgnoreCase(taskDTO.getDocType())) {
+				return;
+			}
+
+			SmTrackingDiaryReqDTO trckReqDTO = new SmTrackingDiaryReqDTO();
+			trckReqDTO.setDocNo(taskDTO.getDocNumber());
+			trckReqDTO.setActionedBy(fc.getUserSessionBean().getUserId());
+			trckReqDTO.setReleaseTask(isRelease);
+			SmServiceLookup.getSmTrackingDiarySO().saveClaimReleaseGroupTaskTrackingDiary(trckReqDTO);
+		} catch (Exception e) {
+			log.error("saveGroupTaskTrackingDiary failed for taskId " + reqDTO.getTaskId(), e);
+		}
+	}
+	//#38885 - END
 }
