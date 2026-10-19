@@ -15,6 +15,7 @@ import javax.faces.context.FacesContext; //#30737 add import
 import my.ep.biz.service.ct.actor.ICtActorSO; //#30737 add import
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.constant.InactiveUserConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constants.CTProcessNameConst;
@@ -249,13 +250,13 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 
 			Long status = user.getStatus();
 
-			if (Long.valueOf(1L).equals(status)) {
+			if (InactiveUserConst.INACTIVE_USER_1.equals(status)) {
 				activeUserCount++;
 			}
 
-			if (Long.valueOf(2L).equals(status)
-					|| Long.valueOf(3L).equals(status)
-					|| Long.valueOf(4L).equals(status)) {
+			if (InactiveUserConst.INACTIVE_USER_2.equals(status)
+					|| InactiveUserConst.INACTIVE_USER_3.equals(status)
+					|| InactiveUserConst.INACTIVE_USER_4.equals(status)) {
 
 				inactiveUsers.add(user);
 			}
@@ -282,7 +283,7 @@ public abstract class CircularBaseBackingBean<T extends BaseManagedBean > extend
 		}
 
 		// All status = 5
-		if (Long.valueOf(5L).equals(userStatusResults.get(0).getStatus())) {
+		if (InactiveUserConst.INACTIVE_USER_5.equals(userStatusResults.get(0).getStatus())) {
 			log.info("All status = 5");
 			throw new EpException(MessageConst.ERROR_750100);
 		}

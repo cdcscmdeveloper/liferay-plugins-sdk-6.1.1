@@ -85,42 +85,39 @@ QtReportBackingBean<TechnicalEvaluationCommitteeReportManagedBean> implements Se
 
 	// #25651 - End
 
-	//#25651 - Start
+	// #25651 - Start
 	/*
-	 * getScReports - Gets the ScReports for opening committee.
+	 * getScReports - Gets the ScReports for technical committee.
 	 */
-    public void getScReports(String qtNumber) {
+	public void getScReports(String qtNumber) {
 
-        boolean isAllReportExisting = false;
-		List<ScQtFinalizationReport> scQtFinalizationReports;
-		if (StringUtils.isNotEmpty(qtNumber) && qtNumber.startsWith(ReportConst.QT_VALUE)) {
-			
-			List<ScQtFinalizationReport> reports = getSourcingIntegrationSO().retriveFinalizationScReport(qtNumber,
-					SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT);
-	
-			if (CollectionUtils.isNotEmpty(reports)) {
-				isAllReportExisting = true;
-				scQtFinalizationReports = reports;
-			} else {
-				isAllReportExisting = false;
-				scQtFinalizationReports = new ArrayList<>();
+		List<ScQtFinalizationReport> reports = new ArrayList<>();
+		boolean isValidQtNumber = StringUtils.isNotEmpty(qtNumber) && qtNumber.startsWith(ReportConst.QT_VALUE);
+
+		if (isValidQtNumber) {
+			List<ScQtFinalizationReport> retrievedReports = getSourcingIntegrationSO().retriveFinalizationScReport(
+					qtNumber, SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT);
+
+			if (CollectionUtils.isNotEmpty(retrievedReports)) {
+				reports = retrievedReports;
+				this.getManagedBean().setReportStage(SourcingConstants.LAPORAN_JAWATANKUASA_TEKNIKAL);
 			}
-	
-		} else {
-			isAllReportExisting = false;
-			scQtFinalizationReports = new ArrayList<>();
 		}
-	
-		this.getManagedBean().setAllReportExisting(isAllReportExisting);
-		this.getManagedBean().setQtReportDocumentList(scQtFinalizationReports);
-    }
-	//#25651 - End
+
+		this.getManagedBean().setAllReportExisting(CollectionUtils.isNotEmpty(reports));
+		this.getManagedBean().setQtReportDocumentList(reports);
+	}
+
+	// #25651 - End
 	
 	public void resetSearch(){
 		log.info("TechnicalEvaluationCommitteeReportBackingBean resetSearch executed");
 		this.getManagedBean().setQuotationNumber(null);
 		this.getManagedBean().setQuotationId(null);
-		this.getManagedBean().setQtReportDocumentList(new ArrayList<ScQtFinalizationReport>()); //#25651
+		//#25651 - Start
+		this.getManagedBean().setReportStage(StringUtils.EMPTY);
+		this.getManagedBean().setQtReportDocumentList(new ArrayList<ScQtFinalizationReport>()); 
+		//#25651 - End
 	}
 
 	@Override
