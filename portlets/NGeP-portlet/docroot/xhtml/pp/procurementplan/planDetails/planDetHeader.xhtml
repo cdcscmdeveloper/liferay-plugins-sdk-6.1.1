@@ -11,6 +11,37 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 xmlns:ac="http://ac.my/jsf/composite/cc"
 >
 	
+	<!-- #41279 Start -->
+	<h:panelGroup rendered="#{(pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode eq ParameterConst.planTypeProcurement) and (pPlanBackingBean.managedBean.btnValue eq 'UPDATE' or empty pPlanBackingBean.managedBean.btnValue)}">
+		<script type="text/javascript">
+			//<![CDATA[
+			(function() {
+				var checkAndShowPopup = function() {
+					var today = new Date();
+					var month = today.getMonth(); // 0 = Jan, 11 = Dis
+					var day   = today.getDate();  // 1-31
+
+					var isWithinRange = (month === 9) || (month === 0 && day <= 15);
+	
+					if (isWithinRange) {
+						setTimeout(function() {
+							if (typeof noticePopup !== 'undefined' && typeof noticePopup.show === 'function') {
+								noticePopup.show();
+							} else if (typeof window['noticePopup'] !== 'undefined' && typeof window['noticePopup'].show === 'function') {
+								window['noticePopup'].show();
+							} else if (typeof PF !== 'undefined' && PF('noticePopup')) {
+								PF('noticePopup').show();
+							}
+						}, 200);
+					}
+				};	
+				checkAndShowPopup();
+			})();
+			//]]>
+		</script>
+	</h:panelGroup>
+	<!-- #41279 End -->
+	
 	<table class="ppTwoTable" style="width: 70%;">
 		<tr>
 			<td>
@@ -146,5 +177,14 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		</div>
 		</p:panel>
 	</p:dialog>
+	
+	<!-- #41279 Start -->
+	<h:panelGroup rendered="#{(pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode eq ParameterConst.planTypeProcurement) and (pPlanBackingBean.managedBean.btnValue eq 'UPDATE' or empty pPlanBackingBean.managedBean.btnValue)}">
+		<ac:infoPopupPP id="noticePopupPlanType" widget="noticePopup"
+			title="#{lbl['lbl.pm.pp.popup.title']}"
+			content="#{lbl['lbl.pm.pp.popup.instruction']}"
+			okBtnLabel="OK" />
+	</h:panelGroup>
+	<!-- #41279 End -->
 	
 </ui:composition>

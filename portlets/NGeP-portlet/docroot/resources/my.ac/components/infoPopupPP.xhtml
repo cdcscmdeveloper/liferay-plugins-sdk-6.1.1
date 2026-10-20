@@ -1,0 +1,90 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<cc:interface>
+		<cc:attribute name="id" />
+		<cc:attribute name="update" default="@this" />
+		<cc:attribute name="title" default="#{lbl['lbl.btn.dialog.cofirm.header']}" />
+		<cc:attribute name="content" default="" />
+		<cc:attribute name="widget" default="" />
+		<cc:attribute name="okAction" default="" />
+		<cc:attribute name="width" default="auto" />
+		<cc:attribute name="height" default="auto" />
+		<cc:attribute name="okProcess" default="@this" />
+		<cc:attribute name="style" default="" />
+		<cc:attribute name="dialogCSS" default="" />
+		<cc:attribute name="loadingWidget" default=""/>
+		<cc:attribute name="bean" type="java.lang.Object" />
+		<cc:attribute name="okBtnLabel" default="#{lbl['lbl.btn.ok'] != null ? lbl['lbl.btn.ok'] : 'OK'}" />
+	</cc:interface>
+
+	<cc:implementation>
+		<style>
+			#{cc.attrs.dialogCSS}
+			.info-ui-dialog {
+				max-width: 500px;
+				width: auto;
+			}
+			.info-ui-dialog .ui-dialog-content table {
+				margin: auto;
+			}
+			.info-ui-dialog .ui-dialog-content table td label {
+				white-space: normal;
+				padding-left: 5px;
+				display: inline !important;
+				float: none !important;
+			}
+			.info-ui-dialog .ui-dialog-content {
+				padding: 1em 1em !important;
+				height: auto !important;
+			}
+		</style>
+
+		<ui:param name="infoheader" value="#{cc.attrs.title}" />
+		<ui:param name="infoContent" value="#{cc.attrs.content}" />
+
+		<p:dialog styleClass="info-ui-dialog" id="#{cc.attrs.id}" widgetVar="#{cc.attrs.widget}"
+			header="#{infoheader}" resizable="false"
+			width="#{cc.attrs.width}" height="#{cc.attrs.height}"
+			closable="false" modal="true" style="#{cc.attrs.style}">
+			
+			<p:blockUI block="#{cc.attrs.id}Popup" widgetVar="infoPopupBlockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
+
+			<p:outputPanel id="#{cc.attrs.id}Popup" layout="block">
+				<table>
+					<tr>
+						<td style="white-space: normal; word-wrap: break-word !important; text-align: justify; text-align-last: left; padding: 0 15px;">
+							<p:outputLabel value="#{infoContent}" escape="false" style="display: block; text-align: left;" />
+						</td>
+					</tr>
+				</table>
+
+				<p:spacer height="1" />
+
+				<div class="ppRightBtn" style="text-align: center;">
+					<c:choose>
+						<c:when test="#{not empty cc.attrs.bean and not empty cc.attrs.okAction}">
+							<p:commandButton id="okWithBeanId" value="#{cc.attrs.okBtnLabel}" process="#{cc.attrs.okProcess}"
+								partialSubmit="true"
+								onstart="#{cc.attrs.widget}.hide(); #{not empty cc.attrs.loadingWidget ? cc.attrs.loadingWidget.concat('.show();') : ''}"
+								action="#{cc.attrs.bean[cc.attrs.okAction]}"
+								oncomplete="#{not empty cc.attrs.loadingWidget ? cc.attrs.loadingWidget.concat('.hide();') : ''}" 
+								update="#{cc.attrs.update}" />
+						</c:when>
+						<c:otherwise>
+							<p:commandButton id="okCloseOnlyId" value="#{cc.attrs.okBtnLabel}" type="button"
+								onclick="#{cc.attrs.widget}.hide();" />
+						</c:otherwise>
+					</c:choose>
+				</div>
+			</p:outputPanel>
+		</p:dialog>
+	</cc:implementation>
+</ui:composition>

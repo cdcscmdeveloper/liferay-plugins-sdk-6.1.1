@@ -9839,4 +9839,22 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 	}
 	// #33690 - END
+	
+	//#41279 Start
+	/**
+	 * Checks whether the current date falls within the notice date range.
+	 * The valid period is Disember or from 1 January to 15 January every year.
+	 *
+	 * @return {@code true} if the current date is within the notice date range;
+	 *         {@code false} otherwise
+	 */
+	public boolean isWithinNoticeDateRange() {
+		Calendar cal = Calendar.getInstance();
+
+		int month = cal.get(Calendar.MONTH);
+		int day = cal.get(Calendar.DAY_OF_MONTH);
+
+		return (month == Calendar.OCTOBER) || (month == Calendar.JANUARY && day <= 15);
+	}
+	//#41279 End
 }
