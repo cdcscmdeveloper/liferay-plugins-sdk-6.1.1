@@ -4854,29 +4854,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.companyExpNonProcRelatedPagingModel = companyExpNonProcRelatedPagingModel;
 	}
 
-	public String getTotalScoreLabel() {
-		return totalScoreLabel;
-	}
-
-	public void setTotalScoreLabel(String totalScoreLabel) {
-		this.totalScoreLabel = totalScoreLabel;
-	}
-
-	public String getMaxItemAllOtherElementsScoreLabel() {
-		return maxItemAllOtherElementsScoreLabel;
-	}
-
-	public void setMaxItemAllOtherElementsScoreLabel(String maxItemAllOtherElementsScoreLabel) {
-		this.maxItemAllOtherElementsScoreLabel = maxItemAllOtherElementsScoreLabel;
-	}
-
-	public String getTooltipDemo() {
-		return tooltipDemo;
-	}
-
-	public void setTooltipDemo(String tooltipDemo) {
-		this.tooltipDemo = tooltipDemo;
-	}
 
 	// 29661 -end-
 }

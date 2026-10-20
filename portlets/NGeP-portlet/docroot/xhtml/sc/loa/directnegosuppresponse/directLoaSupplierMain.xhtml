@@ -64,7 +64,7 @@
 							actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}">
 							<f:setPropertyActionListener
 								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
-								value="1" />
+								value="2" />
 							<f:param name="disableValidation" value="true" />
 						</p:menuitem>
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}"
@@ -72,7 +72,7 @@
 							actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}">
 							<f:setPropertyActionListener
 								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
-								value="2" />
+								value="3" />
 							<f:param name="disableValidation" value="true" />
 						</p:menuitem>
 						<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}"
@@ -80,7 +80,7 @@
 							actionListener="#{directLOABackingBean.tabChangeAction(directLOABackingBean.managedBean.selectedTabIndex)}">
 							<f:setPropertyActionListener
 								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
-								value="3" />
+								value="4" />
 							<f:param name="disableValidation" value="true" />
 						</p:menuitem>
 
@@ -91,7 +91,7 @@
 
 							<f:setPropertyActionListener
 								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
-								value="4" />
+								value="5" />
 							<f:param name="disableValidation" value="true" />
 						</p:menuitem>
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}"
@@ -100,7 +100,7 @@
 							disabled="#{!directLOABackingBean.managedBean.scLoa.bondReq}">
 							<f:setPropertyActionListener
 								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
-								value="5" />
+								value="6" />
 							<f:param name="disableValidation" value="true" />
 						</p:menuitem>
 
@@ -117,27 +117,27 @@
 						</c:if>
 						<!-- #29661 End -->
 						<c:if
-							test="#{directLOABackingBean.managedBean.selectedTabIndex == 1}">
+							test="#{directLOABackingBean.managedBean.selectedTabIndex == 2}">
 							<ui:include
 								src="/xhtml/sc/loa/directnegosuppresponse/directawardloaSupplierLetterOfAcceptance.xhtml" />
 						</c:if>
 						<c:if
-							test="#{directLOABackingBean.managedBean.selectedTabIndex == 2}">
+							test="#{directLOABackingBean.managedBean.selectedTabIndex == 3}">
 							<ui:include
 								src="/xhtml/sc/loa/directnego/directLoaAwardDetailsMenu.xhtml" />
 						</c:if>
 						<c:if
-							test="#{directLOABackingBean.managedBean.selectedTabIndex == 3}">
+							test="#{directLOABackingBean.managedBean.selectedTabIndex == 4}">
 							<ui:include
 								src="/xhtml/sc/loa/directnego/directawardloaDeductionPaymentMenu.xhtml" />
 						</c:if>
 						<c:if
-							test="#{directLOABackingBean.managedBean.selectedTabIndex == 4}">
+							test="#{directLOABackingBean.managedBean.selectedTabIndex == 5}">
 							<ui:include
 								src="/xhtml/sc/loa/directnego/directawardloaFulfilmentSchedule.xhtml" />
 						</c:if>
 						<c:if
-							test="#{directLOABackingBean.managedBean.selectedTabIndex == 5}">
+							test="#{directLOABackingBean.managedBean.selectedTabIndex == 6}">
 							<ui:include
 								src="/xhtml/sc/loa/directnego/directawardloaPerformanceBondMenu.xhtml" />
 						</c:if>

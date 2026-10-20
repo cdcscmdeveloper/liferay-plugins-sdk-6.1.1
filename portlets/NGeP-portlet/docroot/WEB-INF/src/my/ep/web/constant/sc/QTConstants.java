@@ -451,6 +451,11 @@ public interface QTConstants {
 	public static final String PROPOSAL_EVALUATION_PORTLET = "ProposalEvaluation_WAR_NGePportlet";
 	public static final int TAB_LOA_INDEX = 1;
 	public static final String EVALUATION_FINANCIAL_OTHER_CHECKLIST = "/xhtml/sc/evaluation/evaluationStage/financial/financialotherchecklists.xhtml";
+	// #29661 #40974 - Start
+	public static final int DIRECT_LOA_TAB_INDEX_ONE = 1;
+	public static final int DIRECT_LOA_TAB_INDEX_TWO = 2;
+	public static final int DIRECT_LOA_TAB_INDEX_THREE = 3;// 29661 && 29468
+	// #29661 #40974 - End
 
 	// 29661- end-
 
@@ -562,8 +567,5 @@ public interface QTConstants {
 	// #25726 - End
 
 	
-	// #40974  - Start
-	public static final int DIRECT_LOA_TAB_INDEX_ONE = 1;
-	public static final int DIRECT_LOA_TAB_INDEX_TWO = 2;
-	// #40974  - End
+	
 }

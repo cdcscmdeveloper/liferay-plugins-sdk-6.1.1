@@ -1854,7 +1854,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 				SourcingConstants.COMPANY_EXP_CONTRACT_STATUS_ALL);
 		return QTConstants.EVALUATION_FINANCIAL_OTHER_LIST_SUPPLIER_MAIN;
 		// 29661 -end-
-		return "/xhtml/sc/evaluation/evaluationStage/financial/financialOtherListSuppliersMain.xhtml";
+		
 
 	}
 

@@ -9369,10 +9369,7 @@ public class SupplierFinalizationBackingBean extends
 
 			ISearchBean<PmUserRole> searchBean = new SearchBean<>();
 			// 29661 -end-
-			List <String> roleToCheck = new ArrayList<String>();
-			roleToCheck.add(RoleCode.BPK_AUDITOR.value());
 			
-			ISearchBean<PmUserRole> searchBean = new SearchBean<PmUserRole>();
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean(
 							"pmUserOrg.pmUser.userId", 

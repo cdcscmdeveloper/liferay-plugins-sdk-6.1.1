@@ -1,0 +1,178 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+
+	<ui:define name="contentSection">
+
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
+		</p:blockUI>
+		<p:messages id="finNonGCExpMsg" showDetail="true" showSummary="false"
+			autoUpdate="true" closable="true" severity="error, info"></p:messages>
+		<ui:param name="isRenderOrDisable"
+			value="#{((!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoring()) or (!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.isQTStatusChecklistScoringRevision()) or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()))}" />
+		<table style="width: 100%" class="BtnSpacing">
+			<tr>
+				<td align="right"><p:commandButton process="@this"
+						partialSubmit="true" value="#{lbl['lbl.btn.back']}"
+						style="float:left;" immediate="true"
+						action="#{specificationBackingBean.committeeBackAction}" /> <p:commandButton
+						value="#{lbl['lbl.btn.print']}" process="@all" type="button">
+						<p:printer target="finNonGCExp" />
+					</p:commandButton> <p:commandButton value="#{lbl['lbl.btn.save']}"
+						rendered="#{isRenderOrDisable}" style="float:right;"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+						action="#{specificationBackingBean.saveCheckListScores}">
+					</p:commandButton></td>
+			</tr>
+		</table>
+		<h:panelGroup id="finNonGCExp">
+			<ui:param name="docDefKey"
+				value="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey}"></ui:param>
+			<ui:include
+				src="/xhtml/sc/specification/specificationCommittee/checklistHeader.xhtml" />
+			<p:spacer height="5px;"></p:spacer>
+			<p:panel toggleable="true" id="finNonGExpYrs"
+				style="width:100% !important;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.fin.comp.exp.non.federal.gov']}" />
+					<ac:iconTooltip
+						value="#{lbl['lbl.sc.spec.fin.comp.exp.fed.gov.tooltip']}" />
+				</f:facet>
+				<table>
+					<tr>
+						<td><p:outputLabel style="font-weight: bold;"
+								value="#{lbl['lbl.sc.spec.fin.comp.exp.since.year']} "></p:outputLabel>
+							<ui:fragment
+								rendered="#{!specificationBackingBean.managedBean.readOnly}">
+								<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
+							</ui:fragment></td>
+						<td><p:inputText id="nonGovExpyrs" size="7"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
+								label="#{lbl['lbl.sc.spec.fin.comp.exp.since.year']}"
+								required="true" style="text-align:right;font-weight: bold;"
+								value="#{specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue.year}"
+								maxlength="4">
+								<p:ajax event="blur" process="@this" partialSubmit="true"
+									update="@([id$=finNonGExpYrs])"
+									listener="#{specificationBackingBean.compareChecklistValueCurrentYear(specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue)}"></p:ajax>
+							</p:inputText> <p:message id="nonGovMsg" for="nonGovExpyrs" display="icon"></p:message></td>
+					</tr>
+				</table>
+
+				<p:spacer height="3px;"></p:spacer>
+				<h:outputText styleClass="instruction"
+					value="#{lbl['lbl.sc.spec.score.comp.exp.fin.gov.supplier.instructions']}"
+					escape="false" />
+			</p:panel>
+
+			<p:spacer height="2px;"></p:spacer>
+			<p:panel id="cmpExpNGovRelated" toggleable="true"
+				style="width:100% !important;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.fin.comp.exp.proc.related']}" />
+				</f:facet>
+				<p:spacer height="3px;"></p:spacer>
+				<div align="left" class="header-info header-spacing">
+					<table border="0" cellspacing="0" cellpadding="0"
+						style="width: 100%">
+						<tr>
+
+							<td class="header-info-text" style="text-transform: uppercase;float:left;"><h:outputLabel
+									value="#{lbl['lbl.sc.fin.comp.exp.proc.related.table.header']}" />
+							</td>
+						</tr>
+					</table>
+				</div>
+				<p:spacer height="2px;"></p:spacer>
+				<ui:param name="cmpExpGovNGov" value="cmpNGovRel" />
+				<ui:param name="cmpExpPrcNonPrc" value="cmpNGovPrc" />
+				<ui:include
+					src="/xhtml/sc/specification/specificationCommittee/specCompExpRelated.xhtml" />
+
+			</p:panel>
+
+			<p:spacer height="10px;"></p:spacer>
+			<p:panel id="cmpExpNonGovPrc" toggleable="true"
+				style="width:100% !important;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.fin.comp.exp.non.prc.related']}" />
+				</f:facet>
+				<p:spacer height="3px;"></p:spacer>
+				<div align="left" class="header-info header-spacing">
+					<table border="0" cellspacing="0" cellpadding="0"
+						style="width: 100%">
+						<tr>
+
+							<td class="header-info-text" style="text-transform: uppercase;float:left;"><h:outputLabel
+									value="#{lbl['lbl.sc.fin.comp.exp.proc.related.table.header']}" />
+							</td>
+						</tr>
+					</table>
+				</div>
+				<p:spacer height="2px;"></p:spacer>
+				<ui:param name="cmpExpGovNGov" value="cmpNGovNPrc" />
+				<ui:param name="cmpExpPrcNonPrc" value="cmpNGovNonPrc" />
+				<ui:include
+					src="/xhtml/sc/specification/specificationCommittee/specCompExpRelated.xhtml" />
+
+			</p:panel>
+
+			<p:spacer height="10px;"></p:spacer>
+			<p:panel header="#{lbl['lbl.sc.fin.comp.exp.non.gov.score']}"
+				rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}"
+				toggleable="true" id="scoreNonGovCLst"
+				style="width:100% !important;">
+				<table>
+					<tr>
+						<td style="width: 117px;"><p:outputLabel
+								value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel></td>
+						<td><p:selectOneMenu disabled="true"
+								style="width: 180px;margin-bottom: 5px;"
+								value="#{specificationBackingBean.managedBean.checklistScoreType}">
+								<f:selectItems value="#{specificationBackingBean.scoreDetails}"></f:selectItems>
+							</p:selectOneMenu></td>
+						<td><ac:iconTooltip
+								value="#{lbl['lbl.sc.fin.comp.exp.score.check.list.tooltip']}" />
+						</td>
+					</tr>
+				</table>
+
+
+
+				<h:panelGroup
+					rendered="#{SourcingConstants.USER_SCORE  eq specificationBackingBean.managedBean.checklistScoreType}">
+					<table>
+						<tr>
+							<td style="width: 115px;"><p:outputLabel
+									value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel> <ui:fragment
+									rendered="#{!specificationBackingBean.managedBean.readOnly}">
+									<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
+								</ui:fragment></td>
+							<td><p:inputText id="scoreNonTxt" required="true"
+									style="text-align:right;width: 170px;"
+									disabled="#{specificationBackingBean.managedBean.readOnly}"
+									label="#{lbl['lbl.sc.spec.max.score']}"
+									value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"
+									maxlength="14">
+									<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+									<p:ajax event="change" process="@this" partialSubmit="true"
+										update="@([id$=scoreNonGovCLst])"></p:ajax>
+								</p:inputText> <p:message id="scoreNonTxtMsg" for="scoreNonTxt" display="icon"></p:message></td>
+						</tr>
+					</table>
+				</h:panelGroup>
+
+			</p:panel>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

@@ -54,12 +54,13 @@
 						value="#{lbl['lbl.sc.document.no']}" /></td>
 				<td class="header-info-text">
 				<ui:remove>#29661 -start-</ui:remove>
-				<ui:remove>#25201 - start </ui:remove>
-				<p:commandLink rendered="#{isDocTypeQuotation or isDocTypeDirectNego}" process="@this" partialSubmit="true"
+				<p:commandLink rendered="#{!isProposalRender and (isDocTypeQuotation or isDocTypeDirectNego)}" process="@this" partialSubmit="true"
 						action="#{qTDetailBB.editQuationTenderDetails(lOADetailBackingBean.managedBean.scLoa.scQt, false, true, view.viewId)}">
 				       #{lOADetailBackingBean.managedBean.scLoa.scQt.qtNo}
 					</p:commandLink>
-					<ui:remove>#25201 - end </ui:remove>
+					<ui:fragment rendered="#{isProposalRender and (isDocTypeQuotation or isDocTypeDirectNego)}">
+					#{lOADetailBackingBean.managedBean.scLoa.scQt.qtNo}
+					</ui:fragment>
 					<ui:remove>#29661 -start-</ui:remove>
 			    <!-- start - 25790 -->
 				<p:commandLink rendered="#{!lOADetailBackingBean.managedBean.scLoa.brandNew and !(isDocTypeQuotation or isDocTypeDirectNego)}" process="@this" partialSubmit="true"
@@ -92,10 +93,6 @@
 					 #{lOADetailBackingBean.managedBean.scQtProposal.proposalNo}
 					</ui:fragment>
 					<ui:remove>#29661 -end-</ui:remove>
-				<p:commandLink process="@this" partialSubmit="true"
-						action="#{ViewSPBackingBean.navigatetoViewSupplierProposal(view.viewId, lOADetailBackingBean.managedBean.scQtProposal.qtProposalId)}">
-				       #{lOADetailBackingBean.managedBean.scQtProposal.proposalNo}
-					</p:commandLink>
 				</c:when>
 				<c:when test="#{!(isDocTypeQuotation or isDocTypeDirectNego)}">
 				<h:outputText
