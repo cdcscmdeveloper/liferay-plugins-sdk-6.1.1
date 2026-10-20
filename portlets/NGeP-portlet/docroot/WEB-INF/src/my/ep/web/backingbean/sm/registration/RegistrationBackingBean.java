@@ -3614,7 +3614,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 		//#40863 - Start
 		if (ArrayUtils.isNotEmpty(items)) {
-		    List<SelectItem> itemList = new ArrayList<SelectItem>(Arrays.asList(items));
+		    List<SelectItem> itemList = new ArrayList<>(Arrays.asList(items));
 		    Iterator<SelectItem> iterator = itemList.iterator();
 		    while (iterator.hasNext()) {
 		        SelectItem item = iterator.next();
