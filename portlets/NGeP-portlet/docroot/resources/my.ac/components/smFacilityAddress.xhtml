@@ -62,7 +62,8 @@
 					label="#{lbl['lbl.sm.address']}" id="addr1Id"
 					value="#{cc.attrs.facility.smAddress.address1}" size="35"
 					disabled="#{backingBean.managedBean.upsCannotEdit}" /> 
-				<p:message id="addr1IdMsg" for="addr1Id" showSummary="true" showDetail="false" />
+				<p:message id="addr1IdMsg" for="addr1Id" showSummary="true" showDetail="false" display="icon"/>
+				<!-- #28775 - Site Visit Grouping Enhancement -28775 -->
 			</p:outputPanel>
 		</td>
 	</tr>

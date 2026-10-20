@@ -411,13 +411,17 @@ public class CommonApplBackingBean extends BaseBackingBean<CommonApplManagedBean
 						// #29664 - start
 						smApplBB.getManagedBean().setRoleCode(RoleCode.UPS_APPROVER.value());
 						// #29664 - end
-						if (appl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
-							setSiteVisitView(smApplBB.getManagedBean(), appl);
-						} else {
-							if (appl.getApplCategoryType().equals("S")) {
-								setSiteVisitView(smApplBB.getManagedBean(), appl);
-							}
+						// #28778 - Site Visit Grouping Enhancement -28775 - Start
+						if(appl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW) 
+								&& SmApplicationUtil.hasSpecialCategory(appl)){
+							smApplBB.getManagedBean().setSpecialCategoryRechecked(true);
 						}
+						if (appl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
+								|| appl.getApplCategoryType().equals(SupplierManagementConst.SM_APPL_CATEGORY_TYPE_SPECIAL)
+								|| smApplBB.getManagedBean().isSpecialCategoryRechecked()) {
+							setSiteVisitView(smApplBB.getManagedBean(), appl);
+						}
+						// #28778 - Site Visit Grouping Enhancement -28775 - End
 					}
 					if ((resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL) || resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.VERIFY_APPL.replaceAll("\\s", "")))
 							|| (resDTO.getTaskName().equalsIgnoreCase(SMProcessNameConst.REVIEW_SITE_VISIT_AFTER_APPROVE) || resDTO.getTaskName().equalsIgnoreCase(

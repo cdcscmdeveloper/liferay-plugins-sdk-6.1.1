@@ -24,6 +24,8 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
+//#28895_35501 Start - AUDIT TRAIL SM
+import my.ep.biz.service.IAuditTrailSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
@@ -35,8 +37,10 @@ import my.ep.biz.service.sm.scheduler.ISmSchedulerSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sm.AuditSupplierManagementConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
@@ -99,10 +103,14 @@ import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.CustomUtils;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
+//#28895_35501 End
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBankInformationBackingBean;
 import my.ep.web.backingbean.sm.govtsellerregistration.GovtSellerRegistrationBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -116,7 +124,6 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
-import my.ep.web.vo.BlacklistOwnerDirectorVO;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -124,14 +131,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
-//#28895_35501 Start - AUDIT TRAIL SM
-import my.ep.biz.service.IAuditTrailSO;
-import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.sm.AuditSupplierManagementConst;
-import my.ep.util.CustomUtils;
-import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBankInformationBackingBean;
-import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
-//#28895_35501 End
 
 @ManagedBean(name = "registrationBackingBean")
 @RequestScoped
@@ -1169,17 +1168,23 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					&& StringUtils.isNotBlank(smPersonnel.getEmail()) ? smPersonnel
 					.getEmail() : "";
 					
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.INFO_721012,
-									new String[] {
-											suppAdminEmail,
-											SmRuleHelper.getInstance()
-													.getEmailActivationDays()
-													+ "" },
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
+			// 14623 - start : tukar ayat
+			if (this.getManagedBean().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_BASIC)) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+								MessageConst.INFO_721012, new String[] { suppAdminEmail,
+										SmRuleHelper.getInstance().getEmailActivationDays() + "" },
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			} else if (this.getManagedBean().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF)) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+								MessageConst.INFO_722686, new String[] { suppAdminEmail,
+										SmRuleHelper.getInstance().getEmailActivationDays() + "" },
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			}
+			// 14623 - end
 			renewSesionObject();
 			this.getManagedBean().setSmAppl(null);
 			this.getManagedBean().setSmSupp(null);

@@ -1,0 +1,83 @@
+
+<u class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.manufacturing.equipmnt.mchne')</u>
+<br /><br />
+
+
+<table class="descTable" width="100%">
+		<tr style="background-color:#99ccff;" align="center">
+			<th width="5%" class="txtBold">No</th>
+			<th width="5%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.availableLbl')</th>
+			<th width="25%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.manufacturing.type.machine')</th>
+			<th width="20%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.brand')</th>
+			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.function')</th>
+			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.quantity')</th>
+			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.value')</th>
+			<!--#38310 - START -->
+			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.purchasingMthd')</th>
+      <!--#38310 - END -->
+			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.purchase.year')</th>
+			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.guarnName')</th>
+		</tr>
+		
+		#if($machineLs.size() > 0)
+			#set($smSvMachine = $null)
+			#foreach($machine in $machineLs)
+			#if($machine && $machine.getClass().getName().contains("SmSvMachine"))
+				#set($smSvMachine = $machine)
+				#set($machine = $machine.smMachineDtl)
+			#end
+			<tr>
+				<td>$velocityCount</td>
+				<td>#if($!smSvMachine.valid) $smVmUtil.getDescByLabel('lbl.sm.sme.txt.yes')  
+								#else $smVmUtil.getDescByLabel('lbl.sm.sme.txt.no') #end</td>
+				<td>
+				$!machine.machineType
+				$!machine.machine.machineDesc
+				</td>
+				<td>$!machine.brandName</td>
+				<td>$!machine.machineFunction</td>
+				<td>$!machine.qty</td>
+				<td style="text-align:right">
+				#if($machine.value)
+					$smVmUtil.formatToTwoDecimalPoint($machine.value)
+				#end
+				</td>
+				<td>
+					$purchaseMethodMap.get($machine.purchaseMethod)
+				</td>
+				<td>$!machine.purchaseYear</td>
+				<td>$!machine.guarantorName</td>
+			</tr>
+			#set($brandLen = 0)
+			#set($guarantorLen = 0) 
+			#set($functionLen = 0)
+			#set($maxLen = 0)
+			
+			#if($!machine.brandName)
+			    #set($maxLen = $machine.brandName.length())
+			#end
+			#if($!machine.guarantorName)
+			    #set($guarantorLen = $machine.guarantorName.length())
+			#end
+			#if($!machine.machineFunction)
+			    #set($functionLen = $machine.machineFunction.length())
+			#end
+			#if($brandLen > $maxLen) #set($maxLen = $brandLen) #end
+			#if($guarantorLen > $maxLen) #set($maxLen = $guarantorLen) #end  
+			#if($functionLen > $maxLen) #set($maxLen = $functionLen) #end
+			
+			#set($extraRows = $maxLen / 10)
+			#set($rowCounter = $rowCounter + 1 + $extraRows)
+			
+			#if($rowCounter > $MAX_ROWS_PER_PAGE * 2)
+				<div style="page-break-before: always;"></div>
+				#set($rowCounter = 0)
+		    #end
+			
+			#end
+		#else
+			<tr>
+				<td colspan="10" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
+			</tr>
+		#end
+</table>

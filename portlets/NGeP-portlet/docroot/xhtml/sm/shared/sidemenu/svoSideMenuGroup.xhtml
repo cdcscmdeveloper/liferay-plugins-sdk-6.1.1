@@ -1,0 +1,45 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:tabMenu  styleClass="sidemenu" style="display:table-caption; width:20%;" id="tabIndex"
+		activeIndex="#{svoSiteVisitBackingBean.managedBean.activeIndex}" >
+		<p:menuitem value="#{lbl['lbl.sm.svo.sitevisit.info']}" 
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			update="@form" actionListener="#{svoSiteVisitBackingBean.changePageIndex(0,viewFlag)}" />
+			
+		<p:menuitem value="#{lbl['lbl.sm.sitevisit.section.b']}" 
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			update="@form" actionListener="#{svoSiteVisitBackingBean.changePageIndex(1,viewFlag)}" />
+		
+		<p:menuitem value="#{lbl['lbl.sm.sitevisit.licenseinsurance']}" update="@form" 
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				actionListener="#{svoSiteVisitBackingBean.changePageIndex('L',viewFlag)}" 
+				rendered="#{svoSiteVisitBackingBean.managedBean.licensed}"/>
+		
+		<p:menuitem value="#{svoSiteVisitBackingBean.managedBean.parameterDesc}" update="@form" 
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				rendered="#{not empty svoSiteVisitBackingBean.managedBean.smSvTask.pmCategoryL3}" 
+				actionListener="#{svoSiteVisitBackingBean.changePageIndex('C',viewFlag)}" />
+					
+		<p:menuitem value="#{lbl['lbl.sm.sv.templ.bumiputera']}" update="@form" 
+				rendered="#{empty svoSiteVisitBackingBean.managedBean.smSvTask.pmCategoryL3}"
+				actionListener="#{svoSiteVisitBackingBean.changePageIndex('C',viewFlag)}" />
+					
+		<p:menuitem value="#{lbl['lbl.sm.sitevisit.section.d']}" update="@form" 
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				actionListener="#{svoSiteVisitBackingBean.changePageIndex('R',viewFlag)}" />
+				
+		<p:menuitem value="#{lbl['lbl.sm.officeloc']}"  update="@form" 
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				actionListener="#{svoSiteVisitBackingBean.changePageIndex('O',viewFlag)}" />
+				
+		<p:menuitem value="#{lbl['lbl.sm.sitevist.report.submission']}" update="@form" 
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				actionListener="#{svoSiteVisitBackingBean.changePageIndex('S',viewFlag)}" />
+	</p:tabMenu>
+	
+</ui:composition>
