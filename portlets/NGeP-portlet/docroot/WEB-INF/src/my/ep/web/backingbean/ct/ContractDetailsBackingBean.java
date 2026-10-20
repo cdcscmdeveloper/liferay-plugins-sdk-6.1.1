@@ -59,6 +59,7 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper; //Fix - #30045
 import my.ep.jaxb.ct.contract.CTContractDataType;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.persistence.constant.DbValueConst;
@@ -88,6 +89,7 @@ import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc; //Fix - #30866
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNote; //Fix - #30045
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.CustomUtils;
@@ -680,15 +682,22 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					ctBB.getManagedBean().setNewPk7(false);
 				}
 			} else {
-				//#27551 - add null checking
-				if (ctBB.getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().
-						getRequestNote() != null &&
-						ctBB.getManagedBean().getContractVer().getCtContractItems().get(0).getScRequestItem().
-						getRequestNote().getRequestNoteDtls().get(0).getProcurementType().getParameterType().equalsIgnoreCase(
-						ParameterTypeConst.PROCUREMENT_TYPE) && ctBB.newJustification()!= null) {
-					ctBB.getManagedBean().setNewPk7(true);
-				} else {
-					ctBB.getManagedBean().setNewPk7(false);
+				//Start Fix - #30045 || #27551 - add null checking
+				// The scRequestNote variable is only used to determine the procurement type.
+				// However, the values for reason and procurement type are always retrieved from the CT table.
+				ScRequestNote scRequestNote = (ScRequestNote) EntityHelper.getNestedProperty(ctBB.getManagedBean(),
+						"contractVer.ctContractItems[0].scRequestItem.requestNote");
+				if (scRequestNote != null) {
+					String procType = EntityHelper
+							.getStringNestedProperty(ctBB.getManagedBean(),
+									"contractVer.ctContractItems[0].scRequestItem.requestNote.requestNoteDtls[0].procurementType.parameterType");
+					if ((procType.equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE)
+							|| procType.equalsIgnoreCase(ParameterTypeConst.PROCUREMENT_TYPE_RPT)) // End Fix - #30045
+							&& ctBB.newJustification() != null) {
+						ctBB.getManagedBean().setNewPk7(true);
+					} else {
+						ctBB.getManagedBean().setNewPk7(false);
+					}
 				}
 			}
 			
