@@ -5186,7 +5186,14 @@ public class SmApplicationUtil {
 								.getSmAppl().getSmPersonnels(), "pmUser");
 			}
 			//#26238
-			validateBeforeProceedDA(suppAdmin, applicationType);
+			List<SmDisciplinaryAction> smDA = null;
+			if (smSupplier != null
+			        && smSupplier.getSmAppl() != null
+			        && smSupplier.getSmAppl().getSmSupplier() != null) {
+			    smDA = smSupplier.getSmAppl().getSmSupplier().getSmDisciplinaryActions();
+			}
+
+			validateBeforeProceedDA(smDA, suppAdmin, applicationType);
 			validateBumiDA(smSupplier, applicationType);
 			if (smSupplier.getSmAppl() != null
 					&& !smSupplier.getSmAppl().isQuestionnaire()
@@ -5305,15 +5312,16 @@ public class SmApplicationUtil {
 		return result;
 	}
 	//#26238 - start
-	private static void validateBeforeProceedDA(SmPersonnel suppAdmin, String applType){
+	private static void validateBeforeProceedDA(List<SmDisciplinaryAction> smDA, SmPersonnel suppAdmin, String applType){
 		if(suppAdmin == null){
 			return;
 		}
 		boolean types = applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
 				|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
 				|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW);
-		boolean cancelAdmin = suppAdmin.isSuspendRegistration() 
-				|| suppAdmin.isCancelRegistration() || suppAdmin.isBlacklisted();
+		boolean cancelAdmin = (suppAdmin.isSuspendRegistration() 
+				|| suppAdmin.isCancelRegistration()
+				|| suppAdmin.isBlacklisted()) && hasCannotLoginDA(smDA);
 		if(types && cancelAdmin){
 			throw new EpException(SmCommonUtil.getMessage(
 					"lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action", null));
@@ -15749,7 +15757,10 @@ public class SmApplicationUtil {
 			return false;
 		}
 		for(SmDisciplinaryAction da : daList){
-			if(da.isSuspendRegistration() || da.isBlacklistOwner() || da.isCancelRegistration()){
+			if ((da.isSuspendRegistration() || da.isBlacklistOwner() || da
+					.isCancelRegistration())
+					&& da.getRecordStatusFlg().equals(
+							DbValueConst.RECORD_STATUS_ACTIVE)) {
 				return true;
 			}
 		}
