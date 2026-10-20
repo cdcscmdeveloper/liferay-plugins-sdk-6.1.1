@@ -2427,8 +2427,8 @@ public class SpecificationBackingBean extends
 			// #38151 once the specification is revised (incl. revise from endorsement/sign off),
 			// Evaluation Element Weightage for financial scoring is mandatory = Yes
 			if ((QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION.equals(this.getManagedBean().getCurrentStatusId())
-					|| (QTStatusConst.SE_PENDING_REVISION.equals(this.getManagedBean().getCurrentStatusId())
-							&& !this.getManagedBean().isWeightage35384WIP())) // spec maintenance revision, WIP keeps old screen
+					|| QTStatusConst.SE_PENDING_REVISION.equals(this.getManagedBean().getCurrentStatusId()))
+					&& !this.getManagedBean().isWeightage35384WIP() // WIP keeps old screen (saved Yes/No)
 					&& null != this.getManagedBean().getFinancialScoreSetting()) {
 				this.getManagedBean().getFinancialScoreSetting().setWeightageReq(true);
 			}
@@ -8325,7 +8325,6 @@ public class SpecificationBackingBean extends
 			if (null == technical.getOverallFin()) {
 				technical.setOverallFin(new BigDecimal(0));
 			}
-			technical.setOverallOtherFlag(Boolean.TRUE);
 			BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_WEIGHTAGE);
 			if (null != passingScore
 					&& technical.getOverallTechnical().intValue() < passingScore
@@ -8353,7 +8352,6 @@ public class SpecificationBackingBean extends
 					.intValue();
 			technical.setOverallFin(new BigDecimal(financialScore));
 			this.getManagedBean().setRecommendationPackageScore(technical);
-			this.getManagedBean().getRecommendationPackageScore().setOverallOtherFlag(true);
 			int local = technical.getOverallTechnical().intValue()
 					+ technical.getOverallFin().intValue();
 
@@ -11665,12 +11663,6 @@ public class SpecificationBackingBean extends
 						        : packageScoreSetting.getOverallFin()
 						);
 				
-				//#38151 Apply a flag to recognize in specification maintenance data wip before and after revise.
-				newItemScoreSetting.setOverallOtherFlag(
-				        this.getManagedBean().isWeightage35384WIP()
-				            ? null
-				            : Boolean.TRUE
-				    );
 				newItemScoreSetting.setOverallOtherFin(itemScoreSetting.getOverallOtherFin());
 				itemScoreSetting = newItemScoreSetting;
 			}//#28784 - End
@@ -16250,7 +16242,6 @@ public class SpecificationBackingBean extends
 				recommendationItem.setOverallFin(recommendationPackage.getOverallFin());
 				recommendationItem.setPassingScore(recommendationPackage.getPassingScore());
 				//#38151 && 40044 -start-
-				recommendationItem.setOverallOtherFlag(true);
 				recommendationItem.setOverallOtherTechnical(BigDecimal.ZERO);
 				recommendationItem.setOverallOtherFin(BigDecimal.ZERO);
 				//#38151 && 40044 -end-
@@ -21687,53 +21678,9 @@ public class SpecificationBackingBean extends
 	
 	// #38151 && 40044 Start
 	public void checkWeightage35384WIP() {
-
-		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-				IQTDetailSO.class);
-
-		IQTSpecSO	specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-				IQTSpecSO.class);//34852_start
-		SpecificationReqDTO specReqDto=new SpecificationReqDTO();
-		specReqDto.setScQt(this.getManagedBean().getQt());
-		this.getManagedBean().setWipStatusMax(specSo.checkWipScoreSettingMax(specReqDto));//34852_End
-
-		ScQt qt = this.getManagedBean().getQt();
-		boolean checkStatusWip = checkWipScoreSettingFlag(qt.getQtId());
-		Date createdDate = qt.getCreatedDate();
-
-		QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
-		qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
-		qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
-
-		PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
-
-		Date effDate = appVerDtls.getEffDate();
-		Timestamp effTimestamp = new Timestamp(effDate.getTime());
-
-		// for wip PROD usage only -start-
-		if ((createdDate.before(effTimestamp) && !checkStatusWip && this.getManagedBean().getWipStatusMax() <= SourcingConstants.SCORE_SETTING_TYPE_FINANCIAL_BY_ITEM)
-				&& !checkbyStatus())
-		// for wip PROD usage only -end-
-		{
+		if (isWeightage35384WIP(this.getManagedBean().getQt())) { //#38151 shared in SourcingBaseBackingBean (max score setting <= 6 = WIP)
 			this.getManagedBean().setWeightage35384WIP(true);
 		}
 	}
-
-	private boolean checkWipScoreSettingFlag(Long qtId) {
-		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-				IQTSpecSO.class);
-		return specSo.checkWipScoreFlag(qtId);
-	}
-
-	// #38151 -for wip PROD usage only- start
-	public boolean checkbyStatus() { 
-		Long currentStatusId = this.getManagedBean().getCurrentStatusId();
-		if (QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING.equals(currentStatusId)
-				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION.equals(currentStatusId)) {
-			return Boolean.TRUE;
-		}
-		return Boolean.FALSE;
-	}
-	// #38151 -for wip PROD usage only- end
 
 }

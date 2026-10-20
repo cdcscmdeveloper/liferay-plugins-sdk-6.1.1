@@ -7617,40 +7617,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @return true when the QT follows the old (WIP) weightage calculation
 	 */
 	protected boolean isWeightage35384WIP(ScQt qt) {
-		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-				IQTDetailSO.class);
-		Date publishDate = qt.getPublishDate();
-		Date createdDate = qt.getCreatedDate();
-
-		// #38151 4ser max score setting: < 7 (no Technical By Item) = WIP candidate
+		// #38151 WIP depends only on max score setting: <= 6 (no Technical By Item) = WIP
 		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 		EvaluationReqDTO req4SerDTO = new EvaluationReqDTO();
 		req4SerDTO.setQtId(qt.getQtId());
-		int wipstatus = evaluationSO.checkWipScoreSettingMax(req4SerDTO);
-		boolean checkStatusWip = isWipScoreFlagSaved(qt.getQtId());
+		this.getManagedBean().setWipStatusMax(evaluationSO.checkWipScoreSettingMax(req4SerDTO));
 
-		QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
-		qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
-		qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
-		PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
-		Date effDate = appVerDtls.getEffDate();
-
-		if (null == publishDate) {
-			return createdDate.before(new Timestamp(effDate.getTime()));
-		}
-		if (publishDate.before(effDate)) {
-			return true;
-		}
-		return publishDate.after(effDate) && wipstatus < SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM
-				&& !checkStatusWip;
+		return this.getManagedBean().getWipStatusMax() <= SourcingConstants.SCORE_SETTING_TYPE_FINANCIAL_BY_ITEM;
 	}
 
-	// #38151 true = score setting saved with OVERALL_OTHER_FLAG (non-WIP)
-	protected boolean isWipScoreFlagSaved(Long qtId) {
-		IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-				IQTSpecSO.class);
-		return specSo.checkWipScoreFlag(qtId);
-	}
 	// #38151 End
 }

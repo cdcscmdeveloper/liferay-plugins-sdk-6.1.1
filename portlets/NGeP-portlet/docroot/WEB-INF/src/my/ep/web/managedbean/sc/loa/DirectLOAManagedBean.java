@@ -335,6 +335,7 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	/*#29007 End Vinod*/
 	
 	private SmSupplier tempSmSupplier;	// Bug #40022@Syazani -- 16/02/2026
+	private boolean isSaveTemplate = true;	// Bug #40798@Syazani 21/09/2026
 
 	// #25726 START 
 	private BigDecimal limit = new BigDecimal(500000);
@@ -2082,4 +2083,13 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 
 	// #25726 END
 
+	// Bug #40798@Syazani 21/09/2026 -- Start
+	public boolean isSaveTemplate() {
+		return isSaveTemplate;
+	}
+
+	public void setSaveTemplate(boolean isSaveTemplate) {
+		this.isSaveTemplate = isSaveTemplate;
+	}
+	// Bug #40798@Syazani 21/09/2026 -- End
 }
