@@ -1072,8 +1072,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		getManagedBean().setRoleTabActiveIndex(1);
 
 	}
-	   
-	//#36489 - Start
+
+	//#36489,#40780 - Start
 	/**
 	 * check if user still have:
 	 * 1) pending task (BPM)
@@ -1083,37 +1083,45 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 */
 	public void orgUnitStatusChange() {
 		logger.info("orgUnitStatusChange");
-		if (validateUserOrg()) {
-			int status = this.getManagedBean().getSelectedUserOrg().getRecordStatusFlg();
-			if (status == DbValueConst.RECORD_STATUS_SUSPENDED) {
-				EpException ex;
-				if (isAnyPendingTaskForUser(this.getManagedBean().getSelectedUser().getLoginId())) {
-					// revert it to active
-					this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-					// hit error and exit
-					throw new EpException(MessageConst.ERROR_770167);
-				} else if ((ex = isAnyPendingDocForUserRole(validateUserOrgandRole(), this.getManagedBean()
-						.getSelectedUser().getUserId())) != null) {
-					// revert it to active
-					this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-					// hit error and exit
-					throw ex;
-				} else if (isActiveUserGroupUser() != null) {
-					this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-					throw new EpException(MessageConst.ERROR_770202, isActiveUserGroupUser());
-				} else if (validateUserOrgProfileAndStatus()) {
-					checkIsActiveGovtSellerUser();
-				} else {
-					// if inactive set expire Date to SyetemDate
-					inactiveUserOrgRoleAndReceivingAddress(status);
-				}
-			}
-			//#35489 - Start
-			this.getManagedBean().setOrgUnitStatusChange(true);
-			//#35489 - End
+		if (!validateUserOrg()) {
+			return;
 		}
+
+		int status = this.getManagedBean().getSelectedUserOrg().getRecordStatusFlg();
+		String loginId = this.getManagedBean().getSelectedUser().getLoginId();
+		Long userId = this.getManagedBean().getSelectedUser().getUserId();
+		EpException pendingDocumentException;
+
+		if (status == DbValueConst.RECORD_STATUS_SUSPENDED) {
+			// revert it to active
+			if (isAnyPendingTaskForUser(loginId)) {
+				this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+				// hit error and exit
+				throw new EpException(MessageConst.ERROR_770167);
+			} else if ((pendingDocumentException = isAnyPendingDocForUserRole(validateUserOrgandRole(), userId)) != null) {
+				this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+				// hit error and exit
+				throw pendingDocumentException;
+			} else {
+				String[] activeUserGroup = isActiveUserGroupUser();
+				if (activeUserGroup != null) {
+					this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+					throw new EpException(MessageConst.ERROR_770202, activeUserGroup);
+				}
+				boolean validGovtSeller = validateUserOrgProfileAndStatus();
+				if (validGovtSeller) {
+					checkIsActiveGovtSellerUser();
+				}
+				// if inactive set expire Date to SyetemDate
+				inactiveUserOrgRoleAndReceivingAddress(status);
+			}
+		}
+		//#35489 - Start
+		this.getManagedBean().setOrgUnitStatusChange(true);
+		//#35489 - End
+		logger.info("orgUnitStatusChange - End");
 	}
-	//#36489 - End
+	//#36489,#40780 - End
 
 	public void userStatusChange() {
 		logger.info("userStatusChange");

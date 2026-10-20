@@ -14,6 +14,7 @@
 		<cc:attribute name="facilityNameLabel" required="true" />
 		<cc:attribute name="facilityAddressLabel" required="true" />
 		<cc:attribute name="backingBean" required="true" />
+		<cc:attribute name="isBusinessOffice" default="false" />	<!-- #28775 -->
 	</cc:interface>
 
 	<cc:implementation>
@@ -73,8 +74,9 @@
 
 					</p:panel><br />
 
-					<p:panel header="#{lbl['lbl.sm.assocCmpny.panHdr']}"
-						toggleable="true" rendered="#{tableVar.l3.facilityType ne 'B'}">
+					<!-- 28775 - Site Visit Grouping Enhancement - 28775 -->
+					<c:if test="#{!cc.attrs.backingBean.managedBean.smAppl.siteVisitGroup}">
+					<p:panel header="#{lbl['lbl.sm.assocCmpny.panHdr']}" toggleable="true">
 
 						<p:dataTable var="assocVar"
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -103,8 +105,8 @@
 
 					</p:panel><br />
 
-					<p:panel header="#{lbl['lbl.sm.branch.panHdr']}" 
-						rendered="#{tableVar.l3.facilityType ne 'B'}" toggleable="true">
+					<!-- 28775 - Site Visit Grouping Enhancement - 28775 -->
+					<p:panel header="#{lbl['lbl.sm.branch.panHdr']}" toggleable="true">
 
 						<p:dataTable var="brVar"
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -131,10 +133,10 @@
 
 						</p:dataTable>
 
-					</p:panel><br />
+					</p:panel><br /></c:if><!-- 28775 - Site Visit Grouping Enhancement - 28775 -->
 
 					<p:panel header="#{lbl['lbl.sm.facility.information']}"
-						rendered="#{tableVar.l3.facilityType ne 'B'}" toggleable="true">
+						rendered="#{!cc.attrs.isBusinessOffice}" toggleable="true"> <!-- #28775 -->
 
 						<p:dataTable var="facVar"
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"

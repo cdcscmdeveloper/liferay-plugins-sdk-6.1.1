@@ -159,7 +159,8 @@
 				<ui:include src="step6RenewAppln_RegisterCategoryCodesInfo.xhtml" />
 			</c:if>
 			<c:choose>
-				<c:when test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
+				<!-- #26671 - Site Visit Grouping Enhancement - 28775 -->
+				<c:when test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S' or backingBean.managedBean.specialCategoryRechecked}">
 					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 7}">
 						<ui:include src="step6.1RenewAppln_FactoryInfo.xhtml" />
 					</c:if>
@@ -531,7 +532,8 @@
 				<ui:include src="step6RenewAppln_RegisterCategoryCodesInfo.xhtml" />
 			</c:if>
 			<c:choose>
-				<c:when test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
+				<!-- #26671 - Site Visit Grouping Enhancement - 28775 -->
+				<c:when test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S' or backingBean.managedBean.specialCategoryRechecked}">
 					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
 						<ui:include src="step6.1RenewAppln_FactoryInfo.xhtml" />
 					</c:if>
@@ -899,7 +901,8 @@
 				<ui:include src="step6RenewAppln_RegisterCategoryCodesInfo.xhtml" />
 			</c:if>
 			<c:choose>
-				<c:when test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
+			<!-- #26671 - Site Visit Grouping Enhancement - 28775 -->
+				<c:when test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S' or backingBean.managedBean.specialCategoryRechecked}">
 					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
 						<ui:include src="step6.1RenewAppln_FactoryInfo.xhtml" />
 					</c:if>
