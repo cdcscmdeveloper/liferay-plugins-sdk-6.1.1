@@ -8290,6 +8290,7 @@ public class SupplierApplicationBackingBean extends
 
 				regStatus = SmApplicationUtil.setApplicationApproveStatus(
 						getManagedBean().getSmAppl(), pmStatId);
+				// #RUU F-09
 				reqDTO.setPaymentReqd(SmApplicationUtil
 						.getPaymentMode(getManagedBean().getSmAppl()));
 			}

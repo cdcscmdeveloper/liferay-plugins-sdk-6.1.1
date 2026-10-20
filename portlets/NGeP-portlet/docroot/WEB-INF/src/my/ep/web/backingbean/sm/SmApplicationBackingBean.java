@@ -12252,7 +12252,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						.updateSmSupplierInfo(getManagedBean(), reqDTO);
 			}
 			log.info("<<< #30929: SmApplicationBackingBean.submitPOorApproverReviewToBPM() - finish >>>");
+			// #RUU Start
 			createCatPyBill(reqDTO);
+			reqDTO.setPaymentReqd(SmApplicationUtil.getPaymentMode(getManagedBean().getSmAppl(), reqDTO.getPyBillDtls()));
+			// #RUU End
 		} 
 		
 		//#12483 - START

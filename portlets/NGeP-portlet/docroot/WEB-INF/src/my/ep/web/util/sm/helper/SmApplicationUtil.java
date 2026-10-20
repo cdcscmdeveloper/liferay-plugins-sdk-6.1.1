@@ -231,6 +231,8 @@ import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.kernel.util.StringUtil;
+//#RUU
+import my.ep.persistence.entity.py.PyBillDtl;
 
 // TODO: Auto-generated Javadoc
 public class SmApplicationUtil {
@@ -14618,14 +14620,43 @@ public class SmApplicationUtil {
 	 * @return true, if successful
 	 */
 	public static boolean getPaymentMode(SmAppl smAppl) {
-		boolean payReq = false;
 		// #RUU
-		// Enable Registration and Additional Fee for all Application
-		if (!smAppl.getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
-			payReq = true;
-		}
-		return payReq;
+		return getPaymentMode(smAppl, null);
 	}
+	
+	// #RUU Start
+	public static boolean getPaymentMode(SmAppl smAppl, List<PyBillDtl> feeLines) {
+		String applType = smAppl.getApplType();
+
+		// KN / KR - always carry the SPPK registration fee
+		if (ParameterConst.NEW_SM_APPLN_FOR_MOF.equalsIgnoreCase(applType) || ParameterConst.NEW_SM_APPLN_FOR_RENEW.equalsIgnoreCase(applType)) {
+			return true;
+		}
+		// KB - always carries the recognition certificate fee
+		if (ParameterConst.NEW_SM_APPLN_FOR_BUMI.equalsIgnoreCase(applType)) {
+			return true;
+		}
+		// KA - only when the computed fee is actually greater than zero
+		if (ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES.equalsIgnoreCase(applType)) {
+			return sumFeeLines(feeLines).compareTo(BigDecimal.ZERO) > 0;
+		}
+		// KU, KC and everything else - no registration-stage fee
+		return false;
+	}
+
+	public static BigDecimal sumFeeLines(List<PyBillDtl> feeLines) {
+		BigDecimal total = BigDecimal.ZERO;
+		if (feeLines != null) {
+			for (PyBillDtl d : feeLines) {
+				if (d != null && d.getItemPrice() != null) {
+					total = total.add(d.getItemPrice());
+				}
+			}
+		}
+		return total;
+	}
+
+	// #RUU End
 
 	/**
 	 * Wild card search for rejection reasons
